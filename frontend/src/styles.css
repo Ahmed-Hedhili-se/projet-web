@@ -1,0 +1,194 @@
+@import 'tailwindcss';                                     /* charge Tailwind CSS v4 */
+
+@theme {                                                   /* tokens de DESIGN.md : chaque variable crée des classes (--color-obsidian → bg-obsidian) */
+  --color-obsidian: #000000;                               /* fond principal (hero, tuiles) */
+  --color-graphite: #0e0e0e;                               /* navigation, surfaces de contrôle */
+  --color-carbon: #1d1d1f;                                 /* panneaux et bandes de contenu */
+  --color-steel: #333336;                                  /* bordures fines */
+  --color-slate: #6e6e73;                                  /* contours des champs, séparateurs */
+  --color-ash: #86868b;                                    /* texte secondaire */
+  --color-porcelain: #f5f5f7;                              /* texte principal sur fond sombre */
+  --color-apple-blue: #0071e3;                             /* boutons d'action principaux uniquement */
+  --color-electric-link: #2997ff;                          /* liens sur fond sombre */
+  --color-cobalt-link: #0066cc;                            /* liens sur fond clair */
+  --color-copper-new: #b64400;                             /* petites étiquettes « New » / statut */
+  --color-optical-yellow: #ffd500;                         /* mise en avant de caractéristiques techniques */
+
+  --font-sans: 'SF Pro Text', 'Inter', ui-sans-serif, system-ui, sans-serif;    /* police des textes */
+  --font-display: 'SF Pro Display', 'Inter', ui-sans-serif, system-ui, sans-serif; /* police des titres */
+
+  --text-utility-nav: 12px;                                /* navigation, petits boutons */
+  --text-utility-nav--line-height: 1.33;
+  --text-utility-nav--letter-spacing: -0.12px;
+  --text-body: 14px;                                       /* texte courant */
+  --text-body--line-height: 1.29;
+  --text-body--letter-spacing: -0.224px;
+  --text-section-nav: 17px;                                /* texte de lecture plus grand */
+  --text-section-nav--line-height: 1.47;
+  --text-section-nav--letter-spacing: -0.374px;
+  --text-product-label: 19px;                              /* nom de produit, logo */
+  --text-product-label--line-height: 1.21;
+  --text-product-label--letter-spacing: 0.228px;
+  --text-feature-stat: 28px;                               /* chiffres des tuiles */
+  --text-feature-stat--line-height: 1;
+  --text-feature-stat--letter-spacing: 0.196px;
+  --text-hero-product-name: 32px;                          /* sous-titre de hero */
+  --text-hero-product-name--line-height: 1.13;
+  --text-hero-product-name--letter-spacing: 0.128px;
+  --text-section-title: 40px;                              /* titres de section */
+  --text-section-title--line-height: 1.1;
+  --text-section-title--letter-spacing: -0.12px;
+  --text-display-sm: 48px;                                 /* grand titre sur mobile */
+  --text-display-sm--line-height: 1.08;
+  --text-display-sm--letter-spacing: -0.24px;
+  --text-display: 80px;                                    /* grand titre d'exposition */
+  --text-display--line-height: 1.05;
+  --text-display--letter-spacing: -1.2px;
+
+  --radius-card: 28px;                                     /* cartes, panneaux, images */
+  --radius-nav: 20px;                                      /* barres de navigation contenues */
+  --radius-capsule: 36px;                                  /* capsules d'information */
+  --radius-input: 980px;                                   /* champs de formulaire */
+  --radius-pill: 9999px;                                   /* boutons pilules */
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);          /* courbe douce : rapide au début, lente à la fin */
+  --animate-fade-up: fade-up 0.9s var(--ease-out-expo) both; /* classe animate-fade-up : apparition vers le haut */
+  --animate-float: float 7s ease-in-out infinite;          /* classe animate-float : léger flottement */
+
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(24px); }      /* départ : invisible et un peu plus bas */
+    to { opacity: 1; transform: translateY(0); }           /* arrivée : visible à sa place */
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }                  /* monte de 10px au milieu de l'animation */
+  }
+}
+
+@layer base {
+  html {
+    color-scheme: dark;                                    /* barres de défilement et contrôles natifs sombres */
+  }
+
+  body {
+    background-color: var(--color-obsidian);               /* fond noir */
+    color: var(--color-porcelain);                         /* texte clair */
+    font-family: var(--font-sans);                         /* police Inter */
+    -webkit-font-smoothing: antialiased;                   /* texte plus net sur macOS */
+  }
+
+  :focus-visible {
+    outline: 1px solid var(--color-apple-blue);            /* contour bleu au clavier (DESIGN.md) */
+    outline-offset: 1px;
+  }
+}
+
+@layer components {
+  .btn-primary {                                           /* bouton pilule bleu (« Blue Purchase Pill ») */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 7px 14px;                                     /* taille compacte */
+    border-radius: var(--radius-pill);
+    background-color: var(--color-apple-blue);
+    color: #ffffff;
+    font-size: var(--text-utility-nav);
+    line-height: 16px;
+    letter-spacing: -0.12px;
+    transition: background-color 0.2s;
+  }
+
+  .btn-primary:hover {
+    background-color: #0077ed;                             /* bleu légèrement plus clair au survol */
+  }
+
+  .btn-outline {                                           /* bouton pilule secondaire (« Outlined Explore Pill ») */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 7px 14px;
+    border: 1px solid var(--color-slate);                  /* contour gris */
+    border-radius: var(--radius-pill);
+    background-color: transparent;
+    color: var(--color-porcelain);
+    font-size: var(--text-utility-nav);
+    line-height: 16px;
+    letter-spacing: -0.12px;
+    transition: border-color 0.2s;
+  }
+
+  .btn-outline:hover {
+    border-color: var(--color-porcelain);                  /* contour clair au survol */
+  }
+
+  .capsule {                                               /* capsule d'information (« Dark Pricing Capsule ») */
+    display: inline-flex;
+    align-items: center;
+    padding: 7px 14px;
+    border-radius: var(--radius-capsule);
+    background-color: rgba(66, 66, 69, 0.72);              /* gris translucide */
+    color: rgba(255, 255, 255, 0.8);
+    font-size: var(--text-utility-nav);
+    line-height: 16px;
+    letter-spacing: -0.12px;
+  }
+
+  .text-link {                                             /* lien sur fond sombre */
+    color: var(--color-electric-link);
+    transition: opacity 0.2s;
+  }
+
+  .text-link:hover {
+    text-decoration: underline;
+  }
+
+  .reveal {                                                /* bloc caché avant d'entrer à l'écran (directive appReveal) */
+    opacity: 0;
+    transform: translateY(32px);
+    transition:
+      opacity 0.9s var(--ease-out-expo),
+      transform 0.9s var(--ease-out-expo);
+  }
+
+  .reveal.is-visible {                                     /* bloc entré à l'écran */
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+::view-transition-old(root) {                              /* transition entre les pages (withViewTransitions dans app.config.ts) */
+  animation: page-out 0.2s ease both;                      /* l'ancienne page s'efface */
+}
+
+::view-transition-new(root) {
+  animation: page-in 0.5s var(--ease-out-expo) both;       /* la nouvelle page apparaît en montant */
+}
+
+@keyframes page-out {
+  to { opacity: 0; }
+}
+
+@keyframes page-in {
+  from { opacity: 0; transform: translateY(16px); }
+}
+
+@media (prefers-reduced-motion: reduce) {                  /* respecte le réglage « réduire les animations » du système */
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;                 /* animations quasi instantanées */
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .reveal {
+    opacity: 1;                                            /* blocs visibles tout de suite */
+    transform: none;
+  }
+
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;                                       /* pas de transition entre les pages */
+  }
+}

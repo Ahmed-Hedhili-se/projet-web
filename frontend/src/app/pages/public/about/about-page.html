@@ -1,0 +1,138 @@
+<section class="overflow-hidden px-4 pt-20 text-center md:pt-28"> <!-- Hero -->
+  <p class="animate-fade-up font-display text-product-label font-semibold text-ash">About NeuroGrid</p>
+  <h1 class="animate-fade-up mx-auto mt-2 max-w-4xl font-display text-display-sm font-semibold md:text-display" style="animation-delay: 100ms">
+    We make AI compute simple.
+  </h1>
+  <p class="animate-fade-up mx-auto mt-5 max-w-2xl text-section-nav text-ash" style="animation-delay: 200ms">
+    NeuroGrid gives AI teams of every size access to powerful GPUs, with honest hourly pricing and expert advice on the right hardware.
+  </p>
+  <div class="animate-fade-up mx-auto mt-12 max-w-5xl" style="animation-delay: 320ms">
+    <div class="overflow-hidden rounded-card border border-steel bg-obsidian">                <!-- cadre média arrondi, sans ombre -->
+      <img src="images/datacenter.svg" alt="Row of NeuroGrid server racks in a data center" width="960" height="540" fetchpriority="high" class="h-auto w-full" />
+    </div>
+  </div>
+</section>
+
+<section class="px-4 py-20 md:py-28"> <!-- Mission -->
+  <div class="mx-auto grid max-w-6xl gap-10 md:grid-cols-2">
+    <div appReveal>
+      <p class="font-display text-product-label font-semibold text-ash">Our mission</p>
+      <h2 class="mt-2 font-display text-hero-product-name font-semibold md:text-section-title">Every model deserves the right hardware.</h2>
+    </div>
+    <div appReveal [revealDelay]="150" class="flex flex-col gap-4 text-section-nav text-ash">
+      <p>Training and serving AI models should not require a hardware budget the size of a research lab. Too many teams overpay for GPUs they do not need, or wait weeks for capacity.</p>
+      <p>We built NeuroGrid to fix that: a fleet of modern GPUs you can book by the hour, and a recommender that tells you exactly which one fits your model.</p>
+    </div>
+  </div>
+</section>
+
+<section class="px-4 pb-20 md:pb-28"> <!-- Chiffres clés -->
+  <div class="mx-auto grid max-w-6xl grid-cols-2 gap-4 rounded-card bg-carbon p-4 md:grid-cols-4"> <!-- panneau Carbon, tuiles noires -->
+    @for (stat of stats; track stat.label) {
+      <div appReveal [revealDelay]="$index * 90">
+        <div class="flex h-full flex-col items-center justify-center gap-2 rounded-card bg-obsidian px-4 py-8 text-center">
+          <p class="font-display text-feature-stat font-semibold">{{ stat.value }}</p>
+          <p class="text-body text-ash">{{ stat.label }}</p>
+        </div>
+      </div>
+    }
+  </div>
+</section>
+
+<section class="bg-linear-to-b from-carbon to-obsidian px-4 py-20 md:py-28"> <!-- Valeurs : fondu Carbon → noir -->
+  <div class="mx-auto max-w-6xl">
+    <div appReveal class="text-center">
+      <p class="font-display text-product-label font-semibold text-ash">Our values</p>
+      <h2 class="mt-2 font-display text-hero-product-name font-semibold md:text-section-title">What drives us.</h2>
+    </div>
+
+    <div class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      @for (value of values; track value.title) {
+        <div appReveal [revealDelay]="$index * 100">
+          <div class="group h-full rounded-card border border-transparent bg-obsidian p-8 transition duration-500 hover:-translate-y-1 hover:border-steel"> <!-- monte légèrement au survol -->
+            <div class="flex size-12 items-center justify-center rounded-full bg-carbon text-porcelain transition-colors duration-500 group-hover:bg-steel">
+              @switch (value.icon) {
+                @case ('eye') {
+                  <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                    <path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z" /><circle cx="12" cy="12" r="3" />
+                  </svg>
+                }
+                @case ('bolt') {
+                  <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                    <path stroke-linejoin="round" d="M13 2.5 4.5 13.5H12l-1 8 8.5-11H12l1-8Z" />
+                  </svg>
+                }
+                @case ('leaf') {
+                  <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                    <path d="M5 19c0-8 5-14 15-14 0 10-6 15-14 15" /><path stroke-linecap="round" d="M5 19 12 12" />
+                  </svg>
+                }
+                @case ('chat') {
+                  <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                    <path stroke-linejoin="round" d="M4 5.5h16v10H9l-5 4v-14Z" />
+                  </svg>
+                }
+              }
+            </div>
+            <h3 class="mt-6 font-display text-product-label font-semibold">{{ value.title }}</h3>
+            <p class="mt-2 text-body text-ash">{{ value.text }}</p>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<section class="px-4 py-20 md:py-28"> <!-- Histoire (frise) -->
+  <div class="mx-auto max-w-3xl">
+    <div appReveal class="text-center">
+      <p class="font-display text-product-label font-semibold text-ash">Our story</p>
+      <h2 class="mt-2 font-display text-hero-product-name font-semibold md:text-section-title">How we got here.</h2>
+    </div>
+
+    <ol class="relative mt-14 border-l border-steel">                                          <!-- ligne verticale de la frise -->
+      @for (milestone of milestones; track milestone.year) {
+        <li appReveal [revealDelay]="$index * 150" class="relative pb-12 pl-8 last:pb-0">
+          <span class="absolute top-1.5 -left-[5px] size-[9px] rounded-full bg-porcelain"></span> <!-- point sur la ligne -->
+          <p class="text-utility-nav font-semibold text-ash">{{ milestone.year }}</p>
+          <h3 class="mt-1 font-display text-product-label font-semibold">{{ milestone.title }}</h3>
+          <p class="mt-2 text-body text-ash">{{ milestone.text }}</p>
+        </li>
+      }
+    </ol>
+  </div>
+</section>
+
+<section class="border-y border-steel bg-graphite px-4 py-20 md:py-28"> <!-- Équipe -->
+  <div class="mx-auto max-w-6xl">
+    <div appReveal class="text-center">
+      <p class="font-display text-product-label font-semibold text-ash">Our team</p>
+      <h2 class="mt-2 font-display text-hero-product-name font-semibold md:text-section-title">The people behind the grid.</h2>
+    </div>
+
+    <div class="mt-12 grid grid-cols-2 gap-4 lg:grid-cols-4">
+      @for (member of team; track member.name) {
+        <div appReveal [revealDelay]="$index * 100">
+          <div class="flex h-full flex-col items-center rounded-card border border-steel bg-obsidian p-6 text-center transition duration-500 hover:-translate-y-1 hover:border-slate">
+            <div class="flex size-20 items-center justify-center rounded-full border border-steel bg-carbon font-display text-hero-product-name font-semibold text-porcelain"> <!-- avatar avec initiales -->
+              {{ initials(member.name) }}
+            </div>
+            <h3 class="mt-5 font-display text-product-label font-semibold">{{ member.name }}</h3>
+            <p class="mt-1 text-body text-ash">{{ member.role }}</p>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<section class="px-4 py-20 md:py-28"> <!-- Appel à l'action -->
+  <div appReveal class="mx-auto max-w-4xl rounded-card border border-steel bg-carbon px-6 py-14 text-center md:px-12 md:py-20">
+    <h2 class="font-display text-hero-product-name font-semibold md:text-section-title">Let's build something together.</h2>
+    <p class="mx-auto mt-4 max-w-lg text-section-nav text-ash">Questions about pricing, capacity or the right GPU for your project? Our team replies within one business day.</p>
+    <div class="mt-8 flex flex-wrap justify-center gap-3">
+      <a routerLink="/contact" class="btn-primary">Contact us</a>
+      <a routerLink="/gpus" class="btn-outline">Browse GPUs</a>
+    </div>
+  </div>
+</section>

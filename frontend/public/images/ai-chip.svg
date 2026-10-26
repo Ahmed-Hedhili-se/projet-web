@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" role="img" aria-label="AI processor with data flowing through its circuits">
+  <defs>
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">                     <!-- halo autour de la puce -->
+      <stop offset="0" stop-color="#f5f5f7" stop-opacity="0.14"/>
+      <stop offset="1" stop-color="#f5f5f7" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="die" x1="0" y1="0" x2="1" y2="1">                    <!-- surface de la puce -->
+      <stop offset="0" stop-color="#2c2c30"/>
+      <stop offset="1" stop-color="#0b0b0c"/>
+    </linearGradient>
+    <pattern id="pins-h" width="14" height="12" patternUnits="userSpaceOnUse"> <!-- broches horizontales -->
+      <rect x="4" width="6" height="12" rx="1" fill="#6e6e73"/>
+    </pattern>
+    <pattern id="pins-v" width="12" height="14" patternUnits="userSpaceOnUse"> <!-- broches verticales -->
+      <rect y="4" width="12" height="6" rx="1" fill="#6e6e73"/>
+    </pattern>
+    <g id="traces" fill="none">                                               <!-- pistes du circuit -->
+      <path d="M400 250 H470 L500 220 H560"/>
+      <path d="M400 300 H560"/>
+      <path d="M400 350 H470 L500 380 H560"/>
+      <path d="M200 250 H130 L100 220 H40"/>
+      <path d="M200 300 H40"/>
+      <path d="M200 350 H130 L100 380 H40"/>
+      <path d="M250 200 V130 L220 100 V40"/>
+      <path d="M300 200 V40"/>
+      <path d="M350 200 V130 L380 100 V40"/>
+      <path d="M250 400 V470 L220 500 V560"/>
+      <path d="M300 400 V560"/>
+      <path d="M350 400 V470 L380 500 V560"/>
+    </g>
+  </defs>
+
+  <circle cx="300" cy="300" r="290" fill="url(#glow)"/>                      <!-- halo -->
+
+  <use href="#traces" stroke="#333336" stroke-width="2"/>                     <!-- pistes au repos -->
+
+  <g fill="none" stroke="#f5f5f7" stroke-width="2" stroke-linecap="round" stroke-dasharray="16 600"> <!-- impulsions de données -->
+    <path d="M400 250 H470 L500 220 H560"><animate attributeName="stroke-dashoffset" values="16;-200" dur="2.6s" repeatCount="indefinite"/></path>
+    <path d="M400 300 H560"><animate attributeName="stroke-dashoffset" values="16;-200" dur="2.2s" begin="0.8s" repeatCount="indefinite"/></path>
+    <path d="M400 350 H470 L500 380 H560"><animate attributeName="stroke-dashoffset" values="16;-200" dur="3s" begin="1.4s" repeatCount="indefinite"/></path>
+    <path d="M200 250 H130 L100 220 H40"><animate attributeName="stroke-dashoffset" values="16;-200" dur="2.8s" begin="0.4s" repeatCount="indefinite"/></path>
+    <path d="M200 300 H40"><animate attributeName="stroke-dashoffset" values="16;-200" dur="2.4s" begin="1.8s" repeatCount="indefinite"/></path>
+    <path d="M200 350 H130 L100 380 H40"><animate attributeName="stroke-dashoffset" values="16;-200" dur="3.2s" begin="1s" repeatCount="indefinite"/></path>
+    <path d="M250 200 V130 L220 100 V40"><animate attributeName="stroke-dashoffset" values="16;-200" dur="2.7s" begin="0.2s" repeatCount="indefinite"/></path>
+    <path d="M350 200 V130 L380 100 V40"><animate attributeName="stroke-dashoffset" values="16;-200" dur="2.5s" begin="1.6s" repeatCount="indefinite"/></path>
+    <path d="M250 400 V470 L220 500 V560"><animate attributeName="stroke-dashoffset" values="16;-200" dur="2.9s" begin="0.6s" repeatCount="indefinite"/></path>
+    <path d="M350 400 V470 L380 500 V560"><animate attributeName="stroke-dashoffset" values="16;-200" dur="2.3s" begin="1.2s" repeatCount="indefinite"/></path>
+  </g>
+
+  <g fill="#0e0e0e" stroke="#6e6e73" stroke-width="1.5">                      <!-- pastilles au bout des pistes -->
+    <circle cx="560" cy="220" r="5"/><circle cx="560" cy="300" r="5"/><circle cx="560" cy="380" r="5"/>
+    <circle cx="40" cy="220" r="5"/><circle cx="40" cy="300" r="5"/><circle cx="40" cy="380" r="5"/>
+    <circle cx="220" cy="40" r="5"/><circle cx="300" cy="40" r="5"/><circle cx="380" cy="40" r="5"/>
+    <circle cx="220" cy="560" r="5"/><circle cx="300" cy="560" r="5"/><circle cx="380" cy="560" r="5"/>
+  </g>
+
+  <rect x="205" y="178" width="190" height="12" fill="url(#pins-h)"/>        <!-- broches du boîtier -->
+  <rect x="205" y="410" width="190" height="12" fill="url(#pins-h)"/>
+  <rect x="178" y="205" width="12" height="190" fill="url(#pins-v)"/>
+  <rect x="410" y="205" width="12" height="190" fill="url(#pins-v)"/>
+
+  <rect x="190" y="190" width="220" height="220" rx="18" fill="#1d1d1f" stroke="#333336" stroke-width="1.5"/> <!-- boîtier -->
+  <rect x="225" y="225" width="150" height="150" rx="10" fill="url(#die)" stroke="#333336"/> <!-- puce -->
+
+  <g fill="#f5f5f7" opacity="0.08">                                          <!-- cœurs de calcul (4 × 4) -->
+    <rect x="232" y="232" width="28" height="28" rx="4"/><rect x="268" y="232" width="28" height="28" rx="4"/><rect x="304" y="232" width="28" height="28" rx="4"/><rect x="340" y="232" width="28" height="28" rx="4"/>
+    <rect x="232" y="268" width="28" height="28" rx="4"/><rect x="268" y="268" width="28" height="28" rx="4"/><rect x="304" y="268" width="28" height="28" rx="4"/><rect x="340" y="268" width="28" height="28" rx="4"/>
+    <rect x="232" y="304" width="28" height="28" rx="4"/><rect x="268" y="304" width="28" height="28" rx="4"/><rect x="304" y="304" width="28" height="28" rx="4"/><rect x="340" y="304" width="28" height="28" rx="4"/>
+    <rect x="232" y="340" width="28" height="28" rx="4"/><rect x="268" y="340" width="28" height="28" rx="4"/><rect x="304" y="340" width="28" height="28" rx="4"/><rect x="340" y="340" width="28" height="28" rx="4"/>
+  </g>
+
+  <g fill="#f5f5f7">                                                          <!-- cœurs qui s'allument tour à tour -->
+    <rect x="268" y="232" width="28" height="28" rx="4" opacity="0"><animate attributeName="opacity" values="0;0.45;0" dur="2.4s" repeatCount="indefinite"/></rect>
+    <rect x="340" y="268" width="28" height="28" rx="4" opacity="0"><animate attributeName="opacity" values="0;0.45;0" dur="2.4s" begin="0.6s" repeatCount="indefinite"/></rect>
+    <rect x="232" y="304" width="28" height="28" rx="4" opacity="0"><animate attributeName="opacity" values="0;0.45;0" dur="2.4s" begin="1.2s" repeatCount="indefinite"/></rect>
+    <rect x="304" y="340" width="28" height="28" rx="4" opacity="0"><animate attributeName="opacity" values="0;0.45;0" dur="2.4s" begin="1.8s" repeatCount="indefinite"/></rect>
+    <rect x="304" y="268" width="28" height="28" rx="4" opacity="0"><animate attributeName="opacity" values="0;0.3;0" dur="3.1s" begin="0.3s" repeatCount="indefinite"/></rect>
+  </g>
+</svg>

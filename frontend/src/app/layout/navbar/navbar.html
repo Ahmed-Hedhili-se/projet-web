@@ -1,0 +1,80 @@
+<header class="sticky top-0 z-50 border-b border-steel/60 bg-obsidian/80 backdrop-blur-md [view-transition-name:site-header]"> <!-- barre fixée en haut, fond flouté, exclue de la transition de page -->
+  <nav class="mx-auto flex h-11 max-w-6xl items-center justify-between px-4" aria-label="Main navigation"> <!-- 44px de haut (DESIGN.md) -->
+
+    <a routerLink="/" (click)="closeMenu()" class="flex items-center gap-2 font-display text-product-label font-semibold text-porcelain"> <!-- logo -->
+      <svg class="size-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"> <!-- icône : grille 3 × 3 -->
+        <rect x="1" y="1" width="5" height="5" rx="1.5" />
+        <rect x="7.5" y="1" width="5" height="5" rx="1.5" opacity="0.6" />
+        <rect x="14" y="1" width="5" height="5" rx="1.5" />
+        <rect x="1" y="7.5" width="5" height="5" rx="1.5" opacity="0.6" />
+        <rect x="7.5" y="7.5" width="5" height="5" rx="1.5" />
+        <rect x="14" y="7.5" width="5" height="5" rx="1.5" opacity="0.6" />
+        <rect x="1" y="14" width="5" height="5" rx="1.5" />
+        <rect x="7.5" y="14" width="5" height="5" rx="1.5" opacity="0.6" />
+        <rect x="14" y="14" width="5" height="5" rx="1.5" />
+      </svg>
+      NeuroGrid
+    </a>
+
+    <ul class="hidden items-center gap-8 md:flex">        <!-- liens, visibles à partir de 768px -->
+      @for (link of links; track link.path) {
+        <li>
+          <a
+            [routerLink]="link.path"
+            routerLinkActive
+            [routerLinkActiveOptions]="{ exact: link.path === '/' }"
+            ariaCurrentWhenActive="page"
+            class="text-utility-nav text-white/80 transition-colors hover:text-porcelain aria-[current=page]:text-porcelain"
+          >{{ link.label }}</a>                           <!-- lien actif : aria-current="page", texte plus clair -->
+        </li>
+      }
+    </ul>
+
+    <div class="hidden items-center gap-3 md:flex">       <!-- boutons de compte, visibles à partir de 768px -->
+      <a routerLink="/login" class="btn-outline">Sign in</a>
+      <a routerLink="/register" class="btn-primary">Get started</a>
+    </div>
+
+    <button
+      type="button"
+      (click)="toggleMenu()"
+      class="flex size-11 items-center justify-center text-white/80 hover:text-porcelain md:hidden"
+      [attr.aria-expanded]="menuOpen()"
+      aria-controls="mobile-menu"
+      [attr.aria-label]="menuOpen() ? 'Close menu' : 'Open menu'"
+    >                                                      <!-- bouton du menu mobile -->
+      @if (menuOpen()) {
+        <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"> <!-- icône croix -->
+          <path stroke-linecap="round" d="M6 6l12 12M18 6L6 18" />
+        </svg>
+      } @else {
+        <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"> <!-- icône hamburger -->
+          <path stroke-linecap="round" d="M4 8h16M4 16h16" />
+        </svg>
+      }
+    </button>
+  </nav>
+
+  @if (menuOpen()) {
+    <div id="mobile-menu" class="border-t border-steel bg-obsidian px-4 pb-6 md:hidden"> <!-- menu mobile déplié -->
+      <ul class="flex flex-col py-2">
+        @for (link of links; track link.path) {
+          <li>
+            <a
+              [routerLink]="link.path"
+              (click)="closeMenu()"
+              routerLinkActive
+              [routerLinkActiveOptions]="{ exact: link.path === '/' }"
+              ariaCurrentWhenActive="page"
+              class="block border-b border-steel/60 py-3 text-section-nav font-medium text-white/80 aria-[current=page]:text-porcelain"
+            >{{ link.label }}</a>
+          </li>
+        }
+      </ul>
+      <div class="mt-6 flex gap-3">
+        <a routerLink="/login" (click)="closeMenu()" class="btn-outline flex-1">Sign in</a>
+        <a routerLink="/register" (click)="closeMenu()" class="btn-primary flex-1">Get started</a>
+      </div>
+    </div>
+  }
+</header>

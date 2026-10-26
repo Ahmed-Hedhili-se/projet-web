@@ -1,0 +1,7 @@
+<div class="flex min-h-screen flex-col">                   <!-- colonne sur toute la hauteur de l'écran -->
+  <app-navbar />                                           <!-- barre de navigation -->
+  <main class="flex-1">                                    <!-- prend l'espace restant : le footer reste en bas -->
+    <router-outlet />                                      <!-- la page de la route actuelle s'affiche ici -->
+  </main>
+  <app-footer />                                           <!-- pied de page -->
+</div>

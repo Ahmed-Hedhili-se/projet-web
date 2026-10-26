@@ -1,0 +1,184 @@
+<section class="overflow-hidden px-4 pt-20 text-center md:pt-28"> <!-- Hero : scène noire d'ouverture -->
+  <p class="animate-fade-up text-utility-nav font-semibold text-copper-new">New · H100 clusters available</p>
+  <p class="animate-fade-up mt-1 font-display text-hero-product-name font-semibold" style="animation-delay: 80ms">NeuroGrid Cloud</p>
+  <h1 class="animate-fade-up mx-auto mt-2 max-w-4xl font-display text-display-sm font-semibold md:text-display" style="animation-delay: 160ms">
+    Compute for every model.
+  </h1>
+  <p class="animate-fade-up mx-auto mt-5 max-w-xl text-section-nav text-ash" style="animation-delay: 240ms">
+    Rent data-center GPUs by the hour and find the right one for your AI workload in seconds.
+  </p>
+  <div class="animate-fade-up mt-8 flex flex-wrap items-center justify-center gap-3" style="animation-delay: 320ms"> <!-- capsule + boutons -->
+    <span class="capsule">From $0.69 / hour</span>
+    <a routerLink="/gpus" class="btn-primary">Explore GPUs</a>
+    <a routerLink="/recommend" class="btn-outline">Get a recommendation</a>
+  </div>
+  <div class="animate-fade-up mx-auto mt-10 max-w-4xl" style="animation-delay: 420ms">       <!-- apparition de l'image -->
+    <img
+      src="images/hero-gpu.svg"
+      alt="NeuroGrid NG-X 80 AI accelerator card"
+      width="960"
+      height="540"
+      fetchpriority="high"
+      class="animate-float h-auto w-full"
+    />                                                                                         <!-- flotte doucement -->
+  </div>
+</section>
+
+<section class="px-4 py-12 md:py-20"> <!-- Chiffres clés -->
+  <div class="mx-auto grid max-w-6xl grid-cols-2 gap-4 rounded-card bg-carbon p-4 md:grid-cols-4"> <!-- panneau Carbon, tuiles noires -->
+    @for (stat of stats; track stat.label) {
+      <div appReveal [revealDelay]="$index * 90">                                              <!-- apparition en cascade -->
+        <div class="flex h-full flex-col items-center justify-center gap-2 rounded-card bg-obsidian px-4 py-8 text-center">
+          <p class="font-display text-feature-stat font-semibold">{{ stat.value }}</p>
+          <p class="text-body text-ash">{{ stat.label }}</p>
+        </div>
+      </div>
+    }
+  </div>
+</section>
+
+<section class="bg-linear-to-b from-carbon to-obsidian px-4 py-20 md:py-28"> <!-- Points forts : fondu Carbon → noir (seul dégradé autorisé) -->
+  <div class="mx-auto max-w-6xl">
+    <div appReveal class="mx-auto max-w-2xl text-center">
+      <p class="font-display text-product-label font-semibold text-ash">Why NeuroGrid</p>
+      <h2 class="mt-2 font-display text-hero-product-name font-semibold md:text-section-title">Built for AI workloads.</h2>
+    </div>
+
+    <div class="mt-12 grid gap-4 md:grid-cols-3">
+      @for (feature of features; track feature.title) {
+        <div appReveal [revealDelay]="$index * 120">
+          <div class="group h-full rounded-card border border-transparent bg-obsidian p-8 transition duration-500 hover:-translate-y-1 hover:border-steel"> <!-- monte légèrement au survol -->
+            <div class="flex size-12 items-center justify-center rounded-full bg-carbon text-porcelain transition-colors duration-500 group-hover:bg-steel"> <!-- pastille de l'icône -->
+              @switch (feature.icon) {
+                @case ('target') {
+                  <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                    <circle cx="12" cy="12" r="9" /><circle cx="12" cy="12" r="5" /><circle cx="12" cy="12" r="1" fill="currentColor" />
+                  </svg>
+                }
+                @case ('clock') {
+                  <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                    <circle cx="12" cy="12" r="9" /><path stroke-linecap="round" d="M12 7v5l3 2" />
+                  </svg>
+                }
+                @case ('chip') {
+                  <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                    <rect x="6" y="6" width="12" height="12" rx="2" /><rect x="9.5" y="9.5" width="5" height="5" rx="1" />
+                    <path stroke-linecap="round" d="M9 3v3M15 3v3M9 18v3M15 18v3M3 9h3M3 15h3M18 9h3M18 15h3" />
+                  </svg>
+                }
+              }
+            </div>
+            <h3 class="mt-6 font-display text-product-label font-semibold">{{ feature.title }}</h3>
+            <p class="mt-2 text-body text-ash">{{ feature.text }}</p>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<section class="px-4 py-20 md:py-28"> <!-- Mise en avant de la recommandation -->
+  <div class="mx-auto grid max-w-6xl items-center gap-12 md:grid-cols-2">
+    <div appReveal>
+      <div class="overflow-hidden rounded-card border border-steel bg-obsidian">              <!-- cadre média arrondi, sans ombre -->
+        <img src="images/ai-chip.svg" alt="AI processor with data flowing through its circuits" width="600" height="600" loading="lazy" class="h-auto w-full" />
+      </div>
+    </div>
+
+    <div appReveal [revealDelay]="150">
+      <p class="font-display text-product-label font-semibold text-ash">GPU Recommendation</p>
+      <h2 class="mt-2 font-display text-hero-product-name font-semibold md:text-section-title">Not sure which GPU you need?</h2>
+      <p class="mt-4 text-section-nav text-ash">
+        Answer four questions about your model. We estimate the memory it needs and match it with the most cost-effective GPU.
+      </p>
+
+      <div class="mt-8 rounded-card bg-carbon p-6">                                           <!-- exemple de résultat (API.md) -->
+        <dl class="grid grid-cols-2 gap-x-6 gap-y-3 text-body">
+          <dt class="text-ash">Model type</dt><dd class="text-right">LLM</dd>
+          <dt class="text-ash">Parameters</dt><dd class="text-right">7 billion</dd>
+          <dt class="text-ash">Mode</dt><dd class="text-right">Inference</dd>
+          <dt class="text-ash">Budget</dt><dd class="text-right">$2.00 / hour</dd>
+        </dl>
+        <div class="mt-5 border-t border-steel pt-5">
+          <p class="text-utility-nav text-ash">Recommended · about 16.8 GB of VRAM needed</p>
+          <div class="mt-1 flex items-baseline justify-between gap-4">
+            <p class="font-display text-product-label font-semibold">NVIDIA RTX 4090 · 24 GB</p>
+            <p class="text-body text-porcelain">$0.69 / hour</p>
+          </div>
+        </div>
+      </div>
+
+      <a routerLink="/recommend" class="btn-primary mt-8">Try the recommender</a>
+    </div>
+  </div>
+</section>
+
+<section class="px-4 pb-20 md:pb-28"> <!-- GPU mis en avant -->
+  <div class="mx-auto max-w-6xl">
+    <div appReveal class="flex flex-wrap items-end justify-between gap-4">
+      <div>
+        <p class="font-display text-product-label font-semibold text-ash">Catalog</p>
+        <h2 class="mt-2 font-display text-hero-product-name font-semibold md:text-section-title">Featured GPUs.</h2>
+      </div>
+      <a routerLink="/gpus" class="text-link text-section-nav">View the full catalog ›</a>
+    </div>
+
+    <div class="mt-10 grid gap-4 md:grid-cols-3">
+      @for (gpu of featuredGpus; track gpu.name) {
+        <div appReveal [revealDelay]="$index * 120">
+          <article class="flex h-full flex-col rounded-card border border-steel bg-carbon p-6 transition duration-500 hover:-translate-y-1 hover:border-slate"> <!-- carte GPU -->
+            <p class="text-utility-nav text-ash">{{ gpu.useCase }}</p>
+            <h3 class="mt-1 font-display text-product-label font-semibold">{{ gpu.name }}</h3>
+            <p class="text-body text-ash">{{ gpu.architecture }}</p>
+
+            <div class="mt-6 grid grid-cols-2 gap-3">                                           <!-- caractéristiques -->
+              <div class="rounded-nav bg-obsidian p-4">
+                <p class="font-display text-feature-stat font-semibold">{{ gpu.vramGb }} GB</p>
+                <p class="mt-1 text-utility-nav text-ash">VRAM</p>
+              </div>
+              <div class="rounded-nav bg-obsidian p-4">
+                <p class="font-display text-feature-stat font-semibold">{{ gpu.fp16Tflops }}</p>
+                <p class="mt-1 text-utility-nav text-ash">FP16 TFLOPS</p>
+              </div>
+            </div>
+
+            <div class="mt-auto flex items-center justify-between pt-6">                       <!-- prix + lien, collés en bas -->
+              <p class="text-section-nav">{{ gpu.pricePerHour | currency: 'USD' }}<span class="text-body text-ash"> / hour</span></p>
+              <a routerLink="/gpus" class="btn-outline">Details</a>
+            </div>
+          </article>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<section class="border-y border-steel bg-graphite px-4 py-20 md:py-28"> <!-- Fonctionnement -->
+  <div class="mx-auto max-w-6xl">
+    <div appReveal class="text-center">
+      <p class="font-display text-product-label font-semibold text-ash">How it works</p>
+      <h2 class="mt-2 font-display text-hero-product-name font-semibold md:text-section-title">From idea to GPU in three steps.</h2>
+    </div>
+
+    <ol class="mt-14 grid gap-10 md:grid-cols-3">
+      @for (step of steps; track step.number) {
+        <li appReveal [revealDelay]="$index * 150" class="relative">
+          <p class="font-display text-section-title font-semibold text-steel">{{ step.number }}</p> <!-- grand numéro discret -->
+          <h3 class="mt-3 font-display text-product-label font-semibold">{{ step.title }}</h3>
+          <p class="mt-2 text-body text-ash">{{ step.text }}</p>
+        </li>
+      }
+    </ol>
+  </div>
+</section>
+
+<section class="px-4 py-20 md:py-28"> <!-- Appel à l'action -->
+  <div appReveal class="mx-auto max-w-4xl rounded-card border border-steel bg-carbon px-6 py-14 text-center md:px-12 md:py-20">
+    <h2 class="font-display text-hero-product-name font-semibold md:text-section-title">Ready to train your next model?</h2>
+    <p class="mx-auto mt-4 max-w-lg text-section-nav text-ash">Create a free account and book your first GPU in under a minute.</p>
+    <div class="mt-8 flex flex-wrap justify-center gap-3">
+      <a routerLink="/register" class="btn-primary">Create an account</a>
+      <a routerLink="/contact" class="btn-outline">Talk to our team</a>
+    </div>
+  </div>
+</section>
