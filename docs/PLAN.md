@@ -6,7 +6,7 @@
 
 Documents liés :
 - [API.md](API.md) — contrat de l'API (source de vérité pour le backend **et** le frontend)
-- [../DESIGN.md](../DESIGN.md) — référence visuelle du frontend
+- [DESIGN.md](DESIGN.md) — référence visuelle du frontend
 
 ---
 
@@ -324,7 +324,7 @@ La disponibilité n'est pas prise en compte dans la recommandation ; elle est v�
 
 Une étape à la fois, testée puis validée avant de passer à la suivante.
 
-### Backend — personne A (branche `backend`)
+### Backend — personne A
 | Étape | Contenu | Terminée quand… |
 |---|---|---|
 | B1 | `docker-compose.yml` (PostgreSQL + Redis), projet Express + TypeScript, Prisma, première migration, seed (GPU + admin), `GET /api/health` | `npm run dev` démarre, la base contient les GPU du seed |
@@ -335,7 +335,7 @@ Une étape à la fois, testée puis validée avant de passer à la suivante.
 | B6 | Profil et locations utilisateur (créer, lister, annuler) | Une location qui dépasse le stock → 409 |
 | B7 | Admin : stats, GPU, utilisateurs, locations, messages | Toutes les routes `/api/admin/*` répondent selon API.md |
 
-### Frontend — personne B (branche `frontend`)
+### Frontend — personne B
 | Étape | Contenu | Terminée quand… |
 |---|---|---|
 | F1 | Projet Angular (standalone, strict), Tailwind avec tokens de DESIGN.md, routes, Navbar, Footer, page 404 | `npm start` affiche le layout responsive |
@@ -354,9 +354,8 @@ qui respectent **exactement** le format de API.md.
 
 ## 10. Organisation Git
 
-- `main` : version stable, on n'y travaille jamais directement.
-- `backend` : branche de la personne A (dossier `backend/` et `docker-compose.yml`).
-- `frontend` : branche de la personne B (dossier `frontend/`).
-- Chacun ne modifie que son dossier. Fusion dans `main` par pull request, après relecture par l'autre personne.
+- Une seule branche : `main`. Chacun commite et pousse directement sur `main`.
+- Chacun ne modifie que son dossier : personne A → `backend/` et `docker-compose.yml`, personne B → `frontend/`.
+- Avant de pousser : `git pull --rebase origin main` pour récupérer le travail de l'autre personne.
 - Toute modification de `docs/API.md` est annoncée à l'autre personne **avant** d'être faite.
 - Messages de commit courts : `feat: ...`, `fix: ...`, `docs: ...`, `chore: ...`.

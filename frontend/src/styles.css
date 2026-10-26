@@ -8,7 +8,7 @@
   --color-slate: #6e6e73;                                  /* contours des champs, séparateurs */
   --color-ash: #86868b;                                    /* texte secondaire */
   --color-porcelain: #f5f5f7;                              /* texte principal sur fond sombre */
-  --color-apple-blue: #0071e3;                             /* boutons d'action principaux uniquement */
+  --color-action-blue: #0071e3;                            /* boutons d'action principaux uniquement */
   --color-electric-link: #2997ff;                          /* liens sur fond sombre */
   --color-cobalt-link: #0066cc;                            /* liens sur fond clair */
   --color-copper-new: #b64400;                             /* petites étiquettes « New » / statut */
@@ -79,7 +79,7 @@
   }
 
   :focus-visible {
-    outline: 1px solid var(--color-apple-blue);            /* contour bleu au clavier (DESIGN.md) */
+    outline: 1px solid var(--color-action-blue);           /* contour bleu au clavier (DESIGN.md) */
     outline-offset: 1px;
   }
 }
@@ -91,7 +91,7 @@
     justify-content: center;
     padding: 7px 14px;                                     /* taille compacte */
     border-radius: var(--radius-pill);
-    background-color: var(--color-apple-blue);
+    background-color: var(--color-action-blue);
     color: #ffffff;
     font-size: var(--text-utility-nav);
     line-height: 16px;
