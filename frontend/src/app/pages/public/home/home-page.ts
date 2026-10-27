@@ -1,10 +1,17 @@
 import { CurrencyPipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { ScrollText } from '../../../shared/components/scroll-text/scroll-text';
+import { SplitText } from '../../../shared/components/split-text/split-text';
+import { CountUp } from '../../../shared/directives/count-up';
 import { Reveal } from '../../../shared/directives/reveal';
+import { Tilt } from '../../../shared/directives/tilt';
 
-interface Stat {                                           // chiffre clé
-  value: string;
+interface Stat {                                           // chiffre clé animé (directive CountUp)
+  value: number;
+  decimals?: number;                                       // décimales affichées (0 par défaut)
+  prefix?: string;                                         // ex. "$"
+  suffix?: string;                                         // ex. "%"
   label: string;
 }
 
@@ -32,16 +39,23 @@ interface Step {                                           // étape du fonction
 
 @Component({
   selector: 'app-home-page',
-  imports: [RouterLink, CurrencyPipe, Reveal],
+  imports: [RouterLink, CurrencyPipe, Reveal, Tilt, CountUp, SplitText, ScrollText],
   templateUrl: './home-page.html',
 })
 export class HomePage {
   protected readonly stats: Stat[] = [
-    { value: '99.9%', label: 'Uptime SLA' },
-    { value: '< 60 s', label: 'From booking to ready' },
-    { value: '$0.69', label: 'Starting price per hour' },
-    { value: '24/7', label: 'Expert support' },
+    { value: 99.9, decimals: 1, suffix: '%', label: 'Uptime SLA' },
+    { value: 60, prefix: '< ', suffix: ' s', label: 'From booking to ready' },
+    { value: 0.69, decimals: 2, prefix: '$', label: 'Starting price per hour' },
+    { value: 24, suffix: '/7', label: 'Expert support' },
   ];
+
+  protected readonly marqueeGpus = [                       // noms affichés dans le bandeau défilant
+    'NVIDIA H100 80GB', 'AMD Instinct MI300X', 'NVIDIA A100 80GB', 'NVIDIA A100 40GB', 'NVIDIA RTX 4090', 'NVIDIA L4',
+  ];
+
+  protected readonly statement =                           // grande phrase qui s'éclaire en défilant
+    'Every AI model has a perfect GPU. NeuroGrid finds it in seconds, books it in one click, and bills only the hours you actually use.';
 
   protected readonly features: Feature[] = [
     {

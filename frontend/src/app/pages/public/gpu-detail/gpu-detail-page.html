@@ -28,20 +28,24 @@
     </div>
   } @else if (gpu(); as gpu) {
     <section class="mt-8 grid items-center gap-10 md:grid-cols-2">                    <!-- image + informations principales -->
-      <div class="animate-fade-up overflow-hidden rounded-card border border-steel bg-obsidian">
-        <img src="images/hero-gpu.svg" [alt]="gpu.name + ' illustration'" width="960" height="540" class="animate-float h-auto w-full" />
+      <div class="animate-fade-up">
+        <div appTilt [tiltMax]="3" class="overflow-hidden rounded-card border border-steel bg-obsidian transition duration-500 ease-out"> <!-- s'incline vers la souris -->
+          <img src="images/hero-gpu.svg" [alt]="gpu.name + ' illustration'" width="960" height="540" class="animate-float h-auto w-full" />
+        </div>
       </div>
 
-      <div class="animate-fade-up" style="animation-delay: 120ms">
-        <p class="font-display text-product-label font-semibold text-ash">{{ gpu.manufacturer }} · {{ gpu.architecture }}</p>
-        <h1 class="mt-2 font-display text-hero-product-name font-semibold md:text-section-title">{{ gpu.name }}</h1>
-        <p class="mt-4 text-section-nav text-ash">{{ gpu.description }}</p>
+      <div>
+        <p class="animate-fade-up font-display text-product-label font-semibold text-ash">{{ gpu.manufacturer }} · {{ gpu.architecture }}</p>
+        <h1 class="mt-2 font-display text-hero-product-name font-semibold md:text-section-title">
+          <app-split-text [text]="gpu.name" [delay]="120" />                                <!-- mots qui sortent du flou -->
+        </h1>
+        <p class="animate-fade-up mt-4 text-section-nav text-ash" style="animation-delay: 360ms">{{ gpu.description }}</p>
 
-        <p class="mt-6 font-display text-feature-stat font-semibold">
-          {{ gpu.pricePerHour | currency: 'USD' }}<span class="text-section-nav font-normal text-ash"> / hour per unit</span>
+        <p class="animate-fade-up mt-6 font-display text-feature-stat font-semibold" style="animation-delay: 440ms">
+          <span class="tabular-nums" [appCountUp]="gpu.pricePerHour" [countDecimals]="2" countPrefix="$"></span><span class="text-section-nav font-normal text-ash"> / hour per unit</span>
         </p>
 
-        <div class="mt-6 flex flex-wrap items-center gap-3">
+        <div class="animate-fade-up mt-6 flex flex-wrap items-center gap-3" style="animation-delay: 520ms"> <!-- capsule + boutons -->
           <span class="capsule">
             @if (gpu.availableUnits > 0) {
               {{ gpu.availableUnits }} of {{ gpu.totalUnits }} units available now
@@ -55,15 +59,15 @@
       </div>
     </section>
 
-    <section appReveal class="mt-16 rounded-card bg-carbon p-4">                       <!-- caractéristiques : panneau Carbon, tuiles noires -->
+    <section class="scroll-zoom mt-16 rounded-card bg-carbon p-4">                     <!-- caractéristiques : grandit en défilant -->
       <h2 class="sr-only">Specifications</h2>
       <div class="grid grid-cols-2 gap-4 md:grid-cols-4">
         <div class="rounded-card bg-obsidian px-4 py-8 text-center">
-          <p class="font-display text-feature-stat font-semibold">{{ gpu.vramGb }} GB</p>
+          <p class="font-display text-feature-stat font-semibold tabular-nums" [appCountUp]="gpu.vramGb" countSuffix=" GB"></p> <!-- chiffre qui défile -->
           <p class="mt-2 text-body text-ash">Memory (VRAM)</p>
         </div>
         <div class="rounded-card bg-obsidian px-4 py-8 text-center">
-          <p class="font-display text-feature-stat font-semibold">{{ gpu.fp16Tflops }}</p>
+          <p class="font-display text-feature-stat font-semibold tabular-nums" [appCountUp]="gpu.fp16Tflops" [countDecimals]="gpu.fp16Tflops % 1 === 0 ? 0 : 1"></p>
           <p class="mt-2 text-body text-ash">FP16 TFLOPS</p>
         </div>
         <div class="rounded-card bg-obsidian px-4 py-8 text-center">
@@ -71,20 +75,22 @@
           <p class="mt-2 text-body text-ash">Architecture</p>
         </div>
         <div class="rounded-card bg-obsidian px-4 py-8 text-center">
-          <p class="font-display text-feature-stat font-semibold">{{ gpu.totalUnits }}</p>
+          <p class="font-display text-feature-stat font-semibold tabular-nums" [appCountUp]="gpu.totalUnits"></p>
           <p class="mt-2 text-body text-ash">Units in our fleet</p>
         </div>
       </div>
     </section>
 
-    <section appReveal class="mt-16">                                                 <!-- exemples de coût -->
+    <section class="mt-16">                                                           <!-- exemples de coût -->
       <h2 class="font-display text-hero-product-name font-semibold">Estimated cost.</h2>
       <p class="mt-2 text-body text-ash">For one unit. The exact price is calculated when you book.</p>
       <div class="mt-6 grid gap-4 sm:grid-cols-3">
         @for (example of costExamples(); track example.hours) {
-          <div class="rounded-card border border-steel bg-carbon p-6">
-            <p class="text-utility-nav text-ash">{{ example.label }}</p>
-            <p class="mt-2 font-display text-feature-stat font-semibold">{{ example.cost | currency: 'USD' }}</p>
+          <div appReveal [revealDelay]="$index * 100">
+            <div appTilt class="rounded-card border border-steel bg-carbon p-6 transition duration-500 ease-out hover:border-slate"> <!-- s'incline vers la souris -->
+              <p class="text-utility-nav text-ash">{{ example.label }}</p>
+              <p class="mt-2 font-display text-feature-stat font-semibold tabular-nums" [appCountUp]="example.cost" [countDecimals]="2" countPrefix="$"></p>
+            </div>
           </div>
         }
       </div>

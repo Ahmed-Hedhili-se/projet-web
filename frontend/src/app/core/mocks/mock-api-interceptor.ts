@@ -3,16 +3,26 @@ import { Observable, delay, mergeMap, of, throwError, timer } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ApiError } from '../models/api-error';
 import { GpuListResponse } from '../models/gpu';
+import { RecommendationRequest } from '../models/recommendation';
 import { MOCK_GPUS } from './mock-gpus';
+import { mockRecommend } from './mock-recommendation';
 
 const NETWORK_DELAY_MS = 400;                              // simule le temps de réponse d'un vrai serveur
 
 export const mockApiInterceptor: HttpInterceptorFn = (req, next) => { // répond à la place du backend (environment.useMockApi)
-  if (req.method !== 'GET' || !req.url.startsWith(`${environment.apiUrl}/gpus`)) {
+  if (!req.url.startsWith(environment.apiUrl)) {
+    return next(req);                                      // requête vers un autre site : on n'y touche pas
+  }
+  const path = req.url.slice(environment.apiUrl.length);   // ex. "/gpus", "/gpus/3", "/recommendations"
+
+  if (req.method === 'POST' && path === '/recommendations') {
+    return recommend(req as HttpRequest<RecommendationRequest>); // POST /recommendations
+  }
+
+  if (req.method !== 'GET' || !path.startsWith('/gpus')) {
     return next(req);                                      // route pas encore simulée : la requête part normalement
   }
 
-  const path = req.url.slice(environment.apiUrl.length);   // ex. "/gpus" ou "/gpus/3"
   if (path === '/gpus') {
     return respond(listGpus(req.params));                  // GET /gpus
   }
@@ -59,8 +69,29 @@ function listGpus(params: HttpParams): GpuListResponse {   // reproduit les filt
   };
 }
 
-function respond<T>(body: T): Observable<HttpResponse<T>> { // réponse 200 après un petit délai
-  return of(new HttpResponse({ status: 200, body })).pipe(delay(NETWORK_DELAY_MS));
+function recommend(req: HttpRequest<RecommendationRequest>): Observable<HttpResponse<unknown>> {
+  const body = req.body;
+  const details: { field: string; message: string }[] = []; // erreurs de validation, comme Zod côté backend
+  if (!body || !['LLM', 'VISION', 'DIFFUSION', 'AUDIO', 'OTHER'].includes(body.modelType)) {
+    details.push({ field: 'modelType', message: 'Choose a model type.' });
+  }
+  if (!body || !(body.parametersBillions >= 0.01 && body.parametersBillions <= 2000)) {
+    details.push({ field: 'parametersBillions', message: 'Enter a number between 0.01 and 2000.' });
+  }
+  if (!body || !['TRAINING', 'INFERENCE'].includes(body.mode)) {
+    details.push({ field: 'mode', message: 'Choose training or inference.' });
+  }
+  if (!body || !(body.budgetPerHour > 0)) {
+    details.push({ field: 'budgetPerHour', message: 'Enter a budget greater than 0.' });
+  }
+  if (!body || details.length > 0) {
+    return fail(req, 400, { error: { code: 'VALIDATION_ERROR', message: 'Invalid request data.', details } });
+  }
+  return respond(mockRecommend(body, MOCK_GPUS), 900);     // délai plus long : laisse voir l'animation d'analyse
+}
+
+function respond<T>(body: T, delayMs = NETWORK_DELAY_MS): Observable<HttpResponse<T>> { // réponse 200 après un petit délai
+  return of(new HttpResponse({ status: 200, body })).pipe(delay(delayMs));
 }
 
 function fail(req: HttpRequest<unknown>, status: number, body: ApiError): Observable<never> { // erreur HTTP après un petit délai

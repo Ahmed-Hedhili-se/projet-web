@@ -1,4 +1,3 @@
-import { CurrencyPipe } from '@angular/common';
 import { Component, DestroyRef, OnInit, computed, inject, input, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
@@ -6,11 +5,14 @@ import { getErrorCode, getErrorMessage } from '../../../core/models/api-error';
 import { Gpu } from '../../../core/models/gpu';
 import { GpuService } from '../../../core/services/gpu-service';
 import { Alert } from '../../../shared/components/alert/alert';
+import { SplitText } from '../../../shared/components/split-text/split-text';
+import { CountUp } from '../../../shared/directives/count-up';
 import { Reveal } from '../../../shared/directives/reveal';
+import { Tilt } from '../../../shared/directives/tilt';
 
 @Component({
   selector: 'app-gpu-detail-page',
-  imports: [RouterLink, CurrencyPipe, Alert, Reveal],
+  imports: [RouterLink, Alert, Reveal, Tilt, CountUp, SplitText],
   templateUrl: './gpu-detail-page.html',
 })
 export class GpuDetailPage implements OnInit {

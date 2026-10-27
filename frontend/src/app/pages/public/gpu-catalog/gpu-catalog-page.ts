@@ -7,11 +7,12 @@ import { GpuService } from '../../../core/services/gpu-service';
 import { Alert } from '../../../shared/components/alert/alert';
 import { GpuCard } from '../../../shared/components/gpu-card/gpu-card';
 import { GpuFilters } from '../../../shared/components/gpu-filters/gpu-filters';
+import { SplitText } from '../../../shared/components/split-text/split-text';
 import { Reveal } from '../../../shared/directives/reveal';
 
 @Component({
   selector: 'app-gpu-catalog-page',
-  imports: [GpuCard, GpuFilters, Alert, Reveal],
+  imports: [GpuCard, GpuFilters, Alert, Reveal, SplitText],
   templateUrl: './gpu-catalog-page.html',
 })
 export class GpuCatalogPage implements OnInit {

@@ -64,6 +64,23 @@
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-10px); }                  /* monte de 10px au milieu de l'animation */
   }
+
+  --animate-blur-in: blur-in 1.1s var(--ease-out-expo) both; /* classe animate-blur-in : mot qui sort du flou */
+  --animate-grow-x: grow-x 1.4s var(--ease-out-expo) both; /* classe animate-grow-x : barre qui se remplit */
+  --animate-marquee: marquee 40s linear infinite;          /* classe animate-marquee : bandeau qui défile */
+
+  @keyframes blur-in {
+    from { opacity: 0; filter: blur(12px); transform: translateY(20px); } /* flou, invisible et plus bas */
+    to { opacity: 1; filter: blur(0); transform: translateY(0); }
+  }
+
+  @keyframes grow-x {
+    from { transform: scaleX(0); }                         /* barre vide (origine à gauche) */
+  }
+
+  @keyframes marquee {
+    to { transform: translateX(-50%); }                    /* la liste est doublée : -50 % = boucle parfaite */
+  }
 }
 
 @layer base {
@@ -205,6 +222,101 @@
     opacity: 1;
     transform: translateY(0);
   }
+
+  .reveal .animate-grow-x {
+    animation-play-state: paused;                          /* attend que le bloc parent soit visible */
+  }
+
+  .reveal.is-visible .animate-grow-x {
+    animation-play-state: running;                         /* démarre quand le bloc entre à l'écran */
+  }
+
+  .card-leave {                                            /* carte qui disparaît (animate.leave dans le catalogue) */
+    animation: card-out 0.3s ease both;
+  }
+
+  @keyframes card-out {
+    to { opacity: 0; transform: scale(0.96); }
+  }
+
+  .result-enter {                                          /* bloc de résultat qui arrive (animate.enter) */
+    animation: blur-in 0.9s var(--ease-out-expo) both;
+  }
+
+  .marquee {                                               /* bandeau défilant : bords qui s'estompent */
+    overflow: hidden;
+    mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent); /* masque de transparence, pas une couleur */
+  }
+
+  .marquee:hover .animate-marquee {
+    animation-play-state: paused;                          /* pause au survol */
+  }
+
+  .form-range {                                            /* curseur (budget) */
+    width: 100%;
+    accent-color: var(--color-action-blue);                /* poignée et piste en bleu d'action */
+    cursor: pointer;
+  }
+}
+
+@supports (animation-timeline: view()) {                   /* animations pilotées par le défilement (Chrome, Edge, Safari récents) */
+  .scroll-zoom {                                           /* image qui grandit en entrant à l'écran */
+    animation: scroll-zoom linear both;
+    animation-timeline: view();                            /* progression = position de l'élément dans l'écran */
+    animation-range: entry 0% cover 45%;
+  }
+
+  .scroll-parallax {                                       /* élément qui défile un peu moins vite que la page */
+    animation: scroll-parallax linear both;
+    animation-timeline: view();
+  }
+
+  .scroll-highlight {                                      /* élément qui s'illumine au centre de l'écran */
+    animation: scroll-highlight linear both;
+    animation-timeline: view();
+    animation-range: cover 10% cover 90%;
+  }
+
+  .scroll-draw-y {                                         /* ligne verticale qui se dessine en défilant */
+    transform-origin: top;
+    animation: scroll-draw-y linear both;
+    animation-timeline: view();
+    animation-range: entry 40% cover 60%;
+  }
+
+  .scroll-text {                                           /* paragraphe dont les mots s'éclairent un à un (ScrollText) */
+    view-timeline-name: --scroll-text;                     /* une frise de défilement partagée par tous ses mots */
+  }
+
+  .scroll-word {
+    animation: scroll-word linear both;
+    animation-timeline: --scroll-text;
+    animation-range: cover var(--word-start) cover var(--word-end); /* chaque mot s'éclaire à son tour */
+  }
+
+  @keyframes scroll-zoom {
+    from { opacity: 0.3; transform: scale(0.86); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  @keyframes scroll-parallax {
+    from { transform: translateY(48px); }
+    to { transform: translateY(-48px); }
+  }
+
+  @keyframes scroll-highlight {
+    0%, 100% { opacity: 0.25; }                            /* discret en haut et en bas de l'écran */
+    35%, 65% { opacity: 1; }                               /* pleinement visible au centre */
+  }
+
+  @keyframes scroll-draw-y {
+    from { transform: scaleY(0); }
+  }
+
+  @keyframes scroll-word {
+    from { color: var(--color-steel); }                    /* mot éteint */
+    to { color: var(--color-porcelain); }                  /* mot allumé */
+  }
 }
 
 ::view-transition-old(root) {                              /* transition entre les pages (withViewTransitions dans app.config.ts) */
@@ -240,5 +352,14 @@
   ::view-transition-old(root),
   ::view-transition-new(root) {
     animation: none;                                       /* pas de transition entre les pages */
+  }
+
+  .scroll-zoom,
+  .scroll-parallax,
+  .scroll-highlight,
+  .scroll-draw-y,
+  .scroll-word,
+  .animate-marquee {
+    animation: none !important;                            /* pas d'effet lié au défilement ni de bandeau défilant */
   }
 }

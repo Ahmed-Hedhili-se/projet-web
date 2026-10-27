@@ -24,7 +24,11 @@ export const routes: Routes = [
     title: 'GPU details | NeuroGrid',
     loadComponent: () => import('./pages/public/gpu-detail/gpu-detail-page').then((m) => m.GpuDetailPage),
   },
-  { path: 'recommend', title: 'GPU recommendation | NeuroGrid', loadComponent: comingSoon, data: { heading: 'GPU recommendation' } }, // F4
+  {
+    path: 'recommend',
+    title: 'GPU recommendation | NeuroGrid',
+    loadComponent: () => import('./pages/public/recommend/recommend-page').then((m) => m.RecommendPage),
+  },
   { path: 'contact', title: 'Contact | NeuroGrid', loadComponent: comingSoon, data: { heading: 'Contact' } },              // F5
   { path: 'login', title: 'Sign in | NeuroGrid', loadComponent: comingSoon, data: { heading: 'Sign in' } },                // F6
   { path: 'register', title: 'Create an account | NeuroGrid', loadComponent: comingSoon, data: { heading: 'Create an account' } }, // F6

@@ -1,0 +1,1 @@
+@for (word of words(); track $index) {<span class="animate-blur-in inline-block" [style.animation-delay.ms]="delay() + $index * stagger()">{{ word }}</span>{{ $last ? '' : ' ' }}} <!-- inline-block : nécessaire pour le déplacement ; espace entre les mots (sur une ligne pour éviter les espaces en trop) -->

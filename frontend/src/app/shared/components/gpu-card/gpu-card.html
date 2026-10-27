@@ -1,4 +1,4 @@
-<article class="group flex h-full flex-col overflow-hidden rounded-card border border-steel bg-carbon transition duration-500 hover:-translate-y-1 hover:border-slate"> <!-- monte légèrement au survol -->
+<article appTilt class="group flex h-full flex-col overflow-hidden rounded-card border border-steel bg-carbon transition duration-500 ease-out hover:-translate-y-1 hover:border-slate"> <!-- monte et s'incline vers la souris -->
   <a [routerLink]="['/gpus', gpu().id]" class="block overflow-hidden bg-obsidian" tabindex="-1" aria-hidden="true"> <!-- image cliquable (le titre suffit au clavier) -->
     <img
       src="images/hero-gpu.svg"

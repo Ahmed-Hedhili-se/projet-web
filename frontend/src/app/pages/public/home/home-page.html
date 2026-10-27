@@ -1,26 +1,42 @@
 <section class="overflow-hidden px-4 pt-20 text-center md:pt-28"> <!-- Hero : scène noire d'ouverture -->
   <p class="animate-fade-up text-utility-nav font-semibold text-copper-new">New · H100 clusters available</p>
   <p class="animate-fade-up mt-1 font-display text-hero-product-name font-semibold" style="animation-delay: 80ms">NeuroGrid Cloud</p>
-  <h1 class="animate-fade-up mx-auto mt-2 max-w-4xl font-display text-display-sm font-semibold md:text-display" style="animation-delay: 160ms">
-    Compute for every model.
+  <h1 class="mx-auto mt-2 max-w-4xl font-display text-display-sm font-semibold md:text-display">
+    <app-split-text text="Compute for every model." [delay]="160" />                       <!-- mots qui sortent du flou -->
   </h1>
-  <p class="animate-fade-up mx-auto mt-5 max-w-xl text-section-nav text-ash" style="animation-delay: 240ms">
+  <p class="animate-fade-up mx-auto mt-5 max-w-xl text-section-nav text-ash" style="animation-delay: 520ms">
     Rent data-center GPUs by the hour and find the right one for your AI workload in seconds.
   </p>
-  <div class="animate-fade-up mt-8 flex flex-wrap items-center justify-center gap-3" style="animation-delay: 320ms"> <!-- capsule + boutons -->
+  <div class="animate-fade-up mt-8 flex flex-wrap items-center justify-center gap-3" style="animation-delay: 620ms"> <!-- capsule + boutons -->
     <span class="capsule">From $0.69 / hour</span>
     <a routerLink="/gpus" class="btn-primary">Explore GPUs</a>
     <a routerLink="/recommend" class="btn-outline">Get a recommendation</a>
   </div>
-  <div class="animate-fade-up mx-auto mt-10 max-w-4xl" style="animation-delay: 420ms">       <!-- apparition de l'image -->
-    <img
-      src="images/hero-gpu.svg"
-      alt="NeuroGrid NG-X 80 AI accelerator card"
-      width="960"
-      height="540"
-      fetchpriority="high"
-      class="animate-float h-auto w-full"
-    />                                                                                         <!-- flotte doucement -->
+  <div class="animate-fade-up mx-auto mt-10 max-w-4xl" style="animation-delay: 720ms">       <!-- apparition de l'image -->
+    <div class="scroll-parallax">                                                              <!-- défile un peu moins vite que la page -->
+      <img
+        src="images/hero-gpu.svg"
+        alt="NeuroGrid NG-X 80 AI accelerator card"
+        width="960"
+        height="540"
+        fetchpriority="high"
+        class="animate-float h-auto w-full"
+      />                                                                                       <!-- flotte doucement -->
+    </div>
+  </div>
+</section>
+
+<section class="marquee border-y border-steel/60 py-6" aria-label="GPUs available on NeuroGrid"> <!-- Bandeau défilant -->
+  <div class="animate-marquee flex w-max gap-12">                                             <!-- piste plus large que l'écran -->
+    @for (copy of [1, 2]; track copy) {                                                        <!-- liste doublée pour une boucle sans saut -->
+      <ul class="flex shrink-0 gap-12" [attr.aria-hidden]="copy === 2">
+        @for (name of marqueeGpus; track name) {
+          <li class="flex items-center gap-12 whitespace-nowrap font-display text-hero-product-name font-semibold text-steel">
+            {{ name }} <span class="size-1.5 rounded-full bg-steel" aria-hidden="true"></span>
+          </li>
+        }
+      </ul>
+    }
   </div>
 </section>
 
@@ -29,12 +45,24 @@
     @for (stat of stats; track stat.label) {
       <div appReveal [revealDelay]="$index * 90">                                              <!-- apparition en cascade -->
         <div class="flex h-full flex-col items-center justify-center gap-2 rounded-card bg-obsidian px-4 py-8 text-center">
-          <p class="font-display text-feature-stat font-semibold">{{ stat.value }}</p>
+          <p
+            class="font-display text-feature-stat font-semibold tabular-nums"
+            [appCountUp]="stat.value"
+            [countDecimals]="stat.decimals ?? 0"
+            [countPrefix]="stat.prefix ?? ''"
+            [countSuffix]="stat.suffix ?? ''"
+          ></p>                                                                                <!-- chiffre qui défile jusqu'à sa valeur -->
           <p class="text-body text-ash">{{ stat.label }}</p>
         </div>
       </div>
     }
   </div>
+</section>
+
+<section class="px-4 py-20 md:py-32"> <!-- Grande phrase qui s'éclaire au défilement -->
+  <p class="mx-auto max-w-4xl font-display text-hero-product-name font-semibold md:text-section-title">
+    <app-scroll-text [text]="statement" />
+  </p>
 </section>
 
 <section class="bg-linear-to-b from-carbon to-obsidian px-4 py-20 md:py-28"> <!-- Points forts : fondu Carbon → noir (seul dégradé autorisé) -->
@@ -47,8 +75,8 @@
     <div class="mt-12 grid gap-4 md:grid-cols-3">
       @for (feature of features; track feature.title) {
         <div appReveal [revealDelay]="$index * 120">
-          <div class="group h-full rounded-card border border-transparent bg-obsidian p-8 transition duration-500 hover:-translate-y-1 hover:border-steel"> <!-- monte légèrement au survol -->
-            <div class="flex size-12 items-center justify-center rounded-full bg-carbon text-porcelain transition-colors duration-500 group-hover:bg-steel"> <!-- pastille de l'icône -->
+          <div appTilt class="group h-full rounded-card border border-transparent bg-obsidian p-8 transition duration-500 ease-out hover:-translate-y-1 hover:border-steel"> <!-- s'incline vers la souris -->
+            <div class="flex size-12 items-center justify-center rounded-full bg-carbon text-porcelain transition duration-500 group-hover:scale-110 group-hover:bg-steel"> <!-- pastille qui grossit au survol -->
               @switch (feature.icon) {
                 @case ('target') {
                   <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
@@ -79,7 +107,7 @@
 
 <section class="px-4 py-20 md:py-28"> <!-- Mise en avant de la recommandation -->
   <div class="mx-auto grid max-w-6xl items-center gap-12 md:grid-cols-2">
-    <div appReveal>
+    <div class="scroll-zoom">                                                                  <!-- grandit en entrant à l'écran -->
       <div class="overflow-hidden rounded-card border border-steel bg-obsidian">              <!-- cadre média arrondi, sans ombre -->
         <img src="images/ai-chip.svg" alt="AI processor with data flowing through its circuits" width="600" height="600" loading="lazy" class="h-auto w-full" />
       </div>
@@ -101,7 +129,12 @@
         </dl>
         <div class="mt-5 border-t border-steel pt-5">
           <p class="text-utility-nav text-ash">Recommended · about 16.8 GB of VRAM needed</p>
-          <div class="mt-1 flex items-baseline justify-between gap-4">
+          <div class="mt-3 h-2 overflow-hidden rounded-pill bg-obsidian">                    <!-- jauge mémoire : 16.8 Go sur 24 Go -->
+            <div appReveal class="h-full">
+              <div class="animate-grow-x h-full w-[70%] origin-left rounded-pill bg-porcelain"></div>
+            </div>
+          </div>
+          <div class="mt-3 flex items-baseline justify-between gap-4">
             <p class="font-display text-product-label font-semibold">NVIDIA RTX 4090 · 24 GB</p>
             <p class="text-body text-porcelain">$0.69 / hour</p>
           </div>
@@ -126,18 +159,18 @@
     <div class="mt-10 grid gap-4 md:grid-cols-3">
       @for (gpu of featuredGpus; track gpu.name) {
         <div appReveal [revealDelay]="$index * 120">
-          <article class="flex h-full flex-col rounded-card border border-steel bg-carbon p-6 transition duration-500 hover:-translate-y-1 hover:border-slate"> <!-- carte GPU -->
+          <article appTilt class="flex h-full flex-col rounded-card border border-steel bg-carbon p-6 transition duration-500 ease-out hover:-translate-y-1 hover:border-slate"> <!-- carte GPU qui s'incline -->
             <p class="text-utility-nav text-ash">{{ gpu.useCase }}</p>
             <h3 class="mt-1 font-display text-product-label font-semibold">{{ gpu.name }}</h3>
             <p class="text-body text-ash">{{ gpu.architecture }}</p>
 
             <div class="mt-6 grid grid-cols-2 gap-3">                                           <!-- caractéristiques -->
               <div class="rounded-nav bg-obsidian p-4">
-                <p class="font-display text-feature-stat font-semibold">{{ gpu.vramGb }} GB</p>
+                <p class="font-display text-feature-stat font-semibold tabular-nums" [appCountUp]="gpu.vramGb" countSuffix=" GB"></p>
                 <p class="mt-1 text-utility-nav text-ash">VRAM</p>
               </div>
               <div class="rounded-nav bg-obsidian p-4">
-                <p class="font-display text-feature-stat font-semibold">{{ gpu.fp16Tflops }}</p>
+                <p class="font-display text-feature-stat font-semibold tabular-nums" [appCountUp]="gpu.fp16Tflops" [countDecimals]="gpu.fp16Tflops % 1 === 0 ? 0 : 1"></p>
                 <p class="mt-1 text-utility-nav text-ash">FP16 TFLOPS</p>
               </div>
             </div>
@@ -153,17 +186,18 @@
   </div>
 </section>
 
-<section class="border-y border-steel bg-graphite px-4 py-20 md:py-28"> <!-- Fonctionnement -->
-  <div class="mx-auto max-w-6xl">
-    <div appReveal class="text-center">
+<section class="border-y border-steel bg-graphite px-4 py-20 md:py-28"> <!-- Fonctionnement : titre collant + étapes qui s'illuminent -->
+  <div class="mx-auto grid max-w-6xl gap-10 md:grid-cols-2 md:gap-16">
+    <div class="md:sticky md:top-32 md:self-start">                                          <!-- reste en place pendant le défilement -->
       <p class="font-display text-product-label font-semibold text-ash">How it works</p>
       <h2 class="mt-2 font-display text-hero-product-name font-semibold md:text-section-title">From idea to GPU in three steps.</h2>
+      <p class="mt-4 max-w-sm text-section-nav text-ash">No contract, no setup fees. Describe, book, compute.</p>
     </div>
 
-    <ol class="mt-14 grid gap-10 md:grid-cols-3">
+    <ol class="flex flex-col gap-6 md:gap-24 md:py-16">
       @for (step of steps; track step.number) {
-        <li appReveal [revealDelay]="$index * 150" class="relative">
-          <p class="font-display text-section-title font-semibold text-steel">{{ step.number }}</p> <!-- grand numéro discret -->
+        <li class="scroll-highlight rounded-card border border-steel bg-obsidian p-8">         <!-- s'illumine au centre de l'écran -->
+          <p class="font-display text-section-title font-semibold text-steel">{{ step.number }}</p>
           <h3 class="mt-3 font-display text-product-label font-semibold">{{ step.title }}</h3>
           <p class="mt-2 text-body text-ash">{{ step.text }}</p>
         </li>
@@ -173,7 +207,7 @@
 </section>
 
 <section class="px-4 py-20 md:py-28"> <!-- Appel à l'action -->
-  <div appReveal class="mx-auto max-w-4xl rounded-card border border-steel bg-carbon px-6 py-14 text-center md:px-12 md:py-20">
+  <div class="scroll-zoom mx-auto max-w-4xl rounded-card border border-steel bg-carbon px-6 py-14 text-center md:px-12 md:py-20"> <!-- grandit en entrant à l'écran -->
     <h2 class="font-display text-hero-product-name font-semibold md:text-section-title">Ready to train your next model?</h2>
     <p class="mx-auto mt-4 max-w-lg text-section-nav text-ash">Create a free account and book your first GPU in under a minute.</p>
     <div class="mt-8 flex flex-wrap justify-center gap-3">
