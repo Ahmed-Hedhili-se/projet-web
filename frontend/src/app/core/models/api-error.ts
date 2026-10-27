@@ -21,6 +21,13 @@ export function getErrorMessage(err: unknown): string {    // transforme une err
   return 'Something went wrong. Please try again.';
 }
 
+export function getErrorDetails(err: unknown): { field: string; message: string }[] { // erreurs par champ (VALIDATION_ERROR)
+  if (err instanceof HttpErrorResponse) {
+    return (err.error as ApiError | null)?.error?.details ?? [];
+  }
+  return [];
+}
+
 export function getErrorCode(err: unknown): string | null { // code d'erreur de l'API, ex. "GPU_NOT_FOUND"
   if (err instanceof HttpErrorResponse) {
     return (err.error as ApiError | null)?.error?.code ?? null;

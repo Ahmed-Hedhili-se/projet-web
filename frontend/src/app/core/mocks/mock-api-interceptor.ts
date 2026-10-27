@@ -2,6 +2,9 @@ import { HttpErrorResponse, HttpInterceptorFn, HttpParams, HttpRequest, HttpResp
 import { Observable, delay, mergeMap, of, throwError, timer } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ApiError } from '../models/api-error';
+import { ContactRequest } from '../models/contact';
+import { LoginRequest } from '../models/user';
+import { MOCK_ACCOUNTS, mockTokenFor } from './mock-users';
 import { GpuListResponse } from '../models/gpu';
 import { RecommendationRequest } from '../models/recommendation';
 import { MOCK_GPUS } from './mock-gpus';
@@ -17,6 +20,18 @@ export const mockApiInterceptor: HttpInterceptorFn = (req, next) => { // répond
 
   if (req.method === 'POST' && path === '/recommendations') {
     return recommend(req as HttpRequest<RecommendationRequest>); // POST /recommendations
+  }
+
+  if (req.method === 'POST' && path === '/contact') {
+    return contact(req as HttpRequest<ContactRequest>);    // POST /contact
+  }
+
+  if (req.method === 'POST' && path === '/auth/login') {
+    return login(req as HttpRequest<LoginRequest>);        // POST /auth/login
+  }
+
+  if (req.method === 'GET' && path === '/auth/me') {
+    return me(req);                                        // GET /auth/me
   }
 
   if (req.method !== 'GET' || !path.startsWith('/gpus')) {
@@ -90,8 +105,78 @@ function recommend(req: HttpRequest<RecommendationRequest>): Observable<HttpResp
   return respond(mockRecommend(body, MOCK_GPUS), 900);     // délai plus long : laisse voir l'animation d'analyse
 }
 
-function respond<T>(body: T, delayMs = NETWORK_DELAY_MS): Observable<HttpResponse<T>> { // réponse 200 après un petit délai
-  return of(new HttpResponse({ status: 200, body })).pipe(delay(delayMs));
+const MAX_LOGIN_FAILURES = 5;                              // docs/API.md : 5 échecs max (le vrai backend utilise Redis, par IP + email, sur 15 min)
+const loginFailures = new Map<string, number>();           // nombre d'échecs par email, en mémoire
+
+function login(req: HttpRequest<LoginRequest>): Observable<HttpResponse<unknown>> {
+  const email = (req.body?.email ?? '').trim().toLowerCase();
+  const password = req.body?.password ?? '';
+  const details: { field: string; message: string }[] = [];
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    details.push({ field: 'email', message: 'Invalid email address.' });
+  }
+  if (password.length === 0) {
+    details.push({ field: 'password', message: 'Enter your password.' });
+  }
+  if (details.length > 0) {
+    return fail(req, 400, { error: { code: 'VALIDATION_ERROR', message: 'Invalid request data.', details } });
+  }
+
+  if ((loginFailures.get(email) ?? 0) >= MAX_LOGIN_FAILURES) {
+    return fail(req, 429, { error: { code: 'TOO_MANY_ATTEMPTS', message: 'Too many failed attempts. Please try again in 15 minutes.' } });
+  }
+
+  const account = MOCK_ACCOUNTS.find((item) => item.user.email === email);
+  if (!account || account.password !== password) {
+    loginFailures.set(email, (loginFailures.get(email) ?? 0) + 1); // un échec de plus pour cet email
+    return fail(req, 401, { error: { code: 'INVALID_CREDENTIALS', message: 'Invalid email or password.' } });
+  }
+  if (account.user.isBlocked) {
+    return fail(req, 403, { error: { code: 'ACCOUNT_BLOCKED', message: 'Your account has been blocked. Please contact our support team.' } });
+  }
+
+  loginFailures.delete(email);                             // connexion réussie : le compteur repart à zéro
+  return respond({ token: mockTokenFor(account.user), user: { ...account.user } }, 700);
+}
+
+function me(req: HttpRequest<unknown>): Observable<HttpResponse<unknown>> {
+  const token = req.headers.get('Authorization')?.replace('Bearer ', '');  // header ajouté par authInterceptor
+  const account = MOCK_ACCOUNTS.find((item) => mockTokenFor(item.user) === token);
+  if (!account) {
+    return fail(req, 401, { error: { code: 'UNAUTHORIZED', message: 'Please sign in again.' } });
+  }
+  if (account.user.isBlocked) {
+    return fail(req, 403, { error: { code: 'ACCOUNT_BLOCKED', message: 'Your account has been blocked. Please contact our support team.' } });
+  }
+  return respond({ user: { ...account.user } });
+}
+
+let nextContactId = 13;                                    // les messages fictifs continuent après l'exemple n° 12 de docs/API.md
+
+function contact(req: HttpRequest<ContactRequest>): Observable<HttpResponse<unknown>> {
+  const body = req.body;
+  const details: { field: string; message: string }[] = []; // mêmes règles que docs/API.md
+  const length = (value: unknown) => (typeof value === 'string' ? value.trim().length : 0);
+  if (length(body?.name) < 1 || length(body?.name) > 100) {
+    details.push({ field: 'name', message: 'Enter your name (100 characters max).' });
+  }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(body?.email ?? '')) {
+    details.push({ field: 'email', message: 'Invalid email address.' });
+  }
+  if (length(body?.subject) < 1 || length(body?.subject) > 150) {
+    details.push({ field: 'subject', message: 'Enter a subject (150 characters max).' });
+  }
+  if (length(body?.message) < 10 || length(body?.message) > 2000) {
+    details.push({ field: 'message', message: 'Your message must be between 10 and 2000 characters.' });
+  }
+  if (details.length > 0) {
+    return fail(req, 400, { error: { code: 'VALIDATION_ERROR', message: 'Invalid request data.', details } });
+  }
+  return respond({ success: true, id: nextContactId++ }, 700, 201); // 201 = message créé
+}
+
+function respond<T>(body: T, delayMs = NETWORK_DELAY_MS, status = 200): Observable<HttpResponse<T>> { // réponse après un petit délai
+  return of(new HttpResponse({ status, body })).pipe(delay(delayMs));
 }
 
 function fail(req: HttpRequest<unknown>, status: number, body: ApiError): Observable<never> { // erreur HTTP après un petit délai

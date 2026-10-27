@@ -1,9 +1,12 @@
 import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
-import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
+import { ApplicationConfig, inject, provideAppInitializer, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { provideRouter, withComponentInputBinding, withInMemoryScrolling, withViewTransitions } from '@angular/router';
 import { environment } from '../environments/environment';
 import { routes } from './app.routes';
+import { authInterceptor } from './core/interceptors/auth-interceptor';
+import { errorInterceptor } from './core/interceptors/error-interceptor';
 import { mockApiInterceptor } from './core/mocks/mock-api-interceptor';
+import { AuthService } from './core/services/auth-service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -16,7 +19,12 @@ export const appConfig: ApplicationConfig = {
     ),
     provideHttpClient(
       withFetch(),                                         // utilise l'API fetch du navigateur
-      withInterceptors(environment.useMockApi ? [mockApiInterceptor] : []), // données fictives tant que le backend n'est pas prêt
+      withInterceptors([
+        authInterceptor,                                   // 1. ajoute le token
+        errorInterceptor,                                  // 2. gère la session expirée (401)
+        ...(environment.useMockApi ? [mockApiInterceptor] : []), // 3. données fictives, en dernier pour voir le token
+      ]),
     ),
+    provideAppInitializer(() => inject(AuthService).restoreSession()), // vérifie la session avant d'afficher l'application
   ],
 };

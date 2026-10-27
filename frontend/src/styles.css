@@ -81,6 +81,28 @@
   @keyframes marquee {
     to { transform: translateX(-50%); }                    /* la liste est doublée : -50 % = boucle parfaite */
   }
+
+  --animate-draw: draw 0.8s var(--ease-out-expo) 0.35s both; /* classe animate-draw : trait SVG qui se dessine (pathLength="1") */
+  --animate-pop-in: pop-in 0.6s var(--ease-out-expo) both; /* classe animate-pop-in : apparition avec léger rebond */
+
+  @keyframes draw {
+    from { stroke-dasharray: 1; stroke-dashoffset: 1; }    /* trait caché */
+    to { stroke-dasharray: 1; stroke-dashoffset: 0; }      /* trait entièrement dessiné */
+  }
+
+  --animate-shake: shake 0.5s ease both;                   /* classe animate-shake : secousse (identifiants incorrects) */
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-8px); }              /* gauche… */
+    40%, 80% { transform: translateX(8px); }               /* …droite */
+  }
+
+  @keyframes pop-in {
+    0% { opacity: 0; transform: scale(0.6); }
+    70% { opacity: 1; transform: scale(1.06); }            /* dépasse un peu… */
+    100% { opacity: 1; transform: scale(1); }              /* …puis revient à sa taille */
+  }
 }
 
 @layer base {
@@ -239,6 +261,34 @@
     to { opacity: 0; transform: scale(0.96); }
   }
 
+  .site-grid {                                             /* image de fond du site (SiteBackground) */
+    background-image: url('/images/background-grid.svg');  /* motif de 64 × 64 px répété */
+    background-size: 64px 64px;
+    animation: grid-drift 24s linear infinite;             /* glisse lentement en diagonale */
+  }
+
+  @keyframes grid-drift {
+    to { transform: translate(64px, 64px); }               /* une case entière : la boucle est invisible */
+  }
+
+  .site-vignette {                                         /* assombrit les bords de l'écran */
+    background: radial-gradient(ellipse at 50% 35%, transparent 0%, rgba(0, 0, 0, 0.55) 60%, #000000 100%);
+  }
+
+  .menu-enter {                                            /* menu déroulant qui s'ouvre (animate.enter) */
+    transform-origin: top right;
+    animation: menu-in 0.25s var(--ease-out-expo) both;
+  }
+
+  .menu-leave {                                            /* menu déroulant qui se ferme (animate.leave) */
+    transform-origin: top right;
+    animation: menu-in 0.15s ease reverse both;            /* même animation, jouée à l'envers */
+  }
+
+  @keyframes menu-in {
+    from { opacity: 0; transform: translateY(-6px) scale(0.96); }
+  }
+
   .result-enter {                                          /* bloc de résultat qui arrive (animate.enter) */
     animation: blur-in 0.9s var(--ease-out-expo) both;
   }
@@ -359,7 +409,8 @@
   .scroll-highlight,
   .scroll-draw-y,
   .scroll-word,
-  .animate-marquee {
+  .animate-marquee,
+  .site-grid {
     animation: none !important;                            /* pas d'effet lié au défilement ni de bandeau défilant */
   }
 }
