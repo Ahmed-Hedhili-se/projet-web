@@ -1,0 +1,44 @@
+<article class="group flex h-full flex-col overflow-hidden rounded-card border border-steel bg-carbon transition duration-500 hover:-translate-y-1 hover:border-slate"> <!-- monte légèrement au survol -->
+  <a [routerLink]="['/gpus', gpu().id]" class="block overflow-hidden bg-obsidian" tabindex="-1" aria-hidden="true"> <!-- image cliquable (le titre suffit au clavier) -->
+    <img
+      src="images/hero-gpu.svg"
+      alt=""
+      width="960"
+      height="540"
+      loading="lazy"
+      class="h-auto w-full transition-transform duration-700 group-hover:scale-105"
+    />                                                     <!-- zoom doux au survol -->
+  </a>
+
+  <div class="flex flex-1 flex-col p-6">
+    <p class="text-utility-nav text-ash">{{ gpu().manufacturer }} · {{ gpu().architecture }}</p>
+    <h3 class="mt-1 font-display text-product-label font-semibold">
+      <a [routerLink]="['/gpus', gpu().id]" class="hover:underline">{{ gpu().name }}</a>
+    </h3>
+
+    <div class="mt-5 grid grid-cols-2 gap-3">               <!-- caractéristiques principales -->
+      <div class="rounded-nav bg-obsidian p-4">
+        <p class="font-display text-feature-stat font-semibold">{{ gpu().vramGb }} GB</p>
+        <p class="mt-1 text-utility-nav text-ash">VRAM</p>
+      </div>
+      <div class="rounded-nav bg-obsidian p-4">
+        <p class="font-display text-feature-stat font-semibold">{{ gpu().fp16Tflops }}</p>
+        <p class="mt-1 text-utility-nav text-ash">FP16 TFLOPS</p>
+      </div>
+    </div>
+
+    <p class="mt-4 flex items-center gap-2 text-body" [class.text-ash]="gpu().availableUnits === 0"> <!-- disponibilité -->
+      <span class="size-2 rounded-full" [class.bg-porcelain]="gpu().availableUnits > 0" [class.bg-slate]="gpu().availableUnits === 0"></span> <!-- point clair = disponible -->
+      @if (gpu().availableUnits > 0) {
+        {{ gpu().availableUnits }} of {{ gpu().totalUnits }} units available
+      } @else {
+        Fully booked
+      }
+    </p>
+
+    <div class="mt-auto flex items-center justify-between gap-4 pt-6">                <!-- prix + lien, collés en bas -->
+      <p class="text-section-nav">{{ gpu().pricePerHour | currency: 'USD' }}<span class="text-body text-ash"> / hour</span></p>
+      <a [routerLink]="['/gpus', gpu().id]" class="btn-outline">Details</a>
+    </div>
+  </div>
+</article>

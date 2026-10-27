@@ -1,0 +1,67 @@
+<form [formGroup]="form" class="flex flex-col gap-5" (submit)="$event.preventDefault()"> <!-- les filtres s'appliquent tout seuls -->
+  <div>
+    <label for="filter-search" class="form-label">Search</label>
+    <input id="filter-search" type="search" formControlName="search" placeholder="Name or architecture" class="form-field" />
+  </div>
+
+  <div>
+    <label for="filter-sort" class="form-label">Sort by</label>
+    <select id="filter-sort" formControlName="sort" class="form-field">
+      @for (option of sortOptions; track option.value) {
+        <option [value]="option.value">{{ option.label }}</option>
+      }
+    </select>
+  </div>
+
+  <div>
+    <label for="filter-manufacturer" class="form-label">Manufacturer</label>
+    <select id="filter-manufacturer" formControlName="manufacturer" class="form-field">
+      <option value="">All manufacturers</option>
+      @for (manufacturer of manufacturers(); track manufacturer) {
+        <option [value]="manufacturer">{{ manufacturer }}</option>
+      }
+    </select>
+  </div>
+
+  <div class="grid grid-cols-2 gap-3">                     <!-- deux filtres côte à côte -->
+    <div>
+      <label for="filter-vram" class="form-label">Min. memory</label>
+      <select id="filter-vram" formControlName="minVram" class="form-field">
+        <option value="">Any</option>
+        @for (vram of vramOptions; track vram) {
+          <option [value]="vram">{{ vram }} GB+</option>
+        }
+      </select>
+    </div>
+    <div>
+      <label for="filter-price" class="form-label">Max. price</label>
+      <select id="filter-price" formControlName="maxPrice" class="form-field">
+        <option value="">Any</option>
+        @for (price of priceOptions; track price) {
+          <option [value]="price">${{ price }} / h</option>
+        }
+      </select>
+    </div>
+  </div>
+
+  <fieldset class="rounded-nav border border-steel p-4">   <!-- groupe « disponibilité » -->
+    <legend class="px-1 text-utility-nav font-semibold text-ash">Availability</legend>
+    <label class="flex cursor-pointer items-center gap-3 text-body">
+      <input type="checkbox" formControlName="available" class="form-checkbox" />
+      Available only
+    </label>
+    <div class="mt-4 flex flex-col gap-3">
+      <div>
+        <label for="filter-start" class="form-label">Start date</label>
+        <input id="filter-start" type="datetime-local" formControlName="startDate" [min]="minStartDate" class="form-field" />
+      </div>
+      <div>
+        <label for="filter-duration" class="form-label">Duration (hours)</label>
+        <input id="filter-duration" type="number" formControlName="durationHours" min="1" max="720" placeholder="e.g. 24" class="form-field" />
+      </div>
+      <p class="text-utility-nav text-ash">Fill in both to check availability for a specific period.</p>
+    </div>
+  </fieldset>
+
+  <button type="button" (click)="reset()" class="btn-outline self-start">Reset filters</button>
+</form>

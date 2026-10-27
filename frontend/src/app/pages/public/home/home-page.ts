@@ -14,7 +14,8 @@ interface Feature {                                        // point fort de l'of
   text: string;
 }
 
-interface FeaturedGpu {                                    // GPU mis en avant (données d'exemple, remplacées par l'API en F3)
+interface FeaturedGpu {                                    // GPU mis en avant (texte de présentation, ids du catalogue)
+  id: number;                                              // lien vers /gpus/:id
   name: string;
   architecture: string;
   vramGb: number;
@@ -61,9 +62,9 @@ export class HomePage {
   ];
 
   protected readonly featuredGpus: FeaturedGpu[] = [
-    { name: 'NVIDIA H100 80GB', architecture: 'Hopper', vramGb: 80, fp16Tflops: 989.5, pricePerHour: 3.2, useCase: 'Large-scale training' },
-    { name: 'NVIDIA A100 80GB', architecture: 'Ampere', vramGb: 80, fp16Tflops: 312, pricePerHour: 1.89, useCase: 'Fine-tuning' },
-    { name: 'NVIDIA RTX 4090', architecture: 'Ada Lovelace', vramGb: 24, fp16Tflops: 165, pricePerHour: 0.69, useCase: 'Fast inference' },
+    { id: 1, name: 'NVIDIA H100 80GB', architecture: 'Hopper', vramGb: 80, fp16Tflops: 989.5, pricePerHour: 3.2, useCase: 'Large-scale training' },
+    { id: 2, name: 'NVIDIA A100 80GB', architecture: 'Ampere', vramGb: 80, fp16Tflops: 312, pricePerHour: 1.89, useCase: 'Fine-tuning' },
+    { id: 5, name: 'NVIDIA RTX 4090', architecture: 'Ada Lovelace', vramGb: 24, fp16Tflops: 165, pricePerHour: 0.69, useCase: 'Fast inference' },
   ];
 
   protected readonly steps: Step[] = [

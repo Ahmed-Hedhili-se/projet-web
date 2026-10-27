@@ -1,0 +1,18 @@
+<div
+  class="flex items-start gap-3 rounded-nav border border-steel bg-carbon p-4 text-body"
+  [attr.role]="type() === 'error' ? 'alert' : 'status'"
+>                                                          <!-- annoncé par les lecteurs d'écran -->
+  @if (type() === 'error') {
+    <svg class="mt-px size-5 shrink-0 text-optical-yellow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"> <!-- icône d'avertissement -->
+      <path stroke-linejoin="round" d="M12 3.5 2.5 20h19L12 3.5Z" /><path stroke-linecap="round" d="M12 10v4.5M12 17.2v.3" />
+    </svg>
+  } @else {
+    <svg class="mt-px size-5 shrink-0 text-porcelain" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"> <!-- icône de validation -->
+      <circle cx="12" cy="12" r="9" /><path stroke-linecap="round" stroke-linejoin="round" d="m8 12.5 2.5 2.5L16 9.5" />
+    </svg>
+  }
+  <div class="flex-1">
+    <p class="text-porcelain">{{ message() }}</p>
+    <ng-content />                                         <!-- ex. bouton « Try again » -->
+  </div>
+</div>

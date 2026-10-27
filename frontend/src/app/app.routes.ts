@@ -14,11 +14,21 @@ export const routes: Routes = [
     title: 'About | NeuroGrid',
     loadComponent: () => import('./pages/public/about/about-page').then((m) => m.AboutPage),
   },
-  { path: 'gpus', title: 'GPU catalog | NeuroGrid', loadComponent: comingSoon, data: { heading: 'GPU catalog' } },         // F3
+  {
+    path: 'gpus',
+    title: 'GPU catalog | NeuroGrid',
+    loadComponent: () => import('./pages/public/gpu-catalog/gpu-catalog-page').then((m) => m.GpuCatalogPage),
+  },
+  {
+    path: 'gpus/:id',                                      // :id est transmis à l'input « id » de la page
+    title: 'GPU details | NeuroGrid',
+    loadComponent: () => import('./pages/public/gpu-detail/gpu-detail-page').then((m) => m.GpuDetailPage),
+  },
   { path: 'recommend', title: 'GPU recommendation | NeuroGrid', loadComponent: comingSoon, data: { heading: 'GPU recommendation' } }, // F4
   { path: 'contact', title: 'Contact | NeuroGrid', loadComponent: comingSoon, data: { heading: 'Contact' } },              // F5
   { path: 'login', title: 'Sign in | NeuroGrid', loadComponent: comingSoon, data: { heading: 'Sign in' } },                // F6
   { path: 'register', title: 'Create an account | NeuroGrid', loadComponent: comingSoon, data: { heading: 'Create an account' } }, // F6
+  { path: 'account/rentals/new', title: 'New rental | NeuroGrid', loadComponent: comingSoon, data: { heading: 'New rental' } }, // F7
   {
     path: '**',                                            // toute autre URL → page 404 (doit rester en dernier)
     title: 'Page not found | NeuroGrid',

@@ -143,6 +143,56 @@
     text-decoration: underline;
   }
 
+  .form-label {                                            /* libellé au-dessus d'un champ */
+    display: block;
+    margin-bottom: 6px;
+    color: var(--color-ash);
+    font-size: var(--text-utility-nav);
+    font-weight: 600;
+    letter-spacing: -0.12px;
+  }
+
+  .form-field {                                            /* champ de formulaire (« Device Selector Input ») */
+    width: 100%;
+    height: 40px;
+    padding: 0 20px;
+    border: 1px solid var(--color-slate);                  /* contour gris */
+    border-radius: var(--radius-input);                    /* forme de pilule */
+    background-color: rgba(255, 255, 255, 0.04);           /* fond à peine éclairci */
+    color: var(--color-porcelain);
+    font-size: var(--text-body);
+    letter-spacing: -0.224px;
+    transition: border-color 0.2s;
+  }
+
+  .form-field:hover {
+    border-color: var(--color-ash);                        /* contour plus clair au survol */
+  }
+
+  .form-field:focus {
+    outline: 1px solid var(--color-action-blue);           /* contour bleu à la sélection (DESIGN.md) */
+    outline-offset: 1px;
+  }
+
+  select.form-field {                                      /* liste déroulante avec une flèche personnalisée */
+    appearance: none;
+    padding-right: 45px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2386868b' stroke-width='1.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='m7 10 5 5 5-5'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 18px center;
+    background-size: 16px;
+  }
+
+  select.form-field option {
+    background-color: var(--color-carbon);                 /* fond des options (Windows) */
+  }
+
+  .form-checkbox {                                         /* case à cocher */
+    width: 18px;
+    height: 18px;
+    accent-color: var(--color-action-blue);                /* couleur de la case cochée */
+  }
+
   .reveal {                                                /* bloc caché avant d'entrer à l'écran (directive appReveal) */
     opacity: 0;
     transform: translateY(32px);

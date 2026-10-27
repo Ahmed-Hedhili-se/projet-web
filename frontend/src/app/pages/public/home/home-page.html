@@ -144,7 +144,7 @@
 
             <div class="mt-auto flex items-center justify-between pt-6">                       <!-- prix + lien, collés en bas -->
               <p class="text-section-nav">{{ gpu.pricePerHour | currency: 'USD' }}<span class="text-body text-ash"> / hour</span></p>
-              <a routerLink="/gpus" class="btn-outline">Details</a>
+              <a [routerLink]="['/gpus', gpu.id]" class="btn-outline">Details</a>
             </div>
           </article>
         </div>
