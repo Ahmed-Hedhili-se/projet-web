@@ -1,0 +1,83 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER                                                     // client
+  ADMIN                                                    // administrateur
+}
+
+enum RentalStatus {
+  CONFIRMED                                                // location valide
+  CANCELLED                                                // location annulée
+}
+
+model User {
+  id           Int      @id @default(autoincrement())
+  email        String   @unique                          // identifiant de connexion
+  passwordHash String                                    // mot de passe haché avec bcrypt
+  firstName    String
+  lastName     String
+  role         Role     @default(USER)
+  isBlocked    Boolean  @default(false)                  // bloqué = connexion refusée
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  rentals      Rental[]                                  // locations de l'utilisateur
+
+  @@map("users")
+}
+
+model Gpu {
+  id           Int      @id @default(autoincrement())
+  name         String   @unique                          // ex. "NVIDIA H100 80GB"
+  manufacturer String                                    // ex. "NVIDIA", "AMD"
+  architecture String                                    // ex. "Hopper"
+  vramGb       Int                                       // mémoire en Go
+  fp16Tflops   Float                                     // puissance de calcul FP16
+  pricePerHour Decimal  @db.Decimal(10, 2)               // prix d'une unité pendant 1 heure
+  totalUnits   Int                                       // nombre d'unités possédées
+  description  String
+  isActive     Boolean  @default(true)                   // false = retiré du catalogue
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  rentals      Rental[]                                  // locations de ce GPU
+
+  @@map("gpus")
+}
+
+model Rental {
+  id            Int          @id @default(autoincrement())
+  userId        Int
+  gpuId         Int
+  quantity      Int          @default(1)                 // nombre d'unités louées
+  startDate     DateTime                                 // début de la location
+  durationHours Int                                      // durée en heures
+  endDate       DateTime                                 // startDate + durationHours (calculé par le backend)
+  totalPrice    Decimal      @db.Decimal(12, 2)          // pricePerHour × quantity × durationHours
+  status        RentalStatus @default(CONFIRMED)
+  cancelledAt   DateTime?                                // date d'annulation
+  createdAt     DateTime     @default(now())
+  user          User         @relation(fields: [userId], references: [id], onDelete: Restrict)
+  gpu           Gpu          @relation(fields: [gpuId], references: [id], onDelete: Restrict)
+
+  @@index([gpuId, startDate, endDate])                   // accélère le calcul de disponibilité
+  @@index([userId])
+  @@map("rentals")
+}
+
+model ContactMessage {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String
+  subject   String
+  message   String
+  isRead    Boolean  @default(false)                     // lu par un admin
+  createdAt DateTime @default(now())
+
+  @@map("contact_messages")
+}

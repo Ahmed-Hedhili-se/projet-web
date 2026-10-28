@@ -1,0 +1,33 @@
+services:
+  postgres:
+    image: postgres:17-alpine                              # base de données relationnelle
+    container_name: neurogrid-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: neurogrid                             # utilisateur de développement
+      POSTGRES_PASSWORD: neurogrid                         # mot de passe de développement (local uniquement)
+      POSTGRES_DB: neurogrid                               # base créée au démarrage
+    ports:
+      - "5432:5432"                                        # accessible depuis le backend sur localhost:5432
+    volumes:
+      - postgres-data:/var/lib/postgresql/data             # données conservées entre les redémarrages
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U neurogrid -d neurogrid"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine                                  # utilisé uniquement pour limiter les logins
+    container_name: neurogrid-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"                                        # accessible sur localhost:6379
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  postgres-data:                                           # volume nommé pour PostgreSQL
