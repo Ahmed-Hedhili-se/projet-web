@@ -2,8 +2,9 @@ import request from 'supertest';
 import { afterAll, describe, expect, it } from 'vitest';
 import { app } from '../src/app';
 import { prisma } from '../src/lib/prisma';
+import { closeConnections } from './helpers';
 
-afterAll(() => prisma.$disconnect());
+afterAll(() => closeConnections());
 
 describe('B1 - setup', () => {
   it('GET /api/health returns { status: "ok" }', async () => {
