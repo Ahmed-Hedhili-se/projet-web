@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1440" height="1550" viewBox="0 0 1440 1550">
+<rect width="1440" height="1550" fill="#ffffff"/>
+<rect x="0" y="0" width="1440" height="56" fill="#ffffff" stroke="#9a9a9a"/>
+<text x="24" y="34" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="18" font-weight="700" text-anchor="start" fill="#222222" >My Rentals</text>
+<text x="164" y="34" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="14" font-weight="400" text-anchor="start" fill="#6b6b6b" >/account/rentals</text>
+<text x="1416" y="34" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="end" fill="#6b6b6b" >Wireframe basse fidélité — 1440 px — TeraMind</text>
+<rect x="0" y="56" width="1440" height="64" fill="#f2f2f2" stroke="#9a9a9a"/>
+<rect x="120" y="76" width="24" height="24" rx="5" fill="#cfcfcf" stroke="#9a9a9a"/>
+<text x="154" y="94" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="18" font-weight="700" text-anchor="start" fill="#222222" >TeraMind</text>
+<text x="272" y="94" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="11" font-weight="400" text-anchor="start" fill="#6b6b6b" >(logo)</text>
+<text x="470" y="94" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="14" font-weight="500" text-anchor="start" fill="#333333" >Home</text>
+<text x="536" y="94" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="14" font-weight="500" text-anchor="start" fill="#333333" >GPUs</text>
+<text x="602" y="94" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="14" font-weight="500" text-anchor="start" fill="#333333" >Recommendation</text>
+<text x="748" y="94" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="14" font-weight="500" text-anchor="start" fill="#333333" >About</text>
+<text x="822" y="94" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="14" font-weight="500" text-anchor="start" fill="#333333" >Contact</text>
+<circle cx="1210" cy="88" r="16" fill="#e4e4e4" stroke="#9a9a9a"/>
+<text x="1210" y="93" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="12" font-weight="700" text-anchor="middle" fill="#333333" >JD</text>
+<text x="1234" y="93" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="14" font-weight="500" text-anchor="start" fill="#333333" >Jane ▾</text>
+<text x="1020" y="114" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start" fill="#6b6b6b" font-style="italic">▸ menu : My rentals · Profile · Sign out</text>
+<text x="120" y="200" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="14" font-weight="600" text-anchor="start" fill="#6b6b6b" >My account</text>
+<text x="120" y="264" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="56" font-weight="800" text-anchor="start" fill="#222222" >My rentals.</text>
+<rect x="1180" y="230" width="140" height="36" rx="18.0" fill="#333333"/>
+<text x="1250.0" y="253.0" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="13" font-weight="600" text-anchor="middle" fill="#ffffff" >New rental</text>
+<rect x="108" y="308" width="1224" height="144" rx="24" fill="#e4e4e4" stroke="#9a9a9a"/>
+<rect x="120.0" y="320" width="384.0" height="120" rx="20" fill="#f2f2f2" stroke="#9a9a9a"/>
+<text x="312.0" y="385.0" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="14" font-weight="600" text-anchor="middle" fill="#333333" >1 · Active now</text>
+<rect x="528.0" y="320" width="384.0" height="120" rx="20" fill="#f2f2f2" stroke="#9a9a9a"/>
+<text x="720.0" y="385.0" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="14" font-weight="600" text-anchor="middle" fill="#333333" >1 · Upcoming</text>
+<rect x="936.0" y="320" width="384.0" height="120" rx="20" fill="#f2f2f2" stroke="#9a9a9a"/>
+<text x="1128.0" y="385.0" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="14" font-weight="600" text-anchor="middle" fill="#333333" >$1,234.56 · Total spent</text>
+<rect x="120" y="490" width="91" height="34" rx="17.0" fill="#333333"/>
+<text x="165.5" y="512.0" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="13" font-weight="600" text-anchor="middle" fill="#ffffff" >All 4</text>
+<rect x="221" y="490" width="126" height="34" rx="17.0" fill="#ffffff" stroke="#333333"/>
+<text x="284.0" y="512.0" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="13" font-weight="600" text-anchor="middle" fill="#333333" >Upcoming 1</text>
+<rect x="357" y="490" width="112" height="34" rx="17.0" fill="#ffffff" stroke="#333333"/>
+<text x="413.0" y="512.0" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="13" font-weight="600" text-anchor="middle" fill="#333333" >Active 1</text>
+<rect x="479" y="490" width="133" height="34" rx="17.0" fill="#ffffff" stroke="#333333"/>
+<text x="545.5" y="512.0" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="13" font-weight="600" text-anchor="middle" fill="#333333" >Completed 1</text>
+<rect x="622" y="490" width="133" height="34" rx="17.0" fill="#ffffff" stroke="#333333"/>
+<text x="688.5" y="512.0" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="13" font-weight="600" text-anchor="middle" fill="#333333" >Cancelled 1</text>
+<rect x="120" y="560" width="1200" height="230" rx="24" fill="#f2f2f2" stroke="#9a9a9a"/>
+<text x="150" y="600" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start" fill="#6b6b6b" >Rental #15 · NVIDIA</text>
+<text x="150" y="628" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="19" font-weight="700" text-anchor="start" fill="#333333" >2 × NVIDIA H100 80GB</text>
+<rect x="1170" y="588" width="120" height="30" rx="15" fill="#ffffff" stroke="#333333"/>
+<text x="1230" y="608" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="12" font-weight="600" text-anchor="middle" fill="#333333" >● Upcoming</text>
+<text x="150" y="670" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start" fill="#6b6b6b" >Start</text>
+<text x="150" y="694" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="15" font-weight="600" text-anchor="start" fill="#333333" >…</text>
+<text x="440" y="670" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start" fill="#6b6b6b" >End</text>
+<text x="440" y="694" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="15" font-weight="600" text-anchor="start" fill="#333333" >…</text>
+<text x="730" y="670" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start" fill="#6b6b6b" >Duration</text>
+<text x="730" y="694" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="15" font-weight="600" text-anchor="start" fill="#333333" >…</text>
+<text x="1020" y="670" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start" fill="#6b6b6b" >Total</text>
+<text x="1020" y="694" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="15" font-weight="600" text-anchor="start" fill="#333333" >…</text>
+<line x1="150" y1="720" x2="1290" y2="720" stroke="#9a9a9a"/>
+<text x="150" y="756" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="start" fill="#6b6b6b" >Starts in 2 days · free cancellation until then</text>
+<rect x="1140" y="736" width="150" height="36" rx="18.0" fill="#ffffff" stroke="#333333"/>
+<text x="1215.0" y="759.0" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="13" font-weight="600" text-anchor="middle" fill="#333333" >Cancel rental</text>
+<rect x="120" y="810" width="1200" height="230" rx="24" fill="#f2f2f2" stroke="#9a9a9a"/>
+<text x="150" y="850" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start" fill="#6b6b6b" >Rental #15 · NVIDIA</text>
+<text x="150" y="878" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="19" font-weight="700" text-anchor="start" fill="#333333" >NVIDIA RTX 4090</text>
+<rect x="1170" y="838" width="120" height="30" rx="15" fill="#ffffff" stroke="#333333"/>
+<text x="1230" y="858" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="12" font-weight="600" text-anchor="middle" fill="#333333" >● Active</text>
+<text x="150" y="920" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start" fill="#6b6b6b" >Start</text>
+<text x="150" y="944" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="15" font-weight="600" text-anchor="start" fill="#333333" >…</text>
+<text x="440" y="920" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start" fill="#6b6b6b" >End</text>
+<text x="440" y="944" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="15" font-weight="600" text-anchor="start" fill="#333333" >…</text>
+<text x="730" y="920" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start" fill="#6b6b6b" >Duration</text>
+<text x="730" y="944" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="15" font-weight="600" text-anchor="start" fill="#333333" >…</text>
+<text x="1020" y="920" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start" fill="#6b6b6b" >Total</text>
+<text x="1020" y="944" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="15" font-weight="600" text-anchor="start" fill="#333333" >…</text>
+<text x="150" y="986" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start" fill="#6b6b6b" >In progress · 25%</text>
+<rect x="150" y="998" width="1140" height="10" rx="5" fill="#e4e4e4"/>
+<rect x="150" y="998" width="285" height="10" rx="5" fill="#cfcfcf"/>
+<rect x="120" y="1060" width="1200" height="170" rx="24" fill="#f2f2f2" stroke="#9a9a9a"/>
+<text x="150" y="1100" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start" fill="#6b6b6b" >Rental #15 · NVIDIA</text>
+<text x="150" y="1128" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="19" font-weight="700" text-anchor="start" fill="#333333" >4 × NVIDIA A100 80GB</text>
+<rect x="1170" y="1088" width="120" height="30" rx="15" fill="#ffffff" stroke="#333333"/>
+<text x="1230" y="1108" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="12" font-weight="600" text-anchor="middle" fill="#333333" >● Completed</text>
+<text x="150" y="1170" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start" fill="#6b6b6b" >Start</text>
+<text x="150" y="1194" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="15" font-weight="600" text-anchor="start" fill="#333333" >…</text>
+<text x="440" y="1170" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start" fill="#6b6b6b" >End</text>
+<text x="440" y="1194" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="15" font-weight="600" text-anchor="start" fill="#333333" >…</text>
+<text x="730" y="1170" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start" fill="#6b6b6b" >Duration</text>
+<text x="730" y="1194" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="15" font-weight="600" text-anchor="start" fill="#333333" >…</text>
+<text x="1020" y="1170" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start" fill="#6b6b6b" >Total</text>
+<text x="1020" y="1194" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="15" font-weight="600" text-anchor="start" fill="#333333" >…</text>
+<text x="120" y="1260" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start" fill="#6b6b6b" font-style="italic">▸ Cancel rental → fenêtre de confirmation « Cancel this rental? » (Keep it / Cancel rental)</text>
+<rect x="0" y="1320" width="1440" height="230" fill="#f2f2f2" stroke="#9a9a9a"/>
+<text x="120" y="1370" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="18" font-weight="700" text-anchor="start" fill="#222222" >TeraMind</text>
+<rect x="120" y="1390" width="220" height="8" rx="4" fill="#cfcfcf"/>
+<rect x="120" y="1408" width="132" height="8" rx="4" fill="#cfcfcf"/>
+<text x="450" y="1370" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="14" font-weight="700" text-anchor="start" fill="#333333" >Services</text>
+<text x="450" y="1400" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="start" fill="#6b6b6b" >GPU catalog</text>
+<text x="450" y="1426" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="start" fill="#6b6b6b" >GPU recommendation</text>
+<text x="740" y="1370" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="14" font-weight="700" text-anchor="start" fill="#333333" >Company</text>
+<text x="740" y="1400" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="start" fill="#6b6b6b" >About</text>
+<text x="740" y="1426" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="start" fill="#6b6b6b" >Contact</text>
+<text x="1030" y="1370" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="14" font-weight="700" text-anchor="start" fill="#333333" >Account</text>
+<text x="1030" y="1400" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="start" fill="#6b6b6b" >Sign in</text>
+<text x="1030" y="1426" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="start" fill="#6b6b6b" >Create an account</text>
+<line x1="120" y1="1490" x2="1320" y2="1490" stroke="#9a9a9a"/>
+<text x="120" y="1520" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start" fill="#6b6b6b" >© 2026 TeraMind. All rights reserved.</text>
+<text x="1320" y="1520" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="12" font-weight="400" text-anchor="end" fill="#6b6b6b" >Fictional company — SUP'COM web project.</text>
+</svg>

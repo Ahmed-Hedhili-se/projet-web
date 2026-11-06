@@ -1,0 +1,130 @@
+<section class="px-4 pt-16 pb-10 md:pt-20"> <!-- En-tête -->
+  <div class="mx-auto flex max-w-6xl flex-wrap items-end justify-between gap-6">
+    <div>
+      <p class="animate-fade-up font-display text-product-label font-semibold text-ash">My account</p>
+      <h1 class="mt-2 font-display text-display-sm font-semibold md:text-display">
+        <app-split-text text="My rentals." [delay]="100" />                                   <!-- mots qui sortent du flou -->
+      </h1>
+    </div>
+    <a routerLink="/account/rentals/new" class="animate-fade-up btn-primary" style="animation-delay: 300ms">New rental</a>
+  </div>
+</section>
+
+<section class="px-4 pb-20 md:pb-28"> <!-- Statistiques, onglets et liste -->
+  <div class="mx-auto max-w-6xl">
+    @if (loading()) {
+      <div class="grid gap-4 sm:grid-cols-3">                                                  <!-- squelettes pendant le chargement -->
+        @for (item of [1, 2, 3]; track item) {
+          <div class="h-28 animate-pulse rounded-card bg-carbon"></div>
+        }
+      </div>
+      <div class="mt-8 flex flex-col gap-4">
+        @for (item of [1, 2, 3]; track item) {
+          <div class="h-36 animate-pulse rounded-card border border-steel bg-carbon"></div>
+        }
+      </div>
+    } @else if (errorMessage(); as message) {
+      <app-alert [message]="message">
+        <button type="button" (click)="load()" class="text-link mt-2 text-body">Try again</button>
+      </app-alert>
+    } @else {
+      <div class="animate-fade-up grid gap-4 rounded-card bg-carbon p-4 sm:grid-cols-3">       <!-- tuiles : panneau Carbon, tuiles noires -->
+        @for (stat of stats(); track stat.label + stat.value) {                                 <!-- recréée si la valeur change -->
+          <div class="rounded-card bg-obsidian px-6 py-6">
+            <p class="font-display text-feature-stat font-semibold tabular-nums" [appCountUp]="stat.value" [countDecimals]="stat.decimals" [countPrefix]="stat.prefix"></p>
+            <p class="mt-2 text-body text-ash">{{ stat.label }}</p>
+          </div>
+        }
+      </div>
+
+      <div class="animate-fade-up mt-8 flex gap-2 overflow-x-auto pb-1" style="animation-delay: 100ms" role="tablist" aria-label="Filter rentals"> <!-- onglets de filtre -->
+        @for (tab of tabs(); track tab.value) {
+          <button
+            type="button"
+            role="tab"
+            (click)="filter.set(tab.value)"
+            [attr.aria-selected]="filter() === tab.value"
+            class="flex shrink-0 items-center gap-2 rounded-pill border px-4 py-2 text-utility-nav font-semibold transition duration-300"
+            [class]="filter() === tab.value ? 'border-porcelain bg-porcelain text-obsidian' : 'border-steel text-ash hover:border-slate hover:text-porcelain'"
+          >
+            {{ tab.label }}
+            <span class="rounded-pill px-1.5 tabular-nums" [class]="filter() === tab.value ? 'bg-obsidian/10' : 'bg-carbon'">{{ tab.count }}</span>
+          </button>
+        }
+      </div>
+
+      @if (cancelError(); as message) {
+        <div animate.enter="result-enter" class="mt-6"><app-alert [message]="message" /></div>
+      }
+
+      <ul class="mt-6 flex flex-col gap-4">
+        @for (rental of filtered(); track rental.id) {
+          <li appReveal [revealDelay]="($index % 4) * 80" animate.leave="card-leave">           <!-- apparaît en cascade, s'efface quand il est filtré -->
+            <article class="rounded-card border border-steel bg-carbon p-6 transition duration-500 hover:border-slate">
+              <div class="flex flex-wrap items-start justify-between gap-4">
+                <div>
+                  <p class="text-utility-nav text-ash">Rental #{{ rental.id }} · {{ rental.gpu.manufacturer }}</p>
+                  <h2 class="mt-1 font-display text-product-label font-semibold">
+                    @if (rental.quantity > 1) { <span class="text-ash">{{ rental.quantity }} ×</span> }
+                    <a [routerLink]="['/gpus', rental.gpu.id]" class="hover:underline">{{ rental.gpu.name }}</a>
+                  </h2>
+                </div>
+                <app-status-badge [status]="rental.status" />
+              </div>
+
+              <dl class="mt-5 grid grid-cols-2 gap-4 text-body md:grid-cols-4">                 <!-- détails -->
+                <div><dt class="text-utility-nav text-ash">Start</dt><dd>{{ rental.startDate | date: 'MMM d, y · HH:mm' }}</dd></div>
+                <div><dt class="text-utility-nav text-ash">End</dt><dd>{{ rental.endDate | date: 'MMM d, y · HH:mm' }}</dd></div>
+                <div><dt class="text-utility-nav text-ash">Duration</dt><dd>{{ formatDuration(rental.durationHours) }}</dd></div>
+                <div><dt class="text-utility-nav text-ash">Total</dt><dd class="font-semibold tabular-nums" [class.line-through]="rental.status === 'CANCELLED'" [class.text-ash]="rental.status === 'CANCELLED'">{{ rental.totalPrice | currency: 'USD' }}</dd></div>
+              </dl>
+
+              @if (rental.status === 'ACTIVE') {
+                <div class="mt-5">                                                              <!-- barre d'avancement -->
+                  <div class="flex justify-between text-utility-nav text-ash">
+                    <span>In progress</span><span class="tabular-nums">{{ progress(rental) }}%</span>
+                  </div>
+                  <div class="mt-2 h-2 overflow-hidden rounded-pill bg-obsidian">
+                    <div class="animate-grow-x h-full origin-left rounded-pill bg-porcelain" [style.width.%]="progress(rental)"></div>
+                  </div>
+                </div>
+              }
+
+              @if (rental.status === 'UPCOMING') {
+                <div class="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-steel pt-5">
+                  <p class="text-body text-ash">Starts {{ relativeTime(rental.startDate) }} · free cancellation until then</p>
+                  <button type="button" (click)="askCancel(rental)" class="btn-outline">Cancel rental</button>
+                </div>
+              }
+
+              @if (rental.status === 'CANCELLED' && rental.cancelledAt) {
+                <p class="mt-5 border-t border-steel pt-5 text-utility-nav text-ash">Cancelled on {{ rental.cancelledAt | date: 'MMM d, y' }}</p>
+              }
+            </article>
+          </li>
+        } @empty {
+          <li animate.enter="result-enter" class="flex flex-col items-center rounded-card border border-steel bg-carbon px-6 py-16 text-center"> <!-- aucune location -->
+            <img src="images/hero-gpu.svg" alt="" width="960" height="540" class="animate-float w-56" />
+            <p class="mt-6 font-display text-product-label font-semibold">
+              {{ filter() === 'ALL' ? 'You have no rentals yet.' : 'No rentals in this category.' }}
+            </p>
+            <p class="mt-2 text-body text-ash">Find a GPU and book it by the hour in under a minute.</p>
+            <a routerLink="/gpus" class="btn-primary mt-6">Browse GPUs</a>
+          </li>
+        }
+      </ul>
+    }
+  </div>
+</section>
+
+@if (toCancel(); as rental) {
+  <app-confirm-dialog
+    title="Cancel this rental?"
+    [message]="'Your ' + rental.quantity + ' × ' + rental.gpu.name + ' booking will be cancelled and its units released. This cannot be undone.'"
+    confirmLabel="Cancel rental"
+    cancelLabel="Keep it"
+    [busy]="cancelling()"
+    (confirmed)="confirmCancel()"
+    (cancelled)="toCancel.set(null)"
+  />                                                                                           <!-- fenêtre de confirmation -->
+}

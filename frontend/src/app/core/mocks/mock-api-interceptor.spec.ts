@@ -70,7 +70,7 @@ describe('mockApiInterceptor', () => {
   it('should return 401 five times, then 429 TOO_MANY_ATTEMPTS', async () => {
     const tryWrongPassword = async () =>
       (await firstValueFrom(
-        http.post(`${environment.apiUrl}/auth/login`, { email: 'admin@neurogrid.example', password: 'wrong' }),
+        http.post(`${environment.apiUrl}/auth/login`, { email: 'admin@teramind.example', password: 'wrong' }),
       ).catch((err: unknown) => err)) as HttpErrorResponse;
 
     for (let attempt = 1; attempt <= 5; attempt++) {
@@ -79,6 +79,25 @@ describe('mockApiInterceptor', () => {
     const sixth = await tryWrongPassword();
     expect(sixth.status).toBe(429);                        // 6e tentative bloquée
     expect(sixth.error.error.code).toBe('TOO_MANY_ATTEMPTS');
+  });
+
+  it('should create an account, then refuse the same email with EMAIL_TAKEN', async () => {
+    localStorage.clear();                                  // aucun compte créé auparavant
+    const account = { email: 'new.user@example.com', password: 'Password123', firstName: 'New', lastName: 'User' };
+
+    const created = await firstValueFrom(http.post<AuthResponse>(`${environment.apiUrl}/auth/register`, account));
+    expect(created.user.role).toBe('USER');
+    expect(created.user.email).toBe('new.user@example.com');
+
+    const login = await firstValueFrom(
+      http.post<AuthResponse>(`${environment.apiUrl}/auth/login`, { email: account.email, password: account.password }),
+    );
+    expect(login.user.id).toBe(created.user.id);           // le nouveau compte peut se connecter
+
+    const error = (await firstValueFrom(http.post(`${environment.apiUrl}/auth/register`, account)).catch((err: unknown) => err)) as HttpErrorResponse;
+    expect(error.status).toBe(409);
+    expect(error.error.error.code).toBe('EMAIL_TAKEN');
+    localStorage.clear();
   });
 
   it('should return the user of the token on GET /auth/me', async () => {

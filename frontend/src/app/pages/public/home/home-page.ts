@@ -55,7 +55,7 @@ export class HomePage {
   ];
 
   protected readonly statement =                           // grande phrase qui s'éclaire en défilant
-    'Every AI model has a perfect GPU. NeuroGrid finds it in seconds, books it in one click, and bills only the hours you actually use.';
+    'Every AI model has a perfect GPU. TeraMind finds it in seconds, books it in one click, and bills only the hours you actually use.';
 
   protected readonly features: Feature[] = [
     {

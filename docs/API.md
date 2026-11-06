@@ -1,4 +1,4 @@
-# NeuroGrid — Contrat d'API
+# TeraMind — Contrat d'API
 
 > **Source de vérité** : le backend implémente exactement ce document, le frontend l'appelle exactement.
 > Toute modification est annoncée à l'autre membre de l'équipe **avant** d'être faite.

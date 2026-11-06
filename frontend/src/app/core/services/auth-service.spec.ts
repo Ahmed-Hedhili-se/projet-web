@@ -29,7 +29,7 @@ describe('AuthService', () => {
     expect(service.isLoggedIn()).toBe(true);
     expect(service.isAdmin()).toBe(false);
     expect(service.currentUser()?.firstName).toBe('Jane');
-    expect(localStorage.getItem('neurogrid_token')).toBe('abc'); // la session survit au rafraîchissement
+    expect(localStorage.getItem('teramind_token')).toBe('abc'); // la session survit au rafraîchissement
   });
 
   it('should forget everything on logout', () => {
@@ -39,6 +39,6 @@ describe('AuthService', () => {
     service.logout();
 
     expect(service.isLoggedIn()).toBe(false);
-    expect(localStorage.getItem('neurogrid_token')).toBeNull();
+    expect(localStorage.getItem('teramind_token')).toBeNull();
   });
 });

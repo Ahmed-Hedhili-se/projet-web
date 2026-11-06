@@ -7,7 +7,7 @@
   },
   "newProjectRoot": "projects",
   "projects": {
-    "neurogrid": {
+    "teramind": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -57,10 +57,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "neurogrid:build:production"
+              "buildTarget": "teramind:build:production"
             },
             "development": {
-              "buildTarget": "neurogrid:build:development"
+              "buildTarget": "teramind:build:development"
             }
           },
           "defaultConfiguration": "development"

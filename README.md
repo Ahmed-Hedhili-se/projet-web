@@ -1,6 +1,6 @@
-# NeuroGrid
+# TeraMind
 
-Corporate website of **NeuroGrid**, a fictional company that rents GPUs for AI workloads
+Corporate website of **TeraMind**, a fictional company that rents GPUs for AI workloads
 and recommends the best GPU for a given model.
 
 SUP'COM web project — team of 2.

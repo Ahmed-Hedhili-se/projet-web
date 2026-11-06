@@ -1,0 +1,155 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1440" height="4010" viewBox="0 0 1440 4010">
+<rect width="1440" height="4010" fill="#ffffff"/>
+<rect x="0" y="0" width="1440" height="56" fill="#ffffff" stroke="#9a9a9a"/>
+<text x="24" y="34" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="18" font-weight="700" text-anchor="start" fill="#222222" >Home</text>
+<text x="98" y="34" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="14" font-weight="400" text-anchor="start" fill="#6b6b6b" >/</text>
+<text x="1416" y="34" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="end" fill="#6b6b6b" >Wireframe basse fidélité — 1440 px — TeraMind</text>
+<rect x="0" y="56" width="1440" height="64" fill="#f2f2f2" stroke="#9a9a9a"/>
+<rect x="120" y="76" width="24" height="24" rx="5" fill="#cfcfcf" stroke="#9a9a9a"/>
+<text x="154" y="94" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="18" font-weight="700" text-anchor="start" fill="#222222" >TeraMind</text>
+<text x="272" y="94" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="11" font-weight="400" text-anchor="start" fill="#6b6b6b" >(logo)</text>
+<text x="470" y="94" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="14" font-weight="500" text-anchor="start" fill="#333333" >Home</text>
+<text x="536" y="94" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="14" font-weight="500" text-anchor="start" fill="#333333" >GPUs</text>
+<text x="602" y="94" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="14" font-weight="500" text-anchor="start" fill="#333333" >Recommendation</text>
+<text x="748" y="94" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="14" font-weight="500" text-anchor="start" fill="#333333" >About</text>
+<text x="822" y="94" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="14" font-weight="500" text-anchor="start" fill="#333333" >Contact</text>
+<rect x="1090" y="70" width="100" height="36" rx="18.0" fill="#ffffff" stroke="#333333"/>
+<text x="1140.0" y="93.0" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="13" font-weight="600" text-anchor="middle" fill="#333333" >Sign in</text>
+<rect x="1200" y="70" width="120" height="36" rx="18.0" fill="#333333"/>
+<text x="1260.0" y="93.0" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="13" font-weight="600" text-anchor="middle" fill="#ffffff" >Get started</text>
+<text x="720.0" y="180" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="13" font-weight="600" text-anchor="middle" fill="#6b6b6b" >New · H100 clusters available</text>
+<text x="720.0" y="220" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="26" font-weight="700" text-anchor="middle" fill="#333333" >TeraMind Cloud</text>
+<text x="720.0" y="290" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="64" font-weight="800" text-anchor="middle" fill="#222222" >Compute for every model.</text>
+<text x="1020.0" y="340" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start" fill="#6b6b6b" font-style="italic">▸ titre animé mot par mot</text>
+<rect x="440.0" y="330" width="560" height="8" rx="4" fill="#cfcfcf"/>
+<rect x="440.0" y="348" width="336" height="8" rx="4" fill="#cfcfcf"/>
+<rect x="390.0" y="380" width="170" height="36" rx="18" fill="#f2f2f2" stroke="#9a9a9a"/>
+<text x="475.0" y="403" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="13" font-weight="500" text-anchor="middle" fill="#333333" >From $0.69 / hour</text>
+<rect x="575.0" y="380" width="150" height="36" rx="18.0" fill="#333333"/>
+<text x="650.0" y="403.0" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="13" font-weight="600" text-anchor="middle" fill="#ffffff" >Explore GPUs</text>
+<rect x="740.0" y="380" width="210" height="36" rx="18.0" fill="#ffffff" stroke="#333333"/>
+<text x="845.0" y="403.0" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="13" font-weight="600" text-anchor="middle" fill="#333333" >Get a recommendation</text>
+<rect x="270.0" y="450" width="900" height="420" rx="12" fill="#f2f2f2" stroke="#9a9a9a"/>
+<path d="M270.0 450L1170.0 870M1170.0 450L270.0 870" stroke="#cfcfcf" stroke-width="1.5"/>
+<rect x="570.0" y="642.0" width="300" height="36" rx="18" fill="#ffffff" stroke="#9a9a9a"/>
+<text x="720.0" y="665.0" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="13" font-weight="600" text-anchor="middle" fill="#333333" >Image : GPU illustration (animée)</text>
+<rect x="0" y="920" width="1440" height="70" rx="0" fill="#f2f2f2" stroke="#9a9a9a"/>
+<text x="720.0" y="960.0" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="13" font-weight="600" text-anchor="middle" fill="#333333" >Bandeau défilant : noms des GPU disponibles</text>
+<rect x="108" y="1028" width="1224" height="164" rx="24" fill="#e4e4e4" stroke="#9a9a9a"/>
+<rect x="120.0" y="1040" width="282.0" height="140" rx="20" fill="#f2f2f2" stroke="#9a9a9a"/>
+<text x="261.0" y="1115.0" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="14" font-weight="600" text-anchor="middle" fill="#333333" >99.9% · Uptime SLA</text>
+<rect x="426.0" y="1040" width="282.0" height="140" rx="20" fill="#f2f2f2" stroke="#9a9a9a"/>
+<text x="567.0" y="1115.0" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="14" font-weight="600" text-anchor="middle" fill="#333333" >&lt; 60 s · Booking to ready</text>
+<rect x="732.0" y="1040" width="282.0" height="140" rx="20" fill="#f2f2f2" stroke="#9a9a9a"/>
+<text x="873.0" y="1115.0" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="14" font-weight="600" text-anchor="middle" fill="#333333" >$0.69 · From / hour</text>
+<rect x="1038.0" y="1040" width="282.0" height="140" rx="20" fill="#f2f2f2" stroke="#9a9a9a"/>
+<text x="1179.0" y="1115.0" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="14" font-weight="600" text-anchor="middle" fill="#333333" >24/7 · Support</text>
+<text x="120" y="1210" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start" fill="#6b6b6b" font-style="italic">▸ chiffres clés qui défilent jusqu'à leur valeur</text>
+<rect x="240" y="1280" width="960" height="8" rx="4" fill="#cfcfcf"/>
+<rect x="240" y="1314" width="960" height="8" rx="4" fill="#cfcfcf"/>
+<rect x="240" y="1348" width="672" height="8" rx="4" fill="#cfcfcf"/>
+<text x="240" y="1380" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start" fill="#6b6b6b" font-style="italic">▸ grande phrase : les mots s'éclairent pendant le défilement</text>
+<text x="720.0" y="1450" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="14" font-weight="600" text-anchor="middle" fill="#6b6b6b" >Why TeraMind</text>
+<text x="720.0" y="1494" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="34" font-weight="700" text-anchor="middle" fill="#222222" >Built for AI workloads.</text>
+<rect x="120.0" y="1540" width="384.0" height="200" rx="20" fill="#f2f2f2" stroke="#9a9a9a"/>
+<circle cx="172.0" cy="1596" r="24" fill="#e4e4e4" stroke="#9a9a9a"/>
+<text x="172.0" y="1601" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="11" font-weight="400" text-anchor="middle" fill="#6b6b6b" >icon</text>
+<text x="148.0" y="1660" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="17" font-weight="700" text-anchor="start" fill="#333333" >Right-sized recommendations</text>
+<rect x="148.0" y="1680" width="328" height="8" rx="4" fill="#cfcfcf"/>
+<rect x="148.0" y="1698" width="197" height="8" rx="4" fill="#cfcfcf"/>
+<rect x="528.0" y="1540" width="384.0" height="200" rx="20" fill="#f2f2f2" stroke="#9a9a9a"/>
+<circle cx="580.0" cy="1596" r="24" fill="#e4e4e4" stroke="#9a9a9a"/>
+<text x="580.0" y="1601" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="11" font-weight="400" text-anchor="middle" fill="#6b6b6b" >icon</text>
+<text x="556.0" y="1660" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="17" font-weight="700" text-anchor="start" fill="#333333" >Pay by the hour</text>
+<rect x="556.0" y="1680" width="328" height="8" rx="4" fill="#cfcfcf"/>
+<rect x="556.0" y="1698" width="197" height="8" rx="4" fill="#cfcfcf"/>
+<rect x="936.0" y="1540" width="384.0" height="200" rx="20" fill="#f2f2f2" stroke="#9a9a9a"/>
+<circle cx="988.0" cy="1596" r="24" fill="#e4e4e4" stroke="#9a9a9a"/>
+<text x="988.0" y="1601" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="11" font-weight="400" text-anchor="middle" fill="#6b6b6b" >icon</text>
+<text x="964.0" y="1660" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="17" font-weight="700" text-anchor="start" fill="#333333" >Latest data-center GPUs</text>
+<rect x="964.0" y="1680" width="328" height="8" rx="4" fill="#cfcfcf"/>
+<rect x="964.0" y="1698" width="197" height="8" rx="4" fill="#cfcfcf"/>
+<rect x="120" y="1820" width="560" height="520" rx="12" fill="#f2f2f2" stroke="#9a9a9a"/>
+<path d="M120 1820L680 2340M680 1820L120 2340" stroke="#cfcfcf" stroke-width="1.5"/>
+<rect x="250.0" y="2062.0" width="300" height="36" rx="18" fill="#ffffff" stroke="#9a9a9a"/>
+<text x="400.0" y="2085.0" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="13" font-weight="600" text-anchor="middle" fill="#333333" >Image : puce IA (animée)</text>
+<text x="740" y="1880" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="14" font-weight="600" text-anchor="start" fill="#6b6b6b" >GPU Recommendation</text>
+<text x="740" y="1924" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="32" font-weight="700" text-anchor="start" fill="#222222" >Not sure which GPU you need?</text>
+<rect x="740" y="1950" width="540" height="8" rx="4" fill="#cfcfcf"/>
+<rect x="740" y="1968" width="324" height="8" rx="4" fill="#cfcfcf"/>
+<rect x="740" y="2010" width="580" height="200" rx="20" fill="#f2f2f2" stroke="#9a9a9a"/>
+<text x="770" y="2048" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="start" fill="#6b6b6b" >Example result: LLM · 7B · Inference · $2.00 / h</text>
+<rect x="770" y="2120" width="520" height="10" rx="5" fill="#e4e4e4"/>
+<rect x="770" y="2120" width="364" height="10" rx="5" fill="#cfcfcf"/>
+<text x="770" y="2170" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="16" font-weight="700" text-anchor="start" fill="#333333" >NVIDIA RTX 4090 · 24 GB — $0.69 / hour</text>
+<rect x="740" y="2240" width="200" height="36" rx="18.0" fill="#333333"/>
+<text x="840.0" y="2263.0" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="13" font-weight="600" text-anchor="middle" fill="#ffffff" >Try the recommender</text>
+<text x="120" y="2420" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="14" font-weight="600" text-anchor="start" fill="#6b6b6b" >Catalog</text>
+<text x="120" y="2464" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="34" font-weight="700" text-anchor="start" fill="#222222" >Featured GPUs.</text>
+<text x="1320" y="2464" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="14" font-weight="600" text-anchor="end" fill="#333333" >View the full catalog ›</text>
+<rect x="120.0" y="2500" width="384.0" height="270" rx="20" fill="#f2f2f2" stroke="#9a9a9a"/>
+<text x="144.0" y="2540" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start" fill="#6b6b6b" >Large-scale training</text>
+<text x="144.0" y="2566" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="18" font-weight="700" text-anchor="start" fill="#333333" >NVIDIA H100 80GB</text>
+<rect x="144.0" y="2596" width="162.0" height="80" rx="14" fill="#e4e4e4" stroke="#9a9a9a"/>
+<text x="225.0" y="2641.0" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="13" font-weight="600" text-anchor="middle" fill="#333333" >VRAM</text>
+<rect x="318.0" y="2596" width="162.0" height="80" rx="14" fill="#e4e4e4" stroke="#9a9a9a"/>
+<text x="399.0" y="2641.0" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="13" font-weight="600" text-anchor="middle" fill="#333333" >TFLOPS</text>
+<text x="144.0" y="2738" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="15" font-weight="600" text-anchor="start" fill="#333333" >$ / hour</text>
+<rect x="380.0" y="2714" width="100" height="36" rx="18.0" fill="#ffffff" stroke="#333333"/>
+<text x="430.0" y="2737.0" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="13" font-weight="600" text-anchor="middle" fill="#333333" >Details</text>
+<rect x="528.0" y="2500" width="384.0" height="270" rx="20" fill="#f2f2f2" stroke="#9a9a9a"/>
+<text x="552.0" y="2540" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start" fill="#6b6b6b" >Fine-tuning</text>
+<text x="552.0" y="2566" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="18" font-weight="700" text-anchor="start" fill="#333333" >NVIDIA A100 80GB</text>
+<rect x="552.0" y="2596" width="162.0" height="80" rx="14" fill="#e4e4e4" stroke="#9a9a9a"/>
+<text x="633.0" y="2641.0" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="13" font-weight="600" text-anchor="middle" fill="#333333" >VRAM</text>
+<rect x="726.0" y="2596" width="162.0" height="80" rx="14" fill="#e4e4e4" stroke="#9a9a9a"/>
+<text x="807.0" y="2641.0" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="13" font-weight="600" text-anchor="middle" fill="#333333" >TFLOPS</text>
+<text x="552.0" y="2738" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="15" font-weight="600" text-anchor="start" fill="#333333" >$ / hour</text>
+<rect x="788.0" y="2714" width="100" height="36" rx="18.0" fill="#ffffff" stroke="#333333"/>
+<text x="838.0" y="2737.0" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="13" font-weight="600" text-anchor="middle" fill="#333333" >Details</text>
+<rect x="936.0" y="2500" width="384.0" height="270" rx="20" fill="#f2f2f2" stroke="#9a9a9a"/>
+<text x="960.0" y="2540" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start" fill="#6b6b6b" >Fast inference</text>
+<text x="960.0" y="2566" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="18" font-weight="700" text-anchor="start" fill="#333333" >NVIDIA RTX 4090</text>
+<rect x="960.0" y="2596" width="162.0" height="80" rx="14" fill="#e4e4e4" stroke="#9a9a9a"/>
+<text x="1041.0" y="2641.0" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="13" font-weight="600" text-anchor="middle" fill="#333333" >VRAM</text>
+<rect x="1134.0" y="2596" width="162.0" height="80" rx="14" fill="#e4e4e4" stroke="#9a9a9a"/>
+<text x="1215.0" y="2641.0" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="13" font-weight="600" text-anchor="middle" fill="#333333" >TFLOPS</text>
+<text x="960.0" y="2738" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="15" font-weight="600" text-anchor="start" fill="#333333" >$ / hour</text>
+<rect x="1196.0" y="2714" width="100" height="36" rx="18.0" fill="#ffffff" stroke="#333333"/>
+<text x="1246.0" y="2737.0" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="13" font-weight="600" text-anchor="middle" fill="#333333" >Details</text>
+<rect x="0" y="2840" width="1440" height="520" rx="0" fill="#f2f2f2" stroke="#9a9a9a"/>
+<text x="120" y="2920" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="14" font-weight="600" text-anchor="start" fill="#6b6b6b" >How it works</text>
+<text x="120" y="2964" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="34" font-weight="700" text-anchor="start" fill="#222222" >From idea to GPU</text>
+<text x="120" y="3004" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="34" font-weight="700" text-anchor="start" fill="#222222" >in three steps.</text>
+<text x="120" y="3040" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start" fill="#6b6b6b" font-style="italic">▸ titre collant pendant le défilement</text>
+<rect x="740.0" y="2900" width="580.0" height="120" rx="20" fill="#f2f2f2" stroke="#9a9a9a"/>
+<text x="1030.0" y="2965.0" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="14" font-weight="600" text-anchor="middle" fill="#333333" >01 · Describe your model</text>
+<rect x="740.0" y="3044" width="580.0" height="120" rx="20" fill="#f2f2f2" stroke="#9a9a9a"/>
+<text x="1030.0" y="3109.0" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="14" font-weight="600" text-anchor="middle" fill="#333333" >02 · Book your GPU</text>
+<rect x="740.0" y="3188" width="580.0" height="120" rx="20" fill="#f2f2f2" stroke="#9a9a9a"/>
+<text x="1030.0" y="3253.0" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="14" font-weight="600" text-anchor="middle" fill="#333333" >03 · Start computing</text>
+<text x="740" y="3340" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start" fill="#6b6b6b" font-style="italic">▸ chaque étape s'illumine au centre de l'écran</text>
+<rect x="240" y="3440" width="960" height="260" rx="24" fill="#f2f2f2" stroke="#9a9a9a"/>
+<text x="720.0" y="3530" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="32" font-weight="700" text-anchor="middle" fill="#222222" >Ready to train your next model?</text>
+<rect x="500.0" y="3555" width="440" height="8" rx="4" fill="#cfcfcf"/>
+<rect x="540.0" y="3600" width="170" height="36" rx="18.0" fill="#333333"/>
+<text x="625.0" y="3623.0" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="13" font-weight="600" text-anchor="middle" fill="#ffffff" >Create an account</text>
+<rect x="730.0" y="3600" width="170" height="36" rx="18.0" fill="#ffffff" stroke="#333333"/>
+<text x="815.0" y="3623.0" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="13" font-weight="600" text-anchor="middle" fill="#333333" >Talk to our team</text>
+<rect x="0" y="3780" width="1440" height="230" fill="#f2f2f2" stroke="#9a9a9a"/>
+<text x="120" y="3830" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="18" font-weight="700" text-anchor="start" fill="#222222" >TeraMind</text>
+<rect x="120" y="3850" width="220" height="8" rx="4" fill="#cfcfcf"/>
+<rect x="120" y="3868" width="132" height="8" rx="4" fill="#cfcfcf"/>
+<text x="450" y="3830" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="14" font-weight="700" text-anchor="start" fill="#333333" >Services</text>
+<text x="450" y="3860" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="start" fill="#6b6b6b" >GPU catalog</text>
+<text x="450" y="3886" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="start" fill="#6b6b6b" >GPU recommendation</text>
+<text x="740" y="3830" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="14" font-weight="700" text-anchor="start" fill="#333333" >Company</text>
+<text x="740" y="3860" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="start" fill="#6b6b6b" >About</text>
+<text x="740" y="3886" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="start" fill="#6b6b6b" >Contact</text>
+<text x="1030" y="3830" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="14" font-weight="700" text-anchor="start" fill="#333333" >Account</text>
+<text x="1030" y="3860" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="start" fill="#6b6b6b" >Sign in</text>
+<text x="1030" y="3886" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="start" fill="#6b6b6b" >Create an account</text>
+<line x1="120" y1="3950" x2="1320" y2="3950" stroke="#9a9a9a"/>
+<text x="120" y="3980" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start" fill="#6b6b6b" >© 2026 TeraMind. All rights reserved.</text>
+<text x="1320" y="3980" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="12" font-weight="400" text-anchor="end" fill="#6b6b6b" >Fictional company — SUP'COM web project.</text>
+</svg>

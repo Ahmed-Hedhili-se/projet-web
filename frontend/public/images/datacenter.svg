@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" role="img" aria-label="Row of NeuroGrid server racks in a data center">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" role="img" aria-label="Row of TeraMind server racks in a data center">
   <defs>
     <radialGradient id="ceiling" cx="50%" cy="0%" r="70%">                   <!-- lumière venant du plafond -->
       <stop offset="0" stop-color="#f5f5f7" stop-opacity="0.12"/>

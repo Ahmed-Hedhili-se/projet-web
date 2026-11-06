@@ -45,7 +45,7 @@ export class AboutPage {
   ];
 
   protected readonly mission =                             // texte qui s'éclaire en défilant
-    'Training and serving AI models should not require a research-lab budget. Too many teams overpay for GPUs they do not need, or wait weeks for capacity. We built NeuroGrid to fix that: modern GPUs you can book by the hour, and a recommender that tells you exactly which one fits your model.';
+    'Training and serving AI models should not require a research-lab budget. Too many teams overpay for GPUs they do not need, or wait weeks for capacity. We built TeraMind to fix that: modern GPUs you can book by the hour, and a recommender that tells you exactly which one fits your model.';
 
   protected readonly values: Value[] = [
     { icon: 'eye', title: 'Transparency', text: 'One clear hourly price per GPU. What you see is what you pay.' },
@@ -55,7 +55,7 @@ export class AboutPage {
   ];
 
   protected readonly milestones: Milestone[] = [
-    { year: '2024', title: 'NeuroGrid is founded', text: 'A small team of ML engineers sets out to make GPU compute simple and affordable.' },
+    { year: '2024', title: 'TeraMind is founded', text: 'A small team of ML engineers sets out to make GPU compute simple and affordable.' },
     { year: '2025', title: 'First H100 cluster', text: 'Our first data center goes live with H100 and A100 GPUs for training workloads.' },
     { year: '2026', title: 'GPU recommender launch', text: 'Customers can now describe their model and get the most cost-effective GPU instantly.' },
   ];

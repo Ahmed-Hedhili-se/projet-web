@@ -1,3 +1,5 @@
+import { GpuSummary } from './gpu';
+
 export type ModelType = 'LLM' | 'VISION' | 'DIFFUSION' | 'AUDIO' | 'OTHER'; // types de modèle acceptés
 export type WorkloadMode = 'TRAINING' | 'INFERENCE';      // entraînement ou inférence
 
@@ -6,14 +8,6 @@ export interface RecommendationRequest {                   // body de POST /reco
   parametersBillions: number;                              // de 0.01 à 2000
   mode: WorkloadMode;
   budgetPerHour: number;                                   // > 0, en dollars
-}
-
-export interface GpuSummary {                              // objet « GpuSummary » de docs/API.md
-  id: number;
-  name: string;
-  manufacturer: string;
-  vramGb: number;
-  pricePerHour: number;
 }
 
 export interface GpuConfiguration {                        // un GPU × un nombre d'unités
