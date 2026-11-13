@@ -108,6 +108,8 @@
 @layer base {
   html {
     color-scheme: dark;                                    /* barres de défilement et contrôles natifs sombres */
+    --aurora-rgb: 41 151 255;                              /* couleur « Aurore » par défaut (bleu) ; SceneSync la fait évoluer */
+    --aurora: rgb(var(--aurora-rgb));                      /* usage : color: var(--aurora) · fond : rgb(var(--aurora-rgb) / .12) */
   }
 
   body {

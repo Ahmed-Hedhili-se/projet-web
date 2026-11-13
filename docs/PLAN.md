@@ -346,6 +346,7 @@ Une étape à la fois, testée puis validée avant de passer à la suivante.
 | F6 | Login, Register, `AuthService`, interceptors, guards | Connexion, déconnexion et routes protégées OK |
 | F7 | Espace utilisateur : nouvelle location, mes locations, profil | Location créée puis annulée depuis l'interface |
 | F8 | Espace admin : dashboard, GPU, utilisateurs, locations, messages | Toutes les actions admin fonctionnent |
+| F9 | Motion & 3D (`docs/DESIGN-MOTION.md`) : planète Three.js synchronisée avec le réseau neuronal (`SceneSync`), défilement Lenis, cartes en verre | Planète grande sur Home et petite ailleurs, réseau relié au curseur conservé, versions légères (mobile, animations réduites, sans WebGL) |
 
 Tant qu'une route backend n'est pas prête, le frontend peut utiliser des données fictives
 qui respectent **exactement** le format de API.md.
