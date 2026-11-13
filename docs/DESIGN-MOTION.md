@@ -75,7 +75,7 @@ Use `THREE.SphereGeometry` (no GLTF needed). Load textures with `TextureLoader`;
 **Scroll choreography (hero)** — smoothstep keyframes on `SceneSync.frame.scrollProgress` (damped, `k = min(1, dt·3.2)`):
 ```
 X: {0:0}  {0.32:-3.1} {0.64:3.2}  {1:0}      (× clamp(innerWidth/1200, 0.5, 1))
-Y: {0:-4.5}{0.32:0.55} {0.64:0.45} {1:0.15}
+Y: {0:-4.75}{0.32:0.55} {0.64:0.45} {1:0.15}
 S: {0:2.15}{0.32:1.0}  {0.64:0.92} {1:1.12}
 rotation.y = 2.07 + spinPhase + progress·π·1.6
 ```
@@ -95,11 +95,13 @@ Write `frame.planet = { x, y, radius }` (planet centre and visible radius **in C
 
 ### Glass cards (where content floats over the scene)
 ```
-background: rgba(29, 29, 31, .55)   /* Carbon at 55 % */
+background: rgba(22, 22, 24, .66)   /* dark Carbon at 66 % — darker than first planned so text stays ≥ 4.5:1 over the bright day side */
 backdrop-filter: blur(14px) saturate(120%)
 border: 1px solid rgba(51, 51, 54, .8)   /* Steel */
 border-radius: 28px                      /* DESIGN.md card radius */
-hover: background rgba(29,29,31,.68), border Slate #6e6e73, translateY(-4px)
+hover: background rgba(22,22,24,.76), border Slate mixed with 35 % aurora, translateY(-4px)
+mobile / coarse pointer: no blur, background at 86 %
+secondary text inside glass: Porcelain at 70 % (Ash is too dim over the planet)
 ```
 No box shadow. A very faint **top-left sheen** (`radial-gradient(120% 120% at 0% 0%, rgba(245,245,247,.05), transparent 45%)`) may fade in on hover.
 Forms, tables and admin screens keep **solid** Carbon/Obsidian surfaces (readability first).

@@ -1,5 +1,5 @@
 <span class="scroll-text">                                 <!-- porte la frise de défilement partagée -->
   @for (item of words(); track $index) {
-    <span class="scroll-word" [style.--word-start]="item.start" [style.--word-end]="item.end">{{ item.word + ' ' }}</span> <!-- moment où ce mot s'éclaire -->
+    <span class="scroll-word" [style.--word-start]="item.start" [style.--word-end]="item.end">{{ item.word }}</span>{{ ' ' }} <!-- chaque mot apparaît à son tour ; l'espace est placé après le mot -->
   }
 </span>

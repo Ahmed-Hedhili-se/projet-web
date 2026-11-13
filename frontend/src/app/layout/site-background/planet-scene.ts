@@ -21,7 +21,7 @@ const ENTRY_START_Y = -6.5;                                // la planète arrive
 const POINTER_TILT = 0.08;                                 // inclinaison maximale vers le curseur (radians)
 
 const STOPS_X: Stop[] = [{ p: 0, v: 0 }, { p: 0.32, v: -3.1 }, { p: 0.64, v: 3.2 }, { p: 1, v: 0 }];       // chorégraphie au défilement (docs/DESIGN-MOTION.md, section 4)
-const STOPS_Y: Stop[] = [{ p: 0, v: -4.5 }, { p: 0.32, v: 0.55 }, { p: 0.64, v: 0.45 }, { p: 1, v: 0.15 }];
+const STOPS_Y: Stop[] = [{ p: 0, v: -4.75 }, { p: 0.32, v: 0.55 }, { p: 0.64, v: 0.45 }, { p: 1, v: 0.15 }];
 const STOPS_S: Stop[] = [{ p: 0, v: 2.15 }, { p: 0.32, v: 1.0 }, { p: 0.64, v: 0.92 }, { p: 1, v: 1.12 }];
 
 const DATA_CENTERS = [                                     // les 3 data centers TeraMind (latitude, longitude)

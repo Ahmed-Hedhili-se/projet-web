@@ -178,6 +178,33 @@
     letter-spacing: -0.12px;
   }
 
+  .glass-card {                                            /* carte en verre : le contenu flotte au-dessus de la planète (DESIGN-MOTION.md, section 5) */
+    border: 1px solid rgb(51 51 54 / 0.8);                 /* Steel */
+    border-radius: var(--radius-card);
+    background-color: rgb(22 22 24 / 0.66);                /* gris très foncé translucide : le texte reste lisible même devant la planète */
+    backdrop-filter: blur(14px) saturate(120%);            /* floute ce qui est derrière */
+    transition:
+      background-color 0.5s,
+      border-color 0.5s,
+      transform 0.5s var(--ease-out-expo);
+  }
+
+  .glass-card:hover {
+    border-color: color-mix(in srgb, var(--aurora) 35%, var(--color-slate)); /* bordure légèrement teintée Aurore au survol */
+    background-color: rgb(22 22 24 / 0.76);
+  }
+
+  .hero-scrim {                                            /* voile sombre en haut du hero de Home */
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(125% 62% at 50% -10%, rgb(0 0 0 / 0.82) 0%, rgb(0 0 0 / 0.28) 44%, transparent 68%);
+  }
+
+  .aurora-glow {                                           /* lueur Aurore très douce derrière le titre d'une section */
+    background: radial-gradient(45% 300px at 50% 320px, rgb(var(--aurora-rgb) / 0.12), transparent 100%); /* s'estompe de tous les côtés : aucune ligne visible */
+  }
+
   .text-link {                                             /* lien sur fond sombre */
     color: var(--color-electric-link);
     transition: opacity 0.2s;
@@ -355,6 +382,30 @@
   }
 }
 
+html.lenis,
+html.lenis body {
+  height: auto;                                            /* défilement adouci Lenis (core/services/smooth-scroll.ts) */
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;                        /* Lenis gère lui-même la douceur */
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;                            /* panneaux qui défilent seuls (ex. formulaire admin) */
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+@media (pointer: coarse), (max-width: 767px) {             /* version légère : pas de flou sur mobile (coûteux) */
+  .glass-card {
+    backdrop-filter: none;
+    background-color: rgb(22 22 24 / 0.86);
+  }
+}
+
 @supports (animation-timeline: view()) {                   /* animations pilotées par le défilement (Chrome, Edge, Safari récents) */
   .scroll-zoom {                                           /* image qui grandit en entrant à l'écran */
     animation: scroll-zoom linear both;
@@ -380,14 +431,15 @@
     animation-range: entry 40% cover 60%;
   }
 
-  .scroll-text {                                           /* paragraphe dont les mots s'éclairent un à un (ScrollText) */
+  .scroll-text {                                           /* paragraphe dont les mots apparaissent un à un (ScrollText) */
     view-timeline-name: --scroll-text;                     /* une frise de défilement partagée par tous ses mots */
   }
 
   .scroll-word {
+    display: inline-block;                                 /* nécessaire pour déplacer le mot */
     animation: scroll-word linear both;
     animation-timeline: --scroll-text;
-    animation-range: cover var(--word-start) cover var(--word-end); /* chaque mot s'éclaire à son tour */
+    animation-range: cover var(--word-start) cover var(--word-end); /* chaque mot apparaît à son tour */
   }
 
   @keyframes scroll-zoom {
@@ -401,8 +453,8 @@
   }
 
   @keyframes scroll-highlight {
-    0%, 100% { opacity: 0.25; }                            /* discret en haut et en bas de l'écran */
-    35%, 65% { opacity: 1; }                               /* pleinement visible au centre */
+    0%, 100% { opacity: 0.8; transform: scale(0.96); }     /* un peu en retrait en haut et en bas de l'écran (reste lisible) */
+    35%, 65% { opacity: 1; transform: scale(1); }          /* pleinement présent au centre */
   }
 
   @keyframes scroll-draw-y {
@@ -410,8 +462,9 @@
   }
 
   @keyframes scroll-word {
-    from { color: var(--color-steel); }                    /* mot éteint */
-    to { color: var(--color-porcelain); }                  /* mot allumé */
+    0% { opacity: 0; filter: blur(8px); transform: translateY(0.4em); color: var(--aurora-text); }   /* mot pas encore arrivé : invisible, flou, plus bas */
+    55% { opacity: 1; filter: blur(0); transform: translateY(0); color: var(--aurora-text); }        /* il arrive net, à la couleur Aurore */
+    100% { opacity: 1; filter: blur(0); transform: translateY(0); color: var(--color-porcelain); }   /* puis devient blanc, bien lisible */
   }
 }
 
@@ -438,6 +491,10 @@
     animation-duration: 0.01ms !important;                 /* animations quasi instantanées */
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+
+  .planet-canvas {
+    filter: brightness(0.6);                               /* planète immobile derrière toute la page : assombrie pour garder les titres lisibles */
   }
 
   .reveal {
