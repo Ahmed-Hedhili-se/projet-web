@@ -17,6 +17,11 @@ enum RentalStatus {
   CANCELLED                                                // location annulée
 }
 
+enum SoftwareStack {
+  CUDA                                                     // GPU NVIDIA
+  ROCM                                                     // GPU AMD
+}
+
 model User {
   id           Int      @id @default(autoincrement())
   email        String   @unique                          // identifiant de connexion
@@ -46,6 +51,15 @@ model Gpu {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
   rentals      Rental[]                                  // locations de ce GPU
+
+  // Caractéristiques internes, utilisées seulement par le conseiller IA (pas renvoyées par GET /gpus)
+  memoryBandwidthGbs  Int           @default(0)          // bande passante mémoire en Go/s
+  fp8Tflops           Float?                             // null = FP8 non supporté
+  supportedPrecisions String[]      @default([])         // ex. ["FP32","BF16","FP16","FP8","INT8"]
+  softwareStack       SoftwareStack @default(CUDA)
+  computeCapability   String        @default("")         // "9.0" (CUDA) ou "gfx942" (ROCm)
+  eccMemory           Boolean       @default(true)       // mémoire avec correction d'erreurs
+  fastInterconnect    Boolean       @default(false)      // NVLink / Infinity Fabric entre les GPU d'un serveur
 
   @@map("gpus")
 }
