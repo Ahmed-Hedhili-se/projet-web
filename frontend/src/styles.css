@@ -245,11 +245,15 @@
     transform: translateY(0);
   }
 
-  .reveal .animate-grow-x {
+  .reveal .animate-grow-x,
+  .reveal .bar-grow,
+  .reveal .ring-fill {
     animation-play-state: paused;                          /* attend que le bloc parent soit visible */
   }
 
-  .reveal.is-visible .animate-grow-x {
+  .reveal.is-visible .animate-grow-x,
+  .reveal.is-visible .bar-grow,
+  .reveal.is-visible .ring-fill {
     animation-play-state: running;                         /* démarre quand le bloc entre à l'écran */
   }
 
@@ -273,6 +277,43 @@
 
   .site-vignette {                                         /* assombrit les bords de l'écran */
     background: radial-gradient(ellipse at 50% 35%, transparent 0%, rgba(0, 0, 0, 0.55) 60%, #000000 100%);
+  }
+
+  .bar-grow {                                              /* colonne de graphique qui pousse depuis sa base */
+    transform-origin: bottom;
+    animation: grow-y 0.9s var(--ease-out-expo) both;
+  }
+
+  @keyframes grow-y {
+    from { transform: scaleY(0); }
+  }
+
+  .ring-fill {                                             /* jauge circulaire qui se remplit (cercle de rayon 52 : périmètre ≈ 327) */
+    animation: ring-fill 1.6s var(--ease-out-expo) 0.2s both;
+  }
+
+  @keyframes ring-fill {
+    from { stroke-dashoffset: 327; }                       /* cercle vide */
+  }
+
+  .drawer-enter {                                          /* panneau latéral qui glisse depuis la droite (animate.enter) */
+    animation: drawer-in 0.45s var(--ease-out-expo) both;
+  }
+
+  .drawer-leave {                                          /* panneau latéral qui repart vers la droite (animate.leave) */
+    animation: drawer-in 0.25s ease reverse both;
+  }
+
+  @keyframes drawer-in {
+    from { transform: translateX(100%); }
+  }
+
+  .dialog-backdrop-enter {                                 /* fond sombre d'une fenêtre de confirmation */
+    animation: backdrop-in 0.25s ease both;
+  }
+
+  @keyframes backdrop-in {
+    from { opacity: 0; }
   }
 
   .menu-enter {                                            /* menu déroulant qui s'ouvre (animate.enter) */

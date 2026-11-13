@@ -1,0 +1,48 @@
+<div class="mx-auto grid max-w-7xl gap-6 px-4 pt-8 pb-20 lg:grid-cols-[220px_1fr] lg:gap-10 lg:pt-12"> <!-- menu à gauche sur grand écran -->
+  <aside class="animate-fade-up">
+    <nav aria-label="Admin navigation" class="rounded-card border border-steel bg-carbon p-2 lg:sticky lg:top-16 lg:p-3">
+      <p class="hidden px-3 pt-2 pb-3 text-utility-nav font-semibold text-ash lg:block">Admin</p>
+      <ul class="flex gap-1 overflow-x-auto lg:flex-col">     <!-- barre défilante sur mobile, colonne sur grand écran -->
+        @for (link of links; track link.path) {
+          <li class="shrink-0">
+            <a
+              [routerLink]="link.path"
+              routerLinkActive
+              [routerLinkActiveOptions]="{ exact: link.path === '/admin' }"
+              ariaCurrentWhenActive="page"
+              class="group flex items-center gap-3 rounded-[14px] px-3 py-2.5 text-body text-ash transition-colors duration-300 hover:bg-obsidian/60 hover:text-porcelain aria-[current=page]:bg-obsidian aria-[current=page]:text-porcelain"
+            >                                                                                   <!-- lien actif : fond noir, texte clair -->
+              <span class="flex size-5 items-center justify-center transition-transform duration-300 group-hover:scale-110">
+                @switch (link.icon) {
+                  @case ('dashboard') {
+                    <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="3.5" y="3.5" width="7" height="9" rx="2" /><rect x="13.5" y="3.5" width="7" height="5" rx="2" /><rect x="13.5" y="11.5" width="7" height="9" rx="2" /><rect x="3.5" y="15.5" width="7" height="5" rx="2" /></svg>
+                  }
+                  @case ('gpu') {
+                    <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2" /><rect x="9.5" y="9.5" width="5" height="5" rx="1" /><path stroke-linecap="round" d="M9 3v3M15 3v3M9 18v3M15 18v3M3 9h3M3 15h3M18 9h3M18 15h3" /></svg>
+                  }
+                  @case ('users') {
+                    <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="9" cy="8" r="3.5" /><path stroke-linecap="round" d="M2.5 20c.8-3.5 3.4-5.5 6.5-5.5s5.7 2 6.5 5.5" /><path stroke-linecap="round" d="M16 4.8a3.5 3.5 0 0 1 0 6.4M18 14.8c1.8.7 3 2.5 3.5 5.2" /></svg>
+                  }
+                  @case ('rentals') {
+                    <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5" /><path stroke-linecap="round" d="M3.5 10h17M8 3v4M16 3v4" /></svg>
+                  }
+                  @case ('messages') {
+                    <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="3" y="5.5" width="18" height="13" rx="2" /><path stroke-linecap="round" stroke-linejoin="round" d="m4 7 8 6 8-6" /></svg>
+                  }
+                }
+              </span>
+              {{ link.label }}
+              @if (link.icon === 'messages' && adminService.unreadMessages() > 0) {
+                <span animate.enter="animate-pop-in" class="ml-auto rounded-pill bg-porcelain px-2 text-utility-nav font-semibold text-obsidian tabular-nums">{{ adminService.unreadMessages() }}</span> <!-- badge des messages non lus -->
+              }
+            </a>
+          </li>
+        }
+      </ul>
+    </nav>
+  </aside>
+
+  <div class="min-w-0">                                    <!-- page admin de la route actuelle -->
+    <router-outlet />
+  </div>
+</div>

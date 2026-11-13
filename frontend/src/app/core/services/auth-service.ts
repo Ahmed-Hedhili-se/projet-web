@@ -3,10 +3,10 @@ import { Injectable, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, catchError, map, of, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { AuthResponse, LoginRequest, MeResponse, User } from '../models/user';
+import { AuthResponse, LoginRequest, MeResponse, RegisterRequest, User } from '../models/user';
 
-const TOKEN_KEY = 'neurogrid_token';                       // clés utilisées dans le localStorage du navigateur
-const USER_KEY = 'neurogrid_user';
+const TOKEN_KEY = 'teramind_token';                       // clés utilisées dans le localStorage du navigateur
+const USER_KEY = 'teramind_user';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {                                 // connexion, déconnexion et utilisateur courant
@@ -25,6 +25,19 @@ export class AuthService {                                 // connexion, déconn
     return this.http
       .post<AuthResponse>(`${environment.apiUrl}/auth/login`, request)
       .pipe(tap((response) => this.saveSession(response.token, response.user))); // garde le token si la connexion réussit
+  }
+
+  register(request: RegisterRequest): Observable<AuthResponse> { // POST /auth/register : crée le compte et connecte directement
+    return this.http
+      .post<AuthResponse>(`${environment.apiUrl}/auth/register`, request)
+      .pipe(tap((response) => this.saveSession(response.token, response.user)));
+  }
+
+  updateCurrentUser(user: User): void {                    // après une modification du profil (UserService)
+    const token = this.tokenState();
+    if (token) {
+      this.saveSession(token, user);
+    }
   }
 
   logout(redirectTo = '/'): void {                         // pas de route API : on oublie simplement le token

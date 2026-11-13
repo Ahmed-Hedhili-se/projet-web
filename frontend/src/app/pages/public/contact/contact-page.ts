@@ -23,7 +23,7 @@ export class ContactPage {
   protected readonly topics = ['Sales & pricing', 'Technical support', 'Partnership', 'Other']; // sujets proposés
 
   protected readonly infoCards = [                         // cartes d'information (entreprise fictive)
-    { icon: 'mail', label: 'Email', value: 'hello@neurogrid.example' },
+    { icon: 'mail', label: 'Email', value: 'hello@teramind.example' },
     { icon: 'clock', label: 'Response time', value: 'Within one business day' },
     { icon: 'pin', label: 'Office', value: 'Ariana, Tunisia' },
   ];

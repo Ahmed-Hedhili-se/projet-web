@@ -15,11 +15,29 @@ export interface LoginRequest {                            // body de POST /auth
   password: string;
 }
 
-export interface AuthResponse {                            // réponse de POST /auth/login (et plus tard /auth/register)
+export interface RegisterRequest {                         // body de POST /auth/register
+  email: string;
+  password: string;                                        // 8 à 72 caractères
+  firstName: string;                                       // 1 à 50 caractères
+  lastName: string;                                        // 1 à 50 caractères
+}
+
+export interface AuthResponse {                            // réponse de POST /auth/login et POST /auth/register
   token: string;                                           // JWT à envoyer dans le header Authorization
   user: User;
 }
 
-export interface MeResponse {                              // réponse de GET /auth/me
+export interface MeResponse {                              // réponse de GET /auth/me, GET /users/me et PUT /users/me
   user: User;
+}
+
+export interface UpdateProfileRequest {                    // body de PUT /users/me (les 3 champs sont obligatoires)
+  email: string;
+  firstName: string;
+  lastName: string;
+}
+
+export interface ChangePasswordRequest {                   // body de PUT /users/me/password
+  currentPassword: string;
+  newPassword: string;                                     // 8 à 72 caractères
 }

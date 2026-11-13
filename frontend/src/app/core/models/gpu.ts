@@ -36,3 +36,15 @@ export interface GpuListResponse {                         // réponse de GET /g
 export interface GpuResponse {                             // réponse de GET /gpus/:id
   gpu: Gpu;
 }
+
+export interface GpuSummary {                              // objet « GpuSummary » de docs/API.md (GPU résumé)
+  id: number;
+  name: string;
+  manufacturer: string;
+  vramGb: number;
+  pricePerHour: number;
+}
+
+export function toGpuSummary(gpu: Gpu): GpuSummary {       // Gpu complet → GpuSummary
+  return { id: gpu.id, name: gpu.name, manufacturer: gpu.manufacturer, vramGb: gpu.vramGb, pricePerHour: gpu.pricePerHour };
+}

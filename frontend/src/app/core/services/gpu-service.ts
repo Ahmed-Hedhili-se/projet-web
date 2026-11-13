@@ -19,7 +19,10 @@ export class GpuService {
     return this.http.get<GpuListResponse>(this.baseUrl, { params });
   }
 
-  getById(id: number): Observable<GpuResponse> {           // GET /gpus/:id
-    return this.http.get<GpuResponse>(`${this.baseUrl}/${id}`);
+  getById(id: number, period?: { startDate: string; durationHours: number }): Observable<GpuResponse> { // GET /gpus/:id
+    const params = period                                  // période facultative : availableUnits calculé sur cette période
+      ? new HttpParams().set('startDate', period.startDate).set('durationHours', String(period.durationHours))
+      : undefined;
+    return this.http.get<GpuResponse>(`${this.baseUrl}/${id}`, { params });
   }
 }

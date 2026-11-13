@@ -29,7 +29,7 @@ export class LoginPage {
   protected readonly demoAccounts = environment.useMockApi // comptes fictifs, affichés seulement avec les données de démonstration
     ? [
         { label: 'User', email: 'jane.doe@example.com', password: 'Password123' },
-        { label: 'Admin', email: 'admin@neurogrid.example', password: 'Admin12345' },
+        { label: 'Admin', email: 'admin@teramind.example', password: 'Admin12345' },
         { label: 'Blocked', email: 'blocked@example.com', password: 'Password123' },
       ]
     : [];

@@ -46,3 +46,24 @@ export const MOCK_GPUS: Gpu[] = [                          // données fictives 
     isActive: false, createdAt: created, updatedAt: created, // désactivé : ne doit pas apparaître dans le catalogue
   },
 ];
+
+const GPUS_KEY = 'teramind_mock_gpus';                    // catalogue modifiable par l'admin, gardé dans le navigateur (mock seulement)
+let memoryGpus: Gpu[] | null = null;                       // secours si le localStorage est indisponible
+
+export function allMockGpus(): Gpu[] {                     // catalogue actuel (actifs et désactivés)
+  try {
+    const json = localStorage.getItem(GPUS_KEY);
+    return json ? (JSON.parse(json) as Gpu[]) : structuredClone(MOCK_GPUS); // vide = catalogue de départ
+  } catch {
+    return memoryGpus ?? structuredClone(MOCK_GPUS);
+  }
+}
+
+export function saveMockGpus(gpus: Gpu[]): void {          // enregistre le catalogue (survit au rafraîchissement)
+  memoryGpus = gpus;
+  try {
+    localStorage.setItem(GPUS_KEY, JSON.stringify(gpus));
+  } catch {                                                // stockage indisponible : le catalogue reste en mémoire
+    return;
+  }
+}

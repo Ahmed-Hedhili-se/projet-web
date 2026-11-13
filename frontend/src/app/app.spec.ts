@@ -21,7 +21,7 @@ describe('App', () => {
     const fixture = TestBed.createComponent(App);
     await fixture.whenStable();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('header')?.textContent).toContain('NeuroGrid'); // logo dans la Navbar
+    expect(compiled.querySelector('header')?.textContent).toContain('TeraMind'); // logo dans la Navbar
     expect(compiled.querySelector('footer')?.textContent).toContain('All rights reserved'); // copyright dans le Footer
   });
 });

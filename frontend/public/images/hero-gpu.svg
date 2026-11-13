@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" role="img" aria-label="NeuroGrid NG-X 80 AI accelerator card">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" role="img" aria-label="TeraMind TM-X 80 AI accelerator card">
   <defs>
     <radialGradient id="glow" cx="50%" cy="50%" r="50%">                     <!-- halo lumineux derrière la carte -->
       <stop offset="0" stop-color="#f5f5f7" stop-opacity="0.16"/>
@@ -64,8 +64,8 @@
     <rect x="28" y="28" width="10" height="10" rx="2.5"/>
   </g>
   <g font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">
-    <text x="190" y="290" font-size="26" font-weight="600" letter-spacing="4" fill="#f5f5f7">NEUROGRID</text>
-    <text x="190" y="318" font-size="14" letter-spacing="2" fill="#86868b">NG-X 80 · 80 GB HBM3</text>
+    <text x="190" y="290" font-size="26" font-weight="600" letter-spacing="4" fill="#f5f5f7">TERAMIND</text>
+    <text x="190" y="318" font-size="14" letter-spacing="2" fill="#86868b">TM-X 80 · 80 GB HBM3</text>
     <text x="190" y="342" font-size="12" letter-spacing="2" fill="#6e6e73">AI ACCELERATOR</text>
   </g>
 

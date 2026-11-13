@@ -1,0 +1,127 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1440" height="3400" viewBox="0 0 1440 3400">
+<rect width="1440" height="3400" fill="#ffffff"/>
+<rect x="0" y="0" width="1440" height="56" fill="#ffffff" stroke="#9a9a9a"/>
+<text x="24" y="34" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="18" font-weight="700" text-anchor="start" fill="#222222" >About</text>
+<text x="109" y="34" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="14" font-weight="400" text-anchor="start" fill="#6b6b6b" >/about</text>
+<text x="1416" y="34" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="end" fill="#6b6b6b" >Wireframe basse fidélité — 1440 px — TeraMind</text>
+<rect x="0" y="56" width="1440" height="64" fill="#f2f2f2" stroke="#9a9a9a"/>
+<rect x="120" y="76" width="24" height="24" rx="5" fill="#cfcfcf" stroke="#9a9a9a"/>
+<text x="154" y="94" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="18" font-weight="700" text-anchor="start" fill="#222222" >TeraMind</text>
+<text x="272" y="94" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="11" font-weight="400" text-anchor="start" fill="#6b6b6b" >(logo)</text>
+<text x="470" y="94" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="14" font-weight="500" text-anchor="start" fill="#333333" >Home</text>
+<text x="536" y="94" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="14" font-weight="500" text-anchor="start" fill="#333333" >GPUs</text>
+<text x="602" y="94" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="14" font-weight="500" text-anchor="start" fill="#333333" >Recommendation</text>
+<text x="748" y="94" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="14" font-weight="500" text-anchor="start" fill="#333333" >About</text>
+<text x="822" y="94" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="14" font-weight="500" text-anchor="start" fill="#333333" >Contact</text>
+<rect x="1090" y="70" width="100" height="36" rx="18.0" fill="#ffffff" stroke="#333333"/>
+<text x="1140.0" y="93.0" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="13" font-weight="600" text-anchor="middle" fill="#333333" >Sign in</text>
+<rect x="1200" y="70" width="120" height="36" rx="18.0" fill="#333333"/>
+<text x="1260.0" y="93.0" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="13" font-weight="600" text-anchor="middle" fill="#ffffff" >Get started</text>
+<text x="720.0" y="190" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="14" font-weight="600" text-anchor="middle" fill="#6b6b6b" >About TeraMind</text>
+<text x="720.0" y="260" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="60" font-weight="800" text-anchor="middle" fill="#222222" >We make AI compute simple.</text>
+<rect x="420.0" y="300" width="600" height="8" rx="4" fill="#cfcfcf"/>
+<rect x="420.0" y="318" width="360" height="8" rx="4" fill="#cfcfcf"/>
+<rect x="220" y="360" width="1000" height="520" rx="12" fill="#f2f2f2" stroke="#9a9a9a"/>
+<path d="M220 360L1220 880M1220 360L220 880" stroke="#cfcfcf" stroke-width="1.5"/>
+<rect x="570.0" y="602.0" width="300" height="36" rx="18" fill="#ffffff" stroke="#9a9a9a"/>
+<text x="720.0" y="625.0" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="13" font-weight="600" text-anchor="middle" fill="#333333" >Image : data center (animée)</text>
+<text x="120" y="970" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="14" font-weight="600" text-anchor="start" fill="#6b6b6b" >Our mission</text>
+<text x="120" y="1014" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="34" font-weight="700" text-anchor="start" fill="#222222" >Every model deserves the right hardware.</text>
+<rect x="120" y="1060" width="900" height="8" rx="4" fill="#cfcfcf"/>
+<rect x="120" y="1090" width="900" height="8" rx="4" fill="#cfcfcf"/>
+<rect x="120" y="1120" width="900" height="8" rx="4" fill="#cfcfcf"/>
+<rect x="120" y="1150" width="450" height="8" rx="4" fill="#cfcfcf"/>
+<text x="120" y="1190" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start" fill="#6b6b6b" font-style="italic">▸ texte qui s'éclaire mot à mot</text>
+<rect x="108" y="1238" width="1224" height="164" rx="24" fill="#e4e4e4" stroke="#9a9a9a"/>
+<rect x="120.0" y="1250" width="282.0" height="140" rx="20" fill="#f2f2f2" stroke="#9a9a9a"/>
+<text x="261.0" y="1325.0" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="14" font-weight="600" text-anchor="middle" fill="#333333" >2024 · Founded</text>
+<rect x="426.0" y="1250" width="282.0" height="140" rx="20" fill="#f2f2f2" stroke="#9a9a9a"/>
+<text x="567.0" y="1325.0" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="14" font-weight="600" text-anchor="middle" fill="#333333" >3 · Data centers</text>
+<rect x="732.0" y="1250" width="282.0" height="140" rx="20" fill="#f2f2f2" stroke="#9a9a9a"/>
+<text x="873.0" y="1325.0" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="14" font-weight="600" text-anchor="middle" fill="#333333" >1,200+ · Customers</text>
+<rect x="1038.0" y="1250" width="282.0" height="140" rx="20" fill="#f2f2f2" stroke="#9a9a9a"/>
+<text x="1179.0" y="1325.0" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="14" font-weight="600" text-anchor="middle" fill="#333333" >60 · GPUs</text>
+<text x="720.0" y="1480" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="14" font-weight="600" text-anchor="middle" fill="#6b6b6b" >Our values</text>
+<text x="720.0" y="1524" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="34" font-weight="700" text-anchor="middle" fill="#222222" >What drives us.</text>
+<rect x="120.0" y="1570" width="282.0" height="190" rx="20" fill="#f2f2f2" stroke="#9a9a9a"/>
+<circle cx="168.0" cy="1622" r="22" fill="#e4e4e4" stroke="#9a9a9a"/>
+<text x="146.0" y="1680" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="17" font-weight="700" text-anchor="start" fill="#333333" >Transparency</text>
+<rect x="146.0" y="1702" width="230" height="8" rx="4" fill="#cfcfcf"/>
+<rect x="146.0" y="1720" width="138" height="8" rx="4" fill="#cfcfcf"/>
+<rect x="426.0" y="1570" width="282.0" height="190" rx="20" fill="#f2f2f2" stroke="#9a9a9a"/>
+<circle cx="474.0" cy="1622" r="22" fill="#e4e4e4" stroke="#9a9a9a"/>
+<text x="452.0" y="1680" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="17" font-weight="700" text-anchor="start" fill="#333333" >Performance</text>
+<rect x="452.0" y="1702" width="230" height="8" rx="4" fill="#cfcfcf"/>
+<rect x="452.0" y="1720" width="138" height="8" rx="4" fill="#cfcfcf"/>
+<rect x="732.0" y="1570" width="282.0" height="190" rx="20" fill="#f2f2f2" stroke="#9a9a9a"/>
+<circle cx="780.0" cy="1622" r="22" fill="#e4e4e4" stroke="#9a9a9a"/>
+<text x="758.0" y="1680" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="17" font-weight="700" text-anchor="start" fill="#333333" >Efficiency</text>
+<rect x="758.0" y="1702" width="230" height="8" rx="4" fill="#cfcfcf"/>
+<rect x="758.0" y="1720" width="138" height="8" rx="4" fill="#cfcfcf"/>
+<rect x="1038.0" y="1570" width="282.0" height="190" rx="20" fill="#f2f2f2" stroke="#9a9a9a"/>
+<circle cx="1086.0" cy="1622" r="22" fill="#e4e4e4" stroke="#9a9a9a"/>
+<text x="1064.0" y="1680" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="17" font-weight="700" text-anchor="start" fill="#333333" >Support</text>
+<rect x="1064.0" y="1702" width="230" height="8" rx="4" fill="#cfcfcf"/>
+<rect x="1064.0" y="1720" width="138" height="8" rx="4" fill="#cfcfcf"/>
+<text x="720.0" y="1840" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="14" font-weight="600" text-anchor="middle" fill="#6b6b6b" >Our story</text>
+<text x="720.0" y="1884" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="34" font-weight="700" text-anchor="middle" fill="#222222" >How we got here.</text>
+<line x1="420" y1="1930" x2="420" y2="2260" stroke="#333333" stroke-width="2"/>
+<text x="440" y="2280" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start" fill="#6b6b6b" font-style="italic">▸ la ligne se dessine pendant le défilement</text>
+<circle cx="420" cy="1940" r="7" fill="#333333"/>
+<text x="450" y="1936" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="12" font-weight="600" text-anchor="start" fill="#6b6b6b" >2024</text>
+<text x="450" y="1962" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="18" font-weight="700" text-anchor="start" fill="#333333" >TeraMind is founded</text>
+<rect x="450" y="1978" width="500" height="8" rx="4" fill="#cfcfcf"/>
+<circle cx="420" cy="2060" r="7" fill="#333333"/>
+<text x="450" y="2056" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="12" font-weight="600" text-anchor="start" fill="#6b6b6b" >2025</text>
+<text x="450" y="2082" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="18" font-weight="700" text-anchor="start" fill="#333333" >First H100 cluster</text>
+<rect x="450" y="2098" width="500" height="8" rx="4" fill="#cfcfcf"/>
+<circle cx="420" cy="2180" r="7" fill="#333333"/>
+<text x="450" y="2176" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="12" font-weight="600" text-anchor="start" fill="#6b6b6b" >2026</text>
+<text x="450" y="2202" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="18" font-weight="700" text-anchor="start" fill="#333333" >GPU recommender launch</text>
+<rect x="450" y="2218" width="500" height="8" rx="4" fill="#cfcfcf"/>
+<rect x="0" y="2350" width="1440" height="420" rx="0" fill="#f2f2f2" stroke="#9a9a9a"/>
+<text x="720.0" y="2420" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="14" font-weight="600" text-anchor="middle" fill="#6b6b6b" >Our team</text>
+<text x="720.0" y="2464" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="34" font-weight="700" text-anchor="middle" fill="#222222" >The people behind the grid.</text>
+<rect x="120.0" y="2520" width="282.0" height="200" rx="20" fill="#f2f2f2" stroke="#9a9a9a"/>
+<circle cx="261.0" cy="2590" r="40" fill="#e4e4e4" stroke="#9a9a9a"/>
+<text x="261.0" y="2596" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="18" font-weight="700" text-anchor="middle" fill="#333333" >AH</text>
+<text x="261.0" y="2670" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="16" font-weight="700" text-anchor="middle" fill="#333333" >Name</text>
+<text x="261.0" y="2694" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="middle" fill="#6b6b6b" >Role</text>
+<rect x="426.0" y="2520" width="282.0" height="200" rx="20" fill="#f2f2f2" stroke="#9a9a9a"/>
+<circle cx="567.0" cy="2590" r="40" fill="#e4e4e4" stroke="#9a9a9a"/>
+<text x="567.0" y="2596" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="18" font-weight="700" text-anchor="middle" fill="#333333" >YT</text>
+<text x="567.0" y="2670" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="16" font-weight="700" text-anchor="middle" fill="#333333" >Name</text>
+<text x="567.0" y="2694" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="middle" fill="#6b6b6b" >Role</text>
+<rect x="732.0" y="2520" width="282.0" height="200" rx="20" fill="#f2f2f2" stroke="#9a9a9a"/>
+<circle cx="873.0" cy="2590" r="40" fill="#e4e4e4" stroke="#9a9a9a"/>
+<text x="873.0" y="2596" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="18" font-weight="700" text-anchor="middle" fill="#333333" >LM</text>
+<text x="873.0" y="2670" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="16" font-weight="700" text-anchor="middle" fill="#333333" >Name</text>
+<text x="873.0" y="2694" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="middle" fill="#6b6b6b" >Role</text>
+<rect x="1038.0" y="2520" width="282.0" height="200" rx="20" fill="#f2f2f2" stroke="#9a9a9a"/>
+<circle cx="1179.0" cy="2590" r="40" fill="#e4e4e4" stroke="#9a9a9a"/>
+<text x="1179.0" y="2596" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="18" font-weight="700" text-anchor="middle" fill="#333333" >KJ</text>
+<text x="1179.0" y="2670" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="16" font-weight="700" text-anchor="middle" fill="#333333" >Name</text>
+<text x="1179.0" y="2694" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="middle" fill="#6b6b6b" >Role</text>
+<rect x="240" y="2850" width="960" height="240" rx="24" fill="#f2f2f2" stroke="#9a9a9a"/>
+<text x="720.0" y="2940" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="32" font-weight="700" text-anchor="middle" fill="#222222" >Let's build something together.</text>
+<rect x="570.0" y="3000" width="140" height="36" rx="18.0" fill="#333333"/>
+<text x="640.0" y="3023.0" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="13" font-weight="600" text-anchor="middle" fill="#ffffff" >Contact us</text>
+<rect x="730.0" y="3000" width="140" height="36" rx="18.0" fill="#ffffff" stroke="#333333"/>
+<text x="800.0" y="3023.0" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="13" font-weight="600" text-anchor="middle" fill="#333333" >Browse GPUs</text>
+<rect x="0" y="3170" width="1440" height="230" fill="#f2f2f2" stroke="#9a9a9a"/>
+<text x="120" y="3220" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="18" font-weight="700" text-anchor="start" fill="#222222" >TeraMind</text>
+<rect x="120" y="3240" width="220" height="8" rx="4" fill="#cfcfcf"/>
+<rect x="120" y="3258" width="132" height="8" rx="4" fill="#cfcfcf"/>
+<text x="450" y="3220" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="14" font-weight="700" text-anchor="start" fill="#333333" >Services</text>
+<text x="450" y="3250" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="start" fill="#6b6b6b" >GPU catalog</text>
+<text x="450" y="3276" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="start" fill="#6b6b6b" >GPU recommendation</text>
+<text x="740" y="3220" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="14" font-weight="700" text-anchor="start" fill="#333333" >Company</text>
+<text x="740" y="3250" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="start" fill="#6b6b6b" >About</text>
+<text x="740" y="3276" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="start" fill="#6b6b6b" >Contact</text>
+<text x="1030" y="3220" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="14" font-weight="700" text-anchor="start" fill="#333333" >Account</text>
+<text x="1030" y="3250" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="start" fill="#6b6b6b" >Sign in</text>
+<text x="1030" y="3276" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="start" fill="#6b6b6b" >Create an account</text>
+<line x1="120" y1="3340" x2="1320" y2="3340" stroke="#9a9a9a"/>
+<text x="120" y="3370" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start" fill="#6b6b6b" >© 2026 TeraMind. All rights reserved.</text>
+<text x="1320" y="3370" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="12" font-weight="400" text-anchor="end" fill="#6b6b6b" >Fictional company — SUP'COM web project.</text>
+</svg>

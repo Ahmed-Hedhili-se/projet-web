@@ -1,0 +1,19 @@
+<span
+  class="inline-flex items-center gap-2 rounded-pill border px-3 py-1 text-utility-nav font-semibold"
+  [class.border-porcelain]="status() === 'ACTIVE'"
+  [class.text-porcelain]="status() === 'ACTIVE' || status() === 'UPCOMING'"
+  [class.border-steel]="status() !== 'ACTIVE'"
+  [class.text-ash]="status() === 'COMPLETED' || status() === 'CANCELLED'"
+>                                                          <!-- pilule : contour clair si la location est en cours -->
+  <span class="relative flex size-2">
+    @if (status() === 'ACTIVE') {
+      <span class="absolute inline-flex size-full animate-ping rounded-full bg-porcelain opacity-75"></span> <!-- onde qui pulse -->
+    }
+    <span
+      class="relative inline-flex size-2 rounded-full"
+      [class.bg-porcelain]="status() === 'ACTIVE' || status() === 'UPCOMING'"
+      [class.bg-slate]="status() === 'COMPLETED' || status() === 'CANCELLED'"
+    ></span>
+  </span>
+  {{ labels[status()] }}
+</span>

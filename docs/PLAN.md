@@ -1,6 +1,6 @@
-# NeuroGrid — Plan du projet
+# TeraMind — Plan du projet
 
-> Site institutionnel (en anglais) de **NeuroGrid**, entreprise fictive qui loue des GPU pour l'IA
+> Site institutionnel (en anglais) de **TeraMind**, entreprise fictive qui loue des GPU pour l'IA
 > et recommande le GPU optimal selon le modèle à entraîner ou à servir.
 > Projet web SUP'COM — équipe de 2 : **personne A = backend**, **personne B = frontend**.
 
@@ -34,7 +34,7 @@ Documents liés :
 - cartes et tuiles arrondies à 28px, boutons en pilule, **pas d'ombres** (bordure fine `#333336` à la place) ;
 - les couleurs, tailles et arrondis de DESIGN.md sont déclarés comme tokens dans la configuration Tailwind.
 
-Le site utilise uniquement la marque fictive NeuroGrid : aucun nom ni logo de marque réelle dans l'interface
+Le site utilise uniquement la marque fictive TeraMind : aucun nom ni logo de marque réelle dans l'interface
 (les noms de GPU comme « NVIDIA H100 » sont des données du catalogue, pas du branding).
 
 Responsive : mobile d'abord, navigation repliée en menu sur petit écran.

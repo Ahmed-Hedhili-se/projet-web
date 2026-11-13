@@ -3,6 +3,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime } from 'rxjs';
 import { GpuQuery, GpuSort } from '../../../core/models/gpu';
+import { toDateTimeLocal } from '../../utils/date-time';
 
 @Component({
   selector: 'app-gpu-filters',
@@ -59,9 +60,4 @@ export class GpuFilters {                                  // formulaire de filt
       sort: value.sort,
     };
   }
-}
-
-function toDateTimeLocal(date: Date): string {             // format attendu par <input type="datetime-local"> : "2026-11-02T09:00"
-  const pad = (n: number) => String(n).padStart(2, '0');
-  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
 }

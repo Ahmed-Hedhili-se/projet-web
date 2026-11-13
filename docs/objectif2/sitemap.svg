@@ -1,0 +1,141 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="2020" height="1250" viewBox="0 0 2020 1250">
+<rect width="2020" height="1250" fill="#ffffff"/>
+<text x="40" y="52" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="28" font-weight="800" text-anchor="start" fill="#111111" >TeraMind — Arborescence du site (sitemap)</text>
+<text x="40" y="80" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start" fill="#555555" >Objectif 2 · toutes les pages, leur hiérarchie et les liens entre sections · nombre de clics depuis l'accueil</text>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#444444"/></marker></defs>
+<rect x="30" y="270" width="1180" height="420" rx="22" fill="#f7f7f7" stroke="#bbbbbb" stroke-dasharray="8 6"/>
+<text x="1192" y="674" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="13" font-weight="700" text-anchor="end" fill="#555555" >Pages publiques</text>
+<rect x="1210" y="270" width="380" height="660" rx="22" fill="#eef2f7" stroke="#bbbbbb" stroke-dasharray="8 6"/>
+<text x="1572" y="914" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="13" font-weight="700" text-anchor="end" fill="#555555" >Espace utilisateur (connecté · authGuard)</text>
+<rect x="1600" y="500" width="390" height="560" rx="22" fill="#f5f0ea" stroke="#bbbbbb" stroke-dasharray="8 6"/>
+<text x="1972" y="1044" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="13" font-weight="700" text-anchor="end" fill="#555555" >Espace admin (rôle ADMIN · adminGuard)</text>
+<path d="M930.0 180 V255.0 H145.0 V330" fill="none" stroke="#444444" stroke-width="1.6" marker-end="url(#arrow)"/>
+<path d="M930.0 180 V255.0 H335.0 V330" fill="none" stroke="#444444" stroke-width="1.6" marker-end="url(#arrow)"/>
+<path d="M930.0 180 V255.0 H525.0 V330" fill="none" stroke="#444444" stroke-width="1.6" marker-end="url(#arrow)"/>
+<path d="M930.0 180 V255.0 H715.0 V330" fill="none" stroke="#444444" stroke-width="1.6" marker-end="url(#arrow)"/>
+<path d="M930.0 180 V255.0 H905.0 V330" fill="none" stroke="#444444" stroke-width="1.6" marker-end="url(#arrow)"/>
+<path d="M930.0 180 V255.0 H1095.0 V330" fill="none" stroke="#444444" stroke-width="1.6" marker-end="url(#arrow)"/>
+<path d="M930.0 180 V255.0 H1390.0 V330" fill="none" stroke="#444444" stroke-width="1.6" marker-end="url(#arrow)"/>
+<path d="M145.0 400 V480.0 H145.0 V560" fill="none" stroke="#444444" stroke-width="1.6" marker-end="url(#arrow)"/>
+<path d="M145.0 630 V825.0 H1230" fill="none" stroke="#444444" stroke-width="1.6" marker-end="url(#arrow)"/>
+<text x="165.0" y="815.0" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="12" font-weight="600" text-anchor="start" fill="#444444" >Rent this GPU</text>
+<path d="M1390.0 400 V480.0 H1315.0 V560" fill="none" stroke="#444444" stroke-width="1.6" marker-end="url(#arrow)"/>
+<path d="M1390.0 400 V480.0 H1505.0 V560" fill="none" stroke="#444444" stroke-width="1.6" marker-end="url(#arrow)"/>
+<path d="M1475 365.0 H1725.0 V560" fill="none" stroke="#444444" stroke-width="1.6" marker-end="url(#arrow)"/>
+<text x="1733.0" y="395.0" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="12" font-weight="600" text-anchor="start" fill="#444444" >ADMIN</text>
+<path d="M1315.0 630 V790" fill="none" stroke="#444444" stroke-width="1.6" marker-end="url(#arrow)"/>
+<text x="1325.0" y="710.0" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="12" font-weight="600" text-anchor="start" fill="#444444" >New rental</text>
+<path d="M1670 630 V715.0 H1740" fill="none" stroke="#444444" stroke-width="1.6" marker-end="url(#arrow)"/>
+<path d="M1670 630 V805.0 H1740" fill="none" stroke="#444444" stroke-width="1.6" marker-end="url(#arrow)"/>
+<path d="M1670 630 V895.0 H1740" fill="none" stroke="#444444" stroke-width="1.6" marker-end="url(#arrow)"/>
+<path d="M1670 630 V985.0 H1740" fill="none" stroke="#444444" stroke-width="1.6" marker-end="url(#arrow)"/>
+<path d="M335.0 400 V460 H185.0 V560" fill="none" stroke="#444444" stroke-width="1.6" stroke-dasharray="6 5" marker-end="url(#arrow)"/>
+<text x="345.0" y="450" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="12" font-weight="600" text-anchor="start" fill="#444444" >View details</text>
+<path d="M990 365.0 H1010" fill="none" stroke="#444444" stroke-width="1.6" stroke-dasharray="6 5" marker-end="url(#arrow)"/>
+<rect x="845" y="110" width="170" height="70" rx="14" fill="#111111" stroke="#333333" stroke-width="1.5"/>
+<text x="930.0" y="140" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="14" font-weight="700" text-anchor="middle" fill="#ffffff" >Home</text>
+<text x="930.0" y="160" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="11.5" font-weight="400" text-anchor="middle" fill="#bbbbbb" >/</text>
+<circle cx="1011" cy="114" r="13" fill="#ffffff" stroke="#333333" stroke-width="1.5"/>
+<text x="1011" y="119" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="12" font-weight="800" text-anchor="middle" fill="#111111" >0</text>
+<rect x="60" y="330" width="170" height="70" rx="14" fill="#ffffff" stroke="#333333" stroke-width="1.5"/>
+<text x="145.0" y="360" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="14" font-weight="700" text-anchor="middle" fill="#111111" >GPU Catalog</text>
+<text x="145.0" y="380" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="11.5" font-weight="400" text-anchor="middle" fill="#666666" >/gpus</text>
+<circle cx="226" cy="334" r="13" fill="#ffffff" stroke="#333333" stroke-width="1.5"/>
+<text x="226" y="339" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="12" font-weight="800" text-anchor="middle" fill="#111111" >1</text>
+<rect x="250" y="330" width="170" height="70" rx="14" fill="#ffffff" stroke="#333333" stroke-width="1.5"/>
+<text x="335.0" y="360" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="14" font-weight="700" text-anchor="middle" fill="#111111" >GPU Recommendation</text>
+<text x="335.0" y="380" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="11.5" font-weight="400" text-anchor="middle" fill="#666666" >/recommend</text>
+<circle cx="416" cy="334" r="13" fill="#ffffff" stroke="#333333" stroke-width="1.5"/>
+<text x="416" y="339" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="12" font-weight="800" text-anchor="middle" fill="#111111" >1</text>
+<rect x="440" y="330" width="170" height="70" rx="14" fill="#ffffff" stroke="#333333" stroke-width="1.5"/>
+<text x="525.0" y="360" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="14" font-weight="700" text-anchor="middle" fill="#111111" >About</text>
+<text x="525.0" y="380" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="11.5" font-weight="400" text-anchor="middle" fill="#666666" >/about</text>
+<circle cx="606" cy="334" r="13" fill="#ffffff" stroke="#333333" stroke-width="1.5"/>
+<text x="606" y="339" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="12" font-weight="800" text-anchor="middle" fill="#111111" >1</text>
+<rect x="630" y="330" width="170" height="70" rx="14" fill="#ffffff" stroke="#333333" stroke-width="1.5"/>
+<text x="715.0" y="360" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="14" font-weight="700" text-anchor="middle" fill="#111111" >Contact</text>
+<text x="715.0" y="380" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="11.5" font-weight="400" text-anchor="middle" fill="#666666" >/contact</text>
+<circle cx="796" cy="334" r="13" fill="#ffffff" stroke="#333333" stroke-width="1.5"/>
+<text x="796" y="339" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="12" font-weight="800" text-anchor="middle" fill="#111111" >1</text>
+<rect x="820" y="330" width="170" height="70" rx="14" fill="#ffffff" stroke="#333333" stroke-width="1.5"/>
+<text x="905.0" y="360" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="14" font-weight="700" text-anchor="middle" fill="#111111" >Sign in</text>
+<text x="905.0" y="380" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="11.5" font-weight="400" text-anchor="middle" fill="#666666" >/login</text>
+<circle cx="986" cy="334" r="13" fill="#ffffff" stroke="#333333" stroke-width="1.5"/>
+<text x="986" y="339" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="12" font-weight="800" text-anchor="middle" fill="#111111" >1</text>
+<rect x="1010" y="330" width="170" height="70" rx="14" fill="#ffffff" stroke="#333333" stroke-width="1.5"/>
+<text x="1095.0" y="360" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="14" font-weight="700" text-anchor="middle" fill="#111111" >Create account</text>
+<text x="1095.0" y="380" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="11.5" font-weight="400" text-anchor="middle" fill="#666666" >/register</text>
+<circle cx="1176" cy="334" r="13" fill="#ffffff" stroke="#333333" stroke-width="1.5"/>
+<text x="1176" y="339" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="12" font-weight="800" text-anchor="middle" fill="#111111" >1</text>
+<rect x="60" y="560" width="170" height="70" rx="14" fill="#ffffff" stroke="#333333" stroke-width="1.5"/>
+<text x="145.0" y="590" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="14" font-weight="700" text-anchor="middle" fill="#111111" >GPU Detail</text>
+<text x="145.0" y="610" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="11.5" font-weight="400" text-anchor="middle" fill="#666666" >/gpus/:id</text>
+<circle cx="226" cy="564" r="13" fill="#ffffff" stroke="#333333" stroke-width="1.5"/>
+<text x="226" y="569" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="12" font-weight="800" text-anchor="middle" fill="#111111" >2</text>
+<rect x="440" y="560" width="170" height="70" rx="14" fill="#ffffff" stroke="#333333" stroke-width="1.5" stroke-dasharray="5 4"/>
+<text x="525.0" y="590" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="14" font-weight="700" text-anchor="middle" fill="#111111" >Page not found</text>
+<text x="525.0" y="610" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="11.5" font-weight="400" text-anchor="middle" fill="#666666" >toute URL inconnue</text>
+<rect x="1305" y="330" width="170" height="70" rx="14" fill="#ffffff" stroke="#333333" stroke-width="1.5"/>
+<text x="1390.0" y="360" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="14" font-weight="700" text-anchor="middle" fill="#111111" >User menu (avatar)</text>
+<text x="1390.0" y="380" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="11.5" font-weight="400" text-anchor="middle" fill="#666666" >menu déroulant</text>
+<circle cx="1471" cy="334" r="13" fill="#ffffff" stroke="#333333" stroke-width="1.5"/>
+<text x="1471" y="339" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="12" font-weight="800" text-anchor="middle" fill="#111111" >1</text>
+<rect x="1230" y="560" width="170" height="70" rx="14" fill="#ffffff" stroke="#333333" stroke-width="1.5"/>
+<text x="1315.0" y="590" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="14" font-weight="700" text-anchor="middle" fill="#111111" >My Rentals</text>
+<text x="1315.0" y="610" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="11.5" font-weight="400" text-anchor="middle" fill="#666666" >/account/rentals</text>
+<circle cx="1396" cy="564" r="13" fill="#ffffff" stroke="#333333" stroke-width="1.5"/>
+<text x="1396" y="569" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="12" font-weight="800" text-anchor="middle" fill="#111111" >2</text>
+<rect x="1420" y="560" width="170" height="70" rx="14" fill="#ffffff" stroke="#333333" stroke-width="1.5"/>
+<text x="1505.0" y="590" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="14" font-weight="700" text-anchor="middle" fill="#111111" >Profile</text>
+<text x="1505.0" y="610" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="11.5" font-weight="400" text-anchor="middle" fill="#666666" >/account/profile</text>
+<circle cx="1586" cy="564" r="13" fill="#ffffff" stroke="#333333" stroke-width="1.5"/>
+<text x="1586" y="569" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="12" font-weight="800" text-anchor="middle" fill="#111111" >2</text>
+<rect x="1230" y="790" width="170" height="70" rx="14" fill="#ffffff" stroke="#333333" stroke-width="1.5"/>
+<text x="1315.0" y="820" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="14" font-weight="700" text-anchor="middle" fill="#111111" >New Rental</text>
+<text x="1315.0" y="840" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="11.5" font-weight="400" text-anchor="middle" fill="#666666" >/account/rentals/new</text>
+<circle cx="1396" cy="794" r="13" fill="#ffffff" stroke="#333333" stroke-width="1.5"/>
+<text x="1396" y="799" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="12" font-weight="800" text-anchor="middle" fill="#111111" >3</text>
+<rect x="1640" y="560" width="170" height="70" rx="14" fill="#ffffff" stroke="#333333" stroke-width="1.5"/>
+<text x="1725.0" y="590" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="14" font-weight="700" text-anchor="middle" fill="#111111" >Admin Dashboard</text>
+<text x="1725.0" y="610" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="11.5" font-weight="400" text-anchor="middle" fill="#666666" >/admin</text>
+<circle cx="1806" cy="564" r="13" fill="#ffffff" stroke="#333333" stroke-width="1.5"/>
+<text x="1806" y="569" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="12" font-weight="800" text-anchor="middle" fill="#111111" >2</text>
+<rect x="1740" y="680" width="170" height="70" rx="14" fill="#ffffff" stroke="#333333" stroke-width="1.5"/>
+<text x="1825.0" y="710" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="14" font-weight="700" text-anchor="middle" fill="#111111" >Admin · GPUs</text>
+<text x="1825.0" y="730" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="11.5" font-weight="400" text-anchor="middle" fill="#666666" >/admin/gpus</text>
+<circle cx="1906" cy="684" r="13" fill="#ffffff" stroke="#333333" stroke-width="1.5"/>
+<text x="1906" y="689" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="12" font-weight="800" text-anchor="middle" fill="#111111" >3</text>
+<rect x="1740" y="770" width="170" height="70" rx="14" fill="#ffffff" stroke="#333333" stroke-width="1.5"/>
+<text x="1825.0" y="800" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="14" font-weight="700" text-anchor="middle" fill="#111111" >Admin · Users</text>
+<text x="1825.0" y="820" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="11.5" font-weight="400" text-anchor="middle" fill="#666666" >/admin/users</text>
+<circle cx="1906" cy="774" r="13" fill="#ffffff" stroke="#333333" stroke-width="1.5"/>
+<text x="1906" y="779" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="12" font-weight="800" text-anchor="middle" fill="#111111" >3</text>
+<rect x="1740" y="860" width="170" height="70" rx="14" fill="#ffffff" stroke="#333333" stroke-width="1.5"/>
+<text x="1825.0" y="890" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="14" font-weight="700" text-anchor="middle" fill="#111111" >Admin · Rentals</text>
+<text x="1825.0" y="910" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="11.5" font-weight="400" text-anchor="middle" fill="#666666" >/admin/rentals</text>
+<circle cx="1906" cy="864" r="13" fill="#ffffff" stroke="#333333" stroke-width="1.5"/>
+<text x="1906" y="869" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="12" font-weight="800" text-anchor="middle" fill="#111111" >3</text>
+<rect x="1740" y="950" width="170" height="70" rx="14" fill="#ffffff" stroke="#333333" stroke-width="1.5"/>
+<text x="1825.0" y="980" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="14" font-weight="700" text-anchor="middle" fill="#111111" >Admin · Messages</text>
+<text x="1825.0" y="1000" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="11.5" font-weight="400" text-anchor="middle" fill="#666666" >/admin/messages</text>
+<circle cx="1906" cy="954" r="13" fill="#ffffff" stroke="#333333" stroke-width="1.5"/>
+<text x="1906" y="959" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="12" font-weight="800" text-anchor="middle" fill="#111111" >3</text>
+<rect x="40" y="1090" width="760" height="140" rx="16" fill="#ffffff" stroke="#bbbbbb"/>
+<text x="60" y="1122" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="15" font-weight="800" text-anchor="start" fill="#111111" >Légende</text>
+<path d="M60 1150 H120" stroke="#444444" stroke-width="1.6" marker-end="url(#arrow)"/>
+<text x="132" y="1155" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="start" fill="#333333" >navigation principale (menu, boutons)</text>
+<path d="M60 1180 H120" stroke="#444444" stroke-width="1.6" stroke-dasharray="6 5" marker-end="url(#arrow)"/>
+<text x="132" y="1185" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="start" fill="#333333" >lien transverse (raccourci entre sections)</text>
+<circle cx="80" cy="1210" r="11" fill="#ffffff" stroke="#333333" stroke-width="1.5"/>
+<text x="80" y="1215" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="11" font-weight="800" text-anchor="middle" fill="#111111" >2</text>
+<text x="132" y="1215" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="start" fill="#333333" >nombre de clics depuis l'accueil</text>
+<text x="460" y="1155" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="start" fill="#333333" >Zones : public · connecté · admin</text>
+<text x="460" y="1185" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="start" fill="#333333" >Navbar et footer présents sur toutes les pages</text>
+<text x="460" y="1215" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="start" fill="#333333" >Page 404 : toute adresse inconnue</text>
+<rect x="830" y="1090" width="1150" height="140" rx="16" fill="#111111"/>
+<text x="856" y="1124" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="17" font-weight="800" text-anchor="start" fill="#ffffff" >Règle des 3 clics : respectée</text>
+<text x="856" y="1154" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="start" fill="#dddddd" >Chemins les plus longs (3 clics) :</text>
+<text x="856" y="1180" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="13" font-weight="600" text-anchor="start" fill="#ffffff" >Home → GPU Catalog → GPU Detail → New Rental (« Rent this GPU »)</text>
+<text x="856" y="1206" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="13" font-weight="600" text-anchor="start" fill="#ffffff" >Home → User menu → Admin Dashboard → GPUs / Users / Rentals / Messages</text>
+<text x="1960" y="1206" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="end" fill="#dddddd" >Toutes les autres pages : 1 ou 2 clics</text>
+</svg>
