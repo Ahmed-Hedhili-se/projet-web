@@ -41,7 +41,7 @@ The two animations are one scene telling that story:
 | 1 | Obsidian background `#000000` + **starfield** + faint **grid** (existing `background-grid.svg`, kept, drifting) | WebGL points + CSS | Stars: Porcelain `#f5f5f7`, slow twinkle |
 | 2 | **3D planet** (+ clouds, halo, data-center markers) | Three.js canvas | Section 4 |
 | 3 | **Neural network** (existing `site-background.ts` logic, kept) | 2D canvas | Section 6 — now reads `SceneSync` |
-| 4 | Vignette (existing `.site-vignette`) | CSS | Keeps the centre readable |
+| — | Vignette (existing `.site-vignette`) | CSS | Sits **between the grid and the planet**: it fades the grid at the edges without darkening the planet or the network |
 
 One single background component lives in `app.html` and **never reloads between routes**, so the planet can glide between its hero and corner positions.
 

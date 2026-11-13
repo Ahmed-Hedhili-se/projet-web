@@ -1,4 +1,6 @@
-import { Component, ElementRef, OnDestroy, afterNextRender, viewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, afterNextRender, effect, inject, signal, viewChild } from '@angular/core';
+import { SceneSync } from '../../core/services/scene-sync';
+import type { PlanetScene } from './planet-scene';
 
 interface NetworkNode {                                    // un point du réseau neuronal
   x: number;
@@ -16,32 +18,48 @@ const COLOR = '245, 245, 247';                             // Porcelain (#f5f5f7
   selector: 'app-site-background',
   templateUrl: './site-background.html',
 })
-export class SiteBackground implements OnDestroy {         // fond fixe du site : grille + réseau neuronal animé
+export class SiteBackground implements OnDestroy {         // fond fixe du site : grille + planète 3D + réseau neuronal animé
+  private readonly sync = inject(SceneSync);               // état partagé entre la planète et le réseau
   private readonly canvas = viewChild.required<ElementRef<HTMLCanvasElement>>('canvas');
+  private readonly planetCanvas = viewChild.required<ElementRef<HTMLCanvasElement>>('planetCanvas');
+
+  protected readonly planetReady = signal(false);          // la planète apparaît en fondu quand elle est chargée
 
   private context: CanvasRenderingContext2D | null = null;
+  private planet: PlanetScene | null = null;               // null : pas encore chargée, ou WebGL indisponible
   private nodes: NetworkNode[] = [];
   private width = 0;
   private height = 0;
   private mouse: { x: number; y: number } | null = null;   // position de la souris (null = hors de la fenêtre)
   private frame = 0;                                       // identifiant de l'image d'animation en cours
-  private readonly reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
+  private lastTime = 0;                                    // heure de l'image précédente (ms)
+  private started = false;
+  private destroyed = false;
+  private readonly reduceMotion = this.sync.reduceMotion;
 
   private readonly onResize = () => this.resize();
   private readonly onPointerMove = (event: PointerEvent) => (this.mouse = { x: event.clientX, y: event.clientY });
   private readonly onPointerLeave = () => (this.mouse = null);
   private readonly onVisibilityChange = () => (document.hidden ? cancelAnimationFrame(this.frame) : this.start()); // pause si l'onglet est caché
+  private readonly onScroll = () => this.requestStill();   // animations réduites : la couleur suit quand même le défilement
 
   constructor() {
-    afterNextRender(() => this.init());                    // le canvas n'existe qu'après le premier affichage
+    afterNextRender(() => this.init());                    // les canvas n'existent qu'après le premier affichage
+    effect(() => {
+      this.sync.path();                                    // à chaque changement de page…
+      this.requestStill();                                 // …on redessine l'image fixe (animations réduites)
+    });
   }
 
   ngOnDestroy(): void {
+    this.destroyed = true;
     cancelAnimationFrame(this.frame);
     window.removeEventListener('resize', this.onResize);
     window.removeEventListener('pointermove', this.onPointerMove);
+    window.removeEventListener('scroll', this.onScroll);
     document.removeEventListener('pointerleave', this.onPointerLeave);
     document.removeEventListener('visibilitychange', this.onVisibilityChange);
+    this.planet?.dispose();
   }
 
   private init(): void {
@@ -52,20 +70,40 @@ export class SiteBackground implements OnDestroy {         // fond fixe du site 
     if (!this.context) {
       return;
     }
+    this.started = true;
     this.resize();
     window.addEventListener('resize', this.onResize);
     window.addEventListener('pointermove', this.onPointerMove);
     document.addEventListener('pointerleave', this.onPointerLeave);
-    document.addEventListener('visibilitychange', this.onVisibilityChange);
 
     if (this.reduceMotion) {
-      this.draw();                                         // animations réduites : une seule image fixe
+      window.addEventListener('scroll', this.onScroll, { passive: true });
+      this.tick(0);                                        // animations réduites : une seule image fixe
     } else {
+      document.addEventListener('visibilitychange', this.onVisibilityChange);
       this.start();
+    }
+    void this.loadPlanet();                                // la 3D se charge ensuite, sans bloquer l'affichage du site
+  }
+
+  private async loadPlanet(): Promise<void> {
+    try {
+      const { PlanetScene } = await import('./planet-scene'); // Three.js est téléchargé seulement ici (pas dans le premier chargement)
+      const lite = window.matchMedia('(pointer: coarse)').matches || window.innerWidth < 768; // version légère : mobile, tablette
+      const planet = await PlanetScene.create(this.planetCanvas().nativeElement, this.sync, lite);
+      if (this.destroyed) {
+        planet.dispose();
+        return;
+      }
+      this.planet = planet;
+      this.planetReady.set(true);
+      this.requestStill();
+    } catch {
+      this.planet = null;                                  // pas de WebGL ou texture introuvable : le réseau neuronal reste seul
     }
   }
 
-  private resize(): void {                                 // adapte le canvas à la fenêtre (net sur les écrans haute densité)
+  private resize(): void {                                 // adapte les canvas à la fenêtre (net sur les écrans haute densité)
     const canvas = this.canvas().nativeElement;
     const ratio = Math.min(window.devicePixelRatio || 1, 2);
     this.width = window.innerWidth;
@@ -73,6 +111,7 @@ export class SiteBackground implements OnDestroy {         // fond fixe du site 
     canvas.width = this.width * ratio;
     canvas.height = this.height * ratio;
     this.context?.setTransform(ratio, 0, 0, ratio, 0, 0);
+    this.planet?.resize(this.width, this.height);
 
     const count = Math.min(90, Math.round((this.width * this.height) / 16000)); // moins de points sur petit écran
     this.nodes = Array.from({ length: count }, () => ({
@@ -82,19 +121,36 @@ export class SiteBackground implements OnDestroy {         // fond fixe du site 
       vy: (Math.random() - 0.5) * 0.3,
       radius: 0.8 + Math.random() * 1.4,
     }));
-    if (this.reduceMotion) {
-      this.draw();
-    }
+    this.requestStill();
   }
 
   private start(): void {
     cancelAnimationFrame(this.frame);
-    const loop = () => {
-      this.move();
-      this.draw();
+    this.lastTime = performance.now();
+    const loop = (now: number) => {
+      const dt = Math.min(0.05, (now - this.lastTime) / 1000); // secondes depuis l'image précédente (plafonné)
+      this.lastTime = now;
+      this.tick(dt);
       this.frame = requestAnimationFrame(loop);            // environ 60 images par seconde
     };
     this.frame = requestAnimationFrame(loop);
+  }
+
+  private tick(dt: number): void {                         // une image : couleur, planète, puis réseau neuronal
+    this.sync.tickAccent(dt);                              // fait évoluer la couleur Aurore (--aurora)
+    this.planet?.render(dt);
+    if (dt > 0) {
+      this.move();
+    }
+    this.draw();
+  }
+
+  private requestStill(): void {                           // animations réduites : redessine une image fixe au prochain rafraîchissement
+    if (!this.reduceMotion || !this.started) {
+      return;
+    }
+    cancelAnimationFrame(this.frame);
+    this.frame = requestAnimationFrame(() => this.tick(0));
   }
 
   private move(): void {                                   // fait avancer chaque point

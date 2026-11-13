@@ -66,7 +66,7 @@ export class SceneSync {                                   // fait « se parler 
     accent: { ...AURORA.blue },
   };
 
-  private path = '/';                                      // adresse actuelle sans ?query ni #ancre
+  readonly path = signal('/');                             // adresse actuelle sans ?query ni #ancre (change à chaque navigation)
   private lastCssWrite = 0;                                // dernière écriture des variables CSS (ms)
 
   private readonly onPointerMove = (event: PointerEvent) => {
@@ -99,12 +99,12 @@ export class SceneSync {                                   // fait « se parler 
   }
 
   tickAccent(dt: number): void {                           // à appeler à chaque image (boucle de la scène 3D) ; dt en secondes
-    const target = auroraForPage(this.path, this.frame.scrollProgress);
+    const target = auroraForPage(this.path(), this.frame.scrollProgress);
     const k = this.reduceMotion ? 1 : Math.min(1, dt * 2.5); // ~1.2 s pour changer de teinte ; immédiat si animations réduites
     this.frame.accent = mixColor(this.frame.accent, target, k);
 
     const now = performance.now();
-    if (now - this.lastCssWrite > 100 && typeof document !== 'undefined') { // au plus ~10 écritures par seconde
+    if ((this.reduceMotion || now - this.lastCssWrite > 100) && typeof document !== 'undefined') { // au plus ~10 écritures par seconde
       this.lastCssWrite = now;
       const { r, g, b } = this.frame.accent;
       const rgb = `${Math.round(r * 255)} ${Math.round(g * 255)} ${Math.round(b * 255)}`;
@@ -114,8 +114,9 @@ export class SceneSync {                                   // fait « se parler 
   }
 
   private modeFor(url: string): SceneMode {
-    this.path = url.split(/[?#]/)[0] || '/';               // ignore ?query et #ancre
-    return this.path === '/' ? 'hero' : 'corner';
+    const path = url.split(/[?#]/)[0] || '/';              // ignore ?query et #ancre
+    this.path.set(path);
+    return path === '/' ? 'hero' : 'corner';
   }
 
   private updateScroll(): void {                           // progression du défilement, de 0 à 1
