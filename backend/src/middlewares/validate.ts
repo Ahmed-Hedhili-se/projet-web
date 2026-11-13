@@ -27,3 +27,12 @@ export function validateQuery(schema: z.ZodType) {         // vérifie req.query
     next();
   };
 }
+
+export function validateParams(schema: z.ZodType) {        // vérifie req.params (ex. :id), résultat dans res.locals.params
+  return (req: Request, res: Response, next: NextFunction) => {
+    const result = schema.safeParse(req.params);
+    if (!result.success) return next(toValidationError(result.error));
+    res.locals.params = result.data;                        // ex. { id: 3 } avec id déjà converti en nombre
+    next();
+  };
+}
