@@ -31,12 +31,17 @@ SUP'COM web project — team of 2.
 │   ├── PLAN.md         Project plan: pages, components, database schema, steps
 │   ├── API.md          API contract (routes, bodies, JSON responses, roles)
 │   └── DESIGN.md       Visual design reference
-└── docker-compose.yml  PostgreSQL + Redis (coming in step B1)
+└── docker-compose.yml  PostgreSQL + Redis
 ```
 
-## Getting started
+## Project status
 
-> The application is not implemented yet. These commands will work once steps B1 and F1 are done.
+| Part | Done | Next |
+|---|---|---|
+| Backend | B1 setup (Docker, Prisma, seed, health) · B2 authentication (JWT, roles, Redis login rate limit) · security hardening · B3 GPU catalog (`GET /gpus`, `GET /gpus/:id`, availability) · B8 AI advisor tools (workload simulator, GitHub repo analysis, configuration ranking) | B4–B7 (recommendation, contact, rentals, admin) · B9 AI advisor chat |
+| Frontend | F1 layout · F2 Home and About · catalog, recommendation, contact and login pages (mock data) | Switch to the real API |
+
+## Getting started
 
 Prerequisites: Node.js (LTS), npm, Docker Desktop, Git.
 
@@ -50,6 +55,7 @@ cp .env.example .env        # then fill in the values
 npm install
 npx prisma migrate dev
 npx prisma db seed
+npm test                    # backend tests (Docker must be running)
 npm run dev
 
 # 3. Frontend (http://localhost:4200)
