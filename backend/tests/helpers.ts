@@ -35,6 +35,14 @@ export async function cleanupTestData() {                   // supprime tout ce 
   if (keys.length) await redis.del(...keys);
 }
 
+export async function waitForRedis() {                      // à appeler dans beforeAll : Redis doit être connecté
+  if (redis.status === 'ready') return;
+  await new Promise<void>((resolve, reject) => {
+    redis.once('ready', resolve);
+    setTimeout(() => reject(new Error('Redis not ready: run `docker compose up -d`')), 5000);
+  });
+}
+
 export async function closeConnections() {                  // à appeler dans afterAll
   await prisma.$disconnect();
   await redis.quit();

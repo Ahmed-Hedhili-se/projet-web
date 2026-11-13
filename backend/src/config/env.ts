@@ -10,6 +10,9 @@ const envSchema = z.object({
   CORS_ORIGIN: z.string().default('http://localhost:4200'), // origine autorisée (frontend Angular)
   ADMIN_EMAIL: z.email().optional(),                        // compte admin créé par le seed
   ADMIN_PASSWORD: z.string().min(8).optional(),
+  GITHUB_TOKEN: z.string().default(''),                     // vide = conseiller IA désactivé, le reste du site marche
+  LLM_PROVIDER: z.enum(['github']).default('github'),       // fournisseur du modèle de langage (GitHub Models)
+  LLM_MODEL: z.string().default('openai/gpt-4.1'),          // modèle utilisé par l'agent
 });
 
 const parsed = envSchema.safeParse(process.env);

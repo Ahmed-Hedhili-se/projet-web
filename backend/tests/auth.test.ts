@@ -1,9 +1,12 @@
 import request from 'supertest';
-import { afterAll, describe, expect, it } from 'vitest';
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { app } from '../src/app';
 import { prisma } from '../src/lib/prisma';
+import { redis } from '../src/lib/redis';
 import { signToken } from '../src/utils/jwt';
-import { cleanupTestData, closeConnections, loginAdmin, registerUser, testEmail } from './helpers';
+import { cleanupTestData, closeConnections, loginAdmin, registerUser, testEmail, waitForRedis } from './helpers';
+
+beforeAll(() => waitForRedis());
 
 afterAll(async () => {
   await cleanupTestData();
@@ -99,6 +102,26 @@ describe('POST /api/auth/login', () => {
     for (let i = 1; i <= 4; i++) {
       const res = await request(app).post('/api/auth/login').send({ email, password: 'BadPassword1' });
       expect(res.status).toBe(401);                           // compteur remis à zéro : pas encore 429
+    }
+  });
+
+  it('still logs in quickly when Redis is down (rate limit skipped, never 500)', async () => {
+    const { email, password } = await registerUser('redisdown');
+    const down = () => Promise.reject(new Error('Connection is closed.'));
+    const spies = [
+      vi.spyOn(redis, 'get').mockImplementation(down),
+      vi.spyOn(redis, 'incr').mockImplementation(down),
+      vi.spyOn(redis, 'del').mockImplementation(down),
+    ];
+    vi.spyOn(console, 'error').mockImplementation(() => undefined); // évite le bruit dans la sortie des tests
+    try {
+      const ok = await request(app).post('/api/auth/login').send({ email, password });
+      expect(ok.status).toBe(200);
+      const wrong = await request(app).post('/api/auth/login').send({ email, password: 'BadPassword1' });
+      expect(wrong.status).toBe(401);
+    } finally {
+      spies.forEach((s) => s.mockRestore());
+      vi.restoreAllMocks();
     }
   });
 

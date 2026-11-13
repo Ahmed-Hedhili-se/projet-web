@@ -4,6 +4,7 @@ import { recordLoginFailure, resetLoginFailures } from '../middlewares/rateLimit
 import { LoginInput, RegisterInput } from '../schemas/auth.schema';
 import { AppError } from '../utils/AppError';
 import { signToken } from '../utils/jwt';
+import { isUniqueViolation } from '../utils/prismaErrors';
 import { toPublicUser } from '../utils/serializers';
 
 const BCRYPT_ROUNDS = 10;                                   // coût du hachage
@@ -14,9 +15,14 @@ export async function register(input: RegisterInput) {
   if (existing) throw new AppError(409, 'EMAIL_TAKEN', 'This email is already in use.');
 
   const passwordHash = await bcrypt.hash(input.password, BCRYPT_ROUNDS);
-  const user = await prisma.user.create({
-    data: { email: input.email, passwordHash, firstName: input.firstName, lastName: input.lastName }, // rôle USER par défaut
-  });
+  const user = await prisma.user
+    .create({
+      data: { email: input.email, passwordHash, firstName: input.firstName, lastName: input.lastName }, // rôle USER par défaut
+    })
+    .catch((err: unknown) => {
+      if (isUniqueViolation(err)) throw new AppError(409, 'EMAIL_TAKEN', 'This email is already in use.'); // 2 inscriptions simultanées
+      throw err;
+    });
 
   return { token: signToken(user.id, user.role), user: toPublicUser(user) };
 }

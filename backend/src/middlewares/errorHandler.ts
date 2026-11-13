@@ -17,6 +17,13 @@ export function errorHandler(err: unknown, _req: Request, res: Response, _next: 
     return;
   }
 
+  if (isBodyParserError(err, 'entity.too.large')) {         // body plus gros que la limite de express.json()
+    res.status(413).json({
+      error: { code: 'PAYLOAD_TOO_LARGE', message: 'Request body is too large.' },
+    });
+    return;
+  }
+
   if (err instanceof SyntaxError && 'body' in err) {        // JSON mal formé envoyé par le client
     res.status(400).json({
       error: { code: 'VALIDATION_ERROR', message: 'Invalid JSON body.', details: [] },
@@ -28,4 +35,8 @@ export function errorHandler(err: unknown, _req: Request, res: Response, _next: 
   res.status(500).json({
     error: { code: 'INTERNAL_ERROR', message: 'An unexpected error occurred.' },
   });
+}
+
+function isBodyParserError(err: unknown, type: string): boolean { // erreurs de express.json() : elles ont un champ "type"
+  return typeof err === 'object' && err !== null && 'type' in err && err.type === type;
 }
