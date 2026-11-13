@@ -13,6 +13,8 @@
   --color-cobalt-link: #0066cc;                            /* liens sur fond clair */
   --color-copper-new: #b64400;                             /* petites étiquettes « New » / statut */
   --color-optical-yellow: #ffd500;                         /* mise en avant de caractéristiques techniques */
+  --color-aurora: var(--aurora-text);                      /* texte à la couleur Aurore (classe text-aurora) : petits titres, mots forts, chiffres clés */
+  --color-aurora-glow: var(--aurora);                      /* couleur Aurore vive (lueurs, icônes, jauges) — jamais pour du texte courant */
 
   --font-sans: 'SF Pro Text', 'Inter', ui-sans-serif, system-ui, sans-serif;    /* police des textes */
   --font-display: 'SF Pro Display', 'Inter', ui-sans-serif, system-ui, sans-serif; /* police des titres */
@@ -110,6 +112,7 @@
     color-scheme: dark;                                    /* barres de défilement et contrôles natifs sombres */
     --aurora-rgb: 41 151 255;                              /* couleur « Aurore » par défaut (bleu) ; SceneSync la fait évoluer */
     --aurora: rgb(var(--aurora-rgb));                      /* usage : color: var(--aurora) · fond : rgb(var(--aurora-rgb) / .12) */
+    --aurora-text: rgb(116 186 255);                       /* variante éclaircie pour les textes (contraste ≥ 4.5:1) */
   }
 
   body {

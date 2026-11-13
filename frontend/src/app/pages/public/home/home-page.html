@@ -2,9 +2,9 @@
   <p class="animate-fade-up text-utility-nav font-semibold text-copper-new">New · H100 clusters available</p>
   <p class="animate-fade-up mt-1 font-display text-hero-product-name font-semibold" style="animation-delay: 80ms">TeraMind Cloud</p>
   <h1 class="mx-auto mt-2 max-w-4xl font-display text-display-sm font-semibold md:text-display">
-    <app-split-text text="Compute for every model." [delay]="160" />                       <!-- mots qui sortent du flou -->
+    <app-split-text text="Compute for every model." highlight="model." [delay]="160" />                       <!-- mots qui sortent du flou -->
   </h1>
-  <p class="animate-fade-up mx-auto mt-5 max-w-xl text-section-nav text-ash" style="animation-delay: 520ms">
+  <p class="animate-fade-up mx-auto mt-5 max-w-xl text-section-nav text-porcelain/90" style="animation-delay: 520ms"> <!-- texte clair : reste lisible au-dessus de la planète -->
     Rent data-center GPUs by the hour and find the right one for your AI workload in seconds.
   </p>
   <div class="animate-fade-up mt-8 flex flex-wrap items-center justify-center gap-3" style="animation-delay: 620ms"> <!-- capsule + boutons -->
@@ -46,7 +46,7 @@
       <div appReveal [revealDelay]="$index * 90">                                              <!-- apparition en cascade -->
         <div class="flex h-full flex-col items-center justify-center gap-2 rounded-card bg-obsidian px-4 py-8 text-center">
           <p
-            class="font-display text-feature-stat font-semibold tabular-nums"
+            class="font-display text-feature-stat font-semibold tabular-nums text-aurora"
             [appCountUp]="stat.value"
             [countDecimals]="stat.decimals ?? 0"
             [countPrefix]="stat.prefix ?? ''"
@@ -68,7 +68,7 @@
 <section class="bg-linear-to-b from-carbon/70 to-transparent px-4 py-20 md:py-28"> <!-- Points forts : fondu Carbon → noir (seul dégradé autorisé) -->
   <div class="mx-auto max-w-6xl">
     <div appReveal class="mx-auto max-w-2xl text-center">
-      <p class="font-display text-product-label font-semibold text-ash">Why TeraMind</p>
+      <p class="font-display text-product-label font-semibold text-aurora">Why TeraMind</p>
       <h2 class="mt-2 font-display text-hero-product-name font-semibold md:text-section-title">Built for AI workloads.</h2>
     </div>
 
@@ -114,7 +114,7 @@
     </div>
 
     <div appReveal [revealDelay]="150">
-      <p class="font-display text-product-label font-semibold text-ash">GPU Recommendation</p>
+      <p class="font-display text-product-label font-semibold text-aurora">GPU Recommendation</p>
       <h2 class="mt-2 font-display text-hero-product-name font-semibold md:text-section-title">Not sure which GPU you need?</h2>
       <p class="mt-4 text-section-nav text-ash">
         Answer four questions about your model. We estimate the memory it needs and match it with the most cost-effective GPU.
@@ -150,7 +150,7 @@
   <div class="mx-auto max-w-6xl">
     <div appReveal class="flex flex-wrap items-end justify-between gap-4">
       <div>
-        <p class="font-display text-product-label font-semibold text-ash">Catalog</p>
+        <p class="font-display text-product-label font-semibold text-aurora">Catalog</p>
         <h2 class="mt-2 font-display text-hero-product-name font-semibold md:text-section-title">Featured GPUs.</h2>
       </div>
       <a routerLink="/gpus" class="text-link text-section-nav">View the full catalog ›</a>
@@ -189,7 +189,7 @@
 <section class="border-y border-steel bg-graphite/70 px-4 py-20 md:py-28"> <!-- Fonctionnement : titre collant + étapes qui s'illuminent -->
   <div class="mx-auto grid max-w-6xl gap-10 md:grid-cols-2 md:gap-16">
     <div class="md:sticky md:top-32 md:self-start">                                          <!-- reste en place pendant le défilement -->
-      <p class="font-display text-product-label font-semibold text-ash">How it works</p>
+      <p class="font-display text-product-label font-semibold text-aurora">How it works</p>
       <h2 class="mt-2 font-display text-hero-product-name font-semibold md:text-section-title">From idea to GPU in three steps.</h2>
       <p class="mt-4 max-w-sm text-section-nav text-ash">No contract, no setup fees. Describe, book, compute.</p>
     </div>

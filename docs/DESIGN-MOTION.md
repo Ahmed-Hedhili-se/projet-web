@@ -182,6 +182,9 @@ on top of the unchanged DESIGN.md base (Obsidian / Carbon surfaces, Porcelain te
 | `--aurora-cyan` | `#22d3ee` | `#22d3ee` (9.3 : 1) | end of the journey, contact, success |
 | `--aurora` | *current interpolated color* | — | written by JS on `:root`, used everywhere below |
 
+Implementation: `SceneSync.tickAccent()` writes `--aurora` (vivid, for glows) and `--aurora-text` (the same color lightened 35 % toward white,
+always ≥ 4.5 : 1 on Obsidian and Carbon). Tailwind classes: `text-aurora` (text) and `*-aurora-glow` (glows, icons, gauges).
+
 Rules: accent colors are **never** used for body text or button fills. Text may use the text-safe variants only for
 **short highlights** (key figures, eyebrow labels, the highlighted word of a title). Buttons stay Action Blue pills.
 

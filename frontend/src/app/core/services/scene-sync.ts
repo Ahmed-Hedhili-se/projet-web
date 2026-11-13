@@ -110,6 +110,8 @@ export class SceneSync {                                   // fait « se parler 
       const rgb = `${Math.round(r * 255)} ${Math.round(g * 255)} ${Math.round(b * 255)}`;
       document.documentElement.style.setProperty('--aurora-rgb', rgb);           // usage : rgb(var(--aurora-rgb) / .12)
       document.documentElement.style.setProperty('--aurora', `rgb(${rgb})`);     // usage : color: var(--aurora)
+      const text = mixColor(this.frame.accent, { r: 1, g: 1, b: 1 }, 0.35);       // éclaircie de 35 % : contraste suffisant pour du texte
+      document.documentElement.style.setProperty('--aurora-text', `rgb(${Math.round(text.r * 255)} ${Math.round(text.g * 255)} ${Math.round(text.b * 255)})`); // classe text-aurora
     }
   }
 
