@@ -13,7 +13,8 @@
 7. [Profil utilisateur](#7-profil-utilisateur)
 8. [Locations utilisateur](#8-locations-utilisateur)
 9. [Admin](#9-admin)
-10. [Récapitulatif des routes](#10-récapitulatif-des-routes)
+10. [Conseiller IA (agent)](#10-conseiller-ia-agent)
+11. [Récapitulatif des routes](#11-récapitulatif-des-routes)
 
 ---
 
@@ -55,14 +56,16 @@
 | 403 | `ACCOUNT_BLOCKED` | compte bloqué par un admin |
 | 403 | `FORBIDDEN` | rôle insuffisant (ex. USER sur une route ADMIN) |
 | 404 | `NOT_FOUND` | route inconnue |
-| 404 | `GPU_NOT_FOUND` / `RENTAL_NOT_FOUND` / `USER_NOT_FOUND` / `MESSAGE_NOT_FOUND` | ressource inexistante (ou qui n'appartient pas à l'utilisateur) |
+| 404 | `GPU_NOT_FOUND` / `RENTAL_NOT_FOUND` / `USER_NOT_FOUND` / `MESSAGE_NOT_FOUND` / `CONVERSATION_NOT_FOUND` | ressource inexistante (ou qui n'appartient pas à l'utilisateur) |
 | 409 | `EMAIL_TAKEN` | email déjà utilisé |
 | 409 | `GPU_NAME_TAKEN` | nom de GPU déjà utilisé |
 | 409 | `NOT_ENOUGH_UNITS` | pas assez d'unités libres sur la période |
 | 409 | `GPU_INACTIVE` | location d'un GPU désactivé |
 | 409 | `RENTAL_NOT_CANCELLABLE` | location qui ne peut plus être annulée |
 | 429 | `TOO_MANY_ATTEMPTS` | trop d'échecs de login (5 par IP + email sur 15 min) |
+| 429 | `AGENT_DAILY_LIMIT` | quota du conseiller IA atteint (30 messages par jour et par utilisateur) |
 | 500 | `INTERNAL_ERROR` | erreur serveur inattendue |
+| 503 | `AGENT_UNAVAILABLE` | conseiller IA désactivé (pas de clé d'API configurée) |
 
 ---
 
@@ -878,7 +881,226 @@ Erreurs : `404 MESSAGE_NOT_FOUND`.
 
 ---
 
-## 10. Récapitulatif des routes
+## 10. Conseiller IA (agent)
+
+Un **chat** avec un agent IA. L'utilisateur décrit son projet en texte libre et/ou colle le lien d'un **dépôt GitHub
+public** de son modèle. L'agent lit le dépôt (taille du modèle, précision, LoRA/QLoRA, FlashAttention, DeepSpeed…),
+simule **toutes** les configurations TeraMind (1, 2, 4 ou 8 GPU de chaque modèle actif) et recommande la meilleure
+**architecture de GPU**, avec durée, coût et alertes. Il peut poser une question s'il manque une information.
+
+- Toutes les routes exigent le rôle **USER** (utilisateur connecté).
+- Les prix, le stock et les estimations viennent **toujours du backend** (base + simulateur), jamais du modèle de langage.
+- Le formulaire `POST /recommendations` (section 5) reste le **mode de secours** (pas de compte, pas de dépôt, IA indisponible).
+
+### Objets
+
+#### `AgentConversation`
+```json
+{
+  "id": 4,
+  "title": "Here is my repo https://github.com/acme/legal-llama...",
+  "repoUrl": "https://github.com/acme/legal-llama",
+  "messageCount": 2,
+  "createdAt": "2026-11-14T18:00:00.000Z",
+  "updatedAt": "2026-11-14T18:00:12.000Z"
+}
+```
+`title` vaut `"New conversation"` puis devient le début du premier message. `repoUrl` = dernier dépôt analysé (ou `null`).
+
+#### `AgentMessage`
+```json
+{
+  "id": 31,
+  "role": "ASSISTANT",
+  "content": "Your repo fine-tunes **Llama 3.1 8B** with QLoRA in BF16. Best architecture: **Hopper**…",
+  "steps": [
+    { "tool": "analyze_repo", "label": "Analyzing github.com/acme/legal-llama" },
+    { "tool": "rank_configs", "label": "Simulated 22 GPU configurations" }
+  ],
+  "cards": [ { "type": "profile", "...": "voir ci-dessous" } ],
+  "createdAt": "2026-11-14T18:00:12.000Z"
+}
+```
+- `role` : `"USER"` | `"ASSISTANT"`.
+- `content` : **Markdown** (gras, listes, tableaux simples). À afficher en Markdown **sans HTML brut** (le texte peut citer un dépôt).
+- `steps` : étapes de travail de l'agent (affichage repliable « ▸ 3 steps »). `[]` pour un message `USER`.
+- `cards` : éléments d'interface riches, dans cet ordre quand ils existent : `profile`, `configs`, `replies`. `[]` pour un message `USER`.
+
+#### Cartes (`cards[]`)
+
+**`profile`** — ce que l'IA a compris du travail (envoyée quand le profil change) :
+```json
+{
+  "type": "profile",
+  "repoUrl": "https://github.com/acme/legal-llama",
+  "profile": {
+    "mode": "QLORA",
+    "paramsBillions": 8,
+    "precision": "BF16",
+    "contextLength": 4096,
+    "gradientCheckpointing": true,
+    "usesCudaKernels": true,
+    "flashAttention": "FA2",
+    "trainingTokens": 300000000
+  },
+  "facts": [
+    { "field": "mode", "value": "QLORA", "evidence": "train.py" },
+    { "field": "paramsBillions", "value": 8, "evidence": "config.json" },
+    { "field": "modelId", "value": "meta-llama/Llama-3.1-8B", "evidence": "train.py" }
+  ],
+  "missing": []
+}
+```
+- `profile.mode` : `PRETRAINING` · `FULL_FINETUNE` · `LORA` · `QLORA` · `INFERENCE`.
+- `profile.precision` : `FP32` · `BF16` · `FP16` · `FP8` · `INT8` · `INT4`. `profile.flashAttention` : `NONE` · `FA2` · `FA3`.
+- Autres champs possibles de `profile` (tous optionnels) : `activeParamsBillions` (MoE), `layers`, `hiddenSize`, `kvHeads`, `headDim`,
+  `batchSize`, `epochs`, `sharded` (ZeRO-3 / FSDP).
+- `facts` : chaque fait trouvé dans le dépôt avec le **fichier qui le prouve** (`evidence`). Vide sans dépôt.
+- `missing` : informations encore inconnues (`mode`, `paramsBillions`, `precision`, `trainingTokens`).
+
+**`configs`** — configurations recommandées (1 à 3), chacune avec un bouton **Rent this** :
+```json
+{
+  "type": "configs",
+  "items": [
+    {
+      "rank": 1,
+      "verdict": "BEST_CHOICE",
+      "gpu": {
+        "id": 1,
+        "name": "NVIDIA H100 80GB",
+        "manufacturer": "NVIDIA",
+        "architecture": "Hopper",
+        "vramGb": 80,
+        "pricePerHour": 3.2
+      },
+      "gpuCount": 8,
+      "pricePerHour": 25.6,
+      "availableUnits": 8,
+      "estimate": {
+        "memoryRequiredGb": 6.4,
+        "memoryPerGpuGb": 6.4,
+        "hours": 1.5,
+        "totalCost": 38.33,
+        "tokensPerSecond": null,
+        "costPerMillionTokens": null
+      },
+      "reasons": [
+        "Fits in memory: 6.4 GB needed per GPU, 80 GB available.",
+        "GPUs are linked by a fast interconnect (NVLink / Infinity Fabric)."
+      ],
+      "warnings": [],
+      "rentPath": "/account/rentals/new?gpuId=1&quantity=8"
+    }
+  ]
+}
+```
+- `verdict` : `"BEST_CHOICE"` · `"CHEAPEST"` · `"FASTEST"` · `"ALTERNATIVE"`.
+- `pricePerHour` = prix de la configuration entière (`gpu.pricePerHour × gpuCount`). `availableUnits` = GPU de ce modèle libres maintenant.
+- `estimate` : `hours` et `totalCost` pour un entraînement ; `tokensPerSecond` et `costPerMillionTokens` pour une inférence ;
+  sinon `null`. Estimations à **±30 %**.
+- `reasons` / `warnings` : phrases en anglais, à afficher telles quelles.
+- `rentPath` : lien interne du bouton **Rent this** (page « New rental » avec le GPU et la quantité pré-remplis).
+
+**`replies`** — boutons de réponse rapide ; un clic envoie le texte comme nouveau message :
+```json
+{ "type": "replies", "options": ["Cheapest option", "Fastest option", "What if I use FP8?"] }
+```
+
+### `GET /agent/status` — USER
+Indique si le conseiller est disponible et le quota restant (pour afficher un message clair dans l'interface).
+
+Réponse `200` :
+```json
+{
+  "available": true,
+  "model": "openai/gpt-4.1",
+  "dailyMessageLimit": 30,
+  "messagesUsedToday": 4
+}
+```
+`available: false` → afficher le formulaire de secours.
+
+### `POST /agent/conversations` — USER
+Crée une conversation vide. Pas de body.
+
+Réponse `201` : `{ "conversation": AgentConversation }`.
+
+### `GET /agent/conversations` — USER
+Mes conversations, de la plus récente à la plus ancienne (`updatedAt` décroissante).
+
+Réponse `200` : `{ "conversations": [AgentConversation], "total": 1 }`.
+
+### `GET /agent/conversations/:id` — USER
+Réponse `200` :
+```json
+{
+  "conversation": { "...": "objet AgentConversation" },
+  "messages": [ { "...": "objets AgentMessage, du plus ancien au plus récent" } ]
+}
+```
+Erreurs : `400 VALIDATION_ERROR` (id non numérique), `404 CONVERSATION_NOT_FOUND` (inexistante ou à un autre utilisateur).
+
+### `DELETE /agent/conversations/:id` — USER
+Supprime la conversation et ses messages. Réponse `204`.
+
+Erreurs : `404 CONVERSATION_NOT_FOUND`.
+
+### `POST /agent/conversations/:id/messages` — USER
+Envoie un message à l'agent. La réponse est un **flux SSE** (`Content-Type: text/event-stream`).
+
+Body :
+```json
+{
+  "content": "Here is my repo https://github.com/acme/legal-llama, about 300M tokens. Which GPU should I use?"
+}
+```
+Validation : `content` 1 à 4000 caractères.
+
+Erreurs **avant** le début du flux (réponse JSON normale) : `400 VALIDATION_ERROR`, `401 UNAUTHORIZED`, `403 ACCOUNT_BLOCKED`,
+`404 CONVERSATION_NOT_FOUND`, `503 AGENT_UNAVAILABLE`, `429 AGENT_DAILY_LIMIT`.
+
+Événements du flux (chaque événement : une ligne `event: <nom>`, une ligne `data: <JSON>`, puis une ligne vide) :
+| `event` | `data` | Quand |
+|---|---|---|
+| `user_message` | `{ "message": AgentMessage }` | tout de suite : le message de l'utilisateur, enregistré |
+| `step` | `{ "tool": "analyze_repo", "label": "Analyzing github.com/acme/legal-llama" }` | l'agent utilise un outil (0 à 8 fois) |
+| `card` | `{ "card": Carte }` | une carte est prête (peut arriver avant le texte) |
+| `text` | `{ "delta": "Your repo fine-tunes…" }` | texte de la réponse : **concaténer** tous les `delta` (aujourd'hui un seul) |
+| `done` | `{ "message": AgentMessage, "conversation": AgentConversation }` | fin : message complet enregistré, conversation mise à jour |
+| `error` | `{ "error": { "code": "AGENT_ERROR", "message": "…" } }` | erreur pendant le flux (IA indisponible, quota du fournisseur…) ; le flux se termine |
+
+- `done.message` fait foi : il contient le texte complet et **toutes** les cartes dans l'ordre final. Les événements `step` et `card`
+  servent seulement à afficher la progression en direct.
+- Après `error`, le message de l'utilisateur reste enregistré (il compte dans le quota), mais pas de réponse de l'agent.
+- Une réponse prend de 5 à 60 secondes (plusieurs appels au modèle).
+
+Exemple de flux :
+```
+event: user_message
+data: {"message":{"id":30,"role":"USER","content":"Here is my repo …","steps":[],"cards":[],"createdAt":"…"}}
+
+event: step
+data: {"tool":"analyze_repo","label":"Analyzing github.com/acme/legal-llama"}
+
+event: step
+data: {"tool":"rank_configs","label":"Simulated 22 GPU configurations"}
+
+event: card
+data: {"card":{"type":"configs","items":[…]}}
+
+event: text
+data: {"delta":"Your repo fine-tunes **Llama 3.1 8B**…"}
+
+event: done
+data: {"message":{"id":31,"role":"ASSISTANT","content":"…","steps":[…],"cards":[…],"createdAt":"…"},"conversation":{…}}
+```
+> Côté Angular : `EventSource` ne permet ni `POST` ni header `Authorization`. Utiliser `fetch()` avec le token et lire
+> `response.body` (ReadableStream) avec un `TextDecoder`, puis découper sur les lignes vides.
+
+---
+
+## 11. Récapitulatif des routes
 
 | Méthode | URL | Rôle | Réponse |
 |---|---|---|---|
@@ -908,3 +1130,9 @@ Erreurs : `404 MESSAGE_NOT_FOUND`.
 | GET | `/admin/messages` | ADMIN | `200 { messages, total, unread }` |
 | PATCH | `/admin/messages/:id` | ADMIN | `200 { message }` |
 | DELETE | `/admin/messages/:id` | ADMIN | `204` |
+| GET | `/agent/status` | USER | `200 { available, model, dailyMessageLimit, messagesUsedToday }` |
+| POST | `/agent/conversations` | USER | `201 { conversation }` |
+| GET | `/agent/conversations` | USER | `200 { conversations, total }` |
+| GET | `/agent/conversations/:id` | USER | `200 { conversation, messages }` |
+| DELETE | `/agent/conversations/:id` | USER | `204` |
+| POST | `/agent/conversations/:id/messages` | USER | `200` flux SSE : `user_message`, `step`, `card`, `text`, `done` / `error` |

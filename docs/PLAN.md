@@ -304,8 +304,8 @@ model ContactMessage {
 
 > **Deux modes sur la page `/recommend`.**
 > Le mode principal est le **conseiller IA** : il lit un dépôt GitHub public et classe les configurations de GPU
-> avec le simulateur du backend (`backend/src/agent/`, étapes B8 et B9). Sa route n'est **pas encore dans
-> `docs/API.md`** : elle sera ajoutée par la personne A, puis le frontend s'y branchera (étape F10).
+> avec le simulateur du backend (`backend/src/agent/`, étapes B8 et B9). Ses routes sont dans
+> `docs/API.md`, section 10 (`/agent/...`) ; le frontend s'y branche à l'étape F10 (guide : `ahmed.md`).
 > L'algorithme ci-dessous est celui du **formulaire de secours** (`POST /recommendations`).
 
 Entrées : `modelType` (LLM, VISION, DIFFUSION, AUDIO, OTHER), `parametersBillions`, `mode` (TRAINING, INFERENCE), `budgetPerHour`.
@@ -333,15 +333,15 @@ Une étape à la fois, testée puis validée avant de passer à la suivante.
 ### Backend — personne A
 | Étape | Contenu | Terminée quand… |
 |---|---|---|
-| B1 | `docker-compose.yml` (PostgreSQL + Redis), projet Express + TypeScript, Prisma, première migration, seed (GPU + admin), `GET /api/health` | `npm run dev` démarre, la base contient les GPU du seed |
-| B2 | Auth : register, login, me, bcrypt, JWT, middlewares `auth` et `requireRole`, rate limit Redis, format d'erreur commun | Login OK, 6ᵉ échec → 429, route admin refusée à un USER |
-| B3 | GPU : liste avec filtres et disponibilité, détail | Les filtres de API.md renvoient les bons résultats |
+| B1 ✅ | `docker-compose.yml` (PostgreSQL + Redis), projet Express + TypeScript, Prisma, première migration, seed (GPU + admin), `GET /api/health` | `npm run dev` démarre, la base contient les GPU du seed |
+| B2 ✅ | Auth : register, login, me, bcrypt, JWT, middlewares `auth` et `requireRole`, rate limit Redis, format d'erreur commun | Login OK, 6ᵉ échec → 429, route admin refusée à un USER |
+| B3 ✅ | GPU : liste avec filtres et disponibilité, détail | Les filtres de API.md renvoient les bons résultats |
 | B4 | Recommandation | Les exemples de API.md donnent le résultat attendu |
 | B5 | Contact | Le message est enregistré en base |
 | B6 | Profil et locations utilisateur (créer, lister, annuler) | Une location qui dépasse le stock → 409 |
 | B7 | Admin : stats, GPU, utilisateurs, locations, messages | Toutes les routes `/api/admin/*` répondent selon API.md |
-| B8 | Outils du conseiller IA : caractéristiques des GPU, simulateur, analyse d'un dépôt GitHub, classement des configurations | Les tests du simulateur et de l'analyse passent |
-| B9 | Conseiller IA : route de conversation, ajoutée à API.md | À partir d'un lien GitHub, l'IA renvoie un classement de configurations |
+| B8 ✅ | Outils du conseiller IA : caractéristiques des GPU, simulateur, analyse d'un dépôt GitHub, classement des configurations | Les tests du simulateur et de l'analyse passent |
+| B9 ✅ | Conseiller IA : route de conversation, ajoutée à API.md | À partir d'un lien GitHub, l'IA renvoie un classement de configurations |
 
 ### Frontend — personne B
 | Étape | Contenu | Terminée quand… |
