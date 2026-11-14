@@ -179,7 +179,7 @@ Performance and accessibility:
 | Part | Done | Next |
 |---|---|---|
 | Backend | B1 setup (Docker, Prisma, seed, health) · B2 authentication (JWT, roles, Redis login rate limit) · security hardening · B3 GPU catalog (`GET /gpus`, `GET /gpus/:id`, availability) · B8 AI advisor tools (workload simulator, GitHub repo analysis, configuration ranking) · B9 AI advisor (conversations, live stream, daily quota) | B4–B7 (recommendation form, contact, rentals, admin) |
-| Frontend | F1–F10: layout, every public page, user area, admin area, motion & 3D, AI advisor — all on the simulated API | Switch to the real API |
+| Frontend | F1–F10: layout, every public page, user area, admin area, motion & 3D, AI advisor — all on the simulated API | F11 switch to the real API as the backend routes arrive |
 
 ## Getting started (full stack)
 

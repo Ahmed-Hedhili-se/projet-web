@@ -123,7 +123,8 @@ frontend/src/app/
 |---|---|
 | `AuthService` | register, login, logout, utilisateur courant (signal), token dans `localStorage` |
 | `GpuService` | liste filtrée, détail |
-| `RecommendationService` | envoi du formulaire de recommandation |
+| `RecommendationService` | envoi du formulaire de recommandation (mode de secours) |
+| `AgentService` | conseiller IA : statut, conversations, envoi d'un message et lecture de la réponse en flux (routes `/agent/...`) |
 | `ContactService` | envoi d'un message de contact |
 | `RentalService` | mes locations, créer, annuler |
 | `UserService` | profil, changement de mot de passe |
@@ -305,7 +306,7 @@ model ContactMessage {
 > **Deux modes sur la page `/recommend`.**
 > Le mode principal est le **conseiller IA** : il lit un dépôt GitHub public et classe les configurations de GPU
 > avec le simulateur du backend (`backend/src/agent/`, étapes B8 et B9). Ses routes sont dans
-> `docs/API.md`, section 10 (`/agent/...`) ; le frontend s'y branche à l'étape F10 (guide : `ahmed.md`).
+> `docs/API.md`, section 10 (`/agent/...`) ; le frontend s'y branche à l'étape F10.
 > L'algorithme ci-dessous est celui du **formulaire de secours** (`POST /recommendations`).
 
 Entrées : `modelType` (LLM, VISION, DIFFUSION, AUDIO, OTHER), `parametersBillions`, `mode` (TRAINING, INFERENCE), `budgetPerHour`.
@@ -356,6 +357,7 @@ Une étape à la fois, testée puis validée avant de passer à la suivante.
 | F8 ✅ | Espace admin : dashboard, GPU, utilisateurs, locations, messages | Toutes les actions admin fonctionnent |
 | F9 ✅ | Motion & 3D (`docs/DESIGN-MOTION.md`) : planète Three.js synchronisée avec le réseau neuronal (`SceneSync`), défilement Lenis, cartes en verre | Planète grande sur Home et petite ailleurs, réseau relié au curseur conservé, versions légères (mobile, animations réduites, sans WebGL) |
 | F10 ✅ | Conseiller IA sur `/recommend` (routes de API.md, section 10) : lien GitHub puis conversation, formulaire de F4 gardé en secours | L'utilisateur colle un lien et obtient un classement de configurations |
+| F11 | Brancher le frontend sur le vrai backend (`useMockApi: false`), au fur et à mesure que les routes B4–B7 arrivent | Le site fonctionne sans données fictives |
 
 Tant qu'une route backend n'est pas prête, le frontend peut utiliser des données fictives
 qui respectent **exactement** le format de API.md.
