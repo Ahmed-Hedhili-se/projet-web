@@ -1,14 +1,13 @@
-// Tests de l'outil rank_configs sur les GPU du seed (base de développement, pas de LLM).
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { RankResult, rankConfigs } from '../src/agent/rankConfigs';
 import { WorkloadProfile } from '../src/agent/types';
 import { prisma } from '../src/lib/prisma';
 import { cleanupTestData, closeConnections, registerUser, waitForRedis } from './helpers';
 
-const START = new Date('2099-05-01T09:00:00.000Z');         // période lointaine, réservée seulement par ces tests
+const START = new Date('2099-05-01T09:00:00.000Z');
 const HOURS = 48;
 
-const qlora8b: WorkloadProfile = {                          // Llama 3.1 8B en QLoRA, code CUDA (bitsandbytes)
+const qlora8b: WorkloadProfile = {
   mode: 'QLORA', paramsBillions: 8, precision: 'BF16', layers: 32, hiddenSize: 4096, contextLength: 4096,
   gradientCheckpointing: true, usesCudaKernels: true, flashAttention: 'FA2', trainingTokens: 1e8,
 };
@@ -30,7 +29,7 @@ describe('rankConfigs', () => {
     expect(result.items.map((i) => i.rank)).toEqual(result.items.map((_, index) => index + 1));
     expect(result.items[0].verdict).toBe('BEST_CHOICE');
 
-    for (const item of result.items) {                      // prix = prix en base × nombre de GPU
+    for (const item of result.items) {
       const gpu = await prisma.gpu.findUniqueOrThrow({ where: { id: item.gpuId } });
       expect(gpu.isActive).toBe(true);
       expect(item.pricePerHour).toBeCloseTo(Number(gpu.pricePerHour) * item.gpuCount, 2);
@@ -38,7 +37,7 @@ describe('rankConfigs', () => {
     }
     const cheapest = result.items.find((i) => i.verdict === 'CHEAPEST') ?? result.items[0];
     expect(cheapest.estimate.totalCost).toBe(Math.min(...result.items.map((i) => i.estimate.totalCost!)));
-    expect(result.items.some((i) => i.gpuName === 'NVIDIA V100 32GB')).toBe(false); // désactivé
+    expect(result.items.some((i) => i.gpuName === 'NVIDIA V100 32GB')).toBe(false);
   });
 
   it('lists GPUs that cannot run the job, with the reason', async () => {
@@ -59,10 +58,10 @@ describe('rankConfigs', () => {
 
   it('excludes a GPU that is fully booked on the requested period', async () => {
     const before = (await rankConfigs(inference7b, { objective: 'lowest_cost', startDate: START, durationHours: HOURS })) as RankResult;
-    const top = await prisma.gpu.findUniqueOrThrow({ where: { id: before.items[0].gpuId } }); // le moins cher par token
+    const top = await prisma.gpu.findUniqueOrThrow({ where: { id: before.items[0].gpuId } });
 
     const { user } = await registerUser('rank');
-    await prisma.rental.create({                            // tout son stock loué sur la période
+    await prisma.rental.create({
       data: {
         userId: user.id, gpuId: top.id, quantity: top.totalUnits, startDate: START, durationHours: HOURS,
         endDate: new Date(START.getTime() + HOURS * 3600_000), totalPrice: 0,
@@ -72,7 +71,7 @@ describe('rankConfigs', () => {
     const after = (await rankConfigs(inference7b, { objective: 'lowest_cost', startDate: START, durationHours: HOURS })) as RankResult;
     expect(after.items.some((i) => i.gpuId === top.id)).toBe(false);
     expect(after.excluded).toContainEqual({ gpu: top.name, reason: `Only 0 ${top.name} free on this period.` });
-    const now = (await rankConfigs(inference7b, { objective: 'lowest_cost' })) as RankResult; // maintenant : il est libre
+    const now = (await rankConfigs(inference7b, { objective: 'lowest_cost' })) as RankResult;
     expect(now.items[0].gpuId).toBe(top.id);
   });
 

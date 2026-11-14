@@ -1,15 +1,15 @@
-<header class="flex flex-wrap items-end justify-between gap-4"> <!-- En-tête -->
+<header class="flex flex-wrap items-end justify-between gap-4">
   <div>
     <p class="animate-fade-up font-display text-product-label font-semibold text-aurora">Dashboard</p>
     <h1 class="mt-1 font-display text-hero-product-name font-semibold md:text-section-title">
-      <app-split-text [text]="greeting()" [delay]="100" />                                   <!-- « Good morning, Amira. » -->
+      <app-split-text [text]="greeting()" [delay]="100" />
     </h1>
   </div>
   <a routerLink="/admin/gpus" [queryParams]="{ new: 1 }" class="animate-fade-up btn-primary" style="animation-delay: 300ms">Add GPU</a>
 </header>
 
 @if (loading() && !stats()) {
-  <div class="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">                                <!-- squelettes pendant le chargement -->
+  <div class="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
     @for (item of [1, 2, 3, 4]; track item) {
       <div class="h-32 animate-pulse rounded-card bg-carbon"></div>
     }
@@ -22,7 +22,7 @@
     </app-alert>
   </div>
 } @else if (stats(); as s) {
-  <section class="animate-fade-up mt-8 grid gap-4 rounded-card bg-carbon p-4 sm:grid-cols-2 xl:grid-cols-4" style="animation-delay: 200ms" aria-label="Key figures"> <!-- chiffres clés : panneau Carbon, tuiles noires -->
+  <section class="animate-fade-up mt-8 grid gap-4 rounded-card bg-carbon p-4 sm:grid-cols-2 xl:grid-cols-4" style="animation-delay: 200ms" aria-label="Key figures">
     <div class="rounded-card bg-obsidian p-6">
       <p class="text-body text-ash">Revenue · last 30 days</p>
       <p class="mt-2 font-display text-feature-stat font-semibold tabular-nums" [appCountUp]="s.revenue.last30Days" [countDecimals]="2" countPrefix="$"></p>
@@ -38,7 +38,7 @@
       <p class="mt-2 font-display text-feature-stat font-semibold tabular-nums" [appCountUp]="s.users.total"></p>
       <p class="mt-2 text-utility-nav text-ash">{{ s.users.admins }} admin{{ s.users.admins === 1 ? '' : 's' }} · {{ s.users.blocked }} blocked</p>
     </div>
-    <a routerLink="/admin/messages" class="group rounded-card bg-obsidian p-6 transition-colors duration-300 hover:bg-graphite"> <!-- tuile cliquable -->
+    <a routerLink="/admin/messages" class="group rounded-card bg-obsidian p-6 transition-colors duration-300 hover:bg-graphite">
       <p class="flex items-center justify-between text-body text-ash">Unread messages <span class="transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true">›</span></p>
       <p class="mt-2 font-display text-feature-stat font-semibold tabular-nums" [appCountUp]="s.messages.unread"></p>
       <p class="mt-2 text-utility-nav text-ash">{{ s.messages.total }} in total</p>
@@ -46,13 +46,13 @@
   </section>
 
   <div class="mt-4 grid gap-4 xl:grid-cols-[1.6fr_1fr]">
-    <section appReveal class="rounded-card border border-steel bg-carbon p-6" aria-labelledby="chart-title"> <!-- graphique par mois -->
+    <section appReveal class="rounded-card border border-steel bg-carbon p-6" aria-labelledby="chart-title">
       <div class="flex flex-wrap items-start justify-between gap-3">
         <div>
           <h2 id="chart-title" class="font-display text-product-label font-semibold">{{ metric() === 'count' ? 'Rentals per month' : 'Revenue per month' }}</h2>
           <p class="mt-1 text-utility-nav text-ash">Last 6 months · cancelled rentals excluded</p>
         </div>
-        <div class="flex gap-1 rounded-pill bg-obsidian p-1" role="group" aria-label="Chart measure"> <!-- bascule de mesure -->
+        <div class="flex gap-1 rounded-pill bg-obsidian p-1" role="group" aria-label="Chart measure">
           @for (option of metricOptions; track option.value) {
             <button
               type="button"
@@ -66,7 +66,7 @@
       </div>
 
       @if (showTable()) {
-        <table class="mt-6 w-full text-left text-body">                                       <!-- même données, en tableau -->
+        <table class="mt-6 w-full text-left text-body">
           <thead class="text-utility-nav text-ash">
             <tr><th class="py-2 font-semibold">Month</th><th class="py-2 text-right font-semibold">Rentals</th><th class="py-2 text-right font-semibold">Revenue</th></tr>
           </thead>
@@ -77,8 +77,8 @@
           </tbody>
         </table>
       } @else {
-        <div class="mt-6 grid grid-cols-[auto_1fr] gap-x-3">                                    <!-- axe vertical + zone du graphique -->
-          <div class="relative h-56 w-12 text-right text-utility-nav text-ash tabular-nums" aria-hidden="true"> <!-- valeurs de l'axe -->
+        <div class="mt-6 grid grid-cols-[auto_1fr] gap-x-3">
+          <div class="relative h-56 w-12 text-right text-utility-nav text-ash tabular-nums" aria-hidden="true">
             @for (tick of chart().ticks; track $index) {
               <span class="absolute right-0 -translate-y-1/2" [style.top.%]="100 - (tick / chart().max) * 100">
                 {{ metric() === 'revenue' ? '$' : '' }}{{ tick | number: '1.0-0' }}
@@ -87,7 +87,7 @@
           </div>
           <div class="relative h-56">
             @for (tick of chart().ticks; track $index) {
-              <div class="absolute inset-x-0 h-px bg-steel/70" [style.top.%]="100 - (tick / chart().max) * 100"></div> <!-- ligne fine de l'axe -->
+              <div class="absolute inset-x-0 h-px bg-steel/70" [style.top.%]="100 - (tick / chart().max) * 100"></div>
             }
             <div class="relative flex h-full items-end justify-around">
               @for (bar of chart().bars; track bar.label) {
@@ -95,18 +95,18 @@
                   type="button"
                   class="group relative flex h-full flex-1 flex-col items-center justify-end focus-visible:outline-none"
                   [attr.aria-label]="bar.label + ' ' + bar.year + ': ' + bar.count + ' rentals, $' + (bar.revenue | number: '1.2-2') + ' revenue'"
-                >                                                                               <!-- toute la colonne réagit au survol -->
+                >
                   <div
                     class="bar-grow relative w-full max-w-6 rounded-t-[4px] bg-aurora-glow/80 transition-[height,background-color] duration-700 ease-out group-hover:bg-aurora-glow group-focus-visible:bg-aurora-glow"
                     [style.height.%]="bar.height"
                     [style.animation-delay.ms]="$index * 90"
-                  >                                                                             <!-- colonne : 24 px max, coins arrondis en haut seulement -->
+                  >
                     @if (bar.isHighest) {
-                      <span class="absolute bottom-full left-1/2 mb-1 -translate-x-1/2 text-utility-nav font-semibold whitespace-nowrap text-porcelain tabular-nums transition-opacity group-hover:opacity-0"> <!-- étiquette de la plus haute -->
+                      <span class="absolute bottom-full left-1/2 mb-1 -translate-x-1/2 text-utility-nav font-semibold whitespace-nowrap text-porcelain tabular-nums transition-opacity group-hover:opacity-0">
                         {{ metric() === 'revenue' ? (bar.value | currency: 'USD' : 'symbol' : '1.0-0') : bar.value }}
                       </span>
                     }
-                    <span class="pointer-events-none absolute bottom-full left-1/2 z-10 mb-2 -translate-x-1/2 rounded-[10px] border border-steel bg-graphite px-3 py-2 text-left whitespace-nowrap opacity-0 transition-opacity duration-200 group-hover:opacity-100 group-focus-visible:opacity-100"> <!-- bulle au survol et au clavier -->
+                    <span class="pointer-events-none absolute bottom-full left-1/2 z-10 mb-2 -translate-x-1/2 rounded-[10px] border border-steel bg-graphite px-3 py-2 text-left whitespace-nowrap opacity-0 transition-opacity duration-200 group-hover:opacity-100 group-focus-visible:opacity-100">
                       <span class="block text-body font-semibold text-porcelain tabular-nums">{{ bar.count }} rentals · {{ bar.revenue | currency: 'USD' }}</span>
                       <span class="block text-utility-nav text-ash">{{ bar.label }} {{ bar.year }}</span>
                     </span>
@@ -116,7 +116,7 @@
             </div>
           </div>
           <div></div>
-          <div class="mt-2 flex justify-around text-utility-nav text-ash" aria-hidden="true">  <!-- mois sous les colonnes -->
+          <div class="mt-2 flex justify-around text-utility-nav text-ash" aria-hidden="true">
             @for (bar of chart().bars; track bar.label) {
               <span class="flex-1 text-center">{{ bar.label }}</span>
             }
@@ -128,11 +128,11 @@
       </button>
     </section>
 
-    <section appReveal [revealDelay]="120" class="flex flex-col items-center rounded-card border border-steel bg-carbon p-6 text-center" aria-labelledby="occupancy-title"> <!-- taux d'occupation -->
+    <section appReveal [revealDelay]="120" class="flex flex-col items-center rounded-card border border-steel bg-carbon p-6 text-center" aria-labelledby="occupancy-title">
       <h2 id="occupancy-title" class="self-start font-display text-product-label font-semibold">Fleet occupancy</h2>
       <p class="self-start text-utility-nav text-ash">Units rented right now, active GPUs</p>
       <div class="relative mt-6 size-44">
-        <svg viewBox="0 0 120 120" class="size-full -rotate-90" aria-hidden="true">          <!-- jauge circulaire qui se remplit -->
+        <svg viewBox="0 0 120 120" class="size-full -rotate-90" aria-hidden="true">
           <circle cx="60" cy="60" r="52" fill="none" stroke="#333336" stroke-width="10" />
           <circle class="ring-fill" cx="60" cy="60" r="52" fill="none" style="stroke: var(--aurora)" stroke-width="10" stroke-linecap="round" stroke-dasharray="327" [attr.stroke-dashoffset]="occupancy().offset" />
         </svg>
@@ -145,7 +145,7 @@
   </div>
 
   <div class="mt-4 grid gap-4 xl:grid-cols-2">
-    <section appReveal class="rounded-card border border-steel bg-carbon p-6" aria-labelledby="top-title"> <!-- top 5 des GPU -->
+    <section appReveal class="rounded-card border border-steel bg-carbon p-6" aria-labelledby="top-title">
       <h2 id="top-title" class="font-display text-product-label font-semibold">Top GPUs</h2>
       <p class="text-utility-nav text-ash">By number of rentals · revenue shown on the bar</p>
       <ol class="mt-5 flex flex-col gap-4">
@@ -157,7 +157,7 @@
             <span></span>
             <div class="col-span-2 flex items-center gap-3">
               <div class="h-2 flex-1 overflow-hidden rounded-pill bg-obsidian">
-                <div class="animate-grow-x h-full origin-left rounded-r-[4px] bg-aurora-glow/80" [style.width.%]="(gpu.revenue / topRevenueMax()) * 100" [style.animation-delay.ms]="200 + $index * 100"></div> <!-- barre proportionnelle au revenu -->
+                <div class="animate-grow-x h-full origin-left rounded-r-[4px] bg-aurora-glow/80" [style.width.%]="(gpu.revenue / topRevenueMax()) * 100" [style.animation-delay.ms]="200 + $index * 100"></div>
               </div>
               <span class="w-20 text-right text-utility-nav text-porcelain tabular-nums">{{ gpu.revenue | currency: 'USD' : 'symbol' : '1.0-0' }}</span>
             </div>
@@ -168,7 +168,7 @@
       </ol>
     </section>
 
-    <section appReveal [revealDelay]="120" class="rounded-card border border-steel bg-carbon p-6" aria-labelledby="status-title"> <!-- locations par statut -->
+    <section appReveal [revealDelay]="120" class="rounded-card border border-steel bg-carbon p-6" aria-labelledby="status-title">
       <h2 id="status-title" class="font-display text-product-label font-semibold">Rentals by status</h2>
       <p class="text-utility-nav text-ash">{{ s.rentals.total }} rentals in total</p>
       <ul class="mt-5 flex flex-col gap-4">
@@ -181,7 +181,7 @@
           </li>
         }
       </ul>
-      <div class="mt-6 grid grid-cols-2 gap-3">                                                <!-- raccourcis -->
+      <div class="mt-6 grid grid-cols-2 gap-3">
         <a appTilt [tiltMax]="3" routerLink="/admin/rentals" class="rounded-card bg-obsidian p-4 transition duration-500 ease-out hover:bg-graphite">
           <p class="text-body font-semibold">Manage rentals ›</p>
           <p class="text-utility-nav text-ash">{{ s.rentals.upcoming }} upcoming</p>

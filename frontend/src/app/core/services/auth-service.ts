@@ -5,55 +5,55 @@ import { Observable, catchError, map, of, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { AuthResponse, LoginRequest, MeResponse, RegisterRequest, User } from '../models/user';
 
-const TOKEN_KEY = 'teramind_token';                       // clés utilisées dans le localStorage du navigateur
+const TOKEN_KEY = 'teramind_token';
 const USER_KEY = 'teramind_user';
 
 @Injectable({ providedIn: 'root' })
-export class AuthService {                                 // connexion, déconnexion et utilisateur courant
+export class AuthService {
   private readonly http = inject(HttpClient);
   private readonly router = inject(Router);
 
-  private readonly tokenState = signal<string | null>(readStorage(TOKEN_KEY)); // relu au démarrage : la connexion survit au rafraîchissement
+  private readonly tokenState = signal<string | null>(readStorage(TOKEN_KEY));
   private readonly userState = signal<User | null>(readUser());
 
-  readonly token = this.tokenState.asReadonly();           // lecture seule pour le reste de l'application
+  readonly token = this.tokenState.asReadonly();
   readonly currentUser = this.userState.asReadonly();
   readonly isLoggedIn = computed(() => this.tokenState() !== null && this.userState() !== null);
   readonly isAdmin = computed(() => this.userState()?.role === 'ADMIN');
 
-  login(request: LoginRequest): Observable<AuthResponse> { // POST /auth/login
+  login(request: LoginRequest): Observable<AuthResponse> {
     return this.http
       .post<AuthResponse>(`${environment.apiUrl}/auth/login`, request)
-      .pipe(tap((response) => this.saveSession(response.token, response.user))); // garde le token si la connexion réussit
+      .pipe(tap((response) => this.saveSession(response.token, response.user)));
   }
 
-  register(request: RegisterRequest): Observable<AuthResponse> { // POST /auth/register : crée le compte et connecte directement
+  register(request: RegisterRequest): Observable<AuthResponse> {
     return this.http
       .post<AuthResponse>(`${environment.apiUrl}/auth/register`, request)
       .pipe(tap((response) => this.saveSession(response.token, response.user)));
   }
 
-  updateCurrentUser(user: User): void {                    // après une modification du profil (UserService)
+  updateCurrentUser(user: User): void {
     const token = this.tokenState();
     if (token) {
       this.saveSession(token, user);
     }
   }
 
-  logout(redirectTo = '/'): void {                         // pas de route API : on oublie simplement le token
+  logout(redirectTo = '/'): void {
     this.clearSession();
     this.router.navigateByUrl(redirectTo);
   }
 
-  restoreSession(): Observable<void> {                     // appelé au démarrage : vérifie que le token est encore valide
+  restoreSession(): Observable<void> {
     if (!this.tokenState()) {
-      return of(undefined);                                // personne n'est connecté
+      return of(undefined);
     }
     return this.http.get<MeResponse>(`${environment.apiUrl}/auth/me`).pipe(
-      tap((response) => this.saveSession(this.tokenState()!, response.user)), // met à jour le profil (rôle, blocage…)
+      tap((response) => this.saveSession(this.tokenState()!, response.user)),
       map(() => undefined),
       catchError(() => {
-        this.clearSession();                               // token expiré ou compte bloqué : on déconnecte
+        this.clearSession();
         return of(undefined);
       }),
     );
@@ -74,7 +74,7 @@ export class AuthService {                                 // connexion, déconn
   }
 }
 
-function readStorage(key: string): string | null {         // localStorage peut être bloqué (navigation privée) : on ne plante pas
+function readStorage(key: string): string | null {
   try {
     return localStorage.getItem(key);
   } catch {
@@ -89,16 +89,16 @@ function writeStorage(key: string, value: string | null): void {
     } else {
       localStorage.setItem(key, value);
     }
-  } catch {                                                // stockage indisponible : la session ne durera que le temps de la page
+  } catch {
     return;
   }
 }
 
-function readUser(): User | null {                         // utilisateur enregistré lors de la dernière connexion
+function readUser(): User | null {
   try {
     const json = readStorage(USER_KEY);
     return json ? (JSON.parse(json) as User) : null;
   } catch {
-    return null;                                           // contenu illisible : on considère qu'on est déconnecté
+    return null;
   }
 }

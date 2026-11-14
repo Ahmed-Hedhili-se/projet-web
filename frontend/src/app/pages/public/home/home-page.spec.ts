@@ -6,7 +6,7 @@ describe('HomePage', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [HomePage],
-      providers: [provideRouter([])],                      // la page utilise routerLink
+      providers: [provideRouter([])],
     }).compileComponents();
   });
 
@@ -15,6 +15,6 @@ describe('HomePage', () => {
     await fixture.whenStable();
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.querySelector('h1')?.textContent).toContain('Compute for every model.');
-    expect(compiled.querySelectorAll('article').length).toBe(3); // 3 cartes GPU
+    expect(compiled.querySelectorAll('article').length).toBe(3);
   });
 });

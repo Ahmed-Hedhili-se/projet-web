@@ -7,22 +7,22 @@ import { CountUp } from '../../../shared/directives/count-up';
 import { Reveal } from '../../../shared/directives/reveal';
 import { Tilt } from '../../../shared/directives/tilt';
 
-interface Stat {                                           // chiffre clé animé (directive CountUp)
+interface Stat {
   value: number;
-  decimals?: number;                                       // décimales affichées (0 par défaut)
-  prefix?: string;                                         // ex. "$"
-  suffix?: string;                                         // ex. "%"
+  decimals?: number;
+  prefix?: string;
+  suffix?: string;
   label: string;
 }
 
-interface Feature {                                        // point fort de l'offre
-  icon: 'target' | 'clock' | 'chip';                       // nom de l'icône SVG affichée
+interface Feature {
+  icon: 'target' | 'clock' | 'chip';
   title: string;
   text: string;
 }
 
-interface FeaturedGpu {                                    // GPU mis en avant (texte de présentation, ids du catalogue)
-  id: number;                                              // lien vers /gpus/:id
+interface FeaturedGpu {
+  id: number;
   name: string;
   architecture: string;
   vramGb: number;
@@ -31,7 +31,7 @@ interface FeaturedGpu {                                    // GPU mis en avant (
   useCase: string;
 }
 
-interface Step {                                           // étape du fonctionnement
+interface Step {
   number: string;
   title: string;
   text: string;
@@ -50,11 +50,11 @@ export class HomePage {
     { value: 24, suffix: '/7', label: 'Expert support' },
   ];
 
-  protected readonly marqueeGpus = [                       // noms affichés dans le bandeau défilant
+  protected readonly marqueeGpus = [
     'NVIDIA H100 80GB', 'AMD Instinct MI300X', 'NVIDIA A100 80GB', 'NVIDIA A100 40GB', 'NVIDIA RTX 4090', 'NVIDIA L4',
   ];
 
-  protected readonly statement =                           // grande phrase qui s'éclaire en défilant
+  protected readonly statement =
     'Every AI model has a perfect GPU. Our AI advisor finds it, you book it in one click, and you pay only for the hours you actually use.';
 
   protected readonly features: Feature[] = [

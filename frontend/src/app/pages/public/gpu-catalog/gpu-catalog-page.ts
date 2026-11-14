@@ -17,20 +17,20 @@ import { Reveal } from '../../../shared/directives/reveal';
 })
 export class GpuCatalogPage implements OnInit {
   private readonly gpuService = inject(GpuService);
-  private readonly destroyRef = inject(DestroyRef);        // permet d'annuler les requêtes en quittant la page
+  private readonly destroyRef = inject(DestroyRef);
 
-  protected readonly gpus = signal<Gpu[]>([]);             // GPU affichés
-  protected readonly manufacturers = signal<string[]>([]); // options du filtre « Manufacturer »
+  protected readonly gpus = signal<Gpu[]>([]);
+  protected readonly manufacturers = signal<string[]>([]);
   protected readonly loading = signal(true);
   protected readonly errorMessage = signal<string | null>(null);
-  protected readonly filtersOpen = signal(false);          // panneau de filtres ouvert sur mobile
-  protected readonly skeletons = [1, 2, 3, 4];             // cartes grises affichées pendant le chargement
+  protected readonly filtersOpen = signal(false);
+  protected readonly skeletons = [1, 2, 3, 4];
 
-  private query: GpuQuery = {};                            // derniers filtres demandés (pour « Try again »)
-  private request?: Subscription;                          // requête en cours
+  private query: GpuQuery = {};
+  private request?: Subscription;
 
   ngOnInit(): void {
-    this.load({});                                         // premier chargement, sans filtre
+    this.load({});
   }
 
   protected onFiltersChange(query: GpuQuery): void {
@@ -47,7 +47,7 @@ export class GpuCatalogPage implements OnInit {
 
   private load(query: GpuQuery): void {
     this.query = query;
-    this.request?.unsubscribe();                           // annule la requête précédente si elle n'est pas finie
+    this.request?.unsubscribe();
     this.loading.set(true);
     this.errorMessage.set(null);
 
@@ -61,7 +61,7 @@ export class GpuCatalogPage implements OnInit {
           this.loading.set(false);
         },
         error: (err: unknown) => {
-          this.errorMessage.set(getErrorMessage(err));     // message lisible pour l'utilisateur
+          this.errorMessage.set(getErrorMessage(err));
           this.loading.set(false);
         },
       });

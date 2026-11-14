@@ -1,4 +1,4 @@
-<header class="flex flex-wrap items-end justify-between gap-4"> <!-- En-tête -->
+<header class="flex flex-wrap items-end justify-between gap-4">
   <div>
     <p class="animate-fade-up font-display text-product-label font-semibold text-aurora">Admin</p>
     <h1 class="mt-1 font-display text-hero-product-name font-semibold md:text-section-title">
@@ -6,7 +6,7 @@
     </h1>
   </div>
   <div class="animate-fade-up flex flex-wrap items-center gap-3" style="animation-delay: 300ms">
-    <div class="flex gap-1 rounded-pill bg-carbon p-1" role="group" aria-label="Choose a view">   <!-- liste ou planning -->
+    <div class="flex gap-1 rounded-pill bg-carbon p-1" role="group" aria-label="Choose a view">
       <button type="button" (click)="view.set('list')" [attr.aria-pressed]="view() === 'list'" class="rounded-pill px-3 py-1 text-utility-nav font-semibold transition-colors duration-300" [class]="view() === 'list' ? 'bg-porcelain text-obsidian' : 'text-ash hover:text-porcelain'">List</button>
       <button type="button" (click)="view.set('planning')" [attr.aria-pressed]="view() === 'planning'" class="rounded-pill px-3 py-1 text-utility-nav font-semibold transition-colors duration-300" [class]="view() === 'planning' ? 'bg-porcelain text-obsidian' : 'text-ash hover:text-porcelain'">Planning</button>
     </div>
@@ -14,7 +14,7 @@
   </div>
 </header>
 
-<div class="animate-fade-up mt-8 flex flex-wrap items-center gap-3" style="animation-delay: 200ms"> <!-- filtres client et GPU -->
+<div class="animate-fade-up mt-8 flex flex-wrap items-center gap-3" style="animation-delay: 200ms">
   <select class="form-field w-auto min-w-44" aria-label="Filter by customer" (change)="pickFilter('user', $any($event.target).value)">
     <option value="" [selected]="userFilter() === null">All customers</option>
     @for (user of userOptions(); track user.id) {
@@ -49,7 +49,7 @@
 }
 
 @if (loading()) {
-  <div class="mt-6 flex flex-col gap-3">                                                      <!-- squelettes pendant le chargement -->
+  <div class="mt-6 flex flex-col gap-3">
     @for (item of [1, 2, 3, 4, 5]; track item) {
       <div class="h-16 animate-pulse rounded-nav bg-carbon"></div>
     }
@@ -61,7 +61,7 @@
     </app-alert>
   </div>
 } @else if (view() === 'list') {
-  <div class="mt-6 flex gap-2 overflow-x-auto pb-1" role="group" aria-label="Filter by status"> <!-- onglets de statut -->
+  <div class="mt-6 flex gap-2 overflow-x-auto pb-1" role="group" aria-label="Filter by status">
     @for (tab of tabs(); track tab.value) {
       <button
         type="button"
@@ -76,8 +76,8 @@
     }
   </div>
 
-  <div class="mt-4 overflow-hidden rounded-card border border-steel bg-carbon">               <!-- tableau des locations -->
-    <table class="hidden w-full text-left text-body lg:table">                                <!-- grand écran : tableau -->
+  <div class="mt-4 overflow-hidden rounded-card border border-steel bg-carbon">
+    <table class="hidden w-full text-left text-body lg:table">
       <thead class="border-b border-steel text-utility-nav text-ash">
         <tr>
           <th class="px-5 py-3 font-semibold">Customer</th>
@@ -90,7 +90,7 @@
       </thead>
       <tbody class="divide-y divide-steel">
         @for (rental of filtered(); track rental.id) {
-          <tr class="result-enter transition-colors duration-300 hover:bg-obsidian/60" [style.animation-delay.ms]="($index < 12 ? $index : 12) * 40"> <!-- lignes en cascade -->
+          <tr class="result-enter transition-colors duration-300 hover:bg-obsidian/60" [style.animation-delay.ms]="($index < 12 ? $index : 12) * 40">
             <td class="px-5 py-4">
               <p class="font-semibold">{{ rental.user.firstName }} {{ rental.user.lastName }}</p>
               <p class="text-utility-nav text-ash">#{{ rental.id }} · {{ rental.user.email }}</p>
@@ -117,7 +117,7 @@
       </tbody>
     </table>
 
-    <ul class="divide-y divide-steel lg:hidden">                                               <!-- mobile et tablette : une carte par location -->
+    <ul class="divide-y divide-steel lg:hidden">
       @for (rental of filtered(); track rental.id) {
         <li appReveal class="p-5">
           <div class="flex items-start justify-between gap-3">
@@ -138,7 +138,7 @@
     </ul>
   </div>
 } @else {
-  <div class="mt-6 flex flex-wrap items-center gap-3">                                        <!-- planning : choix de la période -->
+  <div class="mt-6 flex flex-wrap items-center gap-3">
     <button type="button" (click)="shiftWindow(-7)" class="btn-outline" aria-label="Previous week">‹ Previous</button>
     <button type="button" (click)="resetWindow()" class="btn-outline">Today</button>
     <button type="button" (click)="shiftWindow(7)" class="btn-outline" aria-label="Next week">Next ›</button>
@@ -150,10 +150,10 @@
     </ul>
   </div>
 
-  <div animate.enter="result-enter" class="mt-4 overflow-x-auto rounded-card border border-steel bg-carbon"> <!-- une rangée par GPU, 14 jours en colonnes -->
+  <div animate.enter="result-enter" class="mt-4 overflow-x-auto rounded-card border border-steel bg-carbon">
     <div class="min-w-[760px]">
       <div class="grid grid-cols-[170px_1fr] border-b border-steel">
-        <p class="sticky left-0 z-10 bg-carbon px-5 py-3 text-utility-nav font-semibold text-ash">GPU</p> <!-- sticky : le nom du GPU reste visible quand on fait défiler le planning sur mobile -->
+        <p class="sticky left-0 z-10 bg-carbon px-5 py-3 text-utility-nav font-semibold text-ash">GPU</p>
         <div class="grid grid-cols-14">
           @for (day of days(); track $index) {
             <p class="py-2 text-center text-utility-nav" [class]="day.isToday ? 'font-semibold text-aurora' : 'text-ash'">
@@ -167,9 +167,9 @@
       @for (row of planning(); track row.gpuId) {
         <div class="grid grid-cols-[170px_1fr] border-b border-steel last:border-b-0">
           <p class="sticky left-0 z-10 flex items-center bg-carbon px-5 py-3 text-body font-semibold">{{ row.name }}</p>
-          <div class="planning-track relative my-2" [style.height.px]="row.lanes * laneHeight" [style.background-size]="'calc(100% / ' + planningDays + ') 100%'"> <!-- traits verticaux : un par jour -->
+          <div class="planning-track relative my-2" [style.height.px]="row.lanes * laneHeight" [style.background-size]="'calc(100% / ' + planningDays + ') 100%'">
             @if (todayPercent(); as percent) {
-              <span class="absolute inset-y-0 w-px bg-aurora-glow" [style.left.%]="percent" aria-hidden="true"></span> <!-- trait « maintenant » -->
+              <span class="absolute inset-y-0 w-px bg-aurora-glow" [style.left.%]="percent" aria-hidden="true"></span>
             }
             @for (bar of row.bars; track bar.rental.id) {
               <button
@@ -195,7 +195,7 @@
   </div>
 
   @if (selected(); as rental) {
-    <div animate.enter="result-enter" class="mt-4 flex flex-wrap items-center gap-x-8 gap-y-3 rounded-card border border-steel bg-carbon p-5"> <!-- détail de la barre choisie -->
+    <div animate.enter="result-enter" class="mt-4 flex flex-wrap items-center gap-x-8 gap-y-3 rounded-card border border-steel bg-carbon p-5">
       <div>
         <p class="font-semibold">{{ rental.user.firstName }} {{ rental.user.lastName }}</p>
         <p class="text-utility-nav text-ash">#{{ rental.id }} · {{ rental.user.email }}</p>

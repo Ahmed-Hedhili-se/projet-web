@@ -5,30 +5,30 @@ import { AppError } from '../utils/AppError';
 import { toGpu } from '../utils/serializers';
 import { availableUnits, bookedUnitsByGpu, toPeriod } from './availability.service';
 
-const ORDER_BY: Record<GpuListQuery['sort'], Prisma.GpuOrderByWithRelationInput[]> = { // tri demandé, puis id pour un ordre stable
+const ORDER_BY: Record<GpuListQuery['sort'], Prisma.GpuOrderByWithRelationInput[]> = {
   price_asc: [{ pricePerHour: 'asc' }, { id: 'asc' }],
   price_desc: [{ pricePerHour: 'desc' }, { id: 'asc' }],
   vram_desc: [{ vramGb: 'desc' }, { id: 'asc' }],
   name_asc: [{ name: 'asc' }, { id: 'asc' }],
 };
 
-export async function listGpus(query: GpuListQuery) {     // GET /gpus
+export async function listGpus(query: GpuListQuery) {
   const where: Prisma.GpuWhereInput = {
-    isActive: true,                                         // le catalogue public ne montre que les GPU actifs
+    isActive: true,
     ...(query.search && {
       OR: [
         { name: { contains: query.search, mode: 'insensitive' } },
         { architecture: { contains: query.search, mode: 'insensitive' } },
       ],
     }),
-    ...(query.manufacturer && { manufacturer: query.manufacturer }), // fabricant exact, ex. "NVIDIA"
+    ...(query.manufacturer && { manufacturer: query.manufacturer }),
     ...(query.minVram !== undefined && { vramGb: { gte: query.minVram } }),
     ...(query.maxPrice !== undefined && { pricePerHour: { lte: query.maxPrice } }),
   };
 
   const [rows, manufacturerRows] = await Promise.all([
     prisma.gpu.findMany({ where, orderBy: ORDER_BY[query.sort] }),
-    prisma.gpu.findMany({                                   // tous les fabricants actifs, sans filtre (liste déroulante)
+    prisma.gpu.findMany({
       where: { isActive: true },
       distinct: ['manufacturer'],
       select: { manufacturer: true },
@@ -42,16 +42,16 @@ export async function listGpus(query: GpuListQuery) {     // GET /gpus
   return { gpus, total: gpus.length, manufacturers: manufacturerRows.map((row) => row.manufacturer) };
 }
 
-export async function getGpu(id: number, period: PeriodQuery) { // GET /gpus/:id
+export async function getGpu(id: number, period: PeriodQuery) {
   const gpu = await prisma.gpu.findUnique({ where: { id } });
-  if (!gpu || !gpu.isActive) {                              // un GPU désactivé est caché du public
+  if (!gpu || !gpu.isActive) {
     throw new AppError(404, 'GPU_NOT_FOUND', 'GPU not found.');
   }
   const [result] = await withAvailableUnits([gpu], period);
   return { gpu: result };
 }
 
-async function withAvailableUnits(gpus: Gpu[], period: PeriodQuery) { // ajoute availableUnits à chaque GPU
+async function withAvailableUnits(gpus: Gpu[], period: PeriodQuery) {
   const booked = await bookedUnitsByGpu(gpus.map((gpu) => gpu.id), toPeriod(period.startDate, period.durationHours));
   return gpus.map((gpu) => toGpu(gpu, availableUnits(gpu.totalUnits, booked.get(gpu.id) ?? 0)));
 }

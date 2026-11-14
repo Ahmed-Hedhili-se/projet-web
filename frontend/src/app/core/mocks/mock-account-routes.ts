@@ -9,9 +9,9 @@ import { allMockAccounts, updateMockAccount } from './mock-users';
 
 const HOUR_MS = 60 * 60 * 1000;
 
-export function handleAccountRoutes(req: HttpRequest<unknown>, path: string): Observable<HttpResponse<unknown>> | null { // null = pas une route de ce fichier
+export function handleAccountRoutes(req: HttpRequest<unknown>, path: string): Observable<HttpResponse<unknown>> | null {
   if (req.method === 'GET' && path === '/rentals/me') {
-    return withAccount(req, (account) => {                 // GET /rentals/me : les plus récentes d'abord
+    return withAccount(req, (account) => {
       const status = req.params.get('status');
       const rentals = allMockRentals()
         .filter((rental) => rental.userId === account.user.id)
@@ -28,11 +28,11 @@ export function handleAccountRoutes(req: HttpRequest<unknown>, path: string): Ob
 
   const cancelMatch = path.match(/^\/rentals\/(\d+)\/cancel$/);
   if (req.method === 'PATCH' && cancelMatch) {
-    return withAccount(req, (account) => {                 // PATCH /rentals/:id/cancel
+    return withAccount(req, (account) => {
       const rentals = allMockRentals();
       const record = rentals.find((rental) => rental.id === Number(cancelMatch[1]) && rental.userId === account.user.id);
       if (!record) {
-        return fail(req, 404, { error: { code: 'RENTAL_NOT_FOUND', message: 'Rental not found.' } }); // aussi si elle appartient à quelqu'un d'autre
+        return fail(req, 404, { error: { code: 'RENTAL_NOT_FOUND', message: 'Rental not found.' } });
       }
       if (rentalStatus(record) !== 'UPCOMING') {
         return fail(req, 409, { error: { code: 'RENTAL_NOT_CANCELLABLE', message: 'Only upcoming rentals can be cancelled.' } });
@@ -45,7 +45,7 @@ export function handleAccountRoutes(req: HttpRequest<unknown>, path: string): Ob
   }
 
   if (req.method === 'GET' && path === '/users/me') {
-    return withAccount(req, (account) => respond({ user: { ...account.user } })); // GET /users/me
+    return withAccount(req, (account) => respond({ user: { ...account.user } }));
   }
 
   if (req.method === 'PUT' && path === '/users/me') {
@@ -53,7 +53,7 @@ export function handleAccountRoutes(req: HttpRequest<unknown>, path: string): Ob
   }
 
   if (req.method === 'PUT' && path === '/users/me/password') {
-    return withAccount(req, (account) => {                 // PUT /users/me/password
+    return withAccount(req, (account) => {
       const body = (req as HttpRequest<ChangePasswordRequest>).body;
       const newPassword = body?.newPassword ?? '';
       if (newPassword.length < 8 || newPassword.length > 72) {
@@ -70,7 +70,7 @@ export function handleAccountRoutes(req: HttpRequest<unknown>, path: string): Ob
   return null;
 }
 
-function createRental(req: HttpRequest<CreateRentalRequest>, userId: number): Observable<HttpResponse<unknown>> { // POST /rentals
+function createRental(req: HttpRequest<CreateRentalRequest>, userId: number): Observable<HttpResponse<unknown>> {
   const body = req.body;
   const start = new Date(body?.startDate ?? '');
   const details: FieldError[] = [];
@@ -80,7 +80,7 @@ function createRental(req: HttpRequest<CreateRentalRequest>, userId: number): Ob
   if (!Number.isInteger(body?.quantity) || (body?.quantity ?? 0) < 1) {
     details.push({ field: 'quantity', message: 'Quantity must be at least 1.' });
   }
-  if (Number.isNaN(start.getTime()) || start.getTime() < Date.now() - 60_000) { // une minute de tolérance
+  if (Number.isNaN(start.getTime()) || start.getTime() < Date.now() - 60_000) {
     details.push({ field: 'startDate', message: 'The start date must be in the future.' });
   }
   if (!Number.isInteger(body?.durationHours) || (body?.durationHours ?? 0) < 1 || (body?.durationHours ?? 0) > 720) {
@@ -108,10 +108,10 @@ function createRental(req: HttpRequest<CreateRentalRequest>, userId: number): Ob
     });
   }
   const record = createRecord(userId, gpu, body.quantity, start, body.durationHours);
-  return respond({ rental: toApiRental(record) }, 800, 201); // 201 = location créée
+  return respond({ rental: toApiRental(record) }, 800, 201);
 }
 
-function updateProfile(req: HttpRequest<UpdateProfileRequest>, userId: number): Observable<HttpResponse<unknown>> { // PUT /users/me
+function updateProfile(req: HttpRequest<UpdateProfileRequest>, userId: number): Observable<HttpResponse<unknown>> {
   const email = (req.body?.email ?? '').trim().toLowerCase();
   const firstName = (req.body?.firstName ?? '').trim();
   const lastName = (req.body?.lastName ?? '').trim();

@@ -5,9 +5,9 @@ import { validateBody, validateParams } from '../middlewares/validate';
 import { sendMessageSchema } from '../schemas/agent.schema';
 import { idParamSchema } from '../schemas/gpu.schema';
 
-export const agentRouter = Router();                        // routes /api/agent/* (conseiller IA, B9)
+export const agentRouter = Router();
 
-agentRouter.use(auth);                                      // toutes les routes exigent un utilisateur connecté
+agentRouter.use(auth);
 
 agentRouter.get('/status', agentController.status);
 agentRouter.post('/conversations', agentController.create);

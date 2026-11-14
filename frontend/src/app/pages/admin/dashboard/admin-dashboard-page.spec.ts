@@ -38,12 +38,12 @@ describe('AdminDashboardPage', () => {
     await fixture.whenStable();
     const compiled = fixture.nativeElement as HTMLElement;
 
-    expect(compiled.textContent).toContain('$9,120.75');   // revenu des 30 derniers jours (sans animation dans les tests)
+    expect(compiled.textContent).toContain('$9,120.75');
     expect(compiled.textContent).toContain('NVIDIA H100 80GB');
-    expect(compiled.querySelectorAll('button[aria-label*="rentals"]').length).toBe(6); // 6 colonnes accessibles au clavier
+    expect(compiled.querySelectorAll('button[aria-label*="rentals"]').length).toBe(6);
 
     [...compiled.querySelectorAll('button')].find((button) => button.textContent?.includes('View as table'))?.click();
     await fixture.whenStable();
-    expect(compiled.querySelectorAll('tbody tr').length).toBe(6); // une ligne par mois
+    expect(compiled.querySelectorAll('tbody tr').length).toBe(6);
   });
 });

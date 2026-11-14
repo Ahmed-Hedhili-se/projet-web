@@ -1,43 +1,43 @@
-export type Role = 'USER' | 'ADMIN';                      // rôles de docs/API.md
+export type Role = 'USER' | 'ADMIN';
 
-export interface User {                                    // objet « User » de docs/API.md (jamais de mot de passe)
+export interface User {
   id: number;
   email: string;
   firstName: string;
   lastName: string;
   role: Role;
   isBlocked: boolean;
-  createdAt: string;                                       // date ISO 8601
+  createdAt: string;
 }
 
-export interface LoginRequest {                            // body de POST /auth/login
+export interface LoginRequest {
   email: string;
   password: string;
 }
 
-export interface RegisterRequest {                         // body de POST /auth/register
+export interface RegisterRequest {
   email: string;
-  password: string;                                        // 8 à 72 caractères
-  firstName: string;                                       // 1 à 50 caractères
-  lastName: string;                                        // 1 à 50 caractères
+  password: string;
+  firstName: string;
+  lastName: string;
 }
 
-export interface AuthResponse {                            // réponse de POST /auth/login et POST /auth/register
-  token: string;                                           // JWT à envoyer dans le header Authorization
+export interface AuthResponse {
+  token: string;
   user: User;
 }
 
-export interface MeResponse {                              // réponse de GET /auth/me, GET /users/me et PUT /users/me
+export interface MeResponse {
   user: User;
 }
 
-export interface UpdateProfileRequest {                    // body de PUT /users/me (les 3 champs sont obligatoires)
+export interface UpdateProfileRequest {
   email: string;
   firstName: string;
   lastName: string;
 }
 
-export interface ChangePasswordRequest {                   // body de PUT /users/me/password
+export interface ChangePasswordRequest {
   currentPassword: string;
-  newPassword: string;                                     // 8 à 72 caractères
+  newPassword: string;
 }

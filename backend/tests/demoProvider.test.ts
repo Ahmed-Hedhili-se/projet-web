@@ -1,4 +1,3 @@
-// Tests du fournisseur "demo" (sans IA) : vrais outils, vraie base, faux dépôt GitHub.
 import request from 'supertest';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { demoProvider, profileFromText } from '../src/agent/demoProvider';
@@ -19,7 +18,7 @@ const fakeRepo: RepoSource = {
   readFile: async (_r, _b, path) => REPO[path],
 };
 
-async function chat(token: string, id: number, content: string) { // envoie un message et renvoie l'événement "done"
+async function chat(token: string, id: number, content: string) {
   const res = await request(app).post(`/api/agent/conversations/${id}/messages`)
     .set('Authorization', `Bearer ${token}`).send({ content })
     .buffer(true).parse((r, cb) => { let b = ''; r.setEncoding('utf8'); r.on('data', (c: string) => { b += c; }); r.on('end', () => cb(null, b)); });
@@ -52,8 +51,8 @@ describe('profileFromText', () => {
   it('reads size, mode, precision and dataset size from a sentence', () => {
     expect(profileFromText('Fine-tune an 8B model with QLoRA on 300M tokens')).toEqual({ paramsBillions: 8, mode: 'QLORA', trainingTokens: 3e8 });
     expect(profileFromText('Serve Mistral 7B in FP8')).toEqual({ paramsBillions: 7, mode: 'INFERENCE', precision: 'FP8' });
-    expect(profileFromText('pretrain on 1B tokens')).toEqual({ mode: 'PRETRAINING', trainingTokens: 1e9 }); // "1B tokens" n'est pas une taille
-    expect(profileFromText('see https://github.com/huggyllama/llama-7b')).toEqual({}); // une taille dans une URL est ignorée
+    expect(profileFromText('pretrain on 1B tokens')).toEqual({ mode: 'PRETRAINING', trainingTokens: 1e9 });
+    expect(profileFromText('see https://github.com/huggyllama/llama-7b')).toEqual({});
   });
 });
 
@@ -75,7 +74,7 @@ describe('demo provider through the real agent', () => {
     expect(configs.items[0].estimate.tokensPerSecond).toBeGreaterThan(0);
     expect(first.content).toContain('tokens/s');
 
-    const cheaper = await chat(token, id, 'Cheapest option');   // réponse rapide : nouveau classement sans redemander
+    const cheaper = await chat(token, id, 'Cheapest option');
     expect(cheaper.steps.map((s) => s.tool)).toEqual(['rank_configs']);
     expect(cheaper.cards.find((c) => c.type === 'configs')).toBeDefined();
   });

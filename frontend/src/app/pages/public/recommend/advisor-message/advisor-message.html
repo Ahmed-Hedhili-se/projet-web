@@ -1,15 +1,15 @@
 @if (message().role === 'USER') {
-  <div class="result-enter flex justify-end">                                                  <!-- message de l'utilisateur : bulle à droite -->
+  <div class="result-enter flex justify-end">
     <p class="max-w-[85%] rounded-[20px] rounded-br-[6px] border border-steel bg-carbon px-4 py-3 text-body break-words whitespace-pre-line">{{ message().content }}</p>
   </div>
 } @else {
-  <article class="result-enter flex gap-3">                                                     <!-- réponse de l'IA -->
-    <span class="mt-1 flex size-8 shrink-0 items-center justify-center rounded-full border border-steel bg-obsidian text-aurora" aria-hidden="true"> <!-- pastille « IA » -->
+  <article class="result-enter flex gap-3">
+    <span class="mt-1 flex size-8 shrink-0 items-center justify-center rounded-full border border-steel bg-obsidian text-aurora" aria-hidden="true">
       <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v3m0 12v3M3 12h3m12 0h3M6.3 6.3l2 2m7.4 7.4 2 2m0-11.4-2 2m-7.4 7.4-2 2" /><circle cx="12" cy="12" r="2.5" /></svg>
     </span>
     <div class="flex min-w-0 flex-1 flex-col gap-4">
       @if (working()) {
-        <p class="flex items-center gap-2 text-body text-ash" role="status">                    <!-- en cours : roue + dernière étape -->
+        <p class="flex items-center gap-2 text-body text-ash" role="status">
           <svg class="size-4 shrink-0 animate-spin text-aurora" viewBox="0 0 24 24" fill="none" aria-hidden="true">
             <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-opacity="0.3" stroke-width="2.5" />
             <path d="M21 12a9 9 0 0 0-9-9" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
@@ -18,7 +18,7 @@
         </p>
       } @else if (message().steps.length > 0) {
         <div>
-          <button type="button" (click)="stepsOpen.set(!stepsOpen())" [attr.aria-expanded]="stepsOpen()" class="flex items-center gap-1.5 text-utility-nav font-semibold text-ash transition-colors duration-300 hover:text-porcelain"> <!-- étapes repliables -->
+          <button type="button" (click)="stepsOpen.set(!stepsOpen())" [attr.aria-expanded]="stepsOpen()" class="flex items-center gap-1.5 text-utility-nav font-semibold text-ash transition-colors duration-300 hover:text-porcelain">
             <svg class="size-3 transition-transform duration-300" [class.rotate-90]="stepsOpen()" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="m9 6 6 6-6 6" /></svg>
             {{ message().steps.length }} step{{ message().steps.length === 1 ? '' : 's' }}
           </button>
@@ -33,7 +33,7 @@
       }
 
       @if (profileCard(); as card) {
-        <section class="result-enter rounded-card border border-steel bg-carbon p-5" aria-label="What the AI understood"> <!-- carte « profile » -->
+        <section class="result-enter rounded-card border border-steel bg-carbon p-5" aria-label="What the AI understood">
           <p class="text-utility-nav font-semibold text-ash">What the AI understood</p>
           <ul class="mt-3 flex flex-wrap gap-2">
             @for (badge of badges(); track badge) {
@@ -41,7 +41,7 @@
             }
           </ul>
           @if (evidence().length > 0) {
-            <p class="mt-3 text-utility-nav text-ash">                                           <!-- preuves : fichiers du dépôt -->
+            <p class="mt-3 text-utility-nav text-ash">
               Found in
               @for (item of evidence(); track item.file) {
                 @if (item.url) {
@@ -59,11 +59,11 @@
       }
 
       @if (message().content) {
-        <div class="markdown text-body text-porcelain" [innerHTML]="html()"></div>               <!-- texte de l'IA (Markdown → HTML sûr) -->
+        <div class="markdown text-body text-porcelain" [innerHTML]="html()"></div>
       }
 
       @if (configs().length > 0) {
-        <section aria-label="Recommended configurations">                                       <!-- carte « configs » -->
+        <section aria-label="Recommended configurations">
           <ul class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             @for (config of configs(); track config.item.rank) {
               <li class="result-enter flex flex-col rounded-card border bg-carbon p-5" [class]="config.item.verdict === 'BEST_CHOICE' ? 'border-porcelain/70' : 'border-steel'" [style.animation-delay.ms]="$index * 120">
@@ -101,7 +101,7 @@
       }
 
       @if (repliesCard(); as card) {
-        <ul class="flex flex-wrap gap-2" aria-label="Suggested replies">                         <!-- carte « replies » : un clic envoie le texte -->
+        <ul class="flex flex-wrap gap-2" aria-label="Suggested replies">
           @for (option of card.options; track option) {
             <li><button type="button" (click)="reply.emit(option)" [disabled]="!interactive()" class="btn-outline disabled:opacity-40">{{ option }}</button></li>
           }

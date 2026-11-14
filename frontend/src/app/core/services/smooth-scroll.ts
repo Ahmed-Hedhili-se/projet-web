@@ -5,31 +5,31 @@ import { filter } from 'rxjs';
 import { SceneSync } from './scene-sync';
 
 @Injectable({ providedIn: 'root' })
-export class SmoothScroll {                                // défilement adouci de tout le site (bibliothèque Lenis)
+export class SmoothScroll {
   private readonly router = inject(Router);
   private readonly sync = inject(SceneSync);
   private lenis: Lenis | null = null;
 
-  async start(): Promise<void> {                           // appelé une fois, au démarrage de l'application
+  async start(): Promise<void> {
     if (this.lenis || this.sync.reduceMotion || navigator.userAgent.includes('jsdom')) {
-      return;                                              // animations réduites ou tests : on garde le défilement normal
+      return;
     }
-    const { default: LenisClass } = await import('lenis'); // chargé à la demande, après l'affichage du site
+    const { default: LenisClass } = await import('lenis');
     this.lenis = new LenisClass({ duration: 1.15, smoothWheel: true, touchMultiplier: 1.5, autoRaf: true });
 
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
-      .subscribe(() => this.lenis?.scrollTo(0, { immediate: true, force: true })); // nouvelle page : retour en haut, sans animation
+      .subscribe(() => this.lenis?.scrollTo(0, { immediate: true, force: true }));
   }
 
-  showBottomOf(element: HTMLElement): void {               // descend la page jusqu'à ce que le bas de l'élément soit visible (chat du conseiller IA)
+  showBottomOf(element: HTMLElement): void {
     const overflow = element.getBoundingClientRect().bottom - window.innerHeight + 24;
     if (overflow <= 0) {
-      return;                                              // déjà visible
+      return;
     }
     const top = window.scrollY + overflow;
     if (this.lenis) {
-      this.lenis.scrollTo(top);                            // avec le défilement adouci
+      this.lenis.scrollTo(top);
     } else {
       window.scrollTo({ top });
     }

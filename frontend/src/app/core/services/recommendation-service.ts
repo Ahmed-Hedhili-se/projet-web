@@ -8,7 +8,7 @@ import { RecommendationRequest, RecommendationResponse } from '../models/recomme
 export class RecommendationService {
   private readonly http = inject(HttpClient);
 
-  recommend(request: RecommendationRequest): Observable<RecommendationResponse> { // POST /recommendations
+  recommend(request: RecommendationRequest): Observable<RecommendationResponse> {
     return this.http.post<RecommendationResponse>(`${environment.apiUrl}/recommendations`, request);
   }
 }

@@ -1,139 +1,139 @@
-@import 'tailwindcss';                                     /* charge Tailwind CSS v4 */
+@import 'tailwindcss';
 
-@theme {                                                   /* tokens de DESIGN.md : chaque variable crée des classes (--color-obsidian → bg-obsidian) */
-  --color-obsidian: #000000;                               /* fond principal (hero, tuiles) */
-  --color-graphite: #0e0e0e;                               /* navigation, surfaces de contrôle */
-  --color-carbon: #1d1d1f;                                 /* panneaux et bandes de contenu */
-  --color-steel: #333336;                                  /* bordures fines */
-  --color-slate: #6e6e73;                                  /* contours des champs, séparateurs */
-  --color-ash: #86868b;                                    /* texte secondaire */
-  --color-porcelain: #f5f5f7;                              /* texte principal sur fond sombre */
-  --color-action-blue: #0071e3;                            /* boutons d'action principaux uniquement */
-  --color-electric-link: #2997ff;                          /* liens sur fond sombre */
-  --color-cobalt-link: #0066cc;                            /* liens sur fond clair */
-  --color-copper-new: #b64400;                             /* petites étiquettes « New » / statut */
-  --color-optical-yellow: #ffd500;                         /* mise en avant de caractéristiques techniques */
-  --color-aurora: var(--aurora-text);                      /* texte à la couleur Aurore (classe text-aurora) : petits titres, mots forts, chiffres clés */
-  --color-aurora-glow: var(--aurora);                      /* couleur Aurore vive (lueurs, icônes, jauges) — jamais pour du texte courant */
+@theme {
+  --color-obsidian: #000000;
+  --color-graphite: #0e0e0e;
+  --color-carbon: #1d1d1f;
+  --color-steel: #333336;
+  --color-slate: #6e6e73;
+  --color-ash: #86868b;
+  --color-porcelain: #f5f5f7;
+  --color-action-blue: #0071e3;
+  --color-electric-link: #2997ff;
+  --color-cobalt-link: #0066cc;
+  --color-copper-new: #b64400;
+  --color-optical-yellow: #ffd500;
+  --color-aurora: var(--aurora-text);
+  --color-aurora-glow: var(--aurora);
 
-  --font-sans: 'SF Pro Text', 'Inter', ui-sans-serif, system-ui, sans-serif;    /* police des textes */
-  --font-display: 'SF Pro Display', 'Inter', ui-sans-serif, system-ui, sans-serif; /* police des titres */
+  --font-sans: 'SF Pro Text', 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'SF Pro Display', 'Inter', ui-sans-serif, system-ui, sans-serif;
 
-  --text-utility-nav: 12px;                                /* navigation, petits boutons */
+  --text-utility-nav: 12px;
   --text-utility-nav--line-height: 1.33;
   --text-utility-nav--letter-spacing: -0.12px;
-  --text-body: 14px;                                       /* texte courant */
+  --text-body: 14px;
   --text-body--line-height: 1.29;
   --text-body--letter-spacing: -0.224px;
-  --text-section-nav: 17px;                                /* texte de lecture plus grand */
+  --text-section-nav: 17px;
   --text-section-nav--line-height: 1.47;
   --text-section-nav--letter-spacing: -0.374px;
-  --text-product-label: 19px;                              /* nom de produit, logo */
+  --text-product-label: 19px;
   --text-product-label--line-height: 1.21;
   --text-product-label--letter-spacing: 0.228px;
-  --text-feature-stat: 28px;                               /* chiffres des tuiles */
+  --text-feature-stat: 28px;
   --text-feature-stat--line-height: 1;
   --text-feature-stat--letter-spacing: 0.196px;
-  --text-hero-product-name: 32px;                          /* sous-titre de hero */
+  --text-hero-product-name: 32px;
   --text-hero-product-name--line-height: 1.13;
   --text-hero-product-name--letter-spacing: 0.128px;
-  --text-section-title: 40px;                              /* titres de section */
+  --text-section-title: 40px;
   --text-section-title--line-height: 1.1;
   --text-section-title--letter-spacing: -0.12px;
-  --text-display-sm: 48px;                                 /* grand titre sur mobile */
+  --text-display-sm: 48px;
   --text-display-sm--line-height: 1.08;
   --text-display-sm--letter-spacing: -0.24px;
-  --text-display: 80px;                                    /* grand titre d'exposition */
+  --text-display: 80px;
   --text-display--line-height: 1.05;
   --text-display--letter-spacing: -1.2px;
 
-  --radius-card: 28px;                                     /* cartes, panneaux, images */
-  --radius-nav: 20px;                                      /* barres de navigation contenues */
-  --radius-capsule: 36px;                                  /* capsules d'information */
-  --radius-input: 980px;                                   /* champs de formulaire */
-  --radius-pill: 9999px;                                   /* boutons pilules */
+  --radius-card: 28px;
+  --radius-nav: 20px;
+  --radius-capsule: 36px;
+  --radius-input: 980px;
+  --radius-pill: 9999px;
 
-  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);          /* courbe douce : rapide au début, lente à la fin */
-  --animate-fade-up: fade-up 0.9s var(--ease-out-expo) both; /* classe animate-fade-up : apparition vers le haut */
-  --animate-float: float 7s ease-in-out infinite;          /* classe animate-float : léger flottement */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --animate-fade-up: fade-up 0.9s var(--ease-out-expo) both;
+  --animate-float: float 7s ease-in-out infinite;
 
   @keyframes fade-up {
-    from { opacity: 0; transform: translateY(24px); }      /* départ : invisible et un peu plus bas */
-    to { opacity: 1; transform: translateY(0); }           /* arrivée : visible à sa place */
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 
   @keyframes float {
     0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }                  /* monte de 10px au milieu de l'animation */
+    50% { transform: translateY(-10px); }
   }
 
-  --animate-blur-in: blur-in 1.1s var(--ease-out-expo) both; /* classe animate-blur-in : mot qui sort du flou */
-  --animate-grow-x: grow-x 1.4s var(--ease-out-expo) both; /* classe animate-grow-x : barre qui se remplit */
-  --animate-marquee: marquee 40s linear infinite;          /* classe animate-marquee : bandeau qui défile */
+  --animate-blur-in: blur-in 1.1s var(--ease-out-expo) both;
+  --animate-grow-x: grow-x 1.4s var(--ease-out-expo) both;
+  --animate-marquee: marquee 40s linear infinite;
 
   @keyframes blur-in {
-    from { opacity: 0; filter: blur(12px); transform: translateY(20px); } /* flou, invisible et plus bas */
+    from { opacity: 0; filter: blur(12px); transform: translateY(20px); }
     to { opacity: 1; filter: blur(0); transform: translateY(0); }
   }
 
   @keyframes grow-x {
-    from { transform: scaleX(0); }                         /* barre vide (origine à gauche) */
+    from { transform: scaleX(0); }
   }
 
   @keyframes marquee {
-    to { transform: translateX(-50%); }                    /* la liste est doublée : -50 % = boucle parfaite */
+    to { transform: translateX(-50%); }
   }
 
-  --animate-draw: draw 0.8s var(--ease-out-expo) 0.35s both; /* classe animate-draw : trait SVG qui se dessine (pathLength="1") */
-  --animate-pop-in: pop-in 0.6s var(--ease-out-expo) both; /* classe animate-pop-in : apparition avec léger rebond */
+  --animate-draw: draw 0.8s var(--ease-out-expo) 0.35s both;
+  --animate-pop-in: pop-in 0.6s var(--ease-out-expo) both;
 
   @keyframes draw {
-    from { stroke-dasharray: 1; stroke-dashoffset: 1; }    /* trait caché */
-    to { stroke-dasharray: 1; stroke-dashoffset: 0; }      /* trait entièrement dessiné */
+    from { stroke-dasharray: 1; stroke-dashoffset: 1; }
+    to { stroke-dasharray: 1; stroke-dashoffset: 0; }
   }
 
-  --animate-shake: shake 0.5s ease both;                   /* classe animate-shake : secousse (identifiants incorrects) */
+  --animate-shake: shake 0.5s ease both;
 
   @keyframes shake {
     0%, 100% { transform: translateX(0); }
-    20%, 60% { transform: translateX(-8px); }              /* gauche… */
-    40%, 80% { transform: translateX(8px); }               /* …droite */
+    20%, 60% { transform: translateX(-8px); }
+    40%, 80% { transform: translateX(8px); }
   }
 
   @keyframes pop-in {
     0% { opacity: 0; transform: scale(0.6); }
-    70% { opacity: 1; transform: scale(1.06); }            /* dépasse un peu… */
-    100% { opacity: 1; transform: scale(1); }              /* …puis revient à sa taille */
+    70% { opacity: 1; transform: scale(1.06); }
+    100% { opacity: 1; transform: scale(1); }
   }
 }
 
 @layer base {
   html {
-    color-scheme: dark;                                    /* barres de défilement et contrôles natifs sombres */
-    --aurora-rgb: 41 151 255;                              /* couleur « Aurore » par défaut (bleu) ; SceneSync la fait évoluer */
-    --aurora: rgb(var(--aurora-rgb));                      /* usage : color: var(--aurora) · fond : rgb(var(--aurora-rgb) / .12) */
-    --aurora-text: rgb(116 186 255);                       /* variante éclaircie pour les textes (contraste ≥ 4.5:1) */
+    color-scheme: dark;
+    --aurora-rgb: 41 151 255;
+    --aurora: rgb(var(--aurora-rgb));
+    --aurora-text: rgb(116 186 255);
   }
 
   body {
-    background-color: var(--color-obsidian);               /* fond noir */
-    color: var(--color-porcelain);                         /* texte clair */
-    font-family: var(--font-sans);                         /* police Inter */
-    -webkit-font-smoothing: antialiased;                   /* texte plus net sur macOS */
+    background-color: var(--color-obsidian);
+    color: var(--color-porcelain);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
   }
 
   :focus-visible {
-    outline: 1px solid var(--color-action-blue);           /* contour bleu au clavier (DESIGN.md) */
+    outline: 1px solid var(--color-action-blue);
     outline-offset: 1px;
   }
 }
 
 @layer components {
-  .btn-primary {                                           /* bouton pilule bleu (« Blue Purchase Pill ») */
+  .btn-primary {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 7px 14px;                                     /* taille compacte */
+    padding: 7px 14px;
     border-radius: var(--radius-pill);
     background-color: var(--color-action-blue);
     color: #ffffff;
@@ -144,15 +144,15 @@
   }
 
   .btn-primary:hover {
-    background-color: #0077ed;                             /* bleu légèrement plus clair au survol */
+    background-color: #0077ed;
   }
 
-  .btn-outline {                                           /* bouton pilule secondaire (« Outlined Explore Pill ») */
+  .btn-outline {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     padding: 7px 14px;
-    border: 1px solid var(--color-slate);                  /* contour gris */
+    border: 1px solid var(--color-slate);
     border-radius: var(--radius-pill);
     background-color: transparent;
     color: var(--color-porcelain);
@@ -163,26 +163,26 @@
   }
 
   .btn-outline:hover {
-    border-color: var(--color-porcelain);                  /* contour clair au survol */
+    border-color: var(--color-porcelain);
   }
 
-  .capsule {                                               /* capsule d'information (« Dark Pricing Capsule ») */
+  .capsule {
     display: inline-flex;
     align-items: center;
     padding: 7px 14px;
     border-radius: var(--radius-capsule);
-    background-color: rgba(66, 66, 69, 0.72);              /* gris translucide */
+    background-color: rgba(66, 66, 69, 0.72);
     color: rgba(255, 255, 255, 0.8);
     font-size: var(--text-utility-nav);
     line-height: 16px;
     letter-spacing: -0.12px;
   }
 
-  .glass-card {                                            /* carte en verre : le contenu flotte au-dessus de la planète (DESIGN-MOTION.md, section 5) */
-    border: 1px solid rgb(51 51 54 / 0.8);                 /* Steel */
+  .glass-card {
+    border: 1px solid rgb(51 51 54 / 0.8);
     border-radius: var(--radius-card);
-    background-color: rgb(22 22 24 / 0.66);                /* gris très foncé translucide : le texte reste lisible même devant la planète */
-    backdrop-filter: blur(14px) saturate(120%);            /* floute ce qui est derrière */
+    background-color: rgb(22 22 24 / 0.66);
+    backdrop-filter: blur(14px) saturate(120%);
     transition:
       background-color 0.5s,
       border-color 0.5s,
@@ -190,22 +190,22 @@
   }
 
   .glass-card:hover {
-    border-color: color-mix(in srgb, var(--aurora) 35%, var(--color-slate)); /* bordure légèrement teintée Aurore au survol */
+    border-color: color-mix(in srgb, var(--aurora) 35%, var(--color-slate));
     background-color: rgb(22 22 24 / 0.76);
   }
 
-  .hero-scrim {                                            /* voile sombre en haut du hero de Home */
+  .hero-scrim {
     position: absolute;
     inset: 0;
     pointer-events: none;
     background: radial-gradient(125% 62% at 50% -10%, rgb(0 0 0 / 0.82) 0%, rgb(0 0 0 / 0.28) 44%, transparent 68%);
   }
 
-  .aurora-glow {                                           /* lueur Aurore très douce derrière le titre d'une section */
-    background: radial-gradient(45% 300px at 50% 320px, rgb(var(--aurora-rgb) / 0.12), transparent 100%); /* s'estompe de tous les côtés : aucune ligne visible */
+  .aurora-glow {
+    background: radial-gradient(45% 300px at 50% 320px, rgb(var(--aurora-rgb) / 0.12), transparent 100%);
   }
 
-  .text-link {                                             /* lien sur fond sombre */
+  .text-link {
     color: var(--color-electric-link);
     transition: opacity 0.2s;
   }
@@ -214,7 +214,7 @@
     text-decoration: underline;
   }
 
-  .form-label {                                            /* libellé au-dessus d'un champ */
+  .form-label {
     display: block;
     margin-bottom: 6px;
     color: var(--color-ash);
@@ -223,13 +223,13 @@
     letter-spacing: -0.12px;
   }
 
-  .form-field {                                            /* champ de formulaire (« Device Selector Input ») */
+  .form-field {
     width: 100%;
     height: 40px;
     padding: 0 20px;
-    border: 1px solid var(--color-slate);                  /* contour gris */
-    border-radius: var(--radius-input);                    /* forme de pilule */
-    background-color: rgba(255, 255, 255, 0.04);           /* fond à peine éclairci */
+    border: 1px solid var(--color-slate);
+    border-radius: var(--radius-input);
+    background-color: rgba(255, 255, 255, 0.04);
     color: var(--color-porcelain);
     font-size: var(--text-body);
     letter-spacing: -0.224px;
@@ -237,15 +237,15 @@
   }
 
   .form-field:hover {
-    border-color: var(--color-ash);                        /* contour plus clair au survol */
+    border-color: var(--color-ash);
   }
 
   .form-field:focus {
-    outline: 1px solid var(--color-action-blue);           /* contour bleu à la sélection (DESIGN.md) */
+    outline: 1px solid var(--color-action-blue);
     outline-offset: 1px;
   }
 
-  select.form-field {                                      /* liste déroulante avec une flèche personnalisée */
+  select.form-field {
     appearance: none;
     padding-right: 45px;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2386868b' stroke-width='1.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='m7 10 5 5 5-5'/%3E%3C/svg%3E");
@@ -255,16 +255,16 @@
   }
 
   select.form-field option {
-    background-color: var(--color-carbon);                 /* fond des options (Windows) */
+    background-color: var(--color-carbon);
   }
 
-  .form-checkbox {                                         /* case à cocher */
+  .form-checkbox {
     width: 18px;
     height: 18px;
-    accent-color: var(--color-action-blue);                /* couleur de la case cochée */
+    accent-color: var(--color-action-blue);
   }
 
-  .reveal {                                                /* bloc caché avant d'entrer à l'écran (directive appReveal) */
+  .reveal {
     opacity: 0;
     transform: translateY(32px);
     transition:
@@ -272,7 +272,7 @@
       transform 0.9s var(--ease-out-expo);
   }
 
-  .reveal.is-visible {                                     /* bloc entré à l'écran */
+  .reveal.is-visible {
     opacity: 1;
     transform: translateY(0);
   }
@@ -280,16 +280,16 @@
   .reveal .animate-grow-x,
   .reveal .bar-grow,
   .reveal .ring-fill {
-    animation-play-state: paused;                          /* attend que le bloc parent soit visible */
+    animation-play-state: paused;
   }
 
   .reveal.is-visible .animate-grow-x,
   .reveal.is-visible .bar-grow,
   .reveal.is-visible .ring-fill {
-    animation-play-state: running;                         /* démarre quand le bloc entre à l'écran */
+    animation-play-state: running;
   }
 
-  .card-leave {                                            /* carte qui disparaît (animate.leave dans le catalogue) */
+  .card-leave {
     animation: card-out 0.3s ease both;
   }
 
@@ -297,21 +297,21 @@
     to { opacity: 0; transform: scale(0.96); }
   }
 
-  .site-grid {                                             /* image de fond du site (SiteBackground) */
-    background-image: url('/images/background-grid.svg');  /* motif de 64 × 64 px répété */
+  .site-grid {
+    background-image: url('/images/background-grid.svg');
     background-size: 64px 64px;
-    animation: grid-drift 24s linear infinite;             /* glisse lentement en diagonale */
+    animation: grid-drift 24s linear infinite;
   }
 
   @keyframes grid-drift {
-    to { transform: translate(64px, 64px); }               /* une case entière : la boucle est invisible */
+    to { transform: translate(64px, 64px); }
   }
 
-  .site-vignette {                                         /* assombrit les bords de l'écran */
+  .site-vignette {
     background: radial-gradient(ellipse at 50% 35%, transparent 0%, rgba(0, 0, 0, 0.55) 60%, #000000 100%);
   }
 
-  .bar-grow {                                              /* colonne de graphique qui pousse depuis sa base */
+  .bar-grow {
     transform-origin: bottom;
     animation: grow-y 0.9s var(--ease-out-expo) both;
   }
@@ -320,19 +320,19 @@
     from { transform: scaleY(0); }
   }
 
-  .ring-fill {                                             /* jauge circulaire qui se remplit (cercle de rayon 52 : périmètre ≈ 327) */
+  .ring-fill {
     animation: ring-fill 1.6s var(--ease-out-expo) 0.2s both;
   }
 
   @keyframes ring-fill {
-    from { stroke-dashoffset: 327; }                       /* cercle vide */
+    from { stroke-dashoffset: 327; }
   }
 
-  .drawer-enter {                                          /* panneau latéral qui glisse depuis la droite (animate.enter) */
+  .drawer-enter {
     animation: drawer-in 0.45s var(--ease-out-expo) both;
   }
 
-  .drawer-leave {                                          /* panneau latéral qui repart vers la droite (animate.leave) */
+  .drawer-leave {
     animation: drawer-in 0.25s ease reverse both;
   }
 
@@ -340,7 +340,7 @@
     from { transform: translateX(100%); }
   }
 
-  .dialog-backdrop-enter {                                 /* fond sombre d'une fenêtre de confirmation */
+  .dialog-backdrop-enter {
     animation: backdrop-in 0.25s ease both;
   }
 
@@ -348,30 +348,30 @@
     from { opacity: 0; }
   }
 
-  .menu-enter {                                            /* menu déroulant qui s'ouvre (animate.enter) */
+  .menu-enter {
     transform-origin: top right;
     animation: menu-in 0.25s var(--ease-out-expo) both;
   }
 
-  .menu-leave {                                            /* menu déroulant qui se ferme (animate.leave) */
+  .menu-leave {
     transform-origin: top right;
-    animation: menu-in 0.15s ease reverse both;            /* même animation, jouée à l'envers */
+    animation: menu-in 0.15s ease reverse both;
   }
 
   @keyframes menu-in {
     from { opacity: 0; transform: translateY(-6px) scale(0.96); }
   }
 
-  .result-enter {                                          /* bloc de résultat qui arrive (animate.enter) */
+  .result-enter {
     animation: blur-in 0.9s var(--ease-out-expo) both;
   }
 
-  .markdown {                                              /* réponse du conseiller IA : HTML produit à partir du Markdown (shared/utils/markdown.ts) */
+  .markdown {
     display: flex;
     flex-direction: column;
     gap: 12px;
     line-height: 1.55;
-    overflow-wrap: anywhere;                               /* un long lien ne dépasse pas de la bulle */
+    overflow-wrap: anywhere;
   }
 
   .markdown strong {
@@ -418,7 +418,7 @@
     font-weight: 600;
   }
 
-  .markdown table {                                        /* tableaux simples (comparaison de configurations) */
+  .markdown table {
     display: block;
     overflow-x: auto;
     border-collapse: collapse;
@@ -437,89 +437,89 @@
     font-weight: 600;
   }
 
-  .planning-track {                                        /* rangée du planning admin : un trait vertical par jour (la largeur d'un jour est donnée par la page) */
+  .planning-track {
     background-image: linear-gradient(to right, var(--color-steel) 1px, transparent 1px);
   }
 
-  .marquee {                                               /* bandeau défilant : bords qui s'estompent */
+  .marquee {
     overflow: hidden;
-    mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent); /* masque de transparence, pas une couleur */
+    mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
   }
 
   .marquee:hover .animate-marquee {
-    animation-play-state: paused;                          /* pause au survol */
+    animation-play-state: paused;
   }
 
-  .form-range {                                            /* curseur (budget) */
+  .form-range {
     width: 100%;
-    accent-color: var(--color-action-blue);                /* poignée et piste en bleu d'action */
+    accent-color: var(--color-action-blue);
     cursor: pointer;
   }
 }
 
 html.lenis,
 html.lenis body {
-  height: auto;                                            /* défilement adouci Lenis (core/services/smooth-scroll.ts) */
+  height: auto;
 }
 
 .lenis.lenis-smooth {
-  scroll-behavior: auto !important;                        /* Lenis gère lui-même la douceur */
+  scroll-behavior: auto !important;
 }
 
 .lenis.lenis-smooth [data-lenis-prevent] {
-  overscroll-behavior: contain;                            /* panneaux qui défilent seuls (ex. formulaire admin) */
+  overscroll-behavior: contain;
 }
 
 .lenis.lenis-stopped {
   overflow: hidden;
 }
 
-.scene-low .glass-card {                                   /* ordinateur trop lent (classe posée par planet-scene.ts) : cartes sans flou */
+.scene-low .glass-card {
   backdrop-filter: none;
   background-color: rgb(22 22 24 / 0.86);
 }
 
-@media (pointer: coarse), (max-width: 767px) {             /* version légère : pas de flou sur mobile (coûteux) */
+@media (pointer: coarse), (max-width: 767px) {
   .glass-card {
     backdrop-filter: none;
     background-color: rgb(22 22 24 / 0.86);
   }
 }
 
-@supports (animation-timeline: view()) {                   /* animations pilotées par le défilement (Chrome, Edge, Safari récents) */
-  .scroll-zoom {                                           /* image qui grandit en entrant à l'écran */
+@supports (animation-timeline: view()) {
+  .scroll-zoom {
     animation: scroll-zoom linear both;
-    animation-timeline: view();                            /* progression = position de l'élément dans l'écran */
+    animation-timeline: view();
     animation-range: entry 0% cover 45%;
   }
 
-  .scroll-parallax {                                       /* élément qui défile un peu moins vite que la page */
+  .scroll-parallax {
     animation: scroll-parallax linear both;
     animation-timeline: view();
   }
 
-  .scroll-highlight {                                      /* élément qui s'illumine au centre de l'écran */
+  .scroll-highlight {
     animation: scroll-highlight linear both;
     animation-timeline: view();
     animation-range: cover 10% cover 90%;
   }
 
-  .scroll-draw-y {                                         /* ligne verticale qui se dessine en défilant */
+  .scroll-draw-y {
     transform-origin: top;
     animation: scroll-draw-y linear both;
     animation-timeline: view();
     animation-range: entry 40% cover 60%;
   }
 
-  .scroll-text {                                           /* paragraphe dont les mots apparaissent un à un (ScrollText) */
-    view-timeline-name: --scroll-text;                     /* une frise de défilement partagée par tous ses mots */
+  .scroll-text {
+    view-timeline-name: --scroll-text;
   }
 
   .scroll-word {
-    display: inline-block;                                 /* nécessaire pour déplacer le mot */
+    display: inline-block;
     animation: scroll-word linear both;
     animation-timeline: --scroll-text;
-    animation-range: cover var(--word-start) cover var(--word-end); /* chaque mot apparaît à son tour */
+    animation-range: cover var(--word-start) cover var(--word-end);
   }
 
   @keyframes scroll-zoom {
@@ -533,8 +533,8 @@ html.lenis body {
   }
 
   @keyframes scroll-highlight {
-    0%, 100% { opacity: 0.8; transform: scale(0.96); }     /* un peu en retrait en haut et en bas de l'écran (reste lisible) */
-    35%, 65% { opacity: 1; transform: scale(1); }          /* pleinement présent au centre */
+    0%, 100% { opacity: 0.8; transform: scale(0.96); }
+    35%, 65% { opacity: 1; transform: scale(1); }
   }
 
   @keyframes scroll-draw-y {
@@ -542,18 +542,18 @@ html.lenis body {
   }
 
   @keyframes scroll-word {
-    0% { opacity: 0; filter: blur(8px); transform: translateY(0.4em); color: var(--aurora-text); }   /* mot pas encore arrivé : invisible, flou, plus bas */
-    55% { opacity: 1; filter: blur(0); transform: translateY(0); color: var(--aurora-text); }        /* il arrive net, à la couleur Aurore */
-    100% { opacity: 1; filter: blur(0); transform: translateY(0); color: var(--color-porcelain); }   /* puis devient blanc, bien lisible */
+    0% { opacity: 0; filter: blur(8px); transform: translateY(0.4em); color: var(--aurora-text); }
+    55% { opacity: 1; filter: blur(0); transform: translateY(0); color: var(--aurora-text); }
+    100% { opacity: 1; filter: blur(0); transform: translateY(0); color: var(--color-porcelain); }
   }
 }
 
-::view-transition-old(root) {                              /* transition entre les pages (withViewTransitions dans app.config.ts) */
-  animation: page-out 0.2s ease both;                      /* l'ancienne page s'efface */
+::view-transition-old(root) {
+  animation: page-out 0.2s ease both;
 }
 
 ::view-transition-new(root) {
-  animation: page-in 0.5s var(--ease-out-expo) both;       /* la nouvelle page apparaît en montant */
+  animation: page-in 0.5s var(--ease-out-expo) both;
 }
 
 @keyframes page-out {
@@ -564,27 +564,27 @@ html.lenis body {
   from { opacity: 0; transform: translateY(16px); }
 }
 
-@media (prefers-reduced-motion: reduce) {                  /* respecte le réglage « réduire les animations » du système */
+@media (prefers-reduced-motion: reduce) {
   *,
   *::before,
   *::after {
-    animation-duration: 0.01ms !important;                 /* animations quasi instantanées */
+    animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
 
   .planet-canvas {
-    filter: brightness(0.6);                               /* planète immobile derrière toute la page : assombrie pour garder les titres lisibles */
+    filter: brightness(0.6);
   }
 
   .reveal {
-    opacity: 1;                                            /* blocs visibles tout de suite */
+    opacity: 1;
     transform: none;
   }
 
   ::view-transition-old(root),
   ::view-transition-new(root) {
-    animation: none;                                       /* pas de transition entre les pages */
+    animation: none;
   }
 
   .scroll-zoom,
@@ -594,6 +594,6 @@ html.lenis body {
   .scroll-word,
   .animate-marquee,
   .site-grid {
-    animation: none !important;                            /* pas d'effet lié au défilement ni de bandeau défilant */
+    animation: none !important;
   }
 }

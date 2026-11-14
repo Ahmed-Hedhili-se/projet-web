@@ -8,49 +8,49 @@ datasource db {
 }
 
 enum Role {
-  USER                                                     // client
-  ADMIN                                                    // administrateur
+  USER
+  ADMIN
 }
 
 enum RentalStatus {
-  CONFIRMED                                                // location valide
-  CANCELLED                                                // location annulée
+  CONFIRMED
+  CANCELLED
 }
 
 enum SoftwareStack {
-  CUDA                                                     // GPU NVIDIA
-  ROCM                                                     // GPU AMD
+  CUDA
+  ROCM
 }
 
 model User {
   id           Int      @id @default(autoincrement())
-  email        String   @unique                          // identifiant de connexion
-  passwordHash String                                    // mot de passe haché avec bcrypt
+  email        String   @unique
+  passwordHash String
   firstName    String
   lastName     String
   role         Role     @default(USER)
-  isBlocked    Boolean  @default(false)                  // bloqué = connexion refusée
+  isBlocked    Boolean  @default(false)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
-  rentals      Rental[]                                  // locations de l'utilisateur
-  agentConversations AgentConversation[]                 // conversations avec le conseiller IA
+  rentals      Rental[]
+  agentConversations AgentConversation[]
 
   @@map("users")
 }
 
 enum AgentRole {
-  USER                                                     // message écrit par l'utilisateur
-  ASSISTANT                                                // réponse du conseiller IA
+  USER
+  ASSISTANT
 }
 
 model AgentConversation {
   id              Int            @id @default(autoincrement())
   userId          Int
   title           String         @default("New conversation")
-  repoUrl         String?                                // dernier repo GitHub analysé
-  workloadProfile Json           @default("{}")          // ce que l'agent sait du travail (mémoire de la conversation)
-  lastRanking     Json?                                  // dernier classement calculé (pour afficher les cartes)
-  inputTokens     Int            @default(0)             // consommation cumulée du LLM (suivi des coûts)
+  repoUrl         String?
+  workloadProfile Json           @default("{}")
+  lastRanking     Json?
+  inputTokens     Int            @default(0)
   outputTokens    Int            @default(0)
   createdAt       DateTime       @default(now())
   updatedAt       DateTime       @updatedAt
@@ -65,9 +65,9 @@ model AgentMessage {
   id             Int               @id @default(autoincrement())
   conversationId Int
   role           AgentRole
-  content        String                                  // texte affiché (Markdown)
-  steps          Json              @default("[]")        // étapes de travail de l'agent
-  cards          Json              @default("[]")        // cartes d'interface (profil, configurations, réponses rapides)
+  content        String
+  steps          Json              @default("[]")
+  cards          Json              @default("[]")
   createdAt      DateTime          @default(now())
   conversation   AgentConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
 
@@ -77,27 +77,26 @@ model AgentMessage {
 
 model Gpu {
   id           Int      @id @default(autoincrement())
-  name         String   @unique                          // ex. "NVIDIA H100 80GB"
-  manufacturer String                                    // ex. "NVIDIA", "AMD"
-  architecture String                                    // ex. "Hopper"
-  vramGb       Int                                       // mémoire en Go
-  fp16Tflops   Float                                     // puissance de calcul FP16
-  pricePerHour Decimal  @db.Decimal(10, 2)               // prix d'une unité pendant 1 heure
-  totalUnits   Int                                       // nombre d'unités possédées
+  name         String   @unique
+  manufacturer String
+  architecture String
+  vramGb       Int
+  fp16Tflops   Float
+  pricePerHour Decimal  @db.Decimal(10, 2)
+  totalUnits   Int
   description  String
-  isActive     Boolean  @default(true)                   // false = retiré du catalogue
+  isActive     Boolean  @default(true)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
-  rentals      Rental[]                                  // locations de ce GPU
+  rentals      Rental[]
 
-  // Caractéristiques internes, utilisées seulement par le conseiller IA (pas renvoyées par GET /gpus)
-  memoryBandwidthGbs  Int           @default(0)          // bande passante mémoire en Go/s
-  fp8Tflops           Float?                             // null = FP8 non supporté
-  supportedPrecisions String[]      @default([])         // ex. ["FP32","BF16","FP16","FP8","INT8"]
+  memoryBandwidthGbs  Int           @default(0)
+  fp8Tflops           Float?
+  supportedPrecisions String[]      @default([])
   softwareStack       SoftwareStack @default(CUDA)
-  computeCapability   String        @default("")         // "9.0" (CUDA) ou "gfx942" (ROCm)
-  eccMemory           Boolean       @default(true)       // mémoire avec correction d'erreurs
-  fastInterconnect    Boolean       @default(false)      // NVLink / Infinity Fabric entre les GPU d'un serveur
+  computeCapability   String        @default("")
+  eccMemory           Boolean       @default(true)
+  fastInterconnect    Boolean       @default(false)
 
   @@map("gpus")
 }
@@ -106,18 +105,18 @@ model Rental {
   id            Int          @id @default(autoincrement())
   userId        Int
   gpuId         Int
-  quantity      Int          @default(1)                 // nombre d'unités louées
-  startDate     DateTime                                 // début de la location
-  durationHours Int                                      // durée en heures
-  endDate       DateTime                                 // startDate + durationHours (calculé par le backend)
-  totalPrice    Decimal      @db.Decimal(12, 2)          // pricePerHour × quantity × durationHours
+  quantity      Int          @default(1)
+  startDate     DateTime
+  durationHours Int
+  endDate       DateTime
+  totalPrice    Decimal      @db.Decimal(12, 2)
   status        RentalStatus @default(CONFIRMED)
-  cancelledAt   DateTime?                                // date d'annulation
+  cancelledAt   DateTime?
   createdAt     DateTime     @default(now())
   user          User         @relation(fields: [userId], references: [id], onDelete: Restrict)
   gpu           Gpu          @relation(fields: [gpuId], references: [id], onDelete: Restrict)
 
-  @@index([gpuId, startDate, endDate])                   // accélère le calcul de disponibilité
+  @@index([gpuId, startDate, endDate])
   @@index([userId])
   @@map("rentals")
 }
@@ -128,7 +127,7 @@ model ContactMessage {
   email     String
   subject   String
   message   String
-  isRead    Boolean  @default(false)                     // lu par un admin
+  isRead    Boolean  @default(false)
   createdAt DateTime @default(now())
 
   @@map("contact_messages")

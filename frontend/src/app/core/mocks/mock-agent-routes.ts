@@ -6,12 +6,12 @@ import {
 } from './mock-agent';
 import { fail, respond, withAccount } from './mock-http';
 
-export function handleAgentRoutes(req: HttpRequest<unknown>, path: string): Observable<HttpResponse<unknown>> | null { // null = pas une route /agent
+export function handleAgentRoutes(req: HttpRequest<unknown>, path: string): Observable<HttpResponse<unknown>> | null {
   if (!path.startsWith('/agent/')) {
     return null;
   }
   if (req.method === 'GET' && path === '/agent/status') {
-    return withAccount(req, (account) => {                 // disponibilité et quota du jour
+    return withAccount(req, (account) => {
       const status: AgentStatus = {
         available: true, model: MOCK_AGENT_MODEL, dailyMessageLimit: MOCK_AGENT_DAILY_LIMIT, messagesUsedToday: mockMessagesUsedToday(account.user.id),
       };
@@ -19,10 +19,10 @@ export function handleAgentRoutes(req: HttpRequest<unknown>, path: string): Obse
     });
   }
   if (req.method === 'POST' && path === '/agent/conversations') {
-    return withAccount(req, (account) => respond({ conversation: createMockConversation(account.user.id) }, 300, 201)); // conversation vide
+    return withAccount(req, (account) => respond({ conversation: createMockConversation(account.user.id) }, 300, 201));
   }
   if (req.method === 'GET' && path === '/agent/conversations') {
-    return withAccount(req, (account) => {                 // mes conversations, la plus récente d'abord
+    return withAccount(req, (account) => {
       const conversations = allMockConversations()
         .filter((record) => record.userId === account.user.id)
         .map((record) => record.conversation)
@@ -35,15 +35,15 @@ export function handleAgentRoutes(req: HttpRequest<unknown>, path: string): Obse
     return withAccount(req, (account) => {
       const records = allMockConversations();
       const record = records.find((item) => item.conversation.id === Number(match[1]) && item.userId === account.user.id);
-      if (!record) {                                       // inexistante, ou à un autre utilisateur
+      if (!record) {
         return fail(req, 404, { error: { code: 'CONVERSATION_NOT_FOUND', message: 'Conversation not found.' } });
       }
       if (req.method === 'DELETE') {
         saveMockConversations(records.filter((item) => item !== record));
-        return respond(null, 300, 204);                    // 204 : pas de contenu
+        return respond(null, 300, 204);
       }
       return respond({ conversation: record.conversation, messages: record.messages });
     });
   }
-  return null;                                             // l'envoi d'un message ne passe pas ici : flux lu par AgentService
+  return null;
 }

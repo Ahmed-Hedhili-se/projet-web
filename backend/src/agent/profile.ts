@@ -1,10 +1,9 @@
-// Validation du profil de travail : protège le simulateur contre des valeurs absurdes envoyées par le LLM.
 import { z } from 'zod';
 import { WorkloadProfile } from './types';
 
 const positiveInt = (max: number) => z.number().int().positive().max(max);
 
-export const workloadProfileSchema = z.object({             // tous les champs optionnels : le profil se remplit petit à petit
+export const workloadProfileSchema = z.object({
   mode: z.enum(['PRETRAINING', 'FULL_FINETUNE', 'LORA', 'QLORA', 'INFERENCE']),
   paramsBillions: z.number().positive().max(2000),
   activeParamsBillions: z.number().positive().max(2000),
@@ -15,17 +14,17 @@ export const workloadProfileSchema = z.object({             // tous les champs o
   headDim: positiveInt(1000),
   contextLength: positiveInt(10_000_000),
   batchSize: positiveInt(100_000),
-  trainingTokens: z.number().positive().max(1e14),          // 100 000 milliards de tokens au maximum
+  trainingTokens: z.number().positive().max(1e14),
   epochs: z.number().positive().max(1000),
   gradientCheckpointing: z.boolean(),
   sharded: z.boolean(),
   usesCudaKernels: z.boolean(),
   flashAttention: z.enum(['NONE', 'FA2', 'FA3']),
-}).partial().strict();                                      // strict : un champ inconnu est une erreur
+}).partial().strict();
 
 export type PartialProfile = z.infer<typeof workloadProfileSchema>;
 
-export function missingFields(profile: PartialProfile): string[] { // ce qu'il manque pour lancer une simulation
+export function missingFields(profile: PartialProfile): string[] {
   const missing = (['mode', 'paramsBillions', 'precision'] as const).filter((field) => profile[field] === undefined);
   return missing as string[];
 }

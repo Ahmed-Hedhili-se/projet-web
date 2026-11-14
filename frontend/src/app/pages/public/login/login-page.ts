@@ -14,19 +14,19 @@ import { SplitText } from '../../../shared/components/split-text/split-text';
   templateUrl: './login-page.html',
 })
 export class LoginPage {
-  readonly returnUrl = input<string>();                    // ?returnUrl=… ajouté par authGuard (withComponentInputBinding)
+  readonly returnUrl = input<string>();
 
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
 
-  protected readonly benefits = [                          // avantages listés dans le panneau de gauche
+  protected readonly benefits = [
     'Book GPUs by the hour, in under a minute',
     'Track and cancel your rentals',
     'Ask the AI advisor which GPU fits your model',
   ];
 
-  protected readonly demoAccounts = environment.useMockApi // comptes fictifs, affichés seulement avec les données de démonstration
+  protected readonly demoAccounts = environment.useMockApi
     ? [
         { label: 'User', email: 'jane.doe@example.com', password: 'Password123' },
         { label: 'Admin', email: 'admin@teramind.example', password: 'Admin12345' },
@@ -39,23 +39,23 @@ export class LoginPage {
     password: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
   });
 
-  protected readonly showPassword = signal(false);         // mot de passe visible ou masqué
+  protected readonly showPassword = signal(false);
   protected readonly submitting = signal(false);
   protected readonly errorMessage = signal<string | null>(null);
-  protected readonly shaking = signal(false);              // déclenche la secousse de la carte
+  protected readonly shaking = signal(false);
 
   protected togglePassword(): void {
     this.showPassword.update((visible) => !visible);
   }
 
   protected useDemoAccount(account: { email: string; password: string }): void {
-    this.form.setValue({ email: account.email, password: account.password }); // remplit le formulaire
+    this.form.setValue({ email: account.email, password: account.password });
     this.errorMessage.set(null);
   }
 
   protected submit(): void {
     if (this.form.invalid) {
-      this.form.markAllAsTouched();                        // affiche les erreurs sous les champs
+      this.form.markAllAsTouched();
       return;
     }
     this.submitting.set(true);
@@ -66,19 +66,19 @@ export class LoginPage {
       .login({ email: value.email.trim(), password: value.password })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: () => this.router.navigateByUrl(this.safeReturnUrl()), // retourne à la page demandée, sinon à l'accueil
+        next: () => this.router.navigateByUrl(this.safeReturnUrl()),
         error: (err: unknown) => {
-          this.errorMessage.set(getErrorMessage(err));     // message de l'API, en anglais
+          this.errorMessage.set(getErrorMessage(err));
           if (getErrorCode(err) === 'INVALID_CREDENTIALS') {
-            this.shaking.set(true);                        // la carte tremble
-            this.form.controls.password.reset();           // on vide le mot de passe
+            this.shaking.set(true);
+            this.form.controls.password.reset();
           }
           this.submitting.set(false);
         },
       });
   }
 
-  private safeReturnUrl(): string {                        // n'accepte que des adresses internes (ex. "/account/rentals")
+  private safeReturnUrl(): string {
     const url = this.returnUrl();
     return url && url.startsWith('/') && !url.startsWith('//') ? url : '/';
   }

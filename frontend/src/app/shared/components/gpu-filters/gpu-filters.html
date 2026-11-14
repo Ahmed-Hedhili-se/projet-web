@@ -1,4 +1,4 @@
-<form [formGroup]="form" class="flex flex-col gap-5" (submit)="$event.preventDefault()"> <!-- les filtres s'appliquent tout seuls -->
+<form [formGroup]="form" class="flex flex-col gap-5" (submit)="$event.preventDefault()">
   <div>
     <label for="filter-search" class="form-label">Search</label>
     <input id="filter-search" type="search" formControlName="search" placeholder="Name or architecture" class="form-field" />
@@ -23,7 +23,7 @@
     </select>
   </div>
 
-  <div class="grid grid-cols-2 gap-3">                     <!-- deux filtres côte à côte -->
+  <div class="grid grid-cols-2 gap-3">
     <div>
       <label for="filter-vram" class="form-label">Min. memory</label>
       <select id="filter-vram" formControlName="minVram" class="form-field">
@@ -44,7 +44,7 @@
     </div>
   </div>
 
-  <fieldset class="rounded-nav border border-steel p-4">   <!-- groupe « disponibilité » -->
+  <fieldset class="rounded-nav border border-steel p-4">
     <legend class="px-1 text-utility-nav font-semibold text-ash">Availability</legend>
     <label class="flex cursor-pointer items-center gap-3 text-body">
       <input type="checkbox" formControlName="available" class="form-checkbox" />

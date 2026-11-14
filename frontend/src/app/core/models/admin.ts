@@ -3,26 +3,26 @@ import { Gpu } from './gpu';
 import { Rental } from './rental';
 import { Role, User } from './user';
 
-export interface AdminStats {                              // réponse de GET /admin/stats (docs/API.md, section 9)
+export interface AdminStats {
   users: { total: number; admins: number; blocked: number };
   gpus: { total: number; active: number; totalUnits: number };
   rentals: { total: number; upcoming: number; active: number; completed: number; cancelled: number };
-  revenue: { total: number; last30Days: number };          // locations non annulées
+  revenue: { total: number; last30Days: number };
   messages: { total: number; unread: number };
-  topGpus: { gpuId: number; name: string; rentalCount: number; revenue: number }[]; // 5 maximum
-  rentalsPerMonth: { month: string; count: number; revenue: number }[]; // 6 derniers mois, ex. "2026-10"
+  topGpus: { gpuId: number; name: string; rentalCount: number; revenue: number }[];
+  rentalsPerMonth: { month: string; count: number; revenue: number }[];
 }
 
-export interface AdminGpu extends Gpu {                    // GPU vu par l'admin : + nombre total de locations
+export interface AdminGpu extends Gpu {
   rentalCount: number;
 }
 
-export interface AdminGpuListResponse {                    // réponse de GET /admin/gpus (actifs et désactivés)
+export interface AdminGpuListResponse {
   gpus: AdminGpu[];
   total: number;
 }
 
-export interface GpuInput {                                // body de POST /admin/gpus et PUT /admin/gpus/:id
+export interface GpuInput {
   name: string;
   manufacturer: string;
   architecture: string;
@@ -31,34 +31,34 @@ export interface GpuInput {                                // body de POST /admi
   pricePerHour: number;
   totalUnits: number;
   description: string;
-  isActive: boolean;                                       // optionnel en POST (true par défaut), obligatoire en PUT
+  isActive: boolean;
 }
 
-export interface AdminUser extends User {                  // utilisateur vu par l'admin : + nombre de locations
+export interface AdminUser extends User {
   rentalCount: number;
 }
 
-export interface AdminUserListResponse {                   // réponse de GET /admin/users
+export interface AdminUserListResponse {
   users: AdminUser[];
   total: number;
 }
 
-export interface UserChanges {                             // body de PATCH /admin/users/:id (au moins un des deux champs)
+export interface UserChanges {
   role?: Role;
   isBlocked?: boolean;
 }
 
-export interface AdminRental extends Rental {              // objet « AdminRental » de docs/API.md : une location + son utilisateur
+export interface AdminRental extends Rental {
   user: { id: number; email: string; firstName: string; lastName: string };
 }
 
-export interface AdminRentalListResponse {                 // réponse de GET /admin/rentals
+export interface AdminRentalListResponse {
   rentals: AdminRental[];
   total: number;
 }
 
-export interface AdminMessageListResponse {                // réponse de GET /admin/messages
+export interface AdminMessageListResponse {
   messages: ContactMessage[];
   total: number;
-  unread: number;                                          // nombre total de non lus (indépendant du filtre)
+  unread: number;
 }

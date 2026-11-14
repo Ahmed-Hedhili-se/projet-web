@@ -1,21 +1,21 @@
 <aside class="animate-fade-up rounded-card border border-steel bg-carbon p-3 lg:sticky lg:top-16" aria-label="Conversation history">
   <div class="flex gap-2">
     <button type="button" (click)="created.emit()" [disabled]="disabled()" class="btn-outline flex-1 justify-center disabled:opacity-40">New conversation</button>
-    <button type="button" (click)="open.set(!open())" [attr.aria-expanded]="open()" class="btn-outline lg:hidden">   <!-- mobile : ouvre ou referme la liste -->
+    <button type="button" (click)="open.set(!open())" [attr.aria-expanded]="open()" class="btn-outline lg:hidden">
       History ({{ conversations().length }})
     </button>
   </div>
 
-  <div class="mt-3 lg:block" [class.hidden]="!open()">                                         <!-- toujours visible sur grand écran -->
+  <div class="mt-3 lg:block" [class.hidden]="!open()">
     <p class="px-3 pb-2 text-utility-nav font-semibold text-ash">History</p>
     @if (loading()) {
-      <div class="flex flex-col gap-2">                                                        <!-- squelettes pendant le chargement -->
+      <div class="flex flex-col gap-2">
         @for (item of [1, 2, 3]; track item) {
           <div class="h-12 animate-pulse rounded-[14px] bg-obsidian"></div>
         }
       </div>
     } @else {
-      <ul class="flex max-h-[50vh] flex-col gap-1 overflow-y-auto" data-lenis-prevent>           <!-- longue liste : défile dans le panneau -->
+      <ul class="flex max-h-[50vh] flex-col gap-1 overflow-y-auto" data-lenis-prevent>
         @for (conversation of conversations(); track conversation.id) {
           <li class="flex items-center rounded-[14px] transition-colors duration-300" [class]="conversation.id === activeId() ? 'bg-obsidian' : 'hover:bg-obsidian/60'">
             <button

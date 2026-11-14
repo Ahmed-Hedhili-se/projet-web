@@ -37,9 +37,9 @@ describe('B1 - setup', () => {
     const gpus = await prisma.gpu.findMany({ orderBy: { id: 'asc' } });
     expect(gpus).toHaveLength(7);
     expect(gpus[0].name).toBe('NVIDIA H100 80GB');
-    expect(gpus.filter((g) => g.isActive)).toHaveLength(6); // la V100 est désactivée
+    expect(gpus.filter((g) => g.isActive)).toHaveLength(6);
     const admin = await prisma.user.findFirst({ where: { role: 'ADMIN' } });
     expect(admin).not.toBeNull();
-    expect(admin!.passwordHash).not.toBe(process.env.ADMIN_PASSWORD); // mot de passe bien haché
+    expect(admin!.passwordHash).not.toBe(process.env.ADMIN_PASSWORD);
   });
 });

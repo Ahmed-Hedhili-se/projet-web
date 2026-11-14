@@ -3,15 +3,15 @@ import { app } from '../src/app';
 import { prisma } from '../src/lib/prisma';
 import { redis } from '../src/lib/redis';
 
-export const TEST_DOMAIN = '@test.neurogrid.dev';          // tous les comptes de test utilisent ce domaine
+export const TEST_DOMAIN = '@test.neurogrid.dev';
 
 let counter = 0;
-export function testEmail(label: string): string {          // email unique à chaque appel
+export function testEmail(label: string): string {
   counter += 1;
   return `${label}-${Date.now()}-${counter}${TEST_DOMAIN}`;
 }
 
-export async function registerUser(label = 'user', password = 'MySecret123') { // crée un USER et renvoie son token
+export async function registerUser(label = 'user', password = 'MySecret123') {
   const email = testEmail(label);
   const res = await request(app)
     .post('/api/auth/register')
@@ -19,14 +19,14 @@ export async function registerUser(label = 'user', password = 'MySecret123') { /
   return { email, password, token: res.body.token as string, user: res.body.user };
 }
 
-export async function loginAdmin(): Promise<string> {       // token du compte admin créé par le seed
+export async function loginAdmin(): Promise<string> {
   const res = await request(app)
     .post('/api/auth/login')
     .send({ email: process.env.ADMIN_EMAIL, password: process.env.ADMIN_PASSWORD });
   return res.body.token as string;
 }
 
-export async function cleanupTestData() {                   // supprime tout ce que les tests ont créé
+export async function cleanupTestData() {
   const users = await prisma.user.findMany({ where: { email: { endsWith: TEST_DOMAIN } }, select: { id: true } });
   const ids = users.map((u) => u.id);
   await prisma.rental.deleteMany({ where: { userId: { in: ids } } });
@@ -35,7 +35,7 @@ export async function cleanupTestData() {                   // supprime tout ce 
   if (keys.length) await redis.del(...keys);
 }
 
-export async function waitForRedis() {                      // à appeler dans beforeAll : Redis doit être connecté
+export async function waitForRedis() {
   if (redis.status === 'ready') return;
   await new Promise<void>((resolve, reject) => {
     redis.once('ready', resolve);
@@ -43,7 +43,7 @@ export async function waitForRedis() {                      // à appeler dans b
   });
 }
 
-export async function closeConnections() {                  // à appeler dans afterAll
+export async function closeConnections() {
   await prisma.$disconnect();
   await redis.quit();
 }

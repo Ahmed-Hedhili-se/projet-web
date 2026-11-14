@@ -1,11 +1,9 @@
-// Fournisseur du modèle de langage : toute API compatible OpenAI (GitHub Models par défaut).
-// Interface simple pour pouvoir le remplacer par un faux modèle dans les tests.
 import { env } from '../config/env';
 
 export interface ToolCall {
   id: string;
   name: string;
-  arguments: string;                                        // JSON brut écrit par le modèle (à valider)
+  arguments: string;
 }
 
 export type LlmMessage =
@@ -19,22 +17,22 @@ export interface ToolDefinition {
 }
 
 export interface LlmReply {
-  content: string | null;                                   // texte final (null si le modèle appelle des outils)
+  content: string | null;
   toolCalls: ToolCall[];
   usage: { inputTokens: number; outputTokens: number };
 }
 
 export interface LlmProvider {
   readonly model: string;
-  isConfigured(): boolean;                                  // false = conseiller désactivé (pas de clé)
+  isConfigured(): boolean;
   complete(messages: LlmMessage[], tools: ToolDefinition[]): Promise<LlmReply>;
 }
 
-export class LlmError extends Error {}                      // message lisible, envoyé à l'utilisateur
+export class LlmError extends Error {}
 
-const TIMEOUT_MS = 60_000;                                  // un appel au modèle ne doit pas dépasser 1 minute
+const TIMEOUT_MS = 60_000;
 
-const apiKey = () => env.LLM_API_KEY || env.GITHUB_TOKEN;   // une clé dédiée, sinon le token GitHub
+const apiKey = () => env.LLM_API_KEY || env.GITHUB_TOKEN;
 
 export const openAiCompatibleProvider: LlmProvider = {
   model: env.LLM_MODEL,
@@ -64,7 +62,7 @@ export const openAiCompatibleProvider: LlmProvider = {
     };
     try {
       data = JSON.parse(text);
-    } catch {                                               // ex. une page "OK" au lieu de JSON
+    } catch {
       throw new LlmError('The AI service returned an unexpected answer. Check LLM_BASE_URL and the API key.');
     }
     const message = data.choices?.[0]?.message;
@@ -79,10 +77,10 @@ export const openAiCompatibleProvider: LlmProvider = {
 
 let current: LlmProvider = openAiCompatibleProvider;
 
-export function getLlmProvider(): LlmProvider {             // fournisseur utilisé par l'agent
+export function getLlmProvider(): LlmProvider {
   return current;
 }
 
-export function setLlmProvider(provider: LlmProvider): void { // tests : remplace le vrai modèle par un faux
+export function setLlmProvider(provider: LlmProvider): void {
   current = provider;
 }

@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const sendMessageSchema = z.object({                 // body de POST /agent/conversations/:id/messages
+export const sendMessageSchema = z.object({
   content: z
     .string({ error: 'Message is required.' })
     .trim()

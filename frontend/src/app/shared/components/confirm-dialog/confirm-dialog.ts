@@ -1,25 +1,25 @@
 import { Component, ElementRef, afterNextRender, input, output, viewChild } from '@angular/core';
 
 @Component({
-  selector: 'app-confirm-dialog',                          // usage : @if (open) { <app-confirm-dialog title="…" (confirmed)="…" (cancelled)="…" /> }
+  selector: 'app-confirm-dialog',
   templateUrl: './confirm-dialog.html',
   host: {
-    '(document:keydown.escape)': 'cancel()',               // touche Échap = annuler
+    '(document:keydown.escape)': 'cancel()',
   },
 })
-export class ConfirmDialog {                               // fenêtre de confirmation (annuler une location, supprimer…)
+export class ConfirmDialog {
   readonly title = input.required<string>();
   readonly message = input('');
   readonly confirmLabel = input('Confirm');
   readonly cancelLabel = input('Keep it');
-  readonly busy = input(false);                            // action en cours : boutons désactivés
+  readonly busy = input(false);
   readonly confirmed = output<void>();
   readonly cancelled = output<void>();
 
   private readonly cancelButton = viewChild.required<ElementRef<HTMLButtonElement>>('cancelButton');
 
   constructor() {
-    afterNextRender(() => this.cancelButton().nativeElement.focus()); // le focus va sur le bouton le moins dangereux
+    afterNextRender(() => this.cancelButton().nativeElement.focus());
   }
 
   protected cancel(): void {

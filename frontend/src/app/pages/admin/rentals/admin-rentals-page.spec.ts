@@ -14,7 +14,7 @@ describe('AdminRentalsPage', () => {
   const h100 = { id: 1, name: 'NVIDIA H100 80GB', manufacturer: 'NVIDIA', vramGb: 80, pricePerHour: 3.2 };
 
   const rental = (id: number, user: AdminRental['user'], status: RentalStatus, startOffsetHours: number): AdminRental => {
-    const start = Date.now() + startOffsetHours * HOUR_MS; // dates autour de maintenant : visibles dans le planning
+    const start = Date.now() + startOffsetHours * HOUR_MS;
     return {
       id, quantity: 2, durationHours: 24, totalPrice: 153.6, status, cancelledAt: null, gpu: h100, user,
       startDate: new Date(start).toISOString(), endDate: new Date(start + 24 * HOUR_MS).toISOString(), createdAt: new Date(start - 72 * HOUR_MS).toISOString(),
@@ -35,7 +35,7 @@ describe('AdminRentalsPage', () => {
 
   it('should apply the ?userId filter, cancel a rental and draw the planning', async () => {
     const fixture = TestBed.createComponent(AdminRentalsPage);
-    fixture.componentRef.setInput('userId', '3');          // ?userId=3 : seulement les locations de Jane
+    fixture.componentRef.setInput('userId', '3');
     await fixture.whenStable();
     httpTesting.expectOne(`${environment.apiUrl}/admin/rentals`).flush({ rentals, total: 3 });
     await fixture.whenStable();
@@ -44,9 +44,9 @@ describe('AdminRentalsPage', () => {
     expect(compiled.textContent).toContain('2 of 3 rentals');
     expect(compiled.textContent).not.toContain('lucas.martin@example.com');
 
-    clickButton(compiled, 'Cancel');                       // première ligne : la location 15
+    clickButton(compiled, 'Cancel');
     await fixture.whenStable();
-    clickButton(compiled, 'Cancel rental');                // confirmation
+    clickButton(compiled, 'Cancel rental');
     const request = httpTesting.expectOne(`${environment.apiUrl}/admin/rentals/15/cancel`);
     expect(request.request.method).toBe('PATCH');
     request.flush({ rental: { ...rentals[0], status: 'CANCELLED', cancelledAt: new Date().toISOString() } });
@@ -55,7 +55,7 @@ describe('AdminRentalsPage', () => {
 
     clickButton(compiled, 'Planning');
     await fixture.whenStable();
-    expect(compiled.querySelectorAll('.planning-track button').length).toBe(1); // la location annulée n'est plus dessinée
+    expect(compiled.querySelectorAll('.planning-track button').length).toBe(1);
     expect(compiled.querySelector('.planning-track button')?.textContent).toContain('Jane D. ×2');
   });
 });

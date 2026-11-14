@@ -16,17 +16,17 @@ import { Tilt } from '../../../shared/directives/tilt';
   templateUrl: './gpu-detail-page.html',
 })
 export class GpuDetailPage implements OnInit {
-  readonly id = input.required<string>();                  // paramètre « :id » de l'URL (withComponentInputBinding)
+  readonly id = input.required<string>();
 
   private readonly gpuService = inject(GpuService);
   private readonly destroyRef = inject(DestroyRef);
 
   protected readonly gpu = signal<Gpu | null>(null);
   protected readonly loading = signal(true);
-  protected readonly notFound = signal(false);             // GPU inexistant ou désactivé (404)
+  protected readonly notFound = signal(false);
   protected readonly errorMessage = signal<string | null>(null);
 
-  protected readonly costExamples = computed(() => {       // exemples de coût pour 1 unité, recalculés si le GPU change
+  protected readonly costExamples = computed(() => {
     const gpu = this.gpu();
     if (!gpu) {
       return [];

@@ -19,7 +19,7 @@ describe('RegisterPage', () => {
 
   afterEach(() => httpTesting.verify());
 
-  function fillForm(page: { form: RegisterPage['form'] }, confirmPassword: string): void { // remplit tous les champs
+  function fillForm(page: { form: RegisterPage['form'] }, confirmPassword: string): void {
     page.form.setValue({
       firstName: 'Jane', lastName: 'Doe', email: 'jane.new@example.com',
       password: 'Password123', confirmPassword, acceptTerms: true,
@@ -45,7 +45,7 @@ describe('RegisterPage', () => {
 
     (fixture.nativeElement as HTMLElement).querySelector<HTMLButtonElement>('button[type="submit"]')?.click();
     const req = httpTesting.expectOne(`${environment.apiUrl}/auth/register`);
-    expect(req.request.body).toEqual({ email: 'jane.new@example.com', password: 'Password123', firstName: 'Jane', lastName: 'Doe' }); // ni confirmPassword ni acceptTerms
+    expect(req.request.body).toEqual({ email: 'jane.new@example.com', password: 'Password123', firstName: 'Jane', lastName: 'Doe' });
     req.flush({ error: { code: 'EMAIL_TAKEN', message: 'An account with this email already exists.' } }, { status: 409, statusText: 'Conflict' });
     await fixture.whenStable();
 

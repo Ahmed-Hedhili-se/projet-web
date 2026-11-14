@@ -12,7 +12,7 @@ import { Reveal } from '../../../../shared/directives/reveal';
 import { Tilt } from '../../../../shared/directives/tilt';
 
 @Component({
-  selector: 'app-recommend-form',                         // formulaire de secours de la page Recommendation (POST /recommendations)
+  selector: 'app-recommend-form',
   imports: [ReactiveFormsModule, RouterLink, CurrencyPipe, Alert, CountUp, Reveal, Tilt],
   templateUrl: './recommend-form.html',
 })
@@ -20,19 +20,19 @@ export class RecommendForm {
   private readonly recommendationService = inject(RecommendationService);
   private readonly destroyRef = inject(DestroyRef);
 
-  protected readonly modelTypes: { value: ModelType; label: string; hint: string }[] = [ // choix « Model type »
+  protected readonly modelTypes: { value: ModelType; label: string; hint: string }[] = [
     { value: 'LLM', label: 'LLM', hint: 'Chat, text, code' },
     { value: 'VISION', label: 'Vision', hint: 'Detection, segmentation' },
     { value: 'DIFFUSION', label: 'Diffusion', hint: 'Image generation' },
     { value: 'AUDIO', label: 'Audio', hint: 'Speech, music' },
     { value: 'OTHER', label: 'Other', hint: 'Any other model' },
   ];
-  protected readonly modes: { value: WorkloadMode; label: string; hint: string }[] = [ // choix « Mode »
+  protected readonly modes: { value: WorkloadMode; label: string; hint: string }[] = [
     { value: 'INFERENCE', label: 'Inference', hint: 'Serve a trained model' },
     { value: 'TRAINING', label: 'Training', hint: 'Train or fine-tune' },
   ];
-  protected readonly parameterPresets = [1, 7, 13, 70, 405]; // tailles courantes, en milliards de paramètres
-  protected readonly estimateSteps = [                     // section « How we estimate » (docs/PLAN.md, section 8)
+  protected readonly parameterPresets = [1, 7, 13, 70, 405];
+  protected readonly estimateSteps = [
     { value: '2 / 16 bytes', title: 'Per parameter', text: '2 bytes in inference (FP16 weights). 16 bytes in training: weights, gradients and optimizer states.' },
     { value: '+20%', title: 'Safety margin', text: 'Extra memory for activations, batches and the KV cache.' },
     { value: '×1.1 – ×1.3', title: 'Model type', text: 'Vision and diffusion models need more working memory than text models.' },
@@ -48,22 +48,22 @@ export class RecommendForm {
   protected readonly loading = signal(false);
   protected readonly errorMessage = signal<string | null>(null);
   protected readonly result = signal<RecommendationResponse | null>(null);
-  protected readonly resultList = computed(() => {         // liste de 0 ou 1 élément : un nouvel objet recrée le bloc et rejoue les animations
+  protected readonly resultList = computed(() => {
     const result = this.result();
     return result ? [result] : [];
   });
 
   protected setParameters(value: number): void {
-    this.form.controls.parametersBillions.setValue(value); // clic sur un bouton « 7B », « 70B »…
+    this.form.controls.parametersBillions.setValue(value);
   }
 
   protected gaugePercent(required: number, config: GpuConfiguration): number {
-    return Math.min(100, Math.round((required / config.totalVramGb) * 100)); // part de la mémoire utilisée
+    return Math.min(100, Math.round((required / config.totalVramGb) * 100));
   }
 
   protected submit(): void {
     if (this.form.invalid) {
-      this.form.markAllAsTouched();                        // affiche les messages d'erreur
+      this.form.markAllAsTouched();
       return;
     }
     const value = this.form.getRawValue();
@@ -91,7 +91,7 @@ export class RecommendForm {
       });
   }
 
-  private scrollToResultOnMobile(): void {                 // sur petit écran, le résultat est sous le formulaire : on y descend
+  private scrollToResultOnMobile(): void {
     if (window.innerWidth < 1024) {
       setTimeout(() => document.getElementById('recommendation-result')?.scrollIntoView({ behavior: 'smooth', block: 'start' }));
     }

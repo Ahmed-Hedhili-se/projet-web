@@ -6,4 +6,4 @@ import { RouterLink } from '@angular/router';
   imports: [RouterLink],
   templateUrl: './not-found-page.html',
 })
-export class NotFoundPage {}                               // page affichée pour une URL inconnue
+export class NotFoundPage {}

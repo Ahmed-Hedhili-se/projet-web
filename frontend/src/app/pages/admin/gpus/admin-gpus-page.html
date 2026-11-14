@@ -1,4 +1,4 @@
-<header class="flex flex-wrap items-end justify-between gap-4"> <!-- En-tête -->
+<header class="flex flex-wrap items-end justify-between gap-4">
   <div>
     <p class="animate-fade-up font-display text-product-label font-semibold text-aurora">Admin</p>
     <h1 class="mt-1 font-display text-hero-product-name font-semibold md:text-section-title">
@@ -11,7 +11,7 @@
   </div>
 </header>
 
-<div class="animate-fade-up mt-8 flex flex-wrap items-center gap-3" style="animation-delay: 200ms"> <!-- recherche + filtre de statut -->
+<div class="animate-fade-up mt-8 flex flex-wrap items-center gap-3" style="animation-delay: 200ms">
   <input type="search" [value]="search()" (input)="search.set($any($event.target).value)" placeholder="Search by name, manufacturer, architecture" class="form-field max-w-sm" aria-label="Search GPUs" />
   <div class="flex gap-1 rounded-pill bg-carbon p-1" role="group" aria-label="Filter by status">
     @for (option of statusOptions; track option.value) {
@@ -36,7 +36,7 @@
 }
 
 @if (loading()) {
-  <div class="mt-6 flex flex-col gap-3">                                                      <!-- squelettes pendant le chargement -->
+  <div class="mt-6 flex flex-col gap-3">
     @for (item of [1, 2, 3, 4, 5]; track item) {
       <div class="h-16 animate-pulse rounded-nav bg-carbon"></div>
     }
@@ -48,8 +48,8 @@
     </app-alert>
   </div>
 } @else {
-  <div class="mt-6 overflow-hidden rounded-card border border-steel bg-carbon">               <!-- tableau des GPU -->
-    <table class="hidden w-full text-left text-body md:table">                                <!-- grand écran : tableau -->
+  <div class="mt-6 overflow-hidden rounded-card border border-steel bg-carbon">
+    <table class="hidden w-full text-left text-body md:table">
       <thead class="border-b border-steel text-utility-nav text-ash">
         <tr>
           <th class="px-5 py-3 font-semibold">GPU</th>
@@ -64,7 +64,7 @@
       </thead>
       <tbody class="divide-y divide-steel">
         @for (gpu of filtered(); track gpu.id) {
-          <tr class="result-enter transition-colors duration-300 hover:bg-obsidian/60" [class.opacity-60]="!gpu.isActive" [style.animation-delay.ms]="$index * 40"> <!-- lignes en cascade -->
+          <tr class="result-enter transition-colors duration-300 hover:bg-obsidian/60" [class.opacity-60]="!gpu.isActive" [style.animation-delay.ms]="$index * 40">
             <td class="px-5 py-4">
               <p class="font-semibold">{{ gpu.name }}</p>
               <p class="text-utility-nav text-ash">{{ gpu.manufacturer }} · {{ gpu.architecture }}</p>
@@ -97,7 +97,7 @@
       </tbody>
     </table>
 
-    <ul class="divide-y divide-steel md:hidden">                                               <!-- mobile : une carte par GPU -->
+    <ul class="divide-y divide-steel md:hidden">
       @for (gpu of filtered(); track gpu.id) {
         <li appReveal class="p-5" [class.opacity-60]="!gpu.isActive">
           <div class="flex items-start justify-between gap-3">
@@ -125,7 +125,7 @@
 }
 
 @if (editing(); as current) {
-  <div animate.enter="dialog-backdrop-enter" class="fixed inset-0 z-[90] bg-black/60 backdrop-blur-sm" (click)="closeDrawer()" aria-hidden="true"></div> <!-- fond sombre : clic = fermer -->
+  <div animate.enter="dialog-backdrop-enter" class="fixed inset-0 z-[90] bg-black/60 backdrop-blur-sm" (click)="closeDrawer()" aria-hidden="true"></div>
   <aside
     animate.enter="drawer-enter"
     animate.leave="drawer-leave"
@@ -134,7 +134,7 @@
     aria-modal="true"
     aria-labelledby="gpu-form-title"
     data-lenis-prevent
-  >                                                                                            <!-- panneau qui glisse depuis la droite -->
+  >
     <div class="flex items-center justify-between border-b border-steel px-6 py-4">
       <h2 id="gpu-form-title" class="font-display text-product-label font-semibold">{{ current === 'new' ? 'Add a GPU' : 'Edit ' + current.name }}</h2>
       <button type="button" (click)="closeDrawer()" class="flex size-9 items-center justify-center rounded-full text-ash transition-colors hover:bg-carbon hover:text-porcelain" aria-label="Close">
@@ -152,7 +152,7 @@
         <div>
           <label for="gpu-manufacturer" class="form-label">Manufacturer</label>
           <input id="gpu-manufacturer" type="text" formControlName="manufacturer" list="gpu-manufacturers" class="form-field" />
-          <datalist id="gpu-manufacturers">                                                    <!-- suggestions : fabricants existants -->
+          <datalist id="gpu-manufacturers">
             @for (manufacturer of manufacturers(); track manufacturer) { <option [value]="manufacturer"></option> }
           </datalist>
           @if (fieldError('manufacturer'); as error) { <p class="mt-2 text-utility-nav text-optical-yellow">{{ error }}</p> }
@@ -190,13 +190,13 @@
         <textarea id="gpu-description" formControlName="description" rows="4" class="form-field h-auto resize-y rounded-nav py-3"></textarea>
         @if (fieldError('description'); as error) { <p class="mt-2 text-utility-nav text-optical-yellow">{{ error }}</p> }
       </div>
-      <label class="flex cursor-pointer items-center justify-between rounded-nav border border-steel p-4">  <!-- interrupteur Actif / Inactif -->
+      <label class="flex cursor-pointer items-center justify-between rounded-nav border border-steel p-4">
         <span>
           <span class="block text-body font-semibold">Visible in the catalog</span>
           <span class="block text-utility-nav text-ash">Inactive GPUs cannot be rented.</span>
         </span>
         <input type="checkbox" formControlName="isActive" class="peer sr-only" />
-        <span class="relative h-6 w-11 shrink-0 rounded-pill bg-steel transition-colors duration-300 peer-checked:bg-porcelain peer-focus-visible:outline peer-focus-visible:outline-action-blue after:absolute after:top-0.5 after:left-0.5 after:size-5 after:rounded-full after:bg-porcelain after:transition after:duration-300 peer-checked:after:translate-x-5 peer-checked:after:bg-obsidian"></span> <!-- activé : piste claire, rond noir qui glisse -->
+        <span class="relative h-6 w-11 shrink-0 rounded-pill bg-steel transition-colors duration-300 peer-checked:bg-porcelain peer-focus-visible:outline peer-focus-visible:outline-action-blue after:absolute after:top-0.5 after:left-0.5 after:size-5 after:rounded-full after:bg-porcelain after:transition after:duration-300 peer-checked:after:translate-x-5 peer-checked:after:bg-obsidian"></span>
       </label>
 
       @if (formError(); as message) {

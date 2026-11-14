@@ -2,7 +2,7 @@ import { Gpu, toGpuSummary } from '../models/gpu';
 import { Rental, RentalStatus } from '../models/rental';
 import { allMockGpus } from './mock-gpus';
 
-export interface MockRentalRecord {                        // ce que la base de données stockerait (table rentals)
+export interface MockRentalRecord {
   id: number;
   userId: number;
   gpuId: number;
@@ -11,14 +11,14 @@ export interface MockRentalRecord {                        // ce que la base de 
   durationHours: number;
   endDate: string;
   totalPrice: number;
-  cancelled: boolean;                                      // status CONFIRMED ou CANCELLED en base
+  cancelled: boolean;
   cancelledAt: string | null;
   createdAt: string;
 }
 
-const RENTALS_KEY = 'teramind_mock_rentals_v3';           // locations fictives, gardées dans le navigateur
+const RENTALS_KEY = 'teramind_mock_rentals_v3';
 const HOUR_MS = 60 * 60 * 1000;
-let memoryRentals: MockRentalRecord[] | null = null;       // secours si le localStorage est indisponible
+let memoryRentals: MockRentalRecord[] | null = null;
 
 export function allMockRentals(): MockRentalRecord[] {
   try {
@@ -29,7 +29,7 @@ export function allMockRentals(): MockRentalRecord[] {
   } catch {
     return memoryRentals ?? seedRentals();
   }
-  const seeded = seedRentals();                            // premier lancement : quelques locations d'exemple
+  const seeded = seedRentals();
   saveMockRentals(seeded);
   return seeded;
 }
@@ -38,7 +38,7 @@ export function saveMockRentals(rentals: MockRentalRecord[]): void {
   memoryRentals = rentals;
   try {
     localStorage.setItem(RENTALS_KEY, JSON.stringify(rentals));
-  } catch {                                                // stockage indisponible : la liste reste en mémoire
+  } catch {
     return;
   }
 }
@@ -52,8 +52,8 @@ export function createRecord(userId: number, gpu: Gpu, quantity: number, start: 
     quantity,
     startDate: start.toISOString(),
     durationHours,
-    endDate: new Date(start.getTime() + durationHours * HOUR_MS).toISOString(), // calculé par le backend
-    totalPrice: Math.round(gpu.pricePerHour * quantity * durationHours * 100) / 100, // calculé par le backend
+    endDate: new Date(start.getTime() + durationHours * HOUR_MS).toISOString(),
+    totalPrice: Math.round(gpu.pricePerHour * quantity * durationHours * 100) / 100,
     cancelled: false,
     cancelledAt: null,
     createdAt: new Date().toISOString(),
@@ -62,14 +62,14 @@ export function createRecord(userId: number, gpu: Gpu, quantity: number, start: 
   return record;
 }
 
-export function rentalStatus(record: MockRentalRecord, now = Date.now()): RentalStatus { // statut renvoyé par l'API
+export function rentalStatus(record: MockRentalRecord, now = Date.now()): RentalStatus {
   if (record.cancelled) return 'CANCELLED';
   if (now < Date.parse(record.startDate)) return 'UPCOMING';
   if (now < Date.parse(record.endDate)) return 'ACTIVE';
   return 'COMPLETED';
 }
 
-export function toApiRental(record: MockRentalRecord): Rental { // enregistrement → objet « Rental » de docs/API.md
+export function toApiRental(record: MockRentalRecord): Rental {
   const gpu = allMockGpus().find((item) => item.id === record.gpuId)!;
   return {
     id: record.id,
@@ -85,16 +85,16 @@ export function toApiRental(record: MockRentalRecord): Rental { // enregistremen
   };
 }
 
-export function availableUnits(gpu: Gpu, start: Date, end: Date): number { // unités libres sur une période (docs/PLAN.md, section 7)
+export function availableUnits(gpu: Gpu, start: Date, end: Date): number {
   const booked = allMockRentals()
     .filter((rental) => rental.gpuId === gpu.id && !rental.cancelled)
-    .filter((rental) => Date.parse(rental.startDate) < end.getTime() && Date.parse(rental.endDate) > start.getTime()) // chevauchement
+    .filter((rental) => Date.parse(rental.startDate) < end.getTime() && Date.parse(rental.endDate) > start.getTime())
     .reduce((sum, rental) => sum + rental.quantity, 0);
-  return Math.max(0, gpu.availableUnits - booked);         // gpu.availableUnits = unités non louées par les autres clients fictifs
+  return Math.max(0, gpu.availableUnits - booked);
 }
 
-function seedRentals(): MockRentalRecord[] {               // exemples pour Jane (id 3) et l'admin (id 1), autour de maintenant
-  const hour = Math.floor(Date.now() / HOUR_MS) * HOUR_MS; // heure pile actuelle
+function seedRentals(): MockRentalRecord[] {
+  const hour = Math.floor(Date.now() / HOUR_MS) * HOUR_MS;
   const make = (id: number, userId: number, gpuId: number, quantity: number, startOffsetHours: number, durationHours: number, cancelled = false): MockRentalRecord => {
     const gpu = allMockGpus().find((item) => item.id === gpuId)!;
     const start = hour + startOffsetHours * HOUR_MS;
@@ -109,23 +109,23 @@ function seedRentals(): MockRentalRecord[] {               // exemples pour Jane
       createdAt: new Date(start - 72 * HOUR_MS).toISOString(),
     };
   };
-  const history = Array.from({ length: 40 }, (_, i) => {   // 40 locations passées des clients fictifs (id 4 à 7), sur ~6 mois
-    const startOffset = -Math.round(150 + 4000 * Math.pow(i / 40, 1.6)); // plus nombreuses récemment : la courbe monte
+  const history = Array.from({ length: 40 }, (_, i) => {
+    const startOffset = -Math.round(150 + 4000 * Math.pow(i / 40, 1.6));
     const gpuId = [1, 2, 3, 5, 6, 4][i % 6];
     const duration = [8, 24, 48, 72, 12][i % 5];
-    return make(100 + i, 4 + (i % 4), gpuId, 1 + (i % 3), startOffset, duration, i % 7 === 6); // une sur sept annulée
+    return make(100 + i, 4 + (i % 4), gpuId, 1 + (i % 3), startOffset, duration, i % 7 === 6);
   });
   return [
-    make(11, 3, 6, 1, -480, 8, true),                      // annulée, il y a 20 jours
-    make(12, 3, 2, 4, -240, 72),                           // terminée, il y a 10 jours
-    make(14, 3, 5, 1, -6, 24),                             // en cours depuis 6 h
-    make(15, 3, 1, 2, 48, 48),                             // à venir, dans 2 jours
-    make(16, 1, 3, 1, 24, 12),                             // à venir, pour l'admin
-    make(17, 4, 2, 2, -30, 72),                            // en cours, Lucas (remplit le planning de l'admin)
-    make(18, 5, 1, 1, 30, 96),                             // à venir, Sofia
-    make(19, 6, 6, 3, 72, 48),                             // à venir, Omar
-    make(20, 7, 3, 2, -20, 36),                            // en cours, Mia
-    make(21, 4, 5, 1, 110, 24),                            // à venir, Lucas
+    make(11, 3, 6, 1, -480, 8, true),
+    make(12, 3, 2, 4, -240, 72),
+    make(14, 3, 5, 1, -6, 24),
+    make(15, 3, 1, 2, 48, 48),
+    make(16, 1, 3, 1, 24, 12),
+    make(17, 4, 2, 2, -30, 72),
+    make(18, 5, 1, 1, 30, 96),
+    make(19, 6, 6, 3, 72, 48),
+    make(20, 7, 3, 2, -20, 36),
+    make(21, 4, 5, 1, 110, 24),
     ...history,
   ];
 }

@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-interface FooterColumn {                                   // une colonne de liens du pied de page
-  title: string;                                           // titre de la colonne
-  links: { label: string; path: string }[];                // liens de la colonne
+interface FooterColumn {
+  title: string;
+  links: { label: string; path: string }[];
 }
 
 @Component({
@@ -12,7 +12,7 @@ interface FooterColumn {                                   // une colonne de lie
   templateUrl: './footer.html',
 })
 export class Footer {
-  protected readonly year = new Date().getFullYear();      // année affichée dans le copyright
+  protected readonly year = new Date().getFullYear();
 
   protected readonly columns: FooterColumn[] = [
     {

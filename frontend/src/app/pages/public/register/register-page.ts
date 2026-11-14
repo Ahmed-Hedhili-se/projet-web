@@ -8,9 +8,9 @@ import { Alert } from '../../../shared/components/alert/alert';
 import { PasswordStrength } from '../../../shared/components/password-strength/password-strength';
 import { SplitText } from '../../../shared/components/split-text/split-text';
 
-type RegisterField = 'firstName' | 'lastName' | 'email' | 'password'; // champs envoyés à l'API
+type RegisterField = 'firstName' | 'lastName' | 'email' | 'password';
 
-function passwordsMatch(group: AbstractControl): ValidationErrors | null { // les deux mots de passe doivent être identiques
+function passwordsMatch(group: AbstractControl): ValidationErrors | null {
   const password = group.get('password')?.value;
   const confirm = group.get('confirmPassword')?.value;
   return confirm && password !== confirm ? { passwordsMismatch: true } : null;
@@ -22,13 +22,13 @@ function passwordsMatch(group: AbstractControl): ValidationErrors | null { // le
   templateUrl: './register-page.html',
 })
 export class RegisterPage {
-  readonly returnUrl = input<string>();                    // ?returnUrl=… (withComponentInputBinding)
+  readonly returnUrl = input<string>();
 
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
 
-  protected readonly steps = [                             // étapes affichées dans le panneau de gauche
+  protected readonly steps = [
     { number: '01', text: 'Create your free account' },
     { number: '02', text: 'Find the right GPU for your model' },
     { number: '03', text: 'Book it by the hour and start computing' },
@@ -40,8 +40,8 @@ export class RegisterPage {
       lastName: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.maxLength(50)] }),
       email: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.email] }),
       password: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.minLength(8), Validators.maxLength(72)] }),
-      confirmPassword: new FormControl('', { nonNullable: true, validators: [Validators.required] }), // vérifié seulement côté frontend
-      acceptTerms: new FormControl(false, { nonNullable: true, validators: [Validators.requiredTrue] }), // case à cocher obligatoire
+      confirmPassword: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
+      acceptTerms: new FormControl(false, { nonNullable: true, validators: [Validators.requiredTrue] }),
     },
     { validators: passwordsMatch },
   );
@@ -49,10 +49,10 @@ export class RegisterPage {
   protected readonly showPassword = signal(false);
   protected readonly submitting = signal(false);
   protected readonly errorMessage = signal<string | null>(null);
-  protected readonly serverErrors = signal<Partial<Record<RegisterField, string>>>({}); // erreurs de l'API, par champ
-  protected readonly shaking = signal(false);              // secousse si l'email est déjà pris
+  protected readonly serverErrors = signal<Partial<Record<RegisterField, string>>>({});
+  protected readonly shaking = signal(false);
 
-  protected fieldError(field: RegisterField | 'confirmPassword' | 'acceptTerms'): string | null { // message sous un champ
+  protected fieldError(field: RegisterField | 'confirmPassword' | 'acceptTerms'): string | null {
     const control = this.form.controls[field];
     if (field === 'confirmPassword' && control.touched && this.form.hasError('passwordsMismatch')) {
       return 'Passwords do not match.';
@@ -76,7 +76,7 @@ export class RegisterPage {
 
   protected submit(): void {
     if (this.form.invalid) {
-      this.form.markAllAsTouched();                        // affiche toutes les erreurs
+      this.form.markAllAsTouched();
       return;
     }
     this.submitting.set(true);
@@ -85,7 +85,7 @@ export class RegisterPage {
 
     const value = this.form.getRawValue();
     this.authService
-      .register({                                          // confirmPassword et acceptTerms ne sont pas envoyés (docs/API.md)
+      .register({
         email: value.email.trim(),
         password: value.password,
         firstName: value.firstName.trim(),
@@ -93,7 +93,7 @@ export class RegisterPage {
       })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: () => this.router.navigateByUrl(this.safeReturnUrl()), // compte créé et connecté
+        next: () => this.router.navigateByUrl(this.safeReturnUrl()),
         error: (err: unknown) => {
           const errors: Partial<Record<RegisterField, string>> = {};
           for (const detail of getErrorDetails(err)) {
@@ -101,7 +101,7 @@ export class RegisterPage {
           }
           if (getErrorCode(err) === 'EMAIL_TAKEN') {
             errors.email = 'An account with this email already exists.';
-            this.shaking.set(true);                        // la carte tremble
+            this.shaking.set(true);
           }
           this.serverErrors.set(errors);
           this.errorMessage.set(getErrorMessage(err));
@@ -110,8 +110,8 @@ export class RegisterPage {
       });
   }
 
-  private safeReturnUrl(): string {                        // n'accepte que des adresses internes
+  private safeReturnUrl(): string {
     const url = this.returnUrl();
-    return url && url.startsWith('/') && !url.startsWith('//') ? url : '/gpus'; // par défaut : le catalogue, pour louer tout de suite
+    return url && url.startsWith('/') && !url.startsWith('//') ? url : '/gpus';
   }
 }

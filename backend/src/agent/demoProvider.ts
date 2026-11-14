@@ -1,6 +1,4 @@
-// Fournisseur "demo" (LLM_PROVIDER=demo) : pas d'IA, des règles simples qui appellent les VRAIS outils.
-// Sert à tester et montrer le conseiller sans clé d'API (ou quand le quota du vrai modèle est épuisé).
-import type { LlmMessage, LlmProvider, LlmReply, ToolCall } from './llm'; // types seulement : pas d'import circulaire
+import type { LlmMessage, LlmProvider, LlmReply, ToolCall } from './llm';
 import { missingFields, type PartialProfile } from './profile';
 import type { RankResult } from './rankConfigs';
 
@@ -11,10 +9,10 @@ const text = (content: string): LlmReply => ({ content, toolCalls: [], usage: { 
 
 const NOTE = '\n\n_Demo mode: rule-based advisor, no AI model. Figures come from the real TeraMind simulator._';
 
-export function profileFromText(input: string): PartialProfile { // "fine-tune a 8B model with QLoRA on 300M tokens" → champs du profil
+export function profileFromText(input: string): PartialProfile {
   const t = input.toLowerCase();
   const profile: PartialProfile = {};
-  const withoutUrls = t.replace(/https?:\/\/\S+/g, ' ');    // "llama-7b" dans une URL n'est pas une taille donnée par l'utilisateur
+  const withoutUrls = t.replace(/https?:\/\/\S+/g, ' ');
   const size = withoutUrls.match(/(\d+(?:\.\d+)?)\s?b\b(?!\s*tokens)/);
   if (size) profile.paramsBillions = Number(size[1]);
   if (/\bqlora\b|4.?bit/.test(t)) profile.mode = 'QLORA';
@@ -29,7 +27,7 @@ export function profileFromText(input: string): PartialProfile { // "fine-tune a
   return profile;
 }
 
-function missingOf(profile: PartialProfile): string[] {     // informations encore inconnues, dans l'ordre des questions
+function missingOf(profile: PartialProfile): string[] {
   const missing = missingFields(profile);
   if (profile.mode && profile.mode !== 'INFERENCE' && !profile.trainingTokens) missing.push('trainingTokens');
   return missing;
@@ -40,11 +38,11 @@ function objectiveFrom(input: string): 'lowest_cost' | 'fastest' | 'best_balance
   return /cheap|lowest cost|budget/.test(t) ? 'lowest_cost' : /fast|quick/.test(t) ? 'fastest' : 'best_balance';
 }
 
-function turnContext(messages: LlmMessage[]) {              // dernier message utilisateur + résultats d'outils de ce tour
+function turnContext(messages: LlmMessage[]) {
   const lastUser = messages.map((m) => m.role).lastIndexOf('user');
   const userText = (messages[lastUser] as { content: string }).content;
-  const names = new Map<string, string>();                  // id d'appel → nom de l'outil
-  const results = new Map<string, any>();                   // nom de l'outil → dernier résultat
+  const names = new Map<string, string>();
+  const results = new Map<string, any>();
   for (const m of messages.slice(lastUser + 1)) {
     if (m.role === 'assistant') m.tool_calls?.forEach((c) => names.set(c.id, c.function.name));
     if (m.role === 'tool') results.set(names.get(m.tool_call_id) ?? '', JSON.parse(m.content));
@@ -54,14 +52,14 @@ function turnContext(messages: LlmMessage[]) {              // dernier message u
   return { userText, results, profile: (state.workloadProfile ?? {}) as PartialProfile, hasRanking: Boolean(state.lastRankingAvailable) };
 }
 
-const QUESTIONS: Record<string, { question: string; options: string[] }> = { // une question par information manquante
+const QUESTIONS: Record<string, { question: string; options: string[] }> = {
   mode: { question: 'Do you want to **train** this model or to **serve** it (inference)?', options: ['Inference', 'LoRA fine-tuning', 'QLoRA fine-tuning', 'Full fine-tuning'] },
   paramsBillions: { question: 'How big is the model, in billions of parameters?', options: ['7B model', '13B model', '70B model'] },
   precision: { question: 'Which precision will you use?', options: ['BF16', 'FP16', 'FP8', 'INT4'] },
   trainingTokens: { question: 'How many tokens is your training dataset?', options: ['100M tokens', '1B tokens', '10B tokens'] },
 };
 
-function summarize(ranking: RankResult): string {           // réponse en Markdown à partir du vrai classement
+function summarize(ranking: RankResult): string {
   const [best] = ranking.items;
   if (!best) {
     const reason = ranking.excluded[0]?.reason ?? 'no configuration fits';
@@ -90,36 +88,36 @@ export const demoProvider: LlmProvider = {
   async complete(messages) {
     const { userText, results, profile, hasRanking } = turnContext(messages);
 
-    if (results.has('show_configs')) return text(summarize(results.get('rank_configs') as RankResult)); // 4. réponse finale
+    if (results.has('show_configs')) return text(summarize(results.get('rank_configs') as RankResult));
     const ranked = results.get('rank_configs');
-    if (ranked && !ranked.error) {                          // 3. cartes + réponses rapides
+    if (ranked && !ranked.error) {
       return tools(
         call('show_configs', { ranks: (ranked as RankResult).items.slice(0, 3).map((i) => i.rank) }),
         call('suggest_replies', { options: ['Cheapest option', 'Fastest option', 'What if I use FP8?'] }),
       );
     }
-    const latest: PartialProfile | undefined =              // profil le plus récent du tour (la mise à jour passe après l'analyse)
+    const latest: PartialProfile | undefined =
       results.get('update_workload_profile')?.profile ?? results.get('analyze_repo')?.profile;
     const missing = ranked?.missing ?? (latest ? missingOf(latest) : []);
     const ask = missing.length ? QUESTIONS[missing[0]] ?? QUESTIONS.mode : null;
-    if (results.has('suggest_replies')) {                   // boutons déjà proposés : on termine par la question
+    if (results.has('suggest_replies')) {
       return text(`${ask?.question ?? 'Tell me about your workload: paste your GitHub repository, or describe the model, its size and what you want to do with it.'}${NOTE}`);
     }
-    if (ask) return tools(call('suggest_replies', { options: ask.options })); // 2b. il manque une information : une seule question
-    if (results.has('analyze_repo') || results.has('update_workload_profile')) { // 2. profil prêt : classement
+    if (ask) return tools(call('suggest_replies', { options: ask.options }));
+    if (results.has('analyze_repo') || results.has('update_workload_profile')) {
       const error = results.get('analyze_repo')?.error;
       if (error) return text(`I could not read this repository: ${error}${NOTE}`);
       return tools(call('rank_configs', { objective: objectiveFrom(userText) }));
     }
 
-    const repo = userText.match(/https?:\/\/(?:www\.)?github\.com\/[\w.-]+\/[\w.-]+/i)?.[0]; // 1. début du tour
+    const repo = userText.match(/https?:\/\/(?:www\.)?github\.com\/[\w.-]+\/[\w.-]+/i)?.[0];
     const fields = profileFromText(userText);
-    if (!repo && fields.mode && !fields.precision && !profile.precision) fields.precision = 'BF16'; // valeur par défaut raisonnable
+    if (!repo && fields.mode && !fields.precision && !profile.precision) fields.precision = 'BF16';
     const calls: ToolCall[] = [];
     if (repo) calls.push(call('analyze_repo', { repoUrl: repo }));
     if (Object.keys(fields).length) calls.push(call('update_workload_profile', { fields }));
     if (calls.length) return tools(...calls);
-    if (hasRanking || profile.mode) return tools(call('rank_configs', { objective: objectiveFrom(userText) })); // "Cheapest option"
+    if (hasRanking || profile.mode) return tools(call('rank_configs', { objective: objectiveFrom(userText) }));
     return tools(call('suggest_replies', { options: ['Serve a 7B model', 'QLoRA fine-tuning of an 8B model', 'Analyze my GitHub repo'] }));
   },
 };

@@ -16,7 +16,7 @@ type Mode = 'advisor' | 'form';
   imports: [RouterLink, Alert, SplitText, AdvisorChat, RecommendForm],
   templateUrl: './recommend-page.html',
 })
-export class RecommendPage implements OnInit {             // page Recommendation : conseiller IA (mode principal) ou formulaire de secours
+export class RecommendPage implements OnInit {
   private readonly agentService = inject(AgentService);
   private readonly destroyRef = inject(DestroyRef);
   protected readonly authService = inject(AuthService);
@@ -26,13 +26,13 @@ export class RecommendPage implements OnInit {             // page Recommendatio
     { value: 'advisor', label: 'AI advisor' },
     { value: 'form', label: 'Quick form' },
   ];
-  protected readonly status = signal<AgentStatus | null>(null); // disponibilité et quota du conseiller
+  protected readonly status = signal<AgentStatus | null>(null);
   protected readonly loadingStatus = signal(false);
-  protected readonly unavailable = signal(false);          // IA éteinte ou injoignable : on montre le formulaire
+  protected readonly unavailable = signal(false);
 
   ngOnInit(): void {
     if (!this.authService.isLoggedIn()) {
-      return;                                              // visiteur : carte « Sign in », pas d'appel à l'API
+      return;
     }
     this.loadingStatus.set(true);
     this.agentService
@@ -53,7 +53,7 @@ export class RecommendPage implements OnInit {             // page Recommendatio
       });
   }
 
-  private showFallback(): void {                           // docs/API.md : available = false → formulaire de secours
+  private showFallback(): void {
     this.unavailable.set(true);
     this.mode.set('form');
   }

@@ -13,7 +13,7 @@ import { Tilt } from '../../../shared/directives/tilt';
 
 type ProfileField = 'firstName' | 'lastName' | 'email';
 
-function newPasswordsMatch(group: AbstractControl): ValidationErrors | null { // nouveau mot de passe = confirmation
+function newPasswordsMatch(group: AbstractControl): ValidationErrors | null {
   const password = group.get('newPassword')?.value;
   const confirm = group.get('confirmPassword')?.value;
   return confirm && password !== confirm ? { passwordsMismatch: true } : null;
@@ -25,16 +25,16 @@ function newPasswordsMatch(group: AbstractControl): ValidationErrors | null { //
   templateUrl: './profile-page.html',
 })
 export class ProfilePage implements OnInit {
-  protected readonly authService = inject(AuthService);   // utilisateur affiché (mis à jour après chaque modification)
+  protected readonly authService = inject(AuthService);
   private readonly userService = inject(UserService);
   private readonly destroyRef = inject(DestroyRef);
 
-  protected readonly initials = computed(() => {           // ex. Jane Doe → « JD »
+  protected readonly initials = computed(() => {
     const user = this.authService.currentUser();
     return user ? `${user.firstName[0] ?? ''}${user.lastName[0] ?? ''}`.toUpperCase() : '';
   });
 
-  protected readonly profileForm = new FormGroup({        // informations personnelles (PUT /users/me)
+  protected readonly profileForm = new FormGroup({
     firstName: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.maxLength(50)] }),
     lastName: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.maxLength(50)] }),
     email: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.email] }),
@@ -44,7 +44,7 @@ export class ProfilePage implements OnInit {
   protected readonly profileError = signal<string | null>(null);
   protected readonly profileServerErrors = signal<Partial<Record<ProfileField, string>>>({});
 
-  protected readonly passwordForm = new FormGroup(         // changement de mot de passe (PUT /users/me/password)
+  protected readonly passwordForm = new FormGroup(
     {
       currentPassword: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
       newPassword: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.minLength(8), Validators.maxLength(72)] }),
@@ -55,11 +55,11 @@ export class ProfilePage implements OnInit {
   protected readonly savingPassword = signal(false);
   protected readonly passwordSaved = signal(false);
   protected readonly passwordError = signal<string | null>(null);
-  protected readonly wrongPassword = signal(false);        // mot de passe actuel incorrect (WRONG_PASSWORD)
+  protected readonly wrongPassword = signal(false);
 
   ngOnInit(): void {
     this.fillProfileForm();
-    this.userService                                       // relit le profil depuis l'API (GET /users/me)
+    this.userService
       .getProfile()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
@@ -95,7 +95,7 @@ export class ProfilePage implements OnInit {
       .subscribe({
         next: () => {
           this.savingProfile.set(false);
-          this.profileSaved.set(true);                     // message « Profile updated »
+          this.profileSaved.set(true);
           this.profileForm.markAsPristine();
         },
         error: (err: unknown) => {
@@ -139,17 +139,17 @@ export class ProfilePage implements OnInit {
     this.passwordError.set(null);
 
     this.userService
-      .changePassword({ currentPassword: value.currentPassword, newPassword: value.newPassword }) // la confirmation n'est pas envoyée
+      .changePassword({ currentPassword: value.currentPassword, newPassword: value.newPassword })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
           this.savingPassword.set(false);
           this.passwordSaved.set(true);
-          this.passwordForm.reset();                       // vide les trois champs
+          this.passwordForm.reset();
         },
         error: (err: unknown) => {
           if (getErrorCode(err) === 'WRONG_PASSWORD') {
-            this.wrongPassword.set(true);                  // message sous « Current password »
+            this.wrongPassword.set(true);
           } else {
             this.passwordError.set(getErrorMessage(err));
           }
@@ -162,7 +162,7 @@ export class ProfilePage implements OnInit {
     this.authService.logout();
   }
 
-  private fillProfileForm(): void {                        // remplit le formulaire avec l'utilisateur connecté
+  private fillProfileForm(): void {
     const user = this.authService.currentUser();
     if (user) {
       this.profileForm.setValue({ firstName: user.firstName, lastName: user.lastName, email: user.email });

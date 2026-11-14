@@ -3,13 +3,13 @@ import { z } from 'zod';
 export const emailField = z
   .string({ error: 'Email is required.' })
   .trim()
-  .toLowerCase()                                            // "Jane@Example.com" et "jane@example.com" = même compte
+  .toLowerCase()
   .pipe(z.email({ error: 'Invalid email address.' }));
 
 export const passwordField = z
   .string({ error: 'Password is required.' })
   .min(8, { error: 'Password must be at least 8 characters.' })
-  .max(72, { error: 'Password must be at most 72 characters.' }); // limite de bcrypt
+  .max(72, { error: 'Password must be at most 72 characters.' });
 
 export const nameField = (label: string) =>
   z

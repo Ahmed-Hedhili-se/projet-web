@@ -1,28 +1,28 @@
-export type WorkloadMode = 'PRETRAINING' | 'FULL_FINETUNE' | 'LORA' | 'QLORA' | 'INFERENCE'; // type de travail
+export type WorkloadMode = 'PRETRAINING' | 'FULL_FINETUNE' | 'LORA' | 'QLORA' | 'INFERENCE';
 export type Precision = 'FP32' | 'BF16' | 'FP16' | 'FP8' | 'INT8' | 'INT4';
 export type FlashAttention = 'NONE' | 'FA2' | 'FA3';
 export type Objective = 'lowest_cost' | 'fastest' | 'best_balance';
 
-export interface WorkloadProfile {                          // ce que l'agent sait du travail de l'utilisateur
+export interface WorkloadProfile {
   mode: WorkloadMode;
-  paramsBillions: number;                                   // taille du modèle, ex. 8 pour Llama 3.1 8B
-  activeParamsBillions?: number;                            // MoE : paramètres actifs par token (sinon = paramsBillions)
+  paramsBillions: number;
+  activeParamsBillions?: number;
   precision: Precision;
-  layers?: number;                                          // nombre de couches du transformer
+  layers?: number;
   hiddenSize?: number;
-  kvHeads?: number;                                         // têtes clé/valeur (GQA)
-  headDim?: number;                                         // dimension d'une tête
-  contextLength?: number;                                   // tokens par séquence
-  batchSize?: number;                                       // séquences en parallèle (par GPU à l'entraînement)
-  trainingTokens?: number;                                  // tokens vus par époque (entraînement)
+  kvHeads?: number;
+  headDim?: number;
+  contextLength?: number;
+  batchSize?: number;
+  trainingTokens?: number;
   epochs?: number;
   gradientCheckpointing?: boolean;
-  sharded?: boolean;                                        // ZeRO-3 / FSDP : poids et états répartis sur les GPU
-  usesCudaKernels?: boolean;                                // kernels CUDA spécifiques (.cu, bitsandbytes, TensorRT-LLM…)
+  sharded?: boolean;
+  usesCudaKernels?: boolean;
   flashAttention?: FlashAttention;
 }
 
-export interface GpuSpecs {                                 // caractéristiques d'un GPU utiles au simulateur
+export interface GpuSpecs {
   id: number;
   name: string;
   architecture: string;
@@ -35,26 +35,26 @@ export interface GpuSpecs {                                 // caractéristiques
   computeCapability: string;
   eccMemory: boolean;
   fastInterconnect: boolean;
-  pricePerHour: number;                                     // prix d'un GPU pendant 1 heure
+  pricePerHour: number;
   totalUnits: number;
 }
 
-export interface GpuConfig {                                // ce que l'agent recommande : N GPU d'un même modèle
+export interface GpuConfig {
   gpu: GpuSpecs;
   gpuCount: number;
-  pricePerHour: number;                                     // gpu.pricePerHour × gpuCount
+  pricePerHour: number;
 }
 
-export interface Simulation {                               // résultat du simulateur pour une configuration
+export interface Simulation {
   config: GpuConfig;
   compatible: boolean;
-  exclusionReason: string | null;                           // pourquoi la configuration est écartée
-  memoryRequiredGb: number;                                 // mémoire totale du travail
-  memoryPerGpuGb: number;                                   // mémoire nécessaire sur chaque GPU
-  hours: number | null;                                     // entraînement : durée estimée
-  totalCost: number | null;                                 // entraînement : coût total estimé
-  tokensPerSecond: number | null;                           // inférence : débit agrégé estimé
-  costPerMillionTokens: number | null;                      // inférence : coût d'un million de tokens générés
-  reasons: string[];                                        // points forts (anglais, affichés tels quels)
-  warnings: string[];                                       // alertes (anglais)
+  exclusionReason: string | null;
+  memoryRequiredGb: number;
+  memoryPerGpuGb: number;
+  hours: number | null;
+  totalCost: number | null;
+  tokensPerSecond: number | null;
+  costPerMillionTokens: number | null;
+  reasons: string[];
+  warnings: string[];
 }

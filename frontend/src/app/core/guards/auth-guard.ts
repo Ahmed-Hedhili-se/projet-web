@@ -2,9 +2,9 @@ import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { AuthService } from '../services/auth-service';
 
-export const authGuard: CanActivateFn = (_route, state) => { // espace utilisateur : il faut être connecté
+export const authGuard: CanActivateFn = (_route, state) => {
   if (inject(AuthService).isLoggedIn()) {
     return true;
   }
-  return inject(Router).createUrlTree(['/login'], { queryParams: { returnUrl: state.url } }); // revient ici après la connexion
+  return inject(Router).createUrlTree(['/login'], { queryParams: { returnUrl: state.url } });
 };

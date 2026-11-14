@@ -1,5 +1,3 @@
-// Outil rank_configs : simule toutes les configurations de GPU actives et renvoie un classement compact pour le LLM.
-// Les prix et le stock viennent TOUJOURS de la base, jamais du LLM.
 import { Gpu } from '@prisma/client';
 import { prisma } from '../lib/prisma';
 import { availableUnits, bookedUnitsByGpu, toPeriod } from '../services/availability.service';
@@ -8,20 +6,20 @@ import { isComplete, missingFields, PartialProfile } from './profile';
 import { generateConfigs, rankSimulations, simulate } from './simulator';
 import { GpuSpecs, Objective, Simulation } from './types';
 
-const MAX_ITEMS = 5;                                        // taille du classement renvoyé au LLM
-const MAX_PER_MODEL = 2;                                    // évite 4 variantes du même GPU dans le top 5
+const MAX_ITEMS = 5;
+const MAX_PER_MODEL = 2;
 
 export type Verdict = 'BEST_CHOICE' | 'CHEAPEST' | 'FASTEST' | 'ALTERNATIVE';
 
-export interface RankedConfig {                             // une ligne du classement (format compact)
+export interface RankedConfig {
   rank: number;
   verdict: Verdict;
   gpuId: number;
   gpuName: string;
-  architecture: string;                                     // ex. "Hopper" : ce que l'utilisateur veut comprendre
+  architecture: string;
   gpuCount: number;
-  pricePerHour: number;                                     // prix de la configuration entière
-  availableUnits: number;                                   // GPU de ce modèle libres sur la période
+  pricePerHour: number;
+  availableUnits: number;
   estimate: {
     memoryRequiredGb: number;
     memoryPerGpuGb: number;
@@ -36,19 +34,19 @@ export interface RankedConfig {                             // une ligne du clas
 
 export interface RankResult {
   objective: Objective;
-  simulated: number;                                        // nombre de configurations simulées
+  simulated: number;
   items: RankedConfig[];
-  excluded: { gpu: string; reason: string }[];              // un GPU par ligne : pourquoi aucune de ses configurations ne convient
+  excluded: { gpu: string; reason: string }[];
   assumptions: string[];
 }
 
 export interface RankOptions {
   objective?: Objective;
-  startDate?: Date;                                         // période voulue (sinon : l'heure qui commence)
+  startDate?: Date;
   durationHours?: number;
 }
 
-export function toSpecs(gpu: Gpu): GpuSpecs {               // ligne Prisma → données du simulateur
+export function toSpecs(gpu: Gpu): GpuSpecs {
   return {
     id: gpu.id, name: gpu.name, architecture: gpu.architecture, vramGb: gpu.vramGb, fp16Tflops: gpu.fp16Tflops,
     fp8Tflops: gpu.fp8Tflops, memoryBandwidthGbs: gpu.memoryBandwidthGbs, supportedPrecisions: gpu.supportedPrecisions,
@@ -58,7 +56,7 @@ export function toSpecs(gpu: Gpu): GpuSpecs {               // ligne Prisma → 
 }
 
 export async function rankConfigs(profile: PartialProfile, options: RankOptions = {}): Promise<RankResult | { error: string; missing: string[] }> {
-  if (!isComplete(profile)) {                               // le LLM doit d'abord compléter le profil
+  if (!isComplete(profile)) {
     return { error: 'The workload profile is incomplete: ask the user or analyze the repository first.', missing: missingFields(profile) };
   }
   const objective = options.objective ?? 'best_balance';
@@ -70,7 +68,7 @@ export async function rankConfigs(profile: PartialProfile, options: RankOptions 
   const sims = generateConfigs(gpus.map(toSpecs)).map((config) => {
     const sim = simulate(profile, config);
     const available = free.get(config.gpu.id)!;
-    if (sim.compatible && config.gpuCount > available) {    // la configuration tiendrait, mais pas assez de GPU libres
+    if (sim.compatible && config.gpuCount > available) {
       return { ...sim, compatible: false, exclusionReason: `Only ${available} ${config.gpu.name} free on this period.` };
     }
     return sim;
@@ -96,13 +94,13 @@ function pickItems(ranked: Simulation[], highlights: [Verdict, Simulation | unde
   const result: [Verdict, Simulation][] = [];
   const perModel = new Map<number, number>();
   const add = (verdict: Verdict, sim: Simulation) => {
-    if (result.some(([, s]) => s === sim)) return;          // déjà dans la liste (ex. le moins cher est aussi le meilleur)
+    if (result.some(([, s]) => s === sim)) return;
     const count = perModel.get(sim.config.gpu.id) ?? 0;
     if (verdict === 'ALTERNATIVE' && count >= MAX_PER_MODEL) return;
     perModel.set(sim.config.gpu.id, count + 1);
     result.push([verdict, sim]);
   };
-  for (const [verdict, sim] of highlights) if (sim) add(verdict, sim); // meilleur, moins cher, plus rapide d'abord
+  for (const [verdict, sim] of highlights) if (sim) add(verdict, sim);
   for (const sim of ranked) if (result.length < MAX_ITEMS) add('ALTERNATIVE', sim);
   return result.slice(0, MAX_ITEMS);
 }
@@ -122,7 +120,7 @@ function toRanked(sim: Simulation, verdict: Verdict, rank: number, free: number)
   };
 }
 
-function excludedModels(sims: Simulation[]) {               // GPU dont AUCUNE configuration ne convient, avec la raison de la plus grande
+function excludedModels(sims: Simulation[]) {
   const byGpu = new Map<string, Simulation[]>();
   for (const sim of sims) byGpu.set(sim.config.gpu.name, [...(byGpu.get(sim.config.gpu.name) ?? []), sim]);
   return [...byGpu.entries()]
@@ -130,7 +128,7 @@ function excludedModels(sims: Simulation[]) {               // GPU dont AUCUNE c
     .map(([gpu, list]) => ({ gpu, reason: list.at(-1)!.exclusionReason! }));
 }
 
-function assumptionsFor(mode: string): string[] {           // hypothèses affichées avec les estimations
+function assumptionsFor(mode: string): string[] {
   const common = 'All estimates are approximate (±30%).';
   if (mode === 'INFERENCE') {
     return [common, 'Generation speed is limited by memory bandwidth (60% efficiency); weights are split across GPUs.'];

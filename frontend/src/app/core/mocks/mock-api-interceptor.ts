@@ -17,48 +17,48 @@ import { addMockAccount, allMockAccounts, mockTokenFor, nextMockUserId } from '.
 
 const HOUR_MS = 60 * 60 * 1000;
 
-export const mockApiInterceptor: HttpInterceptorFn = (req, next) => { // répond à la place du backend (environment.useMockApi)
+export const mockApiInterceptor: HttpInterceptorFn = (req, next) => {
   if (!req.url.startsWith(environment.apiUrl)) {
-    return next(req);                                      // requête vers un autre site : on n'y touche pas
+    return next(req);
   }
-  const path = req.url.slice(environment.apiUrl.length);   // ex. "/gpus", "/gpus/3", "/rentals/me"
+  const path = req.url.slice(environment.apiUrl.length);
 
   if (req.method === 'POST' && path === '/recommendations') {
-    return recommend(req as HttpRequest<RecommendationRequest>); // POST /recommendations
+    return recommend(req as HttpRequest<RecommendationRequest>);
   }
   if (req.method === 'POST' && path === '/contact') {
-    return contact(req as HttpRequest<ContactRequest>);    // POST /contact
+    return contact(req as HttpRequest<ContactRequest>);
   }
   if (req.method === 'POST' && path === '/auth/login') {
-    return login(req as HttpRequest<LoginRequest>);        // POST /auth/login
+    return login(req as HttpRequest<LoginRequest>);
   }
   if (req.method === 'POST' && path === '/auth/register') {
-    return register(req as HttpRequest<RegisterRequest>);  // POST /auth/register
+    return register(req as HttpRequest<RegisterRequest>);
   }
   if (req.method === 'GET' && path === '/auth/me') {
-    return withAccount(req, (account) => respond({ user: { ...account.user } })); // GET /auth/me
+    return withAccount(req, (account) => respond({ user: { ...account.user } }));
   }
 
-  const accountResponse = handleAccountRoutes(req, path);  // /rentals/* et /users/me/* (mock-account-routes.ts)
+  const accountResponse = handleAccountRoutes(req, path);
   if (accountResponse) {
     return accountResponse;
   }
 
-  const adminResponse = handleAdminRoutes(req, path);      // /admin/* (mock-admin-routes.ts)
+  const adminResponse = handleAdminRoutes(req, path);
   if (adminResponse) {
     return adminResponse;
   }
 
-  const agentResponse = handleAgentRoutes(req, path);      // /agent/* (mock-agent-routes.ts)
+  const agentResponse = handleAgentRoutes(req, path);
   if (agentResponse) {
     return agentResponse;
   }
 
   if (req.method === 'GET' && path === '/gpus') {
-    return respond(listGpus(req.params));                  // GET /gpus
+    return respond(listGpus(req.params));
   }
   const match = path.match(/^\/gpus\/(\d+)$/);
-  if (req.method === 'GET' && match) {                     // GET /gpus/:id
+  if (req.method === 'GET' && match) {
     const gpu = allMockGpus().find((item) => item.id === Number(match[1]) && item.isActive);
     if (!gpu) {
       return fail(req, 404, { error: { code: 'GPU_NOT_FOUND', message: 'GPU not found.' } });
@@ -66,17 +66,17 @@ export const mockApiInterceptor: HttpInterceptorFn = (req, next) => { // répond
     return respond({ gpu: withAvailability(gpu, req.params) });
   }
 
-  return next(req);                                        // route pas encore simulée : la requête part normalement
+  return next(req);
 };
 
-function withAvailability(gpu: Gpu, params: HttpParams): Gpu { // copie du GPU avec les unités libres sur la période demandée
-  const start = params.has('startDate') ? new Date(params.get('startDate')!) : new Date(); // sans période : l'heure qui commence maintenant
+function withAvailability(gpu: Gpu, params: HttpParams): Gpu {
+  const start = params.has('startDate') ? new Date(params.get('startDate')!) : new Date();
   const hours = params.has('durationHours') ? Number(params.get('durationHours')) : 1;
   const end = new Date(start.getTime() + hours * HOUR_MS);
   return { ...gpu, availableUnits: availableUnits(gpu, start, end) };
 }
 
-function listGpus(params: HttpParams): GpuListResponse {   // reproduit les filtres et le tri décrits dans docs/API.md
+function listGpus(params: HttpParams): GpuListResponse {
   const active = allMockGpus().filter((gpu) => gpu.isActive);
   const search = params.get('search')?.toLowerCase() ?? '';
   const manufacturer = params.get('manufacturer');
@@ -86,7 +86,7 @@ function listGpus(params: HttpParams): GpuListResponse {   // reproduit les filt
   const sort = params.get('sort') ?? 'price_asc';
 
   const gpus = active
-    .map((gpu) => withAvailability(gpu, params))           // copies, avec la disponibilité sur la période
+    .map((gpu) => withAvailability(gpu, params))
     .filter(
       (gpu) =>
         (!search || gpu.name.toLowerCase().includes(search) || gpu.architecture.toLowerCase().includes(search)) &&
@@ -101,7 +101,7 @@ function listGpus(params: HttpParams): GpuListResponse {   // reproduit les filt
       case 'price_desc': return b.pricePerHour - a.pricePerHour;
       case 'vram_desc': return b.vramGb - a.vramGb;
       case 'name_asc': return a.name.localeCompare(b.name);
-      default: return a.pricePerHour - b.pricePerHour;     // price_asc (valeur par défaut)
+      default: return a.pricePerHour - b.pricePerHour;
     }
   });
 
@@ -114,7 +114,7 @@ function listGpus(params: HttpParams): GpuListResponse {   // reproduit les filt
 
 function recommend(req: HttpRequest<RecommendationRequest>): Observable<HttpResponse<unknown>> {
   const body = req.body;
-  const details: FieldError[] = [];                        // erreurs de validation, comme Zod côté backend
+  const details: FieldError[] = [];
   if (!body || !['LLM', 'VISION', 'DIFFUSION', 'AUDIO', 'OTHER'].includes(body.modelType)) {
     details.push({ field: 'modelType', message: 'Choose a model type.' });
   }
@@ -130,11 +130,11 @@ function recommend(req: HttpRequest<RecommendationRequest>): Observable<HttpResp
   if (!body || details.length > 0) {
     return validationError(req, details);
   }
-  return respond(mockRecommend(body, allMockGpus()), 900);     // délai plus long : laisse voir l'animation d'analyse
+  return respond(mockRecommend(body, allMockGpus()), 900);
 }
 
-const MAX_LOGIN_FAILURES = 5;                              // docs/API.md : 5 échecs max (le vrai backend utilise Redis, par IP + email, sur 15 min)
-const loginFailures = new Map<string, number>();           // nombre d'échecs par email, en mémoire
+const MAX_LOGIN_FAILURES = 5;
+const loginFailures = new Map<string, number>();
 
 function login(req: HttpRequest<LoginRequest>): Observable<HttpResponse<unknown>> {
   const email = (req.body?.email ?? '').trim().toLowerCase();
@@ -156,14 +156,14 @@ function login(req: HttpRequest<LoginRequest>): Observable<HttpResponse<unknown>
 
   const account = allMockAccounts().find((item) => item.user.email === email);
   if (!account || account.password !== password) {
-    loginFailures.set(email, (loginFailures.get(email) ?? 0) + 1); // un échec de plus pour cet email
+    loginFailures.set(email, (loginFailures.get(email) ?? 0) + 1);
     return fail(req, 401, { error: { code: 'INVALID_CREDENTIALS', message: 'Invalid email or password.' } });
   }
   if (account.user.isBlocked) {
     return fail(req, 403, { error: { code: 'ACCOUNT_BLOCKED', message: 'Your account has been blocked. Please contact our support team.' } });
   }
 
-  loginFailures.delete(email);                             // connexion réussie : le compteur repart à zéro
+  loginFailures.delete(email);
   return respond({ token: mockTokenFor(account.user), user: { ...account.user } }, 700);
 }
 
@@ -173,7 +173,7 @@ function register(req: HttpRequest<RegisterRequest>): Observable<HttpResponse<un
   const firstName = (body?.firstName ?? '').trim();
   const lastName = (body?.lastName ?? '').trim();
   const password = body?.password ?? '';
-  const details: FieldError[] = [];                        // mêmes règles que docs/API.md
+  const details: FieldError[] = [];
   if (!EMAIL_PATTERN.test(email)) {
     details.push({ field: 'email', message: 'Invalid email address.' });
   }
@@ -194,13 +194,13 @@ function register(req: HttpRequest<RegisterRequest>): Observable<HttpResponse<un
   }
 
   const user: User = { id: nextMockUserId(), email, firstName, lastName, role: 'USER', isBlocked: false, createdAt: new Date().toISOString() };
-  addMockAccount({ password, user });                      // le compte existe maintenant pour login et /auth/me
-  return respond({ token: mockTokenFor(user), user }, 800, 201); // 201 = compte créé
+  addMockAccount({ password, user });
+  return respond({ token: mockTokenFor(user), user }, 800, 201);
 }
 
 function contact(req: HttpRequest<ContactRequest>): Observable<HttpResponse<unknown>> {
   const body = req.body;
-  const details: FieldError[] = [];                        // mêmes règles que docs/API.md
+  const details: FieldError[] = [];
   const length = (value: unknown) => (typeof value === 'string' ? value.trim().length : 0);
   if (length(body?.name) < 1 || length(body?.name) > 100) {
     details.push({ field: 'name', message: 'Enter your name (100 characters max).' });
@@ -217,11 +217,11 @@ function contact(req: HttpRequest<ContactRequest>): Observable<HttpResponse<unkn
   if (details.length > 0) {
     return validationError(req, details);
   }
-  const saved = addMockMessage({                           // le message arrive dans la boîte de réception de l'admin
+  const saved = addMockMessage({
     name: body!.name.trim(),
     email: body!.email.trim(),
     subject: body!.subject.trim(),
     message: body!.message.trim(),
   });
-  return respond({ success: true, id: saved.id }, 700, 201); // 201 = message créé
+  return respond({ success: true, id: saved.id }, 700, 201);
 }

@@ -10,21 +10,21 @@ import { AuthService } from './core/services/auth-service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideBrowserGlobalErrorListeners(),                  // affiche les erreurs non gérées dans la console
+    provideBrowserGlobalErrorListeners(),
     provideRouter(
       routes,
-      withComponentInputBinding(),                         // data, paramètres et query de la route → input() du composant
-      withInMemoryScrolling({ scrollPositionRestoration: 'top' }), // remonte en haut de la page à chaque navigation
-      withViewTransitions({ skipInitialTransition: true }), // fondu entre les pages (pas au premier chargement)
+      withComponentInputBinding(),
+      withInMemoryScrolling({ scrollPositionRestoration: 'top' }),
+      withViewTransitions({ skipInitialTransition: true }),
     ),
     provideHttpClient(
-      withFetch(),                                         // utilise l'API fetch du navigateur
+      withFetch(),
       withInterceptors([
-        authInterceptor,                                   // 1. ajoute le token
-        errorInterceptor,                                  // 2. gère la session expirée (401)
-        ...(environment.useMockApi ? [mockApiInterceptor] : []), // 3. données fictives, en dernier pour voir le token
+        authInterceptor,
+        errorInterceptor,
+        ...(environment.useMockApi ? [mockApiInterceptor] : []),
       ]),
     ),
-    provideAppInitializer(() => inject(AuthService).restoreSession()), // vérifie la session avant d'afficher l'application
+    provideAppInitializer(() => inject(AuthService).restoreSession()),
   ],
 };

@@ -32,10 +32,10 @@ describe('AdminMessagesPage', () => {
     await fixture.whenStable();
     const compiled = fixture.nativeElement as HTMLElement;
 
-    expect(adminService.unreadMessages()).toBe(1);         // badge du menu admin
+    expect(adminService.unreadMessages()).toBe(1);
     expect(compiled.textContent).toContain('2 hours ago');
 
-    (compiled.querySelector('li button') as HTMLButtonElement).click(); // ouvre le message de John (non lu)
+    (compiled.querySelector('li button') as HTMLButtonElement).click();
     const patch = httpTesting.expectOne(`${environment.apiUrl}/admin/messages/12`);
     expect(patch.request.body).toEqual({ isRead: true });
     patch.flush({ message: { ...messages[0], isRead: true } });
@@ -46,7 +46,7 @@ describe('AdminMessagesPage', () => {
 
     clickButton(compiled, 'Delete');
     await fixture.whenStable();
-    const confirm = [...compiled.querySelectorAll('button')].filter((button) => button.textContent?.trim() === 'Delete').at(-1); // bouton de la fenêtre de confirmation
+    const confirm = [...compiled.querySelectorAll('button')].filter((button) => button.textContent?.trim() === 'Delete').at(-1);
     confirm?.click();
     const request = httpTesting.expectOne(`${environment.apiUrl}/admin/messages/12`);
     expect(request.request.method).toBe('DELETE');
@@ -54,6 +54,6 @@ describe('AdminMessagesPage', () => {
     await fixture.whenStable();
 
     expect(compiled.textContent).toContain('The message from John Smith was deleted.');
-    expect(compiled.querySelectorAll('li button').length).toBe(1); // il reste le message d'Ines
+    expect(compiled.querySelectorAll('li button').length).toBe(1);
   });
 });

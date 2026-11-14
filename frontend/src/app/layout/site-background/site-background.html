@@ -1,6 +1,6 @@
-<div class="pointer-events-none fixed inset-0 -z-10 overflow-hidden" aria-hidden="true"> <!-- derrière tout le site, ne bloque pas les clics -->
-  <div class="site-grid absolute -inset-16"></div>                                         <!-- 1. image de fond : grille qui glisse lentement -->
-  <div class="site-vignette absolute inset-0"></div>                                       <!-- 2. bords de la grille assombris -->
-  <canvas #planetCanvas class="planet-canvas absolute inset-0 size-full transition-opacity duration-1000" [class.opacity-0]="!planetReady()"></canvas> <!-- 3. planète 3D + étoiles (apparaît en fondu) -->
-  <canvas #canvas class="absolute inset-0 size-full"></canvas>                             <!-- 4. réseau neuronal animé, au-dessus de la planète -->
+<div class="pointer-events-none fixed inset-0 -z-10 overflow-hidden" aria-hidden="true">
+  <div class="site-grid absolute -inset-16"></div>
+  <div class="site-vignette absolute inset-0"></div>
+  <canvas #planetCanvas class="planet-canvas absolute inset-0 size-full transition-opacity duration-1000" [class.opacity-0]="!planetReady()"></canvas>
+  <canvas #canvas class="absolute inset-0 size-full"></canvas>
 </div>

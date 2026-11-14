@@ -7,11 +7,11 @@ import { renderMarkdown } from '../../../../shared/utils/markdown';
 const MODE_LABELS: Record<AgentWorkloadMode, string> = {
   PRETRAINING: 'Pre-training', FULL_FINETUNE: 'Full fine-tuning', LORA: 'LoRA', QLORA: 'QLoRA', INFERENCE: 'Inference',
 };
-const MISSING_LABELS: Record<string, string> = {           // champs de `missing` → texte lisible
+const MISSING_LABELS: Record<string, string> = {
   mode: 'workload type', paramsBillions: 'model size', precision: 'precision', trainingTokens: 'dataset size',
 };
 
-function compact(value: number): string {                  // 300000000 → « 300M »
+function compact(value: number): string {
   if (value >= 1e9) return `${Math.round(value / 1e8) / 10}B`;
   if (value >= 1e6) return `${Math.round(value / 1e5) / 10}M`;
   if (value >= 1e3) return `${Math.round(value / 100) / 10}K`;
@@ -19,15 +19,15 @@ function compact(value: number): string {                  // 300000000 → « 3
 }
 
 @Component({
-  selector: 'app-advisor-message',                         // un message du chat : bulle de l'utilisateur, ou réponse de l'IA avec ses cartes
+  selector: 'app-advisor-message',
   imports: [RouterLink, CurrencyPipe],
   templateUrl: './advisor-message.html',
 })
 export class AdvisorMessage {
   readonly message = input.required<AgentMessage>();
-  readonly working = input(false);                         // réponse en cours d'arrivée : roue + dernière étape
-  readonly interactive = input(false);                     // dernier message : les boutons de réponse rapide sont actifs
-  readonly reply = output<string>();                       // clic sur une réponse rapide
+  readonly working = input(false);
+  readonly interactive = input(false);
+  readonly reply = output<string>();
 
   private readonly router = inject(Router);
 
@@ -36,16 +36,16 @@ export class AdvisorMessage {
     BEST_CHOICE: 'Best choice', CHEAPEST: 'Cheapest', FASTEST: 'Fastest', ALTERNATIVE: 'Alternative',
   };
 
-  protected readonly html = computed(() => renderMarkdown(this.message().content)); // Markdown → HTML sûr
+  protected readonly html = computed(() => renderMarkdown(this.message().content));
 
   protected readonly profileCard = computed(() => this.message().cards.find((card): card is ProfileCard => card.type === 'profile') ?? null);
   protected readonly repliesCard = computed(() => this.message().cards.find((card): card is RepliesCard => card.type === 'replies') ?? null);
-  protected readonly configs = computed(() => {            // configurations + lien « Rent this » prêt pour routerLink
+  protected readonly configs = computed(() => {
     const card = this.message().cards.find((item): item is ConfigsCard => item.type === 'configs');
     return (card?.items ?? []).map((item) => ({ item, rentUrl: this.router.parseUrl(item.rentPath) }));
   });
 
-  protected readonly badges = computed(() => {             // pastilles de la carte « What the AI understood »
+  protected readonly badges = computed(() => {
     const profile = this.profileCard()?.profile;
     if (!profile) {
       return [];
@@ -65,7 +65,7 @@ export class AdvisorMessage {
     return badges;
   });
 
-  protected readonly evidence = computed(() => {           // fichiers du dépôt qui prouvent les faits (un lien par fichier)
+  protected readonly evidence = computed(() => {
     const card = this.profileCard();
     const files = [...new Set((card?.facts ?? []).map((fact) => fact.evidence))];
     return files.map((file) => ({ file, url: card?.repoUrl ? `${card.repoUrl}/blob/HEAD/${file}` : null }));
@@ -73,7 +73,7 @@ export class AdvisorMessage {
 
   protected readonly missing = computed(() => (this.profileCard()?.missing ?? []).map((field) => MISSING_LABELS[field] ?? field).join(', '));
 
-  protected estimateText(item: ConfigItem): string {       // « ~1.5 h · ~$38 » ou « ~143 tokens/s · $6.21 / 1M tokens »
+  protected estimateText(item: ConfigItem): string {
     const { hours, totalCost, tokensPerSecond, costPerMillionTokens } = item.estimate;
     if (hours !== null && totalCost !== null) {
       const duration = hours < 1 ? `${Math.max(1, Math.round(hours * 60))} min` : hours >= 72 ? `${Math.round(hours / 2.4) / 10} days` : `${Math.round(hours * 10) / 10} h`;

@@ -7,8 +7,8 @@ import { signToken } from '../utils/jwt';
 import { isUniqueViolation } from '../utils/prismaErrors';
 import { toPublicUser } from '../utils/serializers';
 
-const BCRYPT_ROUNDS = 10;                                   // coût du hachage
-const DUMMY_HASH = bcrypt.hashSync('dummy-password', BCRYPT_ROUNDS); // même temps de réponse si l'email n'existe pas
+const BCRYPT_ROUNDS = 10;
+const DUMMY_HASH = bcrypt.hashSync('dummy-password', BCRYPT_ROUNDS);
 
 export async function register(input: RegisterInput) {
   const existing = await prisma.user.findUnique({ where: { email: input.email } });
@@ -17,10 +17,10 @@ export async function register(input: RegisterInput) {
   const passwordHash = await bcrypt.hash(input.password, BCRYPT_ROUNDS);
   const user = await prisma.user
     .create({
-      data: { email: input.email, passwordHash, firstName: input.firstName, lastName: input.lastName }, // rôle USER par défaut
+      data: { email: input.email, passwordHash, firstName: input.firstName, lastName: input.lastName },
     })
     .catch((err: unknown) => {
-      if (isUniqueViolation(err)) throw new AppError(409, 'EMAIL_TAKEN', 'This email is already in use.'); // 2 inscriptions simultanées
+      if (isUniqueViolation(err)) throw new AppError(409, 'EMAIL_TAKEN', 'This email is already in use.');
       throw err;
     });
 
@@ -31,7 +31,7 @@ export async function login(input: LoginInput, ip: string) {
   const user = await prisma.user.findUnique({ where: { email: input.email } });
   const passwordOk = await bcrypt.compare(input.password, user?.passwordHash ?? DUMMY_HASH);
 
-  if (!user || !passwordOk) {                               // même message dans les deux cas : on ne révèle pas si l'email existe
+  if (!user || !passwordOk) {
     await recordLoginFailure(ip, input.email);
     throw new AppError(401, 'INVALID_CREDENTIALS', 'Invalid email or password.');
   }

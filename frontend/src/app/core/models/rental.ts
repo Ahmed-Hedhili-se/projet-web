@@ -1,32 +1,32 @@
 import { GpuSummary } from './gpu';
 
-export type RentalStatus = 'UPCOMING' | 'ACTIVE' | 'COMPLETED' | 'CANCELLED'; // statut calculé par le backend
+export type RentalStatus = 'UPCOMING' | 'ACTIVE' | 'COMPLETED' | 'CANCELLED';
 
-export interface Rental {                                  // objet « Rental » de docs/API.md
+export interface Rental {
   id: number;
-  quantity: number;                                        // nombre d'unités louées
-  startDate: string;                                       // date ISO 8601
+  quantity: number;
+  startDate: string;
   durationHours: number;
-  endDate: string;                                         // startDate + durationHours
-  totalPrice: number;                                      // pricePerHour × quantity × durationHours
+  endDate: string;
+  totalPrice: number;
   status: RentalStatus;
   cancelledAt: string | null;
   createdAt: string;
   gpu: GpuSummary;
 }
 
-export interface CreateRentalRequest {                     // body de POST /rentals (le prix n'est jamais envoyé)
+export interface CreateRentalRequest {
   gpuId: number;
   quantity: number;
-  startDate: string;                                       // date ISO, dans le futur
-  durationHours: number;                                   // de 1 à 720
+  startDate: string;
+  durationHours: number;
 }
 
-export interface RentalResponse {                          // réponse de POST /rentals et PATCH /rentals/:id/cancel
+export interface RentalResponse {
   rental: Rental;
 }
 
-export interface RentalListResponse {                      // réponse de GET /rentals/me
+export interface RentalListResponse {
   rentals: Rental[];
   total: number;
 }

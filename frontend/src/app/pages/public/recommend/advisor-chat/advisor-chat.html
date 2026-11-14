@@ -1,4 +1,4 @@
-<div class="mx-auto grid max-w-6xl items-start gap-6 lg:grid-cols-[260px_minmax(0,1fr)]"> <!-- historique à gauche, conversation à droite -->
+<div class="mx-auto grid max-w-6xl items-start gap-6 lg:grid-cols-[260px_minmax(0,1fr)]">
   <app-advisor-history
     [conversations]="history()"
     [activeId]="conversation()?.id ?? null"
@@ -11,9 +11,9 @@
 
   <div class="min-w-0">
   @if (opening()) {
-    <div class="h-72 animate-pulse rounded-card bg-carbon"></div>                               <!-- conversation en cours de chargement -->
+    <div class="h-72 animate-pulse rounded-card bg-carbon"></div>
   } @else if (messages().length === 0 && !pending()) {
-    <div class="animate-fade-up glass-card px-6 py-10 text-center md:px-10">                    <!-- avant le premier message : accueil + exemples -->
+    <div class="animate-fade-up glass-card px-6 py-10 text-center md:px-10">
       <span class="mx-auto flex size-12 items-center justify-center rounded-full border border-aurora-glow/50 bg-aurora-glow/10 text-aurora" aria-hidden="true">
         <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v3m0 12v3M3 12h3m12 0h3M6.3 6.3l2 2m7.4 7.4 2 2m0-11.4-2 2m-7.4 7.4-2 2" /><circle cx="12" cy="12" r="2.5" /></svg>
       </span>
@@ -29,13 +29,13 @@
       </ul>
     </div>
   } @else {
-    <p class="truncate text-utility-nav font-semibold text-ash">{{ conversation()?.title ?? 'New conversation' }}</p> <!-- titre de la conversation -->
-    <div class="mt-6 flex flex-col gap-6" aria-live="polite">                                   <!-- messages, du plus ancien au plus récent -->
+    <p class="truncate text-utility-nav font-semibold text-ash">{{ conversation()?.title ?? 'New conversation' }}</p>
+    <div class="mt-6 flex flex-col gap-6" aria-live="polite">
       @for (message of messages(); track message.id) {
         <app-advisor-message [message]="message" [interactive]="$last && !sending()" (reply)="send($event)" />
       }
       @if (pending(); as message) {
-        <app-advisor-message [message]="message" [working]="true" />                            <!-- réponse en cours d'arrivée -->
+        <app-advisor-message [message]="message" [working]="true" />
       }
     </div>
   }
@@ -48,7 +48,7 @@
     </div>
   }
 
-  <form #composer (submit)="$event.preventDefault(); send()" class="animate-fade-up mt-6 rounded-card border border-steel bg-carbon p-4 md:p-5" style="animation-delay: 150ms" novalidate> <!-- zone de saisie -->
+  <form #composer (submit)="$event.preventDefault(); send()" class="animate-fade-up mt-6 rounded-card border border-steel bg-carbon p-4 md:p-5" style="animation-delay: 150ms" novalidate>
     <label for="advisor-repo" class="form-label">GitHub repository <span class="font-normal">(optional)</span></label>
     <input
       id="advisor-repo"

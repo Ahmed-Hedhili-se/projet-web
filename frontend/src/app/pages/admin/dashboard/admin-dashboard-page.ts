@@ -13,11 +13,11 @@ import { CountUp } from '../../../shared/directives/count-up';
 import { Reveal } from '../../../shared/directives/reveal';
 import { Tilt } from '../../../shared/directives/tilt';
 
-type ChartMetric = 'count' | 'revenue';                    // mesure affichée dans le graphique (un seul axe à la fois)
+type ChartMetric = 'count' | 'revenue';
 
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-function niceMax(value: number): number {                  // arrondit le haut de l'axe : 13 → 15, 4820 → 5000
+function niceMax(value: number): number {
   if (value <= 0) {
     return 1;
   }
@@ -40,19 +40,19 @@ export class AdminDashboardPage implements OnInit {
   protected readonly loading = signal(true);
   protected readonly errorMessage = signal<string | null>(null);
   protected readonly metric = signal<ChartMetric>('count');
-  protected readonly metricOptions: { value: ChartMetric; label: string }[] = [ // boutons de la bascule
+  protected readonly metricOptions: { value: ChartMetric; label: string }[] = [
     { value: 'count', label: 'Rentals' },
     { value: 'revenue', label: 'Revenue' },
   ];
-  protected readonly showTable = signal(false);            // tableau à la place du graphique (accessibilité)
+  protected readonly showTable = signal(false);
 
-  protected readonly greeting = computed(() => {           // « Good morning, Amira. »
+  protected readonly greeting = computed(() => {
     const hour = new Date().getHours();
     const moment = hour < 12 ? 'morning' : hour < 18 ? 'afternoon' : 'evening';
     return `Good ${moment}, ${this.authService.currentUser()?.firstName ?? 'admin'}.`;
   });
 
-  protected readonly chart = computed(() => {              // données du graphique « par mois »
+  protected readonly chart = computed(() => {
     const months = this.stats()?.rentalsPerMonth ?? [];
     const metric = this.metric();
     const values = months.map((month) => (metric === 'count' ? month.count : month.revenue));
@@ -60,28 +60,28 @@ export class AdminDashboardPage implements OnInit {
     const highest = Math.max(...values);
     return {
       max,
-      ticks: [max, (max * 3) / 4, max / 2, max / 4, 0],    // lignes horizontales de l'axe
+      ticks: [max, (max * 3) / 4, max / 2, max / 4, 0],
       bars: months.map((month, index) => ({
-        label: MONTHS[Number(month.month.slice(5, 7)) - 1], // "2026-10" → "Oct"
+        label: MONTHS[Number(month.month.slice(5, 7)) - 1],
         year: month.month.slice(0, 4),
         count: month.count,
         revenue: month.revenue,
         value: values[index],
-        height: (values[index] / max) * 100,               // hauteur en % de la zone du graphique
-        isHighest: values[index] === highest && highest > 0, // seule la plus haute porte son étiquette
+        height: (values[index] / max) * 100,
+        isHighest: values[index] === highest && highest > 0,
       })),
     };
   });
 
-  protected readonly occupancy = computed(() => {          // part des unités louées en ce moment (GPU actifs)
+  protected readonly occupancy = computed(() => {
     const active = this.gpus().filter((gpu) => gpu.isActive);
     const total = active.reduce((sum, gpu) => sum + gpu.totalUnits, 0);
     const rented = active.reduce((sum, gpu) => sum + (gpu.totalUnits - gpu.availableUnits), 0);
     const percent = total === 0 ? 0 : Math.round((rented / total) * 100);
-    return { total, rented, percent, offset: 327 - (327 * percent) / 100 }; // offset : longueur du cercle non remplie
+    return { total, rented, percent, offset: 327 - (327 * percent) / 100 };
   });
 
-  protected readonly statusRows = computed(() => {         // locations par statut, en barres horizontales
+  protected readonly statusRows = computed(() => {
     const rentals = this.stats()?.rentals;
     if (!rentals) {
       return [];
@@ -104,7 +104,7 @@ export class AdminDashboardPage implements OnInit {
   protected load(): void {
     this.loading.set(true);
     this.errorMessage.set(null);
-    forkJoin({ stats: this.adminService.getStats(), gpus: this.adminService.listGpus() }) // les deux requêtes en parallèle
+    forkJoin({ stats: this.adminService.getStats(), gpus: this.adminService.listGpus() })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: ({ stats, gpus }) => {

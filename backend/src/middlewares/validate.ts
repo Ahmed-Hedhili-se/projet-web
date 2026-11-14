@@ -2,15 +2,15 @@ import { NextFunction, Request, Response } from 'express';
 import { z } from 'zod';
 import { AppError } from '../utils/AppError';
 
-function toValidationError(error: z.ZodError): AppError {  // erreurs Zod → format VALIDATION_ERROR de API.md
+function toValidationError(error: z.ZodError): AppError {
   const details = error.issues.map((issue) => ({
-    field: issue.path.join('.') || 'body',                  // ex. "email"
+    field: issue.path.join('.') || 'body',
     message: issue.message,
   }));
   return new AppError(400, 'VALIDATION_ERROR', 'Invalid request data.', details);
 }
 
-export function validateBody(schema: z.ZodType) {          // vérifie req.body et le remplace par la version nettoyée
+export function validateBody(schema: z.ZodType) {
   return (req: Request, _res: Response, next: NextFunction) => {
     const result = schema.safeParse(req.body ?? {});
     if (!result.success) return next(toValidationError(result.error));
@@ -19,20 +19,20 @@ export function validateBody(schema: z.ZodType) {          // vérifie req.body 
   };
 }
 
-export function validateQuery(schema: z.ZodType) {         // vérifie req.query, résultat dans res.locals.query
+export function validateQuery(schema: z.ZodType) {
   return (req: Request, res: Response, next: NextFunction) => {
     const result = schema.safeParse(req.query);
     if (!result.success) return next(toValidationError(result.error));
-    res.locals.query = result.data;                         // Express 5 : req.query est en lecture seule
+    res.locals.query = result.data;
     next();
   };
 }
 
-export function validateParams(schema: z.ZodType) {        // vérifie req.params (ex. :id), résultat dans res.locals.params
+export function validateParams(schema: z.ZodType) {
   return (req: Request, res: Response, next: NextFunction) => {
     const result = schema.safeParse(req.params);
     if (!result.success) return next(toValidationError(result.error));
-    res.locals.params = result.data;                        // ex. { id: 3 } avec id déjà converti en nombre
+    res.locals.params = result.data;
     next();
   };
 }

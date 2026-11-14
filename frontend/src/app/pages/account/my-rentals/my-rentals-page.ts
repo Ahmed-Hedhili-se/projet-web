@@ -13,7 +13,7 @@ import { CountUp } from '../../../shared/directives/count-up';
 import { Reveal } from '../../../shared/directives/reveal';
 import { formatDuration, relativeTime } from '../../../shared/utils/date-time';
 
-type Filter = 'ALL' | RentalStatus;                        // onglet sélectionné
+type Filter = 'ALL' | RentalStatus;
 
 @Component({
   selector: 'app-my-rentals-page',
@@ -24,7 +24,7 @@ export class MyRentalsPage implements OnInit {
   private readonly rentalService = inject(RentalService);
   private readonly destroyRef = inject(DestroyRef);
 
-  protected readonly formatDuration = formatDuration;      // utilisés dans le template
+  protected readonly formatDuration = formatDuration;
   protected readonly relativeTime = (date: string) => relativeTime(new Date(date));
 
   protected readonly rentals = signal<Rental[]>([]);
@@ -32,11 +32,11 @@ export class MyRentalsPage implements OnInit {
   protected readonly errorMessage = signal<string | null>(null);
   protected readonly filter = signal<Filter>('ALL');
 
-  protected readonly toCancel = signal<Rental | null>(null); // location à annuler (fenêtre de confirmation ouverte)
+  protected readonly toCancel = signal<Rental | null>(null);
   protected readonly cancelling = signal(false);
   protected readonly cancelError = signal<string | null>(null);
 
-  protected readonly tabs = computed(() => {               // onglets avec le nombre de locations dans chacun
+  protected readonly tabs = computed(() => {
     const count = (status: RentalStatus) => this.rentals().filter((rental) => rental.status === status).length;
     return [
       { value: 'ALL' as Filter, label: 'All', count: this.rentals().length },
@@ -47,11 +47,11 @@ export class MyRentalsPage implements OnInit {
     ];
   });
 
-  protected readonly filtered = computed(() =>             // locations de l'onglet sélectionné
+  protected readonly filtered = computed(() =>
     this.filter() === 'ALL' ? this.rentals() : this.rentals().filter((rental) => rental.status === this.filter()),
   );
 
-  protected readonly stats = computed(() => [              // tuiles du haut (recréées quand une valeur change : chiffres rejoués)
+  protected readonly stats = computed(() => [
     { label: 'Active now', value: this.rentals().filter((rental) => rental.status === 'ACTIVE').length, decimals: 0, prefix: '' },
     { label: 'Upcoming', value: this.rentals().filter((rental) => rental.status === 'UPCOMING').length, decimals: 0, prefix: '' },
     {
@@ -84,7 +84,7 @@ export class MyRentalsPage implements OnInit {
       });
   }
 
-  protected progress(rental: Rental): number {             // avancement d'une location en cours, en %
+  protected progress(rental: Rental): number {
     const start = Date.parse(rental.startDate);
     const end = Date.parse(rental.endDate);
     return Math.min(100, Math.max(0, Math.round(((Date.now() - start) / (end - start)) * 100)));
@@ -92,7 +92,7 @@ export class MyRentalsPage implements OnInit {
 
   protected askCancel(rental: Rental): void {
     this.cancelError.set(null);
-    this.toCancel.set(rental);                             // ouvre la fenêtre de confirmation
+    this.toCancel.set(rental);
   }
 
   protected confirmCancel(): void {
@@ -106,7 +106,7 @@ export class MyRentalsPage implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (response) => {
-          this.rentals.update((list) => list.map((item) => (item.id === rental.id ? response.rental : item))); // remplace la location annulée
+          this.rentals.update((list) => list.map((item) => (item.id === rental.id ? response.rental : item)));
           this.cancelling.set(false);
           this.toCancel.set(null);
         },

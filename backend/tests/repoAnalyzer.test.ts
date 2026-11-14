@@ -1,10 +1,9 @@
-// Tests de l'analyse de repo : un faux repo en mémoire remplace GitHub (aucun appel réseau).
 import { describe, expect, it } from 'vitest';
 import { analyzeRepo, paramsFromConfig, readRepoFile, selectFiles, sizeFromName } from '../src/agent/repoAnalyzer';
 import { parseRepoUrl, RepoError, RepoSource } from '../src/lib/github';
 
 function fakeRepo(files: Record<string, string>, branch = 'main'): RepoSource & { reads: string[] } {
-  const reads: string[] = [];                               // fichiers réellement lus (pour vérifier la sélection)
+  const reads: string[] = [];
   return {
     reads,
     getDefaultBranch: async () => branch,
@@ -17,7 +16,7 @@ function fakeRepo(files: Record<string, string>, branch = 'main'): RepoSource & 
   };
 }
 
-const LLAMA_31_8B = {                                       // vrai config.json de Llama 3.1 8B (champs utiles)
+const LLAMA_31_8B = {
   model_type: 'llama', hidden_act: 'silu', hidden_size: 4096, intermediate_size: 14336, num_hidden_layers: 32,
   num_attention_heads: 32, num_key_value_heads: 8, vocab_size: 128256, max_position_embeddings: 131072,
   tie_word_embeddings: false, torch_dtype: 'bfloat16',
@@ -28,7 +27,7 @@ const MIXTRAL_8X7B = {
   max_position_embeddings: 32768, tie_word_embeddings: false,
 };
 
-const QLORA_REPO = {                                        // repo de fine-tuning QLoRA typique
+const QLORA_REPO = {
   'README.md': '# legal-llama\nFine-tune Llama 3.1 8B on legal documents.\nWe trained it on a single A100 80GB.\n',
   'config.json': JSON.stringify(LLAMA_31_8B),
   'requirements.txt': 'torch>=2.3\ntransformers\npeft\nbitsandbytes\nflash-attn\ntrl\n',
@@ -66,7 +65,7 @@ describe('model size helpers', () => {
   it('counts Llama 3.1 8B and Mixtral 8x7B parameters from config.json', () => {
     expect(paramsFromConfig(LLAMA_31_8B)).toMatchObject({ paramsBillions: 8, layers: 32, kvHeads: 8, headDim: 128 });
     expect(paramsFromConfig(MIXTRAL_8X7B)).toMatchObject({ paramsBillions: 46.7, activeParamsBillions: 12.9 });
-    expect(paramsFromConfig({ foo: 1 })).toBeNull();        // pas un transformer
+    expect(paramsFromConfig({ foo: 1 })).toBeNull();
   });
 
   it('reads the size in a model name', () => {
@@ -106,7 +105,7 @@ describe('analyzeRepo', () => {
       modelId: 'scripts/train.py', maxContextLength: 'config.json',
     });
     expect(result.hardwareHints).toEqual([{ text: 'We trained it on a single A100 80GB.', evidence: 'README.md' }]);
-    expect(result.missing).toEqual(['trainingTokens']);    // la taille du dataset n'est jamais dans le code
+    expect(result.missing).toEqual(['trainingTokens']);
   });
 
   it('detects an AWQ inference server with vLLM, sized from the model name', async () => {
@@ -125,20 +124,20 @@ describe('analyzeRepo', () => {
       'ds_config_zero3.json': '{"zero_optimization": {"stage": 3}, "fp16": {"enabled": false}, "bf16": {"enabled": true}}',
     });
     const result = await analyzeRepo('https://github.com/acme/ds', repo);
-    expect(result.suggestedProfile).toMatchObject({ mode: 'FULL_FINETUNE', sharded: true, precision: 'BF16' }); // fp16 désactivé : ignoré
+    expect(result.suggestedProfile).toMatchObject({ mode: 'FULL_FINETUNE', sharded: true, precision: 'BF16' });
     expect(result.facts).toContainEqual({ field: 'deepspeedStage', value: 3, evidence: 'ds_config_zero3.json' });
     expect(result.missing).toEqual(['paramsBillions', 'trainingTokens']);
   });
 
   it('detects QLoRA from command-line flags in a root script', async () => {
-    const repo = fakeRepo({                                 // structure du repo officiel artidoro/qlora
+    const repo = fakeRepo({
       'requirements.txt': 'transformers\npeft\nbitsandbytes\n',
       'qlora.py': 'parser.add_argument("--lora_r", type=int, default=64)\n',
       'scripts/finetune.sh': 'python qlora.py --model_name_or_path huggyllama/llama-7b --bits 4 --bf16 --gradient_checkpointing\n',
     });
     const result = await analyzeRepo('https://github.com/artidoro/qlora', repo);
     expect(repo.reads).toContain('qlora.py');
-    expect(result.framework).toBe('PyTorch');               // déduit de peft / bitsandbytes
+    expect(result.framework).toBe('PyTorch');
     expect(result.suggestedProfile).toMatchObject({ mode: 'QLORA', precision: 'BF16', paramsBillions: 7 });
   });
 

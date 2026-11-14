@@ -9,10 +9,10 @@ import { AuthService } from './auth-service';
 describe('AuthService', () => {
   let service: AuthService;
   let httpTesting: HttpTestingController;
-  const jane = MOCK_ACCOUNTS[0].user;                      // utilisateur USER de démonstration
+  const jane = MOCK_ACCOUNTS[0].user;
 
   beforeEach(() => {
-    localStorage.clear();                                  // chaque test part d'une session vide
+    localStorage.clear();
     TestBed.configureTestingModule({
       providers: [provideRouter([]), provideHttpClient(), provideHttpClientTesting()],
     });
@@ -29,7 +29,7 @@ describe('AuthService', () => {
     expect(service.isLoggedIn()).toBe(true);
     expect(service.isAdmin()).toBe(false);
     expect(service.currentUser()?.firstName).toBe('Jane');
-    expect(localStorage.getItem('teramind_token')).toBe('abc'); // la session survit au rafraîchissement
+    expect(localStorage.getItem('teramind_token')).toBe('abc');
   });
 
   it('should forget everything on logout', () => {

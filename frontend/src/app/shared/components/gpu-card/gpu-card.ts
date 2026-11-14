@@ -9,6 +9,6 @@ import { Tilt } from '../../directives/tilt';
   imports: [RouterLink, CurrencyPipe, Tilt],
   templateUrl: './gpu-card.html',
 })
-export class GpuCard {                                     // carte d'un GPU dans le catalogue
+export class GpuCard {
   readonly gpu = input.required<Gpu>();
 }

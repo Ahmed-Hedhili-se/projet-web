@@ -1,5 +1,5 @@
-const SIMPLEX_NOISE = /* glsl */ `
-vec4 permute(vec4 x){ return mod(((x*34.0)+1.0)*x, 289.0); }                      // bruit « simplex » 3D : motif naturel et animé (vagues, nuages)
+const SIMPLEX_NOISE = `
+vec4 permute(vec4 x){ return mod(((x*34.0)+1.0)*x, 289.0); }
 vec4 taylorInvSqrt(vec4 r){ return 1.79284291400159 - 0.85373472095314 * r; }
 float snoise(vec3 v){
   const vec2 C = vec2(1.0/6.0, 1.0/3.0); const vec4 D = vec4(0.0, 0.5, 1.0, 2.0);
@@ -24,34 +24,34 @@ float snoise(vec3 v){
 }
 `;
 
-const SUN = 'normalize(vec3(-0.9, 0.18, 0.4))';            // direction du soleil, fixe par rapport à l'écran (le jour reste à gauche)
+const SUN = 'normalize(vec3(-0.9, 0.18, 0.4))';
 
-export const SURFACE_VERTEX = /* glsl */ `
+export const SURFACE_VERTEX = `
 varying vec2 vUv;
 varying vec3 vNormal;
 varying vec3 vViewPosition;
 void main(){
-  vUv = uv;                                                // position sur la texture
-  vNormal = normalize(normalMatrix * normal);              // direction de la surface, vue depuis la caméra
+  vUv = uv;
+  vNormal = normalize(normalMatrix * normal);
   vec4 mv = modelViewMatrix * vec4(position, 1.0);
-  vViewPosition = -mv.xyz;                                 // direction vers la caméra
+  vViewPosition = -mv.xyz;
   gl_Position = projectionMatrix * mv;
 }
 `;
 
-export const EARTH_FRAGMENT = /* glsl */ `
-uniform sampler2D dayMap;                                  // terres et océans, de jour
-uniform sampler2D nightMap;                                // lumières des villes
-uniform sampler2D oceanMap;                                // masque : blanc = eau
-uniform sampler2D reliefMap;                               // relief (normal map)
+export const EARTH_FRAGMENT = `
+uniform sampler2D dayMap;
+uniform sampler2D nightMap;
+uniform sampler2D oceanMap;
+uniform sampler2D reliefMap;
 uniform float time;
-uniform float nightLights;                                 // intensité des lumières des villes
-uniform vec3 rimColor;                                     // couleur du contour lumineux (suit la couleur Aurore)
+uniform float nightLights;
+uniform vec3 rimColor;
 varying vec2 vUv;
 varying vec3 vNormal;
 varying vec3 vViewPosition;
 ${SIMPLEX_NOISE}
-vec3 bumpNormal(vec3 eyePos, vec3 N, vec3 mapN){           // incline la surface selon la texture de relief (sans tangentes)
+vec3 bumpNormal(vec3 eyePos, vec3 N, vec3 mapN){
   vec3 q0 = dFdx(eyePos); vec3 q1 = dFdy(eyePos);
   vec2 st0 = dFdx(vUv); vec2 st1 = dFdy(vUv);
   vec3 q1perp = cross(q1, N); vec3 q0perp = cross(N, q0);
@@ -66,43 +66,43 @@ void main(){
   vec3 V = normalize(vViewPosition);
   vec3 sun = ${SUN};
   vec3 color = texture2D(dayMap, vUv).rgb;
-  float water = texture2D(oceanMap, vUv).r;                // 1 = océan, 0 = terre
-  float ndl = dot(N, sun);                                 // > 0 : face au soleil
-  float dayAmt = smoothstep(-0.05, 0.35, ndl);             // 1 = plein jour
+  float water = texture2D(oceanMap, vUv).r;
+  float ndl = dot(N, sun);
+  float dayAmt = smoothstep(-0.05, 0.35, ndl);
 
   float waves = 0.0;
-  if (water > 0.05 && dayAmt > 0.0) {                      // le bruit coûte cher : calculé seulement sur l'eau, côté jour
+  if (water > 0.05 && dayAmt > 0.0) {
     float flowTime = time * 3.2;
     waves = snoise(vec3(vUv.x * 16.8 + flowTime * 0.6, vUv.y * 16.8 - flowTime * 0.5, flowTime * 0.7));
   }
-  color += water * waves * 0.06;                                       // courants marins très légers
-  color = mix(color, vec3(0.01, 0.06, 0.16), water * 0.12);            // océans un peu plus profonds
+  color += water * waves * 0.06;
+  color = mix(color, vec3(0.01, 0.06, 0.16), water * 0.12);
 
   vec3 mapN = texture2D(reliefMap, vUv).xyz * 2.0 - 1.0;
-  vec3 shadeN = mix(bumpNormal(-vViewPosition, N, mapN), N, water);    // relief sur les terres seulement
+  vec3 shadeN = mix(bumpNormal(-vViewPosition, N, mapN), N, water);
   float relief = dot(shadeN, sun) - ndl;
-  color *= clamp(1.0 + relief * 1.3 * dayAmt, 0.55, 1.6);              // montagnes éclairées d'un côté, ombrées de l'autre
-  color *= mix(0.55, 1.0, smoothstep(-0.1, 0.9, ndl));                 // plus lumineux face au soleil
+  color *= clamp(1.0 + relief * 1.3 * dayAmt, 0.55, 1.6);
+  color *= mix(0.55, 1.0, smoothstep(-0.1, 0.9, ndl));
 
   float nightFactor = smoothstep(0.18, -0.30, ndl);
   float lightsFactor = smoothstep(0.30, -0.35, ndl);
-  vec3 cityLights = texture2D(nightMap, vUv).rgb * vec3(1.0, 0.82, 0.55) * nightLights; // blanc chaud
-  color = mix(color, color * 0.08, nightFactor);                       // côté nuit presque noir
-  color += cityLights * lightsFactor;                                  // les villes s'allument la nuit
+  vec3 cityLights = texture2D(nightMap, vUv).rgb * vec3(1.0, 0.82, 0.55) * nightLights;
+  color = mix(color, color * 0.08, nightFactor);
+  color += cityLights * lightsFactor;
 
   vec3 halfDir = normalize(sun + V);
   float glint = pow(max(dot(N, halfDir) + waves * 0.02, 0.0), 140.0);
-  color += glint * water * dayAmt * 0.45 * vec3(1.0, 0.97, 0.88);      // reflet du soleil sur l'océan
+  color += glint * water * dayAmt * 0.45 * vec3(1.0, 0.97, 0.88);
 
   float rim = pow(1.0 - max(dot(V, N), 0.0), 2.4) * 0.55;
-  color = mix(color, rimColor, rim * (0.3 + 0.7 * dayAmt));            // contour lumineux (atmosphère)
+  color = mix(color, rimColor, rim * (0.3 + 0.7 * dayAmt));
 
   gl_FragColor = vec4(color, 1.0);
   #include <colorspace_fragment>
 }
 `;
 
-export const CLOUD_FRAGMENT = /* glsl */ `
+export const CLOUD_FRAGMENT = `
 uniform sampler2D cloudMap;
 uniform float opacity;
 varying vec2 vUv;
@@ -112,17 +112,17 @@ void main(){
   vec3 N = normalize(vNormal);
   vec3 V = normalize(vViewPosition);
   vec4 tex = texture2D(cloudMap, vUv);
-  float cover = tex.a * tex.r;                             // quantité de nuage à cet endroit
-  float edge = pow(1.0 - max(dot(N, V), 0.0), 3.0);        // bord de la planète
+  float cover = tex.a * tex.r;
+  float edge = pow(1.0 - max(dot(N, V), 0.0), 3.0);
   float ndl = dot(N, ${SUN});
-  float day = 1.0 - smoothstep(0.30, -0.30, ndl) * 0.9;    // nuages presque invisibles côté nuit
+  float day = 1.0 - smoothstep(0.30, -0.30, ndl) * 0.9;
   float light = 0.5 + 0.4 * smoothstep(-0.2, 0.6, ndl);
   gl_FragColor = vec4(vec3(light), cover * mix(0.8, 1.0, edge) * opacity * day);
   #include <colorspace_fragment>
 }
 `;
 
-export const HALO_VERTEX = /* glsl */ `
+export const HALO_VERTEX = `
 varying vec2 vUv;
 void main(){
   vUv = uv;
@@ -130,48 +130,48 @@ void main(){
 }
 `;
 
-export const HALO_FRAGMENT = /* glsl */ `
-uniform vec3 glowColor;                                    // couleur Aurore actuelle
+export const HALO_FRAGMENT = `
+uniform vec3 glowColor;
 uniform float intensity;
 varying vec2 vUv;
 void main(){
-  float d = length(vUv - 0.5) * 2.0;                       // 0 au centre, 1 au bord du carré
-  float a = pow(clamp(1.0 - d, 0.0, 1.0), 2.2);            // s'estompe vers l'extérieur
+  float d = length(vUv - 0.5) * 2.0;
+  float a = pow(clamp(1.0 - d, 0.0, 1.0), 2.2);
   gl_FragColor = vec4(glowColor * a * intensity, a);
   #include <colorspace_fragment>
 }
 `;
 
-export const STARS_VERTEX = /* glsl */ `
+export const STARS_VERTEX = `
 attribute float seed;
 attribute float bright;
 uniform float time;
 uniform float size;
-uniform float pixelScale;                                  // adapte la taille des points à la hauteur de l'écran
+uniform float pixelScale;
 varying float vTwinkle;
 void main(){
   vec4 mv = modelViewMatrix * vec4(position, 1.0);
-  vTwinkle = bright * (0.6 + 0.4 * sin(time + seed));      // scintillement
+  vTwinkle = bright * (0.6 + 0.4 * sin(time + seed));
   gl_PointSize = max(size * pixelScale * (90.0 / max(-mv.z, 1.0)), 1.0);
   gl_Position = projectionMatrix * mv;
 }
 `;
 
-export const STARS_FRAGMENT = /* glsl */ `
+export const STARS_FRAGMENT = `
 uniform vec3 starColor;
 varying float vTwinkle;
 void main(){
   float l = length(gl_PointCoord - 0.5);
-  if (l > 0.5) discard;                                    // point rond
+  if (l > 0.5) discard;
   gl_FragColor = vec4(starColor, smoothstep(0.5, 0.0, l) * vTwinkle);
   #include <colorspace_fragment>
 }
 `;
 
-export const MARKERS_VERTEX = /* glsl */ `
+export const MARKERS_VERTEX = `
 attribute float seed;
-attribute float major;                                     // 1 = un des 3 data centers TeraMind, 0 = nœud GPU
-attribute float pulse;                                     // 0 → 1 : onde plus forte quand un paquet de données arrive
+attribute float major;
+attribute float pulse;
 uniform float size;
 uniform float pixelScale;
 varying float vSeed;
@@ -182,15 +182,15 @@ void main(){
   vSeed = seed; vMajor = major; vPulse = pulse;
   vec4 mv = modelViewMatrix * vec4(position, 1.0);
   vec3 normalView = normalize(normalMatrix * normalize(position));
-  vFade = smoothstep(0.15, 0.5, dot(normalView, normalize(-mv.xyz))); // invisible derrière la planète, s'estompe au bord
+  vFade = smoothstep(0.15, 0.5, dot(normalView, normalize(-mv.xyz)));
   gl_PointSize = max(size * (1.0 + major * 0.7 + pulse * 0.8) * pixelScale * (7.0 / max(-mv.z, 1.0)), 2.0);
   gl_Position = projectionMatrix * mv;
 }
 `;
 
-export const MARKERS_FRAGMENT = /* glsl */ `
-uniform vec3 coreColor;                                    // blanc chaud
-uniform vec3 ringColor;                                    // jaune « Optical Yellow »
+export const MARKERS_FRAGMENT = `
+uniform vec3 coreColor;
+uniform vec3 ringColor;
 uniform float time;
 varying float vSeed;
 varying float vFade;
@@ -200,9 +200,9 @@ void main(){
   if (vFade <= 0.001) discard;
   float d = length(gl_PointCoord - 0.5) * 2.0;
   if (d > 1.0) discard;
-  float core = smoothstep(0.30, 0.0, d) * 1.2;             // point central
+  float core = smoothstep(0.30, 0.0, d) * 1.2;
   float phase = fract(time * 0.5 + vSeed);
-  float ring = smoothstep(0.07, 0.0, abs(d - phase)) * (1.0 - phase); // onde radar qui s'agrandit puis s'efface
+  float ring = smoothstep(0.07, 0.0, abs(d - phase)) * (1.0 - phase);
   float strength = 0.55 + 0.45 * vMajor + vPulse;
   gl_FragColor = vec4(coreColor * core + ringColor * ring * strength, clamp(core + ring * 0.7 * strength, 0.0, 1.0) * vFade);
   #include <colorspace_fragment>

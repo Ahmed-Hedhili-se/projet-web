@@ -27,7 +27,7 @@ describe('POST /api/auth/register', () => {
       ['createdAt', 'email', 'firstName', 'id', 'isBlocked', 'lastName', 'role'],
     );
     const saved = await prisma.user.findUnique({ where: { email } });
-    expect(saved!.passwordHash).not.toBe('MySecret123');      // haché avec bcrypt
+    expect(saved!.passwordHash).not.toBe('MySecret123');
   });
 
   it('returns 409 EMAIL_TAKEN for an existing email', async () => {
@@ -90,7 +90,7 @@ describe('POST /api/auth/login', () => {
     expect(sixth.body.error.code).toBe('TOO_MANY_ATTEMPTS');
 
     const blockedGood = await request(app).post('/api/auth/login').send({ email, password });
-    expect(blockedGood.status).toBe(429);                     // bloqué pendant 15 minutes
+    expect(blockedGood.status).toBe(429);
   });
 
   it('a successful login resets the failure counter', async () => {
@@ -101,7 +101,7 @@ describe('POST /api/auth/login', () => {
     expect((await request(app).post('/api/auth/login').send({ email, password })).status).toBe(200);
     for (let i = 1; i <= 4; i++) {
       const res = await request(app).post('/api/auth/login').send({ email, password: 'BadPassword1' });
-      expect(res.status).toBe(401);                           // compteur remis à zéro : pas encore 429
+      expect(res.status).toBe(401);
     }
   });
 
@@ -113,7 +113,7 @@ describe('POST /api/auth/login', () => {
       vi.spyOn(redis, 'incr').mockImplementation(down),
       vi.spyOn(redis, 'del').mockImplementation(down),
     ];
-    vi.spyOn(console, 'error').mockImplementation(() => undefined); // évite le bruit dans la sortie des tests
+    vi.spyOn(console, 'error').mockImplementation(() => undefined);
     try {
       const ok = await request(app).post('/api/auth/login').send({ email, password });
       expect(ok.status).toBe(200);
@@ -182,6 +182,6 @@ describe('Admin routes protection', () => {
     const token = await loginAdmin();
     expect(token).toBeTruthy();
     const res = await request(app).get('/api/admin/stats').set('Authorization', `Bearer ${token}`);
-    expect(res.status).toBe(404);                             // B7 ajoutera /admin/stats
+    expect(res.status).toBe(404);
   });
 });

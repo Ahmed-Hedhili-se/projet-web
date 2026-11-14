@@ -4,13 +4,13 @@ import { agentRouter } from './agent.routes';
 import { authRouter } from './auth.routes';
 import { gpuRouter } from './gpu.routes';
 
-export const apiRouter = Router();                          // regroupe toutes les routes sous /api
+export const apiRouter = Router();
 
-apiRouter.get('/health', (_req, res) => {                   // vérifie que l'API répond
+apiRouter.get('/health', (_req, res) => {
   res.json({ status: 'ok' });
 });
 
 apiRouter.use('/auth', authRouter);
-apiRouter.use('/gpus', gpuRouter);                          // catalogue public (B3)
-apiRouter.use('/agent', agentRouter);                       // conseiller IA (B9)
+apiRouter.use('/gpus', gpuRouter);
+apiRouter.use('/agent', agentRouter);
 apiRouter.use('/admin', adminRouter);

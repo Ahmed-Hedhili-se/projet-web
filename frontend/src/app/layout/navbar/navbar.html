@@ -1,8 +1,8 @@
-<header class="sticky top-0 z-50 border-b border-steel/60 bg-obsidian/80 backdrop-blur-md [view-transition-name:site-header]"> <!-- barre fixée en haut, fond flouté, exclue de la transition de page -->
-  <nav class="mx-auto flex h-11 max-w-6xl items-center justify-between px-4" aria-label="Main navigation"> <!-- 44px de haut (DESIGN.md) -->
+<header class="sticky top-0 z-50 border-b border-steel/60 bg-obsidian/80 backdrop-blur-md [view-transition-name:site-header]">
+  <nav class="mx-auto flex h-11 max-w-6xl items-center justify-between px-4" aria-label="Main navigation">
 
-    <a routerLink="/" (click)="closeMenu()" class="flex items-center gap-2 font-display text-product-label font-semibold text-porcelain"> <!-- logo -->
-      <svg class="size-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"> <!-- icône : grille 3 × 3 -->
+    <a routerLink="/" (click)="closeMenu()" class="flex items-center gap-2 font-display text-product-label font-semibold text-porcelain">
+      <svg class="size-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
         <rect x="1" y="1" width="5" height="5" rx="1.5" />
         <rect x="7.5" y="1" width="5" height="5" rx="1.5" opacity="0.6" />
         <rect x="14" y="1" width="5" height="5" rx="1.5" />
@@ -16,7 +16,7 @@
       TeraMind
     </a>
 
-    <ul class="hidden items-center gap-8 md:flex">        <!-- liens, visibles à partir de 768px -->
+    <ul class="hidden items-center gap-8 md:flex">
       @for (link of links; track link.path) {
         <li>
           <a
@@ -25,13 +25,13 @@
             [routerLinkActiveOptions]="{ exact: link.path === '/' }"
             ariaCurrentWhenActive="page"
             class="text-utility-nav text-white/80 transition-colors hover:text-porcelain aria-[current=page]:text-porcelain"
-          >{{ link.label }}</a>                           <!-- lien actif : aria-current="page", texte plus clair -->
+          >{{ link.label }}</a>
         </li>
       }
     </ul>
 
     @if (authService.currentUser(); as user) {
-      <div id="user-menu-area" class="relative hidden md:block">                             <!-- connecté : avatar + menu -->
+      <div id="user-menu-area" class="relative hidden md:block">
         <button
           type="button"
           (click)="toggleUserMenu()"
@@ -40,9 +40,9 @@
           aria-controls="user-menu"
           aria-haspopup="menu"
         >
-          <span class="flex size-7 items-center justify-center rounded-full border border-steel bg-carbon text-[11px] font-semibold text-porcelain">{{ initials() }}</span> <!-- avatar -->
+          <span class="flex size-7 items-center justify-center rounded-full border border-steel bg-carbon text-[11px] font-semibold text-porcelain">{{ initials() }}</span>
           {{ user.firstName }}
-          <svg class="size-3 transition-transform duration-300" [class.rotate-180]="userMenuOpen()" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"> <!-- flèche qui se retourne -->
+          <svg class="size-3 transition-transform duration-300" [class.rotate-180]="userMenuOpen()" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" d="m6 9 6 6 6-6" />
           </svg>
         </button>
@@ -54,7 +54,7 @@
             animate.enter="menu-enter"
             animate.leave="menu-leave"
             class="absolute top-full right-0 mt-2 w-60 rounded-nav border border-steel bg-graphite p-2"
-          >                                                                                   <!-- menu déroulant animé, sans ombre -->
+          >
             <div class="border-b border-steel px-3 pt-2 pb-3">
               <p class="text-body font-semibold">{{ user.firstName }} {{ user.lastName }}</p>
               <p class="truncate text-utility-nav text-ash">{{ user.email }}</p>
@@ -71,7 +71,7 @@
         }
       </div>
     } @else {
-      <div class="hidden items-center gap-3 md:flex">     <!-- déconnecté : boutons de compte -->
+      <div class="hidden items-center gap-3 md:flex">
         <a routerLink="/login" class="btn-outline">Sign in</a>
         <a routerLink="/register" class="btn-primary">Get started</a>
       </div>
@@ -84,13 +84,13 @@
       [attr.aria-expanded]="menuOpen()"
       aria-controls="mobile-menu"
       [attr.aria-label]="menuOpen() ? 'Close menu' : 'Open menu'"
-    >                                                      <!-- bouton du menu mobile -->
+    >
       @if (menuOpen()) {
-        <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"> <!-- icône croix -->
+        <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
           <path stroke-linecap="round" d="M6 6l12 12M18 6L6 18" />
         </svg>
       } @else {
-        <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"> <!-- icône hamburger -->
+        <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
           <path stroke-linecap="round" d="M4 8h16M4 16h16" />
         </svg>
       }
@@ -98,7 +98,7 @@
   </nav>
 
   @if (menuOpen()) {
-    <div id="mobile-menu" animate.enter="menu-enter" class="border-t border-steel bg-obsidian px-4 pb-6 md:hidden"> <!-- menu mobile déplié -->
+    <div id="mobile-menu" animate.enter="menu-enter" class="border-t border-steel bg-obsidian px-4 pb-6 md:hidden">
       <ul class="flex flex-col py-2">
         @for (link of links; track link.path) {
           <li>
@@ -115,7 +115,7 @@
       </ul>
 
       @if (authService.currentUser(); as user) {
-        <div class="mt-4 flex items-center gap-3">                                            <!-- connecté : utilisateur + liens du compte -->
+        <div class="mt-4 flex items-center gap-3">
           <span class="flex size-9 items-center justify-center rounded-full border border-steel bg-carbon text-utility-nav font-semibold">{{ initials() }}</span>
           <div>
             <p class="text-body font-semibold">{{ user.firstName }} {{ user.lastName }}</p>

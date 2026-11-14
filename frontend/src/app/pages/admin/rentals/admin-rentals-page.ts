@@ -16,15 +16,15 @@ import { formatDuration } from '../../../shared/utils/date-time';
 type StatusFilter = 'ALL' | RentalStatus;
 type View = 'list' | 'planning';
 
-interface PlanningBar {                                    // une location dessinée sur le planning
+interface PlanningBar {
   rental: AdminRental;
-  left: number;                                            // position du début, en % de la largeur
-  width: number;                                           // longueur, en %
-  lane: number;                                            // ligne dans la rangée du GPU (les locations qui se chevauchent sont empilées)
+  left: number;
+  width: number;
+  lane: number;
   label: string;
 }
 
-interface PlanningRow {                                    // une rangée du planning = un GPU
+interface PlanningRow {
   gpuId: number;
   name: string;
   lanes: number;
@@ -32,10 +32,10 @@ interface PlanningRow {                                    // une rangée du pla
 }
 
 const DAY_MS = 24 * 60 * 60 * 1000;
-const PLANNING_DAYS = 14;                                  // le planning montre deux semaines
-const LANE_HEIGHT = 30;                                    // hauteur d'une ligne de barres (px)
+const PLANNING_DAYS = 14;
+const LANE_HEIGHT = 30;
 
-function startOfPlanning(): number {                       // par défaut : de 7 jours avant aujourd'hui à 7 jours après
+function startOfPlanning(): number {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   return today.getTime() - 7 * DAY_MS;
@@ -47,8 +47,8 @@ function startOfPlanning(): number {                       // par défaut : de 7
   templateUrl: './admin-rentals-page.html',
 })
 export class AdminRentalsPage implements OnInit {
-  readonly userId = input<string>();                       // ?userId=3 (lien depuis la page Users) : filtre déjà choisi
-  readonly gpuId = input<string>();                        // ?gpuId=1
+  readonly userId = input<string>();
+  readonly gpuId = input<string>();
 
   private readonly adminService = inject(AdminService);
   private readonly destroyRef = inject(DestroyRef);
@@ -56,8 +56,8 @@ export class AdminRentalsPage implements OnInit {
   protected readonly rentals = signal<AdminRental[]>([]);
   protected readonly loading = signal(true);
   protected readonly errorMessage = signal<string | null>(null);
-  protected readonly notice = signal<string | null>(null); // message de succès en haut de la liste
-  protected readonly actionError = signal<string | null>(null); // erreur d'une annulation (la liste reste affichée)
+  protected readonly notice = signal<string | null>(null);
+  protected readonly actionError = signal<string | null>(null);
 
   protected readonly view = signal<View>('list');
   protected readonly statusFilter = signal<StatusFilter>('ALL');
@@ -65,24 +65,24 @@ export class AdminRentalsPage implements OnInit {
   protected readonly gpuFilter = signal<number | null>(null);
   protected readonly toCancel = signal<AdminRental | null>(null);
   protected readonly cancelling = signal(false);
-  protected readonly selectedId = signal<number | null>(null); // barre du planning sélectionnée
-  protected readonly windowStart = signal(startOfPlanning()); // premier jour affiché dans le planning (ms)
+  protected readonly selectedId = signal<number | null>(null);
+  protected readonly windowStart = signal(startOfPlanning());
 
   protected readonly formatDuration = formatDuration;
   protected readonly laneHeight = LANE_HEIGHT;
   protected readonly planningDays = PLANNING_DAYS;
 
-  protected readonly userOptions = computed(() => {        // clients présents dans les locations, triés par nom
+  protected readonly userOptions = computed(() => {
     const users = new Map(this.rentals().map((rental) => [rental.user.id, `${rental.user.firstName} ${rental.user.lastName}`]));
     return [...users].map(([id, name]) => ({ id, name })).sort((a, b) => a.name.localeCompare(b.name));
   });
 
-  protected readonly gpuOptions = computed(() => {         // GPU présents dans les locations, triés par nom
+  protected readonly gpuOptions = computed(() => {
     const gpus = new Map(this.rentals().map((rental) => [rental.gpu.id, rental.gpu.name]));
     return [...gpus].map(([id, name]) => ({ id, name })).sort((a, b) => a.name.localeCompare(b.name));
   });
 
-  protected readonly scoped = computed(() =>               // locations après les filtres client et GPU (avant le statut)
+  protected readonly scoped = computed(() =>
     this.rentals().filter(
       (rental) =>
         (this.userFilter() === null || rental.user.id === this.userFilter()) &&
@@ -90,11 +90,11 @@ export class AdminRentalsPage implements OnInit {
     ),
   );
 
-  protected readonly filtered = computed(() =>             // + filtre de statut : ce que montre la liste
+  protected readonly filtered = computed(() =>
     this.scoped().filter((rental) => this.statusFilter() === 'ALL' || rental.status === this.statusFilter()),
   );
 
-  protected readonly tabs = computed(() => {               // onglets de statut, avec le nombre de locations
+  protected readonly tabs = computed(() => {
     const count = (status: RentalStatus) => this.scoped().filter((rental) => rental.status === status).length;
     const tabs: { value: StatusFilter; label: string; count: number }[] = [
       { value: 'ALL', label: 'All', count: this.scoped().length },
@@ -106,13 +106,13 @@ export class AdminRentalsPage implements OnInit {
     return tabs;
   });
 
-  protected readonly revenue = computed(() =>              // total des locations affichées, sans les annulées
+  protected readonly revenue = computed(() =>
     this.filtered().filter((rental) => rental.status !== 'CANCELLED').reduce((sum, rental) => sum + rental.totalPrice, 0),
   );
 
-  protected readonly windowEnd = computed(() => this.windowStart() + (PLANNING_DAYS - 1) * DAY_MS); // dernier jour affiché
+  protected readonly windowEnd = computed(() => this.windowStart() + (PLANNING_DAYS - 1) * DAY_MS);
 
-  protected readonly days = computed(() => {               // les 14 colonnes du planning
+  protected readonly days = computed(() => {
     const today = new Date().toDateString();
     return Array.from({ length: PLANNING_DAYS }, (_, index) => {
       const date = new Date(this.windowStart() + index * DAY_MS);
@@ -120,17 +120,17 @@ export class AdminRentalsPage implements OnInit {
     });
   });
 
-  protected readonly todayPercent = computed(() => {       // position du trait « maintenant », ou null s'il est hors de la période
+  protected readonly todayPercent = computed(() => {
     const percent = ((Date.now() - this.windowStart()) / (PLANNING_DAYS * DAY_MS)) * 100;
     return percent >= 0 && percent <= 100 ? percent : null;
   });
 
-  protected readonly planning = computed<PlanningRow[]>(() => { // une rangée par GPU, avec ses locations placées sur la période
+  protected readonly planning = computed<PlanningRow[]>(() => {
     const start = this.windowStart();
     const span = PLANNING_DAYS * DAY_MS;
     const rows = new Map<number, PlanningRow & { laneEnds: number[] }>();
     const visible = this.scoped()
-      .filter((rental) => rental.status !== 'CANCELLED')   // une location annulée ne bloque plus d'unité
+      .filter((rental) => rental.status !== 'CANCELLED')
       .filter((rental) => Date.parse(rental.endDate) > start && Date.parse(rental.startDate) < start + span)
       .sort((a, b) => Date.parse(a.startDate) - Date.parse(b.startDate));
 
@@ -138,9 +138,9 @@ export class AdminRentalsPage implements OnInit {
       const from = Date.parse(rental.startDate);
       const to = Date.parse(rental.endDate);
       const row = rows.get(rental.gpu.id) ?? { gpuId: rental.gpu.id, name: rental.gpu.name, lanes: 0, bars: [], laneEnds: [] };
-      let lane = row.laneEnds.findIndex((end) => end <= from); // première ligne libre à cette date
+      let lane = row.laneEnds.findIndex((end) => end <= from);
       if (lane === -1) {
-        lane = row.laneEnds.length;                        // aucune : on ajoute une ligne
+        lane = row.laneEnds.length;
       }
       row.laneEnds[lane] = to;
       row.lanes = row.laneEnds.length;
@@ -182,7 +182,7 @@ export class AdminRentalsPage implements OnInit {
       });
   }
 
-  protected pickFilter(filter: 'user' | 'gpu', value: string): void { // listes déroulantes : '' = tous
+  protected pickFilter(filter: 'user' | 'gpu', value: string): void {
     const id = value === '' ? null : Number(value);
     if (filter === 'user') {
       this.userFilter.set(id);
@@ -197,19 +197,19 @@ export class AdminRentalsPage implements OnInit {
     this.statusFilter.set('ALL');
   }
 
-  protected shiftWindow(days: number): void {              // semaine précédente / suivante
+  protected shiftWindow(days: number): void {
     this.windowStart.update((start) => start + days * DAY_MS);
   }
 
-  protected resetWindow(): void {                          // revient autour d'aujourd'hui
+  protected resetWindow(): void {
     this.windowStart.set(startOfPlanning());
   }
 
-  protected canCancel(rental: AdminRental): boolean {      // règle de docs/API.md : à venir ou en cours
+  protected canCancel(rental: AdminRental): boolean {
     return rental.status === 'UPCOMING' || rental.status === 'ACTIVE';
   }
 
-  protected confirmCancel(): void {                        // PATCH /admin/rentals/:id/cancel
+  protected confirmCancel(): void {
     const rental = this.toCancel();
     if (!rental) {
       return;
@@ -220,7 +220,7 @@ export class AdminRentalsPage implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (response) => {
-          this.rentals.update((list) => list.map((item) => (item.id === rental.id ? response.rental : item))); // remplace la location annulée
+          this.rentals.update((list) => list.map((item) => (item.id === rental.id ? response.rental : item)));
           this.notice.set(`Rental #${rental.id} of ${rental.user.firstName} ${rental.user.lastName} was cancelled.`);
           this.actionError.set(null);
           this.cancelling.set(false);
@@ -235,7 +235,7 @@ export class AdminRentalsPage implements OnInit {
       });
   }
 
-  protected exportCsv(): void {                            // les locations affichées, dans un fichier Excel
+  protected exportCsv(): void {
     downloadCsv('teramind-rentals.csv', [
       ['ID', 'Customer', 'Email', 'GPU', 'Units', 'Start', 'End', 'Duration (h)', 'Total (USD)', 'Status'],
       ...this.filtered().map((rental) => [

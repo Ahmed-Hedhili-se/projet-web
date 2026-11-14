@@ -1,16 +1,16 @@
 import { GpuSummary } from './gpu';
 
-export type ModelType = 'LLM' | 'VISION' | 'DIFFUSION' | 'AUDIO' | 'OTHER'; // types de modèle acceptés
-export type WorkloadMode = 'TRAINING' | 'INFERENCE';      // entraînement ou inférence
+export type ModelType = 'LLM' | 'VISION' | 'DIFFUSION' | 'AUDIO' | 'OTHER';
+export type WorkloadMode = 'TRAINING' | 'INFERENCE';
 
-export interface RecommendationRequest {                   // body de POST /recommendations (docs/API.md, section 5)
+export interface RecommendationRequest {
   modelType: ModelType;
-  parametersBillions: number;                              // de 0.01 à 2000
+  parametersBillions: number;
   mode: WorkloadMode;
-  budgetPerHour: number;                                   // > 0, en dollars
+  budgetPerHour: number;
 }
 
-export interface GpuConfiguration {                        // un GPU × un nombre d'unités
+export interface GpuConfiguration {
   gpu: GpuSummary;
   gpuCount: number;
   totalVramGb: number;
@@ -18,10 +18,10 @@ export interface GpuConfiguration {                        // un GPU × un nombr
   withinBudget: boolean;
 }
 
-export interface RecommendationResponse {                  // réponse de POST /recommendations
+export interface RecommendationResponse {
   input: RecommendationRequest;
   requiredVramGb: number;
-  recommendation: GpuConfiguration | null;                 // null si aucun GPU ne convient
-  alternatives: GpuConfiguration[];                        // 0 à 2 éléments
+  recommendation: GpuConfiguration | null;
+  alternatives: GpuConfiguration[];
   explanation: string;
 }

@@ -1,58 +1,58 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" role="img" aria-label="TeraMind TM-X 80 AI accelerator card">
   <defs>
-    <radialGradient id="glow" cx="50%" cy="50%" r="50%">                     <!-- halo lumineux derrière la carte -->
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
       <stop offset="0" stop-color="#f5f5f7" stop-opacity="0.16"/>
       <stop offset="1" stop-color="#f5f5f7" stop-opacity="0"/>
     </radialGradient>
-    <linearGradient id="shroud" x1="0" y1="0" x2="0" y2="1">                 <!-- métal sombre de la coque -->
+    <linearGradient id="shroud" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0" stop-color="#3a3a3e"/>
       <stop offset="0.18" stop-color="#1f1f22"/>
       <stop offset="1" stop-color="#09090a"/>
     </linearGradient>
-    <linearGradient id="rim" x1="0" y1="0" x2="1" y2="0">                    <!-- lumière rasante sur l'arête du haut -->
+    <linearGradient id="rim" x1="0" y1="0" x2="1" y2="0">
       <stop offset="0" stop-color="#ffffff" stop-opacity="0"/>
       <stop offset="0.5" stop-color="#ffffff" stop-opacity="0.7"/>
       <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
     </linearGradient>
-    <linearGradient id="bracket" x1="0" y1="0" x2="1" y2="0">                <!-- équerre métallique -->
+    <linearGradient id="bracket" x1="0" y1="0" x2="1" y2="0">
       <stop offset="0" stop-color="#8a8a8f"/>
       <stop offset="1" stop-color="#3a3a3e"/>
     </linearGradient>
-    <linearGradient id="sweep" x1="0" y1="0" x2="1" y2="0">                  <!-- reflet qui balaie la carte -->
+    <linearGradient id="sweep" x1="0" y1="0" x2="1" y2="0">
       <stop offset="0" stop-color="#ffffff" stop-opacity="0"/>
       <stop offset="0.5" stop-color="#ffffff" stop-opacity="0.09"/>
       <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
     </linearGradient>
-    <pattern id="fins" width="12" height="12" patternUnits="userSpaceOnUse"> <!-- ailettes du radiateur -->
+    <pattern id="fins" width="12" height="12" patternUnits="userSpaceOnUse">
       <rect width="6" height="12" fill="#000000" opacity="0.6"/>
       <rect x="6" width="1" height="12" fill="#ffffff" opacity="0.07"/>
     </pattern>
-    <pattern id="vents" width="10" height="14" patternUnits="userSpaceOnUse"> <!-- aérations de l'équerre -->
+    <pattern id="vents" width="10" height="14" patternUnits="userSpaceOnUse">
       <rect x="2" y="2" width="6" height="10" rx="2" fill="#000000" opacity="0.7"/>
     </pattern>
-    <pattern id="fingers" width="7" height="26" patternUnits="userSpaceOnUse"> <!-- contacts du connecteur PCIe -->
+    <pattern id="fingers" width="7" height="26" patternUnits="userSpaceOnUse">
       <rect x="1" y="4" width="4" height="20" rx="1" fill="#86868b"/>
     </pattern>
-    <clipPath id="card-clip">                                                <!-- limite le reflet à la carte -->
+    <clipPath id="card-clip">
       <rect x="136" y="150" width="690" height="240" rx="22"/>
     </clipPath>
   </defs>
 
-  <ellipse cx="480" cy="270" rx="420" ry="210" fill="url(#glow)"/>            <!-- halo -->
-  <ellipse cx="480" cy="470" rx="330" ry="14" fill="#ffffff" opacity="0.05"/> <!-- reflet au sol -->
+  <ellipse cx="480" cy="270" rx="420" ry="210" fill="url(#glow)"/>
+  <ellipse cx="480" cy="470" rx="330" ry="14" fill="#ffffff" opacity="0.05"/>
 
-  <rect x="690" y="136" width="70" height="18" rx="4" fill="#1d1d1f" stroke="#333336"/> <!-- connecteur d'alimentation -->
-  <rect x="108" y="138" width="30" height="268" rx="5" fill="url(#bracket)"/> <!-- équerre -->
+  <rect x="690" y="136" width="70" height="18" rx="4" fill="#1d1d1f" stroke="#333336"/>
+  <rect x="108" y="138" width="30" height="268" rx="5" fill="url(#bracket)"/>
   <rect x="114" y="160" width="18" height="200" fill="url(#vents)"/>
-  <rect x="300" y="388" width="336" height="28" rx="4" fill="#1d1d1f"/>      <!-- connecteur PCIe -->
+  <rect x="300" y="388" width="336" height="28" rx="4" fill="#1d1d1f"/>
   <rect x="306" y="388" width="324" height="26" fill="url(#fingers)"/>
 
-  <rect x="136" y="150" width="690" height="240" rx="22" fill="url(#shroud)" stroke="#333336"/> <!-- coque -->
-  <rect x="470" y="176" width="330" height="188" rx="12" fill="url(#fins)"/>  <!-- radiateur -->
+  <rect x="136" y="150" width="690" height="240" rx="22" fill="url(#shroud)" stroke="#333336"/>
+  <rect x="470" y="176" width="330" height="188" rx="12" fill="url(#fins)"/>
   <rect x="470" y="176" width="330" height="188" rx="12" fill="none" stroke="#333336"/>
-  <rect x="164" y="176" width="280" height="188" rx="14" fill="#0e0e0e" stroke="#333336"/> <!-- plaque du logo -->
+  <rect x="164" y="176" width="280" height="188" rx="14" fill="#0e0e0e" stroke="#333336"/>
 
-  <g transform="translate(190 202)" fill="#f5f5f7">                           <!-- logo : grille 3 × 3 -->
+  <g transform="translate(190 202)" fill="#f5f5f7">
     <rect x="0" y="0" width="10" height="10" rx="2.5"/>
     <rect x="14" y="0" width="10" height="10" rx="2.5" opacity="0.5"/>
     <rect x="28" y="0" width="10" height="10" rx="2.5"/>
@@ -69,13 +69,13 @@
     <text x="190" y="342" font-size="12" letter-spacing="2" fill="#6e6e73">AI ACCELERATOR</text>
   </g>
 
-  <path d="M160 151 H802" stroke="url(#rim)" stroke-width="1.5"/>            <!-- arête éclairée -->
+  <path d="M160 151 H802" stroke="url(#rim)" stroke-width="1.5"/>
 
-  <rect x="164" y="374" width="636" height="3" rx="1.5" fill="#f5f5f7">      <!-- bande lumineuse qui « respire » -->
+  <rect x="164" y="374" width="636" height="3" rx="1.5" fill="#f5f5f7">
     <animate attributeName="opacity" values="0.25;0.9;0.25" dur="4s" repeatCount="indefinite"/>
   </rect>
 
-  <g clip-path="url(#card-clip)">                                             <!-- reflet animé -->
+  <g clip-path="url(#card-clip)">
     <g transform="skewX(-20)">
       <rect x="-200" y="100" width="220" height="340" fill="url(#sweep)">
         <animate attributeName="x" values="-200;1100;1100" keyTimes="0;0.6;1" dur="7s" repeatCount="indefinite"/>

@@ -3,19 +3,19 @@ import { Role } from '@prisma/client';
 import { env } from '../config/env';
 
 export interface TokenPayload {
-  userId: number;                                           // id de l'utilisateur (stocké dans "sub")
-  role: Role;                                               // USER ou ADMIN
+  userId: number;
+  role: Role;
 }
 
 export function signToken(userId: number, role: Role): string {
   return jwt.sign({ role }, env.JWT_SECRET, {
-    subject: String(userId),                                // "sub" doit être une chaîne
-    expiresIn: env.JWT_EXPIRES_IN as SignOptions['expiresIn'], // 24 h par défaut
+    subject: String(userId),
+    expiresIn: env.JWT_EXPIRES_IN as SignOptions['expiresIn'],
     algorithm: 'HS256',
   });
 }
 
-export function verifyToken(token: string): TokenPayload | null { // null si le token est invalide ou expiré
+export function verifyToken(token: string): TokenPayload | null {
   try {
     const payload = jwt.verify(token, env.JWT_SECRET, { algorithms: ['HS256'] });
     if (typeof payload === 'string' || !payload.sub) return null;

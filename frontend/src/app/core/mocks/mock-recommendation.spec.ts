@@ -4,7 +4,7 @@ import { mockRecommend } from './mock-recommendation';
 describe('mockRecommend', () => {
   it('should recommend the cheapest GPU that fits a 7B LLM in inference', () => {
     const result = mockRecommend({ modelType: 'LLM', parametersBillions: 7, mode: 'INFERENCE', budgetPerHour: 2 }, MOCK_GPUS);
-    expect(result.requiredVramGb).toBe(16.8);              // 7 × 2 × 1.2
+    expect(result.requiredVramGb).toBe(16.8);
     expect(result.recommendation?.gpu.name).toBe('NVIDIA RTX 4090');
     expect(result.recommendation?.gpuCount).toBe(1);
     expect(result.recommendation?.withinBudget).toBe(true);
@@ -13,7 +13,7 @@ describe('mockRecommend', () => {
 
   it('should use several GPUs for a large model in training', () => {
     const result = mockRecommend({ modelType: 'LLM', parametersBillions: 13, mode: 'TRAINING', budgetPerHour: 40 }, MOCK_GPUS);
-    expect(result.requiredVramGb).toBe(249.6);             // 13 × 16 × 1.2
+    expect(result.requiredVramGb).toBe(249.6);
     expect(result.recommendation?.gpuCount).toBeGreaterThan(1);
   });
 

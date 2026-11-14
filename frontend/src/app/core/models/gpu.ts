@@ -1,4 +1,4 @@
-export interface Gpu {                                     // objet « Gpu » de docs/API.md
+export interface Gpu {
   id: number;
   name: string;
   manufacturer: string;
@@ -7,37 +7,37 @@ export interface Gpu {                                     // objet « Gpu » de
   fp16Tflops: number;
   pricePerHour: number;
   totalUnits: number;
-  availableUnits: number;                                  // unités libres sur la période demandée
+  availableUnits: number;
   description: string;
   isActive: boolean;
-  createdAt: string;                                       // date ISO 8601
+  createdAt: string;
   updatedAt: string;
 }
 
-export type GpuSort = 'price_asc' | 'price_desc' | 'vram_desc' | 'name_asc'; // valeurs possibles de « sort »
+export type GpuSort = 'price_asc' | 'price_desc' | 'vram_desc' | 'name_asc';
 
-export interface GpuQuery {                                // paramètres de query de GET /gpus (tous optionnels)
+export interface GpuQuery {
   search?: string;
   manufacturer?: string;
   minVram?: number;
   maxPrice?: number;
   available?: boolean;
-  startDate?: string;                                      // date ISO, utilisée avec durationHours
+  startDate?: string;
   durationHours?: number;
   sort?: GpuSort;
 }
 
-export interface GpuListResponse {                         // réponse de GET /gpus
+export interface GpuListResponse {
   gpus: Gpu[];
   total: number;
   manufacturers: string[];
 }
 
-export interface GpuResponse {                             // réponse de GET /gpus/:id
+export interface GpuResponse {
   gpu: Gpu;
 }
 
-export interface GpuSummary {                              // objet « GpuSummary » de docs/API.md (GPU résumé)
+export interface GpuSummary {
   id: number;
   name: string;
   manufacturer: string;
@@ -45,6 +45,6 @@ export interface GpuSummary {                              // objet « GpuSummar
   pricePerHour: number;
 }
 
-export function toGpuSummary(gpu: Gpu): GpuSummary {       // Gpu complet → GpuSummary
+export function toGpuSummary(gpu: Gpu): GpuSummary {
   return { id: gpu.id, name: gpu.name, manufacturer: gpu.manufacturer, vramGb: gpu.vramGb, pricePerHour: gpu.pricePerHour };
 }

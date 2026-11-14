@@ -4,14 +4,14 @@ import { app } from '../src/app';
 import { prisma } from '../src/lib/prisma';
 import { cleanupTestData, closeConnections, registerUser, waitForRedis } from './helpers';
 
-const START = '2099-03-01T09:00:00.000Z';                   // période lointaine : aucune vraie location ne la touche
+const START = '2099-03-01T09:00:00.000Z';
 const HOURS = 48;
 let h100Id: number;
 let mi300Id: number;
 let v100Id: number;
 
 async function bookDirectly(gpuId: number, quantity: number, start: string, hours: number, status: 'CONFIRMED' | 'CANCELLED' = 'CONFIRMED') {
-  const { user } = await registerUser('gpu');               // la location appartient à un compte de test (nettoyé après)
+  const { user } = await registerUser('gpu');
   const startDate = new Date(start);
   await prisma.rental.create({
     data: {
@@ -39,23 +39,23 @@ describe('GET /api/gpus', () => {
     const res = await request(app).get('/api/gpus');
     expect(res.status).toBe(200);
     const ids = res.body.gpus.map((g: { id: number }) => g.id);
-    expect(ids).not.toContain(v100Id);                      // V100 est désactivé dans le seed
+    expect(ids).not.toContain(v100Id);
     expect(res.body.total).toBe(res.body.gpus.length);
     expect(res.body.manufacturers).toEqual(['AMD', 'NVIDIA']);
     const prices = res.body.gpus.map((g: { pricePerHour: number }) => g.pricePerHour);
-    expect(prices).toEqual([...prices].sort((a, b) => a - b)); // price_asc par défaut
+    expect(prices).toEqual([...prices].sort((a, b) => a - b));
     expect(Object.keys(res.body.gpus[0]).sort()).toEqual([
       'architecture', 'availableUnits', 'createdAt', 'description', 'fp16Tflops', 'id', 'isActive',
       'manufacturer', 'name', 'pricePerHour', 'totalUnits', 'updatedAt', 'vramGb',
     ]);
-    expect(typeof res.body.gpus[0].pricePerHour).toBe('number'); // Decimal converti en nombre
+    expect(typeof res.body.gpus[0].pricePerHour).toBe('number');
   });
 
   it('filters by manufacturer, minVram, maxPrice and search', async () => {
     const amd = await request(app).get('/api/gpus?manufacturer=AMD');
     expect(amd.body.gpus.every((g: { manufacturer: string }) => g.manufacturer === 'AMD')).toBe(true);
     expect(amd.body.total).toBeGreaterThan(0);
-    expect(amd.body.manufacturers).toEqual(['AMD', 'NVIDIA']); // la liste ne dépend pas des filtres
+    expect(amd.body.manufacturers).toEqual(['AMD', 'NVIDIA']);
 
     const big = await request(app).get('/api/gpus?minVram=80&maxPrice=3.3');
     for (const g of big.body.gpus) {
@@ -85,8 +85,8 @@ describe('GET /api/gpus', () => {
     const h100 = await prisma.gpu.findUniqueOrThrow({ where: { id: h100Id } });
     const mi300 = await prisma.gpu.findUniqueOrThrow({ where: { id: mi300Id } });
     await bookDirectly(h100Id, 3, START, HOURS);
-    await bookDirectly(h100Id, 2, START, HOURS, 'CANCELLED'); // annulée : ne compte pas
-    await bookDirectly(mi300Id, mi300.totalUnits, START, HOURS); // MI300X complet sur la période
+    await bookDirectly(h100Id, 2, START, HOURS, 'CANCELLED');
+    await bookDirectly(mi300Id, mi300.totalUnits, START, HOURS);
 
     const res = await request(app).get(`/api/gpus?startDate=${START}&durationHours=${HOURS}`);
     const byId = new Map(res.body.gpus.map((g: { id: number }) => [g.id, g]));
@@ -98,7 +98,7 @@ describe('GET /api/gpus', () => {
     expect(freeIds).not.toContain(mi300Id);
     expect(freeIds).toContain(h100Id);
 
-    const after = new Date(new Date(START).getTime() + HOURS * 3600_000).toISOString(); // juste après : tout est libre
+    const after = new Date(new Date(START).getTime() + HOURS * 3600_000).toISOString();
     const later = await request(app).get(`/api/gpus/${h100Id}?startDate=${after}&durationHours=1`);
     expect(later.body.gpu.availableUnits).toBe(h100.totalUnits);
   });

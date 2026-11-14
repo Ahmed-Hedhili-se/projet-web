@@ -1,6 +1,6 @@
 import { AgentConversation, AgentMessage, Gpu, Prisma, User } from '@prisma/client';
 
-export function toConversation(conversation: AgentConversation & { _count: { messages: number } }) { // objet "AgentConversation"
+export function toConversation(conversation: AgentConversation & { _count: { messages: number } }) {
   return {
     id: conversation.id,
     title: conversation.title,
@@ -11,7 +11,7 @@ export function toConversation(conversation: AgentConversation & { _count: { mes
   };
 }
 
-export function toAgentMessage(message: AgentMessage) {     // objet "AgentMessage" de API.md
+export function toAgentMessage(message: AgentMessage) {
   return {
     id: message.id,
     role: message.role,
@@ -22,11 +22,11 @@ export function toAgentMessage(message: AgentMessage) {     // objet "AgentMessa
   };
 }
 
-export function toPrice(value: Prisma.Decimal | number): number { // Decimal Prisma → nombre à 2 décimales
+export function toPrice(value: Prisma.Decimal | number): number {
   return Math.round(Number(value) * 100) / 100;
 }
 
-export function toGpu(gpu: Gpu, availableUnits: number) {   // objet "Gpu" de API.md
+export function toGpu(gpu: Gpu, availableUnits: number) {
   return {
     id: gpu.id,
     name: gpu.name,
@@ -36,7 +36,7 @@ export function toGpu(gpu: Gpu, availableUnits: number) {   // objet "Gpu" de AP
     fp16Tflops: gpu.fp16Tflops,
     pricePerHour: toPrice(gpu.pricePerHour),
     totalUnits: gpu.totalUnits,
-    availableUnits,                                         // unités libres sur la période demandée
+    availableUnits,
     description: gpu.description,
     isActive: gpu.isActive,
     createdAt: gpu.createdAt.toISOString(),
@@ -44,7 +44,7 @@ export function toGpu(gpu: Gpu, availableUnits: number) {   // objet "Gpu" de AP
   };
 }
 
-export function toGpuSummary(gpu: Gpu) {                    // objet "GpuSummary" de API.md
+export function toGpuSummary(gpu: Gpu) {
   return {
     id: gpu.id,
     name: gpu.name,
@@ -54,7 +54,7 @@ export function toGpuSummary(gpu: Gpu) {                    // objet "GpuSummary
   };
 }
 
-export function toPublicUser(user: User) {                  // objet "User" de API.md : jamais de passwordHash
+export function toPublicUser(user: User) {
   return {
     id: user.id,
     email: user.email,

@@ -1,7 +1,7 @@
 @if (authService.currentUser(); as user) {
-  <section class="px-4 pt-16 pb-10 md:pt-20"> <!-- En-tête : avatar + nom -->
+  <section class="px-4 pt-16 pb-10 md:pt-20">
     <div class="mx-auto flex max-w-6xl flex-col items-center gap-6 text-center md:flex-row md:text-left">
-      <div class="animate-pop-in flex size-28 shrink-0 items-center justify-center rounded-full border border-steel bg-carbon font-display text-section-title font-semibold"> <!-- grand avatar -->
+      <div class="animate-pop-in flex size-28 shrink-0 items-center justify-center rounded-full border border-steel bg-carbon font-display text-section-title font-semibold">
         {{ initials() }}
       </div>
       <div>
@@ -17,10 +17,10 @@
     </div>
   </section>
 
-  <section class="px-4 pb-20 md:pb-28"> <!-- Formulaires -->
+  <section class="px-4 pb-20 md:pb-28">
     <div class="mx-auto grid max-w-6xl items-start gap-6 lg:grid-cols-2">
 
-      <form [formGroup]="profileForm" (ngSubmit)="saveProfile()" class="animate-fade-up flex flex-col gap-5 rounded-card border border-steel bg-carbon p-6 md:p-8" style="animation-delay: 450ms" novalidate> <!-- informations personnelles -->
+      <form [formGroup]="profileForm" (ngSubmit)="saveProfile()" class="animate-fade-up flex flex-col gap-5 rounded-card border border-steel bg-carbon p-6 md:p-8" style="animation-delay: 450ms" novalidate>
         <div>
           <h2 class="font-display text-product-label font-semibold">Personal information</h2>
           <p class="mt-1 text-body text-ash">This is how we contact you about your rentals.</p>
@@ -50,7 +50,7 @@
         </div>
 
         @if (profileSaved()) {
-          <div animate.enter="result-enter"><app-alert type="success" message="Profile updated." /></div> <!-- succès -->
+          <div animate.enter="result-enter"><app-alert type="success" message="Profile updated." /></div>
         }
         @if (profileError(); as message) {
           <div animate.enter="result-enter"><app-alert [message]="message" /></div>
@@ -66,10 +66,10 @@
           } @else {
             Save changes
           }
-        </button>                                                                              <!-- désactivé tant que rien n'a changé -->
+        </button>
       </form>
 
-      <form [formGroup]="passwordForm" (ngSubmit)="savePassword()" class="animate-fade-up flex flex-col gap-5 rounded-card border border-steel bg-carbon p-6 md:p-8" style="animation-delay: 550ms" novalidate> <!-- mot de passe -->
+      <form [formGroup]="passwordForm" (ngSubmit)="savePassword()" class="animate-fade-up flex flex-col gap-5 rounded-card border border-steel bg-carbon p-6 md:p-8" style="animation-delay: 550ms" novalidate>
         <div>
           <h2 class="font-display text-product-label font-semibold">Change password</h2>
           <p class="mt-1 text-body text-ash">Use a strong password that you do not use anywhere else.</p>
@@ -84,7 +84,7 @@
         <div>
           <label for="profile-new-password" class="form-label">New password</label>
           <input id="profile-new-password" type="password" formControlName="newPassword" autocomplete="new-password" class="form-field" [attr.aria-invalid]="passwordFieldError('newPassword') !== null" />
-          <app-password-strength [password]="passwordForm.controls.newPassword.value" />       <!-- barres de force -->
+          <app-password-strength [password]="passwordForm.controls.newPassword.value" />
           @if (passwordFieldError('newPassword'); as error) {
             <p class="mt-1 text-utility-nav text-optical-yellow">{{ error }}</p>
           }
@@ -117,13 +117,13 @@
         </button>
       </form>
 
-      <div class="animate-fade-up grid gap-4 sm:grid-cols-2 lg:col-span-2" style="animation-delay: 650ms"> <!-- raccourcis -->
+      <div class="animate-fade-up grid gap-4 sm:grid-cols-2 lg:col-span-2" style="animation-delay: 650ms">
         <a appTilt [tiltMax]="3" routerLink="/account/rentals" class="group flex items-center justify-between rounded-card border border-steel bg-carbon p-6 transition duration-500 ease-out hover:border-slate">
           <div>
             <p class="font-display text-product-label font-semibold">My rentals</p>
             <p class="mt-1 text-body text-ash">Follow and cancel your bookings.</p>
           </div>
-          <span class="text-section-nav text-ash transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true">›</span> <!-- flèche qui avance au survol -->
+          <span class="text-section-nav text-ash transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true">›</span>
         </a>
         <button appTilt [tiltMax]="3" type="button" (click)="signOut()" class="group flex items-center justify-between rounded-card border border-steel bg-carbon p-6 text-left transition duration-500 ease-out hover:border-slate">
           <div>

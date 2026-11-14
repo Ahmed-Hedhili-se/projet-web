@@ -8,61 +8,61 @@ import { GpuResponse } from '../models/gpu';
 import { User } from '../models/user';
 
 @Injectable({ providedIn: 'root' })
-export class AdminService {                                // routes /admin/* (docs/API.md, section 9) — rôle ADMIN obligatoire
+export class AdminService {
   private readonly http = inject(HttpClient);
   private readonly baseUrl = `${environment.apiUrl}/admin`;
 
-  readonly unreadMessages = signal(0);                     // badge du menu admin, mis à jour à chaque lecture des stats
+  readonly unreadMessages = signal(0);
 
-  getStats(): Observable<AdminStats> {                     // GET /admin/stats
+  getStats(): Observable<AdminStats> {
     return this.http
       .get<AdminStats>(`${this.baseUrl}/stats`)
       .pipe(tap((stats) => this.unreadMessages.set(stats.messages.unread)));
   }
 
-  listGpus(): Observable<AdminGpuListResponse> {           // GET /admin/gpus (actifs et désactivés)
+  listGpus(): Observable<AdminGpuListResponse> {
     return this.http.get<AdminGpuListResponse>(`${this.baseUrl}/gpus`);
   }
 
-  createGpu(input: GpuInput): Observable<GpuResponse> {    // POST /admin/gpus
+  createGpu(input: GpuInput): Observable<GpuResponse> {
     return this.http.post<GpuResponse>(`${this.baseUrl}/gpus`, input);
   }
 
-  updateGpu(id: number, input: GpuInput): Observable<GpuResponse> { // PUT /admin/gpus/:id (remplace toutes les infos)
+  updateGpu(id: number, input: GpuInput): Observable<GpuResponse> {
     return this.http.put<GpuResponse>(`${this.baseUrl}/gpus/${id}`, input);
   }
 
-  deactivateGpu(id: number): Observable<GpuResponse> {     // DELETE /admin/gpus/:id (= désactivation)
+  deactivateGpu(id: number): Observable<GpuResponse> {
     return this.http.delete<GpuResponse>(`${this.baseUrl}/gpus/${id}`);
   }
 
-  listUsers(): Observable<AdminUserListResponse> {         // GET /admin/users (la page filtre elle-même la liste)
+  listUsers(): Observable<AdminUserListResponse> {
     return this.http.get<AdminUserListResponse>(`${this.baseUrl}/users`);
   }
 
-  updateUser(id: number, changes: UserChanges): Observable<{ user: User }> { // PATCH /admin/users/:id (rôle et/ou blocage)
+  updateUser(id: number, changes: UserChanges): Observable<{ user: User }> {
     return this.http.patch<{ user: User }>(`${this.baseUrl}/users/${id}`, changes);
   }
 
-  listRentals(): Observable<AdminRentalListResponse> {     // GET /admin/rentals (toutes les locations, avec leur utilisateur)
+  listRentals(): Observable<AdminRentalListResponse> {
     return this.http.get<AdminRentalListResponse>(`${this.baseUrl}/rentals`);
   }
 
-  cancelRental(id: number): Observable<{ rental: AdminRental }> { // PATCH /admin/rentals/:id/cancel (à venir ou en cours)
+  cancelRental(id: number): Observable<{ rental: AdminRental }> {
     return this.http.patch<{ rental: AdminRental }>(`${this.baseUrl}/rentals/${id}/cancel`, {});
   }
 
-  listMessages(): Observable<AdminMessageListResponse> {   // GET /admin/messages (met aussi à jour le badge du menu)
+  listMessages(): Observable<AdminMessageListResponse> {
     return this.http
       .get<AdminMessageListResponse>(`${this.baseUrl}/messages`)
       .pipe(tap((response) => this.unreadMessages.set(response.unread)));
   }
 
-  setMessageRead(id: number, isRead: boolean): Observable<{ message: ContactMessage }> { // PATCH /admin/messages/:id (lu / non lu)
+  setMessageRead(id: number, isRead: boolean): Observable<{ message: ContactMessage }> {
     return this.http.patch<{ message: ContactMessage }>(`${this.baseUrl}/messages/${id}`, { isRead });
   }
 
-  deleteMessage(id: number): Observable<void> {            // DELETE /admin/messages/:id (réponse 204, sans contenu)
+  deleteMessage(id: number): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/messages/${id}`);
   }
 }

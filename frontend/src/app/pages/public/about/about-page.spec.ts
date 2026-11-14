@@ -6,7 +6,7 @@ describe('AboutPage', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [AboutPage],
-      providers: [provideRouter([])],                      // la page utilise routerLink
+      providers: [provideRouter([])],
     }).compileComponents();
   });
 
@@ -15,7 +15,7 @@ describe('AboutPage', () => {
     await fixture.whenStable();
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.querySelector('h1')?.textContent).toContain('We make AI compute simple.');
-    expect(compiled.textContent).toContain('AY');          // initiales d'« Adem YOUSSFI »
+    expect(compiled.textContent).toContain('AY');
     expect(compiled.textContent).toContain('Ahmed HEDHILI');
   });
 });

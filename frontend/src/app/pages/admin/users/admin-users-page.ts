@@ -16,13 +16,13 @@ import { downloadCsv } from '../../../shared/utils/csv';
 type RoleFilter = 'ALL' | Role;
 type AccessFilter = 'ALL' | 'ACTIVE' | 'BLOCKED';
 
-interface PendingChange {                                  // changement en attente de confirmation
+interface PendingChange {
   user: AdminUser;
-  changes: UserChanges;                                    // body envoyé à PATCH /admin/users/:id
+  changes: UserChanges;
   title: string;
   message: string;
   confirmLabel: string;
-  notice: string;                                          // message de succès affiché ensuite
+  notice: string;
 }
 
 @Component({
@@ -38,8 +38,8 @@ export class AdminUsersPage implements OnInit {
   protected readonly users = signal<AdminUser[]>([]);
   protected readonly loading = signal(true);
   protected readonly errorMessage = signal<string | null>(null);
-  protected readonly notice = signal<string | null>(null); // message de succès en haut de la liste
-  protected readonly actionError = signal<string | null>(null); // erreur d'un changement (la liste reste affichée)
+  protected readonly notice = signal<string | null>(null);
+  protected readonly actionError = signal<string | null>(null);
   protected readonly search = signal('');
   protected readonly roleFilter = signal<RoleFilter>('ALL');
   protected readonly accessFilter = signal<AccessFilter>('ALL');
@@ -57,9 +57,9 @@ export class AdminUsersPage implements OnInit {
     { value: 'BLOCKED', label: 'Blocked' },
   ];
 
-  protected readonly currentUserId = computed(() => this.authService.currentUser()?.id ?? null); // l'admin connecté ne peut pas se modifier lui-même
+  protected readonly currentUserId = computed(() => this.authService.currentUser()?.id ?? null);
 
-  protected readonly filtered = computed(() => {           // utilisateurs après recherche et filtres
+  protected readonly filtered = computed(() => {
     const term = this.search().trim().toLowerCase();
     return this.users().filter(
       (user) =>
@@ -69,7 +69,7 @@ export class AdminUsersPage implements OnInit {
     );
   });
 
-  protected readonly summary = computed(() => [            // petites tuiles au-dessus de la liste
+  protected readonly summary = computed(() => [
     { label: 'Accounts', value: this.users().length },
     { label: 'Admins', value: this.users().filter((user) => user.role === 'ADMIN').length },
     { label: 'Blocked', value: this.users().filter((user) => user.isBlocked).length },
@@ -97,11 +97,11 @@ export class AdminUsersPage implements OnInit {
       });
   }
 
-  protected initials(user: AdminUser): string {            // « Jane Doe » → « JD » (rond à gauche du nom)
+  protected initials(user: AdminUser): string {
     return (user.firstName.charAt(0) + user.lastName.charAt(0)).toUpperCase();
   }
 
-  protected askRole(user: AdminUser): void {               // USER ↔ ADMIN, après confirmation
+  protected askRole(user: AdminUser): void {
     const name = `${user.firstName} ${user.lastName}`;
     const toAdmin = user.role === 'USER';
     this.pending.set({
@@ -116,7 +116,7 @@ export class AdminUsersPage implements OnInit {
     });
   }
 
-  protected askBlock(user: AdminUser): void {              // bloquer ↔ débloquer, après confirmation
+  protected askBlock(user: AdminUser): void {
     const name = `${user.firstName} ${user.lastName}`;
     const block = !user.isBlocked;
     this.pending.set({
@@ -131,7 +131,7 @@ export class AdminUsersPage implements OnInit {
     });
   }
 
-  protected confirm(): void {                              // PATCH /admin/users/:id
+  protected confirm(): void {
     const change = this.pending();
     if (!change) {
       return;
@@ -142,7 +142,7 @@ export class AdminUsersPage implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (response) => {
-          const saved: AdminUser = { ...response.user, rentalCount: change.user.rentalCount }; // la réponse ne contient pas rentalCount
+          const saved: AdminUser = { ...response.user, rentalCount: change.user.rentalCount };
           this.users.update((list) => list.map((user) => (user.id === saved.id ? saved : user)));
           this.notice.set(change.notice);
           this.actionError.set(null);
@@ -158,7 +158,7 @@ export class AdminUsersPage implements OnInit {
       });
   }
 
-  protected exportCsv(): void {                            // les utilisateurs affichés, dans un fichier Excel
+  protected exportCsv(): void {
     downloadCsv('teramind-users.csv', [
       ['ID', 'First name', 'Last name', 'Email', 'Role', 'Status', 'Rentals', 'Joined'],
       ...this.filtered().map((user) => [

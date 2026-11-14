@@ -1,18 +1,18 @@
-<section class="px-4 py-10 md:py-16"> <!-- Inscription -->
+<section class="px-4 py-10 md:py-16">
   <div class="mx-auto grid max-w-6xl items-stretch gap-8 lg:grid-cols-2">
 
-    <div class="animate-fade-up relative hidden overflow-hidden rounded-card border border-steel bg-obsidian lg:flex lg:flex-col"> <!-- panneau visuel (grand écran) -->
-      <img src="images/ai-chip.svg" alt="" width="600" height="600" class="animate-float mx-auto mt-8 w-3/4" /> <!-- puce qui flotte -->
+    <div class="animate-fade-up relative hidden overflow-hidden rounded-card border border-steel bg-obsidian lg:flex lg:flex-col">
+      <img src="images/ai-chip.svg" alt="" width="600" height="600" class="animate-float mx-auto mt-8 w-3/4" />
       <div class="mt-auto p-10">
         <h2 class="font-display text-section-title font-semibold">
-          <app-split-text text="Start building." highlight="building." [delay]="200" />                             <!-- mots qui sortent du flou -->
+          <app-split-text text="Start building." highlight="building." [delay]="200" />
         </h2>
         <p class="animate-fade-up mt-3 max-w-sm text-section-nav text-ash" style="animation-delay: 400ms">
           Join TeraMind and get access to data-center GPUs in minutes.
         </p>
         <ol class="mt-6 flex flex-col gap-3">
           @for (step of steps; track step.number) {
-            <li class="animate-fade-up flex items-center gap-4 text-body" [style.animation-delay.ms]="500 + $index * 100"> <!-- arrivent l'une après l'autre -->
+            <li class="animate-fade-up flex items-center gap-4 text-body" [style.animation-delay.ms]="500 + $index * 100">
               <span class="font-display text-product-label font-semibold text-steel">{{ step.number }}</span>
               {{ step.text }}
             </li>
@@ -21,19 +21,19 @@
       </div>
     </div>
 
-    <div class="animate-fade-up flex items-center" style="animation-delay: 120ms">           <!-- colonne du formulaire -->
+    <div class="animate-fade-up flex items-center" style="animation-delay: 120ms">
       <div
         class="mx-auto w-full max-w-md rounded-card border border-steel bg-carbon p-6 md:p-10"
         [class.animate-shake]="shaking()"
         (animationend)="shaking.set(false)"
-      >                                                                                       <!-- tremble si l'email est déjà pris -->
+      >
         <h1 class="font-display text-hero-product-name font-semibold">Create an account</h1>
         <p class="mt-2 text-body text-ash">
           Already have an account? <a routerLink="/login" class="text-link">Sign in</a>
         </p>
 
         <form [formGroup]="form" (ngSubmit)="submit()" class="mt-8 flex flex-col gap-5" novalidate>
-          <div class="grid gap-5 sm:grid-cols-2">                                              <!-- prénom et nom côte à côte -->
+          <div class="grid gap-5 sm:grid-cols-2">
             <div>
               <label for="register-first-name" class="form-label">First name</label>
               <input id="register-first-name" type="text" formControlName="firstName" autocomplete="given-name" class="form-field"
@@ -63,7 +63,7 @@
 
           <div>
             <label for="register-password" class="form-label">Password</label>
-            <div class="relative">                                                             <!-- bouton « Show » dans le champ -->
+            <div class="relative">
               <input id="register-password" [type]="showPassword() ? 'text' : 'password'" formControlName="password" autocomplete="new-password" class="form-field pr-20"
                 [attr.aria-invalid]="fieldError('password') !== null" aria-describedby="register-password-help register-password-error" />
               <button
@@ -73,7 +73,7 @@
                 [attr.aria-label]="showPassword() ? 'Hide password' : 'Show password'"
               >{{ showPassword() ? 'Hide' : 'Show' }}</button>
             </div>
-            <app-password-strength id="register-password-help" [password]="form.controls.password.value" /> <!-- barres de force (composant partagé) -->
+            <app-password-strength id="register-password-help" [password]="form.controls.password.value" />
             @if (fieldError('password'); as error) {
               <p id="register-password-error" class="mt-1 text-utility-nav text-optical-yellow">{{ error }}</p>
             }
@@ -99,14 +99,14 @@
           </div>
 
           @if (errorMessage(); as message) {
-            <div animate.enter="result-enter">                                                 <!-- message d'erreur de l'API -->
+            <div animate.enter="result-enter">
               <app-alert [message]="message" />
             </div>
           }
 
           <button type="submit" class="btn-primary w-full gap-2 py-3 text-body disabled:opacity-60" [disabled]="submitting()">
             @if (submitting()) {
-              <svg class="size-4 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden="true">  <!-- roue de chargement -->
+              <svg class="size-4 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                 <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-opacity="0.3" stroke-width="2.5" />
                 <path d="M21 12a9 9 0 0 0-9-9" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
               </svg>

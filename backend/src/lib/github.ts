@@ -1,11 +1,10 @@
-// Client minimal de l'API GitHub : lecture seule de repos publics (pour le conseiller IA).
 import { env } from '../config/env';
 
 const API = 'https://api.github.com';
-const TIMEOUT_MS = 10_000;                                  // une requête GitHub ne doit pas bloquer l'agent
-const NAME = /^[A-Za-z0-9_.-]{1,100}$/;                     // caractères autorisés dans owner/repo
+const TIMEOUT_MS = 10_000;
+const NAME = /^[A-Za-z0-9_.-]{1,100}$/;
 
-export class RepoError extends Error {}                     // erreur lisible, renvoyée telle quelle au LLM
+export class RepoError extends Error {}
 
 export interface RepoRef {
   owner: string;
@@ -13,17 +12,17 @@ export interface RepoRef {
 }
 
 export interface RepoFile {
-  path: string;                                             // ex. "configs/ds_zero3.json"
-  size: number;                                             // octets
+  path: string;
+  size: number;
 }
 
-export interface RepoSource {                               // interface : le vrai client ou un faux repo dans les tests
+export interface RepoSource {
   getDefaultBranch(ref: RepoRef): Promise<string>;
   listFiles(ref: RepoRef, branch: string): Promise<RepoFile[]>;
   readFile(ref: RepoRef, branch: string, path: string): Promise<string>;
 }
 
-export function parseRepoUrl(input: string): RepoRef {      // "https://github.com/acme/llm/tree/main" → { acme, llm }
+export function parseRepoUrl(input: string): RepoRef {
   let url: URL;
   try {
     url = new URL(/^https?:\/\//i.test(input.trim()) ? input.trim() : `https://${input.trim()}`);
@@ -45,9 +44,9 @@ async function githubFetch(path: string, accept = 'application/vnd.github+json')
   const headers: Record<string, string> = {
     Accept: accept,
     'X-GitHub-Api-Version': '2022-11-28',
-    'User-Agent': 'TeraMind-GPU-Advisor',                   // GitHub exige un User-Agent
+    'User-Agent': 'TeraMind-GPU-Advisor',
   };
-  if (env.GITHUB_TOKEN) headers.Authorization = `Bearer ${env.GITHUB_TOKEN}`; // quota plus élevé avec un token
+  if (env.GITHUB_TOKEN) headers.Authorization = `Bearer ${env.GITHUB_TOKEN}`;
 
   let res: Response;
   try {
@@ -63,7 +62,7 @@ async function githubFetch(path: string, accept = 'application/vnd.github+json')
 
 const repoPath = ({ owner, repo }: RepoRef) => `/repos/${owner}/${repo}`;
 
-export const githubSource: RepoSource = {                   // implémentation réelle (réseau)
+export const githubSource: RepoSource = {
   async getDefaultBranch(ref) {
     const data = (await (await githubFetch(repoPath(ref))).json()) as { default_branch: string; private: boolean };
     if (data.private) throw new RepoError('This repository is private: only public repositories can be read.');
@@ -79,7 +78,7 @@ export const githubSource: RepoSource = {                   // implémentation r
   async readFile(ref, branch, path) {
     const encoded = path.split('/').map(encodeURIComponent).join('/');
     const res = await githubFetch(`${repoPath(ref)}/contents/${encoded}?ref=${encodeURIComponent(branch)}`,
-      'application/vnd.github.raw');                        // contenu brut au lieu du base64
+      'application/vnd.github.raw');
     return res.text();
   },
 };

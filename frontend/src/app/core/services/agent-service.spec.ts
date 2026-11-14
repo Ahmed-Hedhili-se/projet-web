@@ -9,7 +9,7 @@ describe('parseSseBlock', () => {
   });
 
   it('should ignore an incomplete or unreadable block', () => {
-    expect(parseSseBlock(': keep-alive')).toBeNull();      // commentaire SSE, sans événement
+    expect(parseSseBlock(': keep-alive')).toBeNull();
     expect(parseSseBlock('event: text\ndata: {not json')).toBeNull();
   });
 });

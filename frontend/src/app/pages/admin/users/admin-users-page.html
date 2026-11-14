@@ -1,4 +1,4 @@
-<header class="flex flex-wrap items-end justify-between gap-4"> <!-- En-tête -->
+<header class="flex flex-wrap items-end justify-between gap-4">
   <div>
     <p class="animate-fade-up font-display text-product-label font-semibold text-aurora">Admin</p>
     <h1 class="mt-1 font-display text-hero-product-name font-semibold md:text-section-title">
@@ -10,7 +10,7 @@
   </div>
 </header>
 
-<div class="animate-fade-up mt-8 grid grid-cols-3 gap-3 rounded-card bg-carbon p-3" style="animation-delay: 150ms" aria-label="User figures"> <!-- tuiles : comptes, admins, bloqués -->
+<div class="animate-fade-up mt-8 grid grid-cols-3 gap-3 rounded-card bg-carbon p-3" style="animation-delay: 150ms" aria-label="User figures">
   @for (item of summary(); track item.label) {
     <div class="rounded-card bg-obsidian px-4 py-4 md:px-6">
       <p class="font-display text-product-label font-semibold text-aurora tabular-nums md:text-hero-product-name">{{ item.value }}</p>
@@ -19,7 +19,7 @@
   }
 </div>
 
-<div class="animate-fade-up mt-6 flex flex-wrap items-center gap-3" style="animation-delay: 200ms"> <!-- recherche + filtres -->
+<div class="animate-fade-up mt-6 flex flex-wrap items-center gap-3" style="animation-delay: 200ms">
   <input type="search" [value]="search()" (input)="search.set($any($event.target).value)" placeholder="Search by name or email" class="form-field max-w-xs" aria-label="Search users" />
   <div class="flex gap-1 rounded-pill bg-carbon p-1" role="group" aria-label="Filter by role">
     @for (option of roleOptions; track option.value) {
@@ -62,7 +62,7 @@
 }
 
 @if (loading()) {
-  <div class="mt-6 flex flex-col gap-3">                                                      <!-- squelettes pendant le chargement -->
+  <div class="mt-6 flex flex-col gap-3">
     @for (item of [1, 2, 3, 4, 5]; track item) {
       <div class="h-16 animate-pulse rounded-nav bg-carbon"></div>
     }
@@ -74,8 +74,8 @@
     </app-alert>
   </div>
 } @else {
-  <div class="mt-6 overflow-hidden rounded-card border border-steel bg-carbon">               <!-- tableau des utilisateurs -->
-    <table class="hidden w-full text-left text-body md:table">                                <!-- grand écran : tableau -->
+  <div class="mt-6 overflow-hidden rounded-card border border-steel bg-carbon">
+    <table class="hidden w-full text-left text-body md:table">
       <thead class="border-b border-steel text-utility-nav text-ash">
         <tr>
           <th class="px-5 py-3 font-semibold">User</th>
@@ -88,10 +88,10 @@
       </thead>
       <tbody class="divide-y divide-steel">
         @for (user of filtered(); track user.id) {
-          <tr class="result-enter transition-colors duration-300 hover:bg-obsidian/60" [style.animation-delay.ms]="$index * 40"> <!-- lignes en cascade -->
+          <tr class="result-enter transition-colors duration-300 hover:bg-obsidian/60" [style.animation-delay.ms]="$index * 40">
             <td class="px-5 py-4">
               <div class="flex items-center gap-3" [class.opacity-60]="user.isBlocked">
-                <span class="flex size-9 shrink-0 items-center justify-center rounded-full bg-obsidian text-utility-nav font-semibold text-aurora" aria-hidden="true">{{ initials(user) }}</span> <!-- initiales -->
+                <span class="flex size-9 shrink-0 items-center justify-center rounded-full bg-obsidian text-utility-nav font-semibold text-aurora" aria-hidden="true">{{ initials(user) }}</span>
                 <div class="min-w-0">
                   <p class="font-semibold">
                     {{ user.firstName }} {{ user.lastName }}
@@ -106,7 +106,7 @@
             </td>
             <td class="px-3 py-4 text-right tabular-nums">
               @if (user.rentalCount > 0) {
-                <a routerLink="/admin/rentals" [queryParams]="{ userId: user.id }" class="text-link" [attr.aria-label]="'View the ' + user.rentalCount + ' rentals of ' + user.firstName + ' ' + user.lastName">{{ user.rentalCount }}</a> <!-- ouvre les locations de cet utilisateur -->
+                <a routerLink="/admin/rentals" [queryParams]="{ userId: user.id }" class="text-link" [attr.aria-label]="'View the ' + user.rentalCount + ' rentals of ' + user.firstName + ' ' + user.lastName">{{ user.rentalCount }}</a>
               } @else {
                 <span class="text-ash">0</span>
               }
@@ -120,7 +120,7 @@
             </td>
             <td class="px-5 py-4">
               @if (user.id === currentUserId()) {
-                <p class="text-right text-utility-nav text-ash">Your own account</p>            <!-- CANNOT_MODIFY_SELF : pas de boutons sur sa propre ligne -->
+                <p class="text-right text-utility-nav text-ash">Your own account</p>
               } @else {
                 <div class="flex justify-end gap-2">
                   <button type="button" (click)="askRole(user)" class="btn-outline">{{ user.role === 'ADMIN' ? 'Remove admin' : 'Make admin' }}</button>
@@ -135,7 +135,7 @@
       </tbody>
     </table>
 
-    <ul class="divide-y divide-steel md:hidden">                                               <!-- mobile : une carte par utilisateur -->
+    <ul class="divide-y divide-steel md:hidden">
       @for (user of filtered(); track user.id) {
         <li appReveal class="p-5">
           <div class="flex items-start justify-between gap-3">

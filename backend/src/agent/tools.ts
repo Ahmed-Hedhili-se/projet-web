@@ -1,4 +1,3 @@
-// Outils du conseiller IA : définitions envoyées au LLM + exécution côté backend (code déterministe).
 import { z } from 'zod';
 import { githubSource, parseRepoUrl, RepoError, RepoSource } from '../lib/github';
 import { prisma } from '../lib/prisma';
@@ -8,31 +7,29 @@ import { missingFields, PartialProfile, workloadProfileSchema } from './profile'
 import { RankResult, rankConfigs, Verdict } from './rankConfigs';
 import { analyzeRepo, Fact, readRepoFile } from './repoAnalyzer';
 
-// ---------- État de la conversation et sorties d'un tour ----------
-
-export interface AgentState {                               // mémoire de la conversation (enregistrée en base)
+export interface AgentState {
   repoUrl: string | null;
   profile: PartialProfile;
-  facts: Fact[];                                            // faits du dernier repo analysé (avec preuves)
+  facts: Fact[];
   lastRanking: RankResult | null;
 }
 
 export interface Step {
   tool: string;
-  label: string;                                            // texte affiché, ex. "Analyzed github.com/acme/llm"
+  label: string;
 }
 
-export interface ConfigCardItem {                           // une configuration recommandée (carte "configs")
+export interface ConfigCardItem {
   rank: number;
   verdict: Verdict;
   gpu: { id: number; name: string; manufacturer: string; architecture: string; vramGb: number; pricePerHour: number };
   gpuCount: number;
-  pricePerHour: number;                                     // gpu.pricePerHour × gpuCount
+  pricePerHour: number;
   availableUnits: number;
   estimate: RankResult['items'][number]['estimate'];
   reasons: string[];
   warnings: string[];
-  rentPath: string;                                         // lien du bouton "Rent this"
+  rentPath: string;
 }
 
 export type Card =
@@ -42,19 +39,17 @@ export type Card =
 
 export interface ToolContext {
   state: AgentState;
-  cards: Card[];                                            // cartes produites pendant le tour
-  onStep: (step: Step) => void;                             // envoie l'étape au frontend (flux SSE)
+  cards: Card[];
+  onStep: (step: Step) => void;
   onCard: (card: Card) => void;
 }
 
 let repoSource: RepoSource = githubSource;
-export function setRepoSource(source: RepoSource): void {   // tests : faux repo au lieu de GitHub
+export function setRepoSource(source: RepoSource): void {
   repoSource = source;
 }
 
-// ---------- Définitions envoyées au LLM ----------
-
-const PROFILE_PROPERTIES = {                                // mêmes champs que workloadProfileSchema
+const PROFILE_PROPERTIES = {
   mode: { type: 'string', enum: ['PRETRAINING', 'FULL_FINETUNE', 'LORA', 'QLORA', 'INFERENCE'] },
   paramsBillions: { type: 'number', description: 'Model size in billions of parameters' },
   activeParamsBillions: { type: 'number', description: 'MoE only: active parameters per token, in billions' },
@@ -107,9 +102,7 @@ export const TOOL_DEFINITIONS: ToolDefinition[] = [
   } },
 ];
 
-// ---------- Exécution ----------
-
-const argsSchemas = {                                       // les arguments écrits par le LLM sont validés comme une requête
+const argsSchemas = {
   analyze_repo: z.object({ repoUrl: z.string().min(1).max(300) }),
   read_repo_file: z.object({ repoUrl: z.string().min(1).max(300), path: z.string().min(1).max(300) }),
   update_workload_profile: z.object({ fields: workloadProfileSchema }),
@@ -126,7 +119,7 @@ export type ToolName = keyof typeof argsSchemas;
 
 const shortRepo = (url: string) => { const { owner, repo } = parseRepoUrl(url); return `github.com/${owner}/${repo}`; };
 
-export async function executeTool(name: string, rawArgs: string, ctx: ToolContext): Promise<unknown> { // renvoie un objet JSON pour le LLM
+export async function executeTool(name: string, rawArgs: string, ctx: ToolContext): Promise<unknown> {
   if (!(name in argsSchemas)) return { error: `Unknown tool "${name}".` };
   let parsedJson: unknown;
   try {
@@ -135,7 +128,7 @@ export async function executeTool(name: string, rawArgs: string, ctx: ToolContex
     return { error: 'Arguments must be valid JSON.' };
   }
   const parsed = argsSchemas[name as ToolName].safeParse(parsedJson);
-  if (!parsed.success) {                                    // le LLM corrige souvent seul quand on lui dit ce qui ne va pas
+  if (!parsed.success) {
     return { error: 'Invalid arguments.', issues: parsed.error.issues.map((i) => `${i.path.join('.') || 'args'}: ${i.message}`) };
   }
 
@@ -162,7 +155,7 @@ export async function executeTool(name: string, rawArgs: string, ctx: ToolContex
       }
     }
   } catch (err) {
-    if (err instanceof RepoError) return { error: err.message }; // erreur GitHub lisible : le LLM l'explique à l'utilisateur
+    if (err instanceof RepoError) return { error: err.message };
     throw err;
   }
   return { error: 'Unhandled tool.' };
@@ -173,12 +166,12 @@ async function analyzeRepoTool({ repoUrl }: { repoUrl: string }, ctx: ToolContex
   const analysis = await analyzeRepo(repoUrl, repoSource);
   const sameRepo = ctx.state.repoUrl === repoUrl;
   ctx.state.profile = sameRepo
-    ? { ...analysis.suggestedProfile, ...ctx.state.profile } // même repo relu : les corrections déjà faites restent prioritaires
-    : { ...ctx.state.profile, ...analysis.suggestedProfile }; // nouveau repo : ses faits remplacent les anciens, le reste est gardé
+    ? { ...analysis.suggestedProfile, ...ctx.state.profile }
+    : { ...ctx.state.profile, ...analysis.suggestedProfile };
   ctx.state.repoUrl = repoUrl;
   ctx.state.facts = analysis.facts;
   return {
-    untrustedRepositoryData: {                              // contenu du repo = donnée, jamais des instructions
+    untrustedRepositoryData: {
       repo: analysis.repo, framework: analysis.framework, libraries: analysis.libraries,
       facts: analysis.facts, hardwareHints: analysis.hardwareHints, filesRead: analysis.filesRead,
     },
@@ -206,11 +199,11 @@ async function showConfigsTool(ranks: number[], ctx: ToolContext) {
   const items = ranks.map((rank) => ranking.items.find((item) => item.rank === rank)).filter((item) => item !== undefined);
   if (items.length === 0) return { error: `No configuration with these ranks. Available ranks: ${ranking.items.map((i) => i.rank).join(', ') || 'none'}.` };
 
-  const gpus = await prisma.gpu.findMany({ where: { id: { in: items.map((i) => i.gpuId) }, isActive: true } }); // prix relus en base
+  const gpus = await prisma.gpu.findMany({ where: { id: { in: items.map((i) => i.gpuId) }, isActive: true } });
   const cardItems: ConfigCardItem[] = [];
   for (const item of items) {
     const gpu = gpus.find((g) => g.id === item.gpuId);
-    if (!gpu) continue;                                     // GPU désactivé entre-temps : pas de carte
+    if (!gpu) continue;
     const price = toPrice(gpu.pricePerHour);
     cardItems.push({
       rank: item.rank, verdict: item.verdict,
@@ -226,14 +219,14 @@ async function showConfigsTool(ranks: number[], ctx: ToolContext) {
   return { shown: cardItems.map((i) => i.rank) };
 }
 
-function putCard(ctx: ToolContext, card: Card) {           // une seule carte de chaque type par réponse (la dernière gagne)
+function putCard(ctx: ToolContext, card: Card) {
   const index = ctx.cards.findIndex((c) => c.type === card.type);
   if (index >= 0) ctx.cards.splice(index, 1);
   ctx.cards.push(card);
   ctx.onCard(card);
 }
 
-export function profileCard(state: AgentState): Card {      // carte "ce que l'IA a compris", ajoutée si le profil a changé
+export function profileCard(state: AgentState): Card {
   const missing = missingFields(state.profile);
   if (state.profile.mode && state.profile.mode !== 'INFERENCE' && !state.profile.trainingTokens) missing.push('trainingTokens');
   return { type: 'profile', profile: state.profile, facts: state.facts, missing, repoUrl: state.repoUrl };

@@ -12,7 +12,7 @@ describe('mock AI advisor', () => {
     conversation: { id: 1, title: 'New conversation', repoUrl: null, messageCount: 0, createdAt: '', updatedAt: '' },
   });
 
-  beforeEach(() => localStorage.clear());                  // repart des données de démonstration
+  beforeEach(() => localStorage.clear());
 
   it('should rank configurations with the same formulas as the backend simulator', () => {
     const reply = buildMockReply(newRecord(), 'Fine-tune Llama 3.1 8B with QLoRA on 300M tokens');
@@ -24,11 +24,11 @@ describe('mock AI advisor', () => {
     expect(`${best.gpuCount} x ${best.gpu.name}`).toBe('4 x NVIDIA H100 80GB');
     expect(best.rentPath).toBe('/account/rentals/new?gpuId=1&quantity=4');
     expect(cheapest.gpuCount).toBe(1);
-    expect(cheapest.estimate.hours).toBe(10.78);           // même valeur que l'exemple du backend (~10.8 h)
+    expect(cheapest.estimate.hours).toBe(10.78);
     expect(cheapest.estimate.totalCost).toBe(34.5);
     expect(cheapest.estimate.memoryPerGpuGb).toBe(6.4);
     expect(reply.text).toContain('Best architecture: **Hopper**');
-    expect(configs.items.some((item) => item.gpu.manufacturer === 'AMD')).toBe(false); // MI300X : aucune unité libre
+    expect(configs.items.some((item) => item.gpu.manufacturer === 'AMD')).toBe(false);
   });
 
   it('should read a repository, then ask for the dataset size before simulating', () => {
@@ -43,7 +43,7 @@ describe('mock AI advisor', () => {
     expect(first.cards.find((card): card is RepliesCard => card.type === 'replies')!.options).toContain('300M tokens');
     expect(first.cards.some((card) => card.type === 'configs')).toBe(false);
 
-    const second = buildMockReply(record, '300M tokens');    // la conversation se souvient du dépôt
+    const second = buildMockReply(record, '300M tokens');
     expect(second.cards.some((card) => card.type === 'configs')).toBe(true);
     expect(second.text).toContain('artidoro/qlora');
   });
@@ -66,7 +66,7 @@ describe('mock AI advisor', () => {
     expect(record.messages.map((message) => message.role)).toEqual(['USER', 'ASSISTANT']);
     expect(record.conversation.title).toBe('Serve Mistral 7B for 50 concurrent users');
 
-    const error = await replayMockAgent(4, conversation.id, 'Hello', () => undefined).catch((err: unknown) => err); // autre utilisateur
+    const error = await replayMockAgent(4, conversation.id, 'Hello', () => undefined).catch((err: unknown) => err);
     expect(error).toEqual({ code: 'CONVERSATION_NOT_FOUND', message: 'Conversation not found.' });
   });
 
@@ -84,12 +84,12 @@ describe('mock AI advisor', () => {
     const list = await firstValueFrom(http.get<{ total: number }>(`${url}/conversations`, jane));
     expect(list.total).toBe(1);
 
-    const other = { headers: { Authorization: 'Bearer mock-token-1' } }; // l'admin ne voit pas la conversation de Jane
+    const other = { headers: { Authorization: 'Bearer mock-token-1' } };
     const error = (await firstValueFrom(http.get(`${url}/conversations/${created.conversation.id}`, other)).catch((err: unknown) => err)) as HttpErrorResponse;
     expect(error.error.error.code).toBe('CONVERSATION_NOT_FOUND');
 
     const deleted = await firstValueFrom(http.delete(`${url}/conversations/${created.conversation.id}`, { ...jane, observe: 'response' }));
     expect(deleted.status).toBe(204);
-    expect(await firstValueFrom(http.get(`${url}/status`).pipe()).catch((err: HttpErrorResponse) => err.status)).toBe(401); // sans token
+    expect(await firstValueFrom(http.get(`${url}/status`).pipe()).catch((err: HttpErrorResponse) => err.status)).toBe(401);
   });
 });

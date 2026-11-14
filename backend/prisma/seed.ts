@@ -1,14 +1,14 @@
-import 'dotenv/config';                                   // lit ADMIN_EMAIL / ADMIN_PASSWORD dans backend/.env
+import 'dotenv/config';
 import bcrypt from 'bcrypt';
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-const HOPPER = ['FP64', 'FP32', 'TF32', 'BF16', 'FP16', 'FP8', 'INT8']; // précisions supportées par génération
+const HOPPER = ['FP64', 'FP32', 'TF32', 'BF16', 'FP16', 'FP8', 'INT8'];
 const AMPERE = ['FP64', 'FP32', 'TF32', 'BF16', 'FP16', 'INT8'];
 const ADA = ['FP32', 'TF32', 'BF16', 'FP16', 'FP8', 'INT8'];
 
-const gpus = [                                              // mêmes GPU que les données fictives du frontend (ids 1 à 7)
+const gpus = [
   {
     name: 'NVIDIA H100 80GB', manufacturer: 'NVIDIA', architecture: 'Hopper',
     vramGb: 80, fp16Tflops: 989.5, pricePerHour: 3.2, totalUnits: 8,
@@ -28,7 +28,7 @@ const gpus = [                                              // mêmes GPU que le
     vramGb: 40, fp16Tflops: 312, pricePerHour: 1.29, totalUnits: 10,
     description: 'Balanced choice for mid-size training jobs and high-throughput inference.',
     memoryBandwidthGbs: 1555, fp8Tflops: null, supportedPrecisions: AMPERE,
-    softwareStack: 'CUDA' as const, computeCapability: '8.0', eccMemory: true, fastInterconnect: false, // version PCIe
+    softwareStack: 'CUDA' as const, computeCapability: '8.0', eccMemory: true, fastInterconnect: false,
   },
   {
     name: 'AMD Instinct MI300X', manufacturer: 'AMD', architecture: 'CDNA 3',
@@ -55,16 +55,16 @@ const gpus = [                                              // mêmes GPU que le
     name: 'NVIDIA V100 32GB', manufacturer: 'NVIDIA', architecture: 'Volta',
     vramGb: 32, fp16Tflops: 125, pricePerHour: 0.89, totalUnits: 4,
     description: 'Previous-generation GPU, retired from the catalog.',
-    isActive: false,                                        // désactivé : absent du catalogue public
-    memoryBandwidthGbs: 900, fp8Tflops: null, supportedPrecisions: ['FP64', 'FP32', 'FP16', 'INT8'], // pas de BF16
+    isActive: false,
+    memoryBandwidthGbs: 900, fp8Tflops: null, supportedPrecisions: ['FP64', 'FP32', 'FP16', 'INT8'],
     softwareStack: 'CUDA' as const, computeCapability: '7.0', eccMemory: true, fastInterconnect: true,
   },
 ];
 
 async function main() {
-  for (const gpu of gpus) {                                 // un par un pour garder les ids dans l'ordre
+  for (const gpu of gpus) {
     await prisma.gpu.upsert({
-      where: { name: gpu.name },                            // relancer le seed ne crée pas de doublon
+      where: { name: gpu.name },
       update: gpu,
       create: gpu,
     });
@@ -73,12 +73,12 @@ async function main() {
 
   const email = process.env.ADMIN_EMAIL;
   const password = process.env.ADMIN_PASSWORD;
-  if (!email || !password) {                                // le compte admin est optionnel
+  if (!email || !password) {
     console.warn('ADMIN_EMAIL or ADMIN_PASSWORD missing: admin account not created.');
     return;
   }
 
-  const passwordHash = await bcrypt.hash(password, 10);     // jamais de mot de passe en clair en base
+  const passwordHash = await bcrypt.hash(password, 10);
   await prisma.user.upsert({
     where: { email: email.toLowerCase() },
     update: { passwordHash, role: 'ADMIN', isBlocked: false },

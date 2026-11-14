@@ -8,7 +8,7 @@ import { SplitText } from '../../../shared/components/split-text/split-text';
 import { Reveal } from '../../../shared/directives/reveal';
 import { Tilt } from '../../../shared/directives/tilt';
 
-type ContactField = 'name' | 'email' | 'subject' | 'message'; // noms des champs du formulaire
+type ContactField = 'name' | 'email' | 'subject' | 'message';
 
 @Component({
   selector: 'app-contact-page',
@@ -20,20 +20,20 @@ export class ContactPage {
   private readonly destroyRef = inject(DestroyRef);
 
   protected readonly maxMessageLength = 2000;
-  protected readonly topics = ['Sales & pricing', 'Technical support', 'Partnership', 'Other']; // sujets proposés
+  protected readonly topics = ['Sales & pricing', 'Technical support', 'Partnership', 'Other'];
 
-  protected readonly infoCards = [                         // cartes d'information (entreprise fictive)
+  protected readonly infoCards = [
     { icon: 'mail', label: 'Email', value: 'hello@teramind.example' },
     { icon: 'clock', label: 'Response time', value: 'Within one business day' },
     { icon: 'pin', label: 'Office', value: 'Ariana, Tunisia' },
   ];
 
-  protected readonly faq = [                               // questions fréquentes (accordéon)
+  protected readonly faq = [
     { question: 'How quickly can I start using a GPU?', answer: 'Your GPU is ready at the start time you choose when booking, usually within a minute.' },
     { question: 'Can I cancel a rental?', answer: 'Yes. You can cancel for free from your account at any time before the rental starts.' },
     { question: 'Do you offer volume discounts?', answer: 'For rentals of 8 GPUs or more, or longer than 30 days, contact our sales team for a custom offer.' },
   ];
-  protected readonly openFaq = signal<number | null>(0);   // question ouverte (la première au départ)
+  protected readonly openFaq = signal<number | null>(0);
 
   protected readonly form = new FormGroup({
     name: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.maxLength(100)] }),
@@ -47,11 +47,11 @@ export class ContactPage {
 
   protected readonly sending = signal(false);
   protected readonly errorMessage = signal<string | null>(null);
-  protected readonly serverErrors = signal<Partial<Record<ContactField, string>>>({}); // erreurs renvoyées par l'API, par champ
-  protected readonly sent = signal<{ name: string; id: number } | null>(null); // message envoyé : affiche la confirmation
+  protected readonly serverErrors = signal<Partial<Record<ContactField, string>>>({});
+  protected readonly sent = signal<{ name: string; id: number } | null>(null);
 
   protected toggleFaq(index: number): void {
-    this.openFaq.update((open) => (open === index ? null : index)); // ouvre ou ferme la question
+    this.openFaq.update((open) => (open === index ? null : index));
   }
 
   protected chooseTopic(topic: string): void {
@@ -59,7 +59,7 @@ export class ContactPage {
     this.form.controls.subject.markAsTouched();
   }
 
-  protected fieldError(field: ContactField): string | null { // message d'erreur à afficher sous un champ
+  protected fieldError(field: ContactField): string | null {
     const control = this.form.controls[field];
     if (control.touched && control.invalid) {
       switch (field) {
@@ -74,7 +74,7 @@ export class ContactPage {
 
   protected submit(): void {
     if (this.form.invalid) {
-      this.form.markAllAsTouched();                        // affiche toutes les erreurs
+      this.form.markAllAsTouched();
       return;
     }
     const value = this.form.getRawValue();
@@ -93,7 +93,7 @@ export class ContactPage {
         error: (err: unknown) => {
           const errors: Partial<Record<ContactField, string>> = {};
           for (const detail of getErrorDetails(err)) {
-            errors[detail.field as ContactField] = detail.message; // place chaque erreur sous son champ
+            errors[detail.field as ContactField] = detail.message;
           }
           this.serverErrors.set(errors);
           this.errorMessage.set(getErrorMessage(err));
@@ -103,7 +103,7 @@ export class ContactPage {
   }
 
   protected sendAnother(): void {
-    this.form.reset();                                     // vide le formulaire
-    this.sent.set(null);                                   // revient au formulaire
+    this.form.reset();
+    this.sent.set(null);
   }
 }

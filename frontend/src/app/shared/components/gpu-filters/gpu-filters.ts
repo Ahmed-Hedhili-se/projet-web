@@ -10,21 +10,21 @@ import { toDateTimeLocal } from '../../utils/date-time';
   imports: [ReactiveFormsModule],
   templateUrl: './gpu-filters.html',
 })
-export class GpuFilters {                                  // formulaire de filtres du catalogue
-  readonly manufacturers = input<string[]>([]);            // options de la liste « Manufacturer »
-  readonly filtersChange = output<GpuQuery>();             // émis à chaque changement de filtre
+export class GpuFilters {
+  readonly manufacturers = input<string[]>([]);
+  readonly filtersChange = output<GpuQuery>();
 
-  protected readonly vramOptions = [16, 24, 40, 80, 128];  // VRAM minimale proposée (Go)
-  protected readonly priceOptions = [1, 2, 3, 5];          // prix maximal proposé ($ / heure)
+  protected readonly vramOptions = [16, 24, 40, 80, 128];
+  protected readonly priceOptions = [1, 2, 3, 5];
   protected readonly sortOptions: { value: GpuSort; label: string }[] = [
     { value: 'price_asc', label: 'Price: low to high' },
     { value: 'price_desc', label: 'Price: high to low' },
     { value: 'vram_desc', label: 'Memory: high to low' },
     { value: 'name_asc', label: 'Name: A to Z' },
   ];
-  protected readonly minStartDate = toDateTimeLocal(new Date()); // on ne peut pas choisir une date passée
+  protected readonly minStartDate = toDateTimeLocal(new Date());
 
-  protected readonly form = new FormGroup({                // un contrôle par filtre
+  protected readonly form = new FormGroup({
     search: new FormControl('', { nonNullable: true }),
     manufacturer: new FormControl('', { nonNullable: true }),
     minVram: new FormControl('', { nonNullable: true }),
@@ -37,15 +37,15 @@ export class GpuFilters {                                  // formulaire de filt
 
   constructor() {
     this.form.valueChanges
-      .pipe(debounceTime(300), takeUntilDestroyed())       // attend 300 ms après la dernière frappe
+      .pipe(debounceTime(300), takeUntilDestroyed())
       .subscribe(() => this.filtersChange.emit(this.toQuery()));
   }
 
   protected reset(): void {
-    this.form.reset();                                     // remet les valeurs initiales (et émet un changement)
+    this.form.reset();
   }
 
-  private toQuery(): GpuQuery {                            // valeurs du formulaire → paramètres de GET /gpus
+  private toQuery(): GpuQuery {
     const value = this.form.getRawValue();
     const hasPeriod = value.startDate !== '' && value.durationHours !== null && value.durationHours > 0;
 
@@ -55,7 +55,7 @@ export class GpuFilters {                                  // formulaire de filt
       minVram: value.minVram ? Number(value.minVram) : undefined,
       maxPrice: value.maxPrice ? Number(value.maxPrice) : undefined,
       available: value.available || undefined,
-      startDate: hasPeriod ? new Date(value.startDate).toISOString() : undefined, // envoyés seulement s'ils sont remplis tous les deux
+      startDate: hasPeriod ? new Date(value.startDate).toISOString() : undefined,
       durationHours: hasPeriod ? (value.durationHours ?? undefined) : undefined,
       sort: value.sort,
     };

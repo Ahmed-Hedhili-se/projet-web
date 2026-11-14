@@ -1,14 +1,14 @@
 export interface ErrorDetail {
-  field: string;                                            // champ concerné, ex. "email"
-  message: string;                                          // message en anglais
+  field: string;
+  message: string;
 }
 
-export class AppError extends Error {                       // erreur "prévue", transformée en JSON par errorHandler
+export class AppError extends Error {
   constructor(
-    public readonly status: number,                         // code HTTP, ex. 404
-    public readonly code: string,                           // code d'erreur de API.md, ex. "GPU_NOT_FOUND"
-    message: string,                                        // message lisible en anglais
-    public readonly details?: ErrorDetail[],                // seulement pour VALIDATION_ERROR
+    public readonly status: number,
+    public readonly code: string,
+    message: string,
+    public readonly details?: ErrorDetail[],
   ) {
     super(message);
   }

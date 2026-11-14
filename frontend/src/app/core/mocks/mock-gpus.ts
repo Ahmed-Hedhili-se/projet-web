@@ -1,8 +1,8 @@
 import { Gpu } from '../models/gpu';
 
-const created = '2026-10-01T08:00:00.000Z';                // même date de création pour tous les exemples
+const created = '2026-10-01T08:00:00.000Z';
 
-export const MOCK_GPUS: Gpu[] = [                          // données fictives au format de docs/API.md (ids cohérents avec ses exemples)
+export const MOCK_GPUS: Gpu[] = [
   {
     id: 1, name: 'NVIDIA H100 80GB', manufacturer: 'NVIDIA', architecture: 'Hopper',
     vramGb: 80, fp16Tflops: 989.5, pricePerHour: 3.2, totalUnits: 8, availableUnits: 6,
@@ -43,27 +43,27 @@ export const MOCK_GPUS: Gpu[] = [                          // données fictives 
     id: 7, name: 'NVIDIA V100 32GB', manufacturer: 'NVIDIA', architecture: 'Volta',
     vramGb: 32, fp16Tflops: 125, pricePerHour: 0.89, totalUnits: 4, availableUnits: 4,
     description: 'Previous-generation GPU, retired from the catalog.',
-    isActive: false, createdAt: created, updatedAt: created, // désactivé : ne doit pas apparaître dans le catalogue
+    isActive: false, createdAt: created, updatedAt: created,
   },
 ];
 
-const GPUS_KEY = 'teramind_mock_gpus';                    // catalogue modifiable par l'admin, gardé dans le navigateur (mock seulement)
-let memoryGpus: Gpu[] | null = null;                       // secours si le localStorage est indisponible
+const GPUS_KEY = 'teramind_mock_gpus';
+let memoryGpus: Gpu[] | null = null;
 
-export function allMockGpus(): Gpu[] {                     // catalogue actuel (actifs et désactivés)
+export function allMockGpus(): Gpu[] {
   try {
     const json = localStorage.getItem(GPUS_KEY);
-    return json ? (JSON.parse(json) as Gpu[]) : structuredClone(MOCK_GPUS); // vide = catalogue de départ
+    return json ? (JSON.parse(json) as Gpu[]) : structuredClone(MOCK_GPUS);
   } catch {
     return memoryGpus ?? structuredClone(MOCK_GPUS);
   }
 }
 
-export function saveMockGpus(gpus: Gpu[]): void {          // enregistre le catalogue (survit au rafraîchissement)
+export function saveMockGpus(gpus: Gpu[]): void {
   memoryGpus = gpus;
   try {
     localStorage.setItem(GPUS_KEY, JSON.stringify(gpus));
-  } catch {                                                // stockage indisponible : le catalogue reste en mémoire
+  } catch {
     return;
   }
 }

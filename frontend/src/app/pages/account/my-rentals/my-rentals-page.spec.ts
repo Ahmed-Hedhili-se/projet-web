@@ -33,7 +33,7 @@ describe('MyRentalsPage', () => {
     expect(compiled.textContent).toContain('NVIDIA H100 80GB');
 
     const cancelButton = [...compiled.querySelectorAll('button')].find((button) => button.textContent?.includes('Cancel rental'));
-    cancelButton?.click();                                 // ouvre la fenêtre de confirmation
+    cancelButton?.click();
     await fixture.whenStable();
     expect(compiled.textContent).toContain('Cancel this rental?');
 

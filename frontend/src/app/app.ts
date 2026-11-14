@@ -6,15 +6,15 @@ import { Navbar } from './layout/navbar/navbar';
 import { SiteBackground } from './layout/site-background/site-background';
 
 @Component({
-  imports: [RouterOutlet, Navbar, Footer, SiteBackground], // composants utilisés dans le layout
+  imports: [RouterOutlet, Navbar, Footer, SiteBackground],
   selector: 'app-root',
   styleUrl: './app.css',
   templateUrl: './app.html',
 })
-export class App {                                         // composant racine : layout commun à toutes les pages
+export class App {
   private readonly smoothScroll = inject(SmoothScroll);
 
   constructor() {
-    afterNextRender(() => void this.smoothScroll.start()); // défilement adouci, une fois la page affichée
+    afterNextRender(() => void this.smoothScroll.start());
   }
 }

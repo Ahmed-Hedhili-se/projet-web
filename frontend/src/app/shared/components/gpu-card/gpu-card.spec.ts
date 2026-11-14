@@ -7,13 +7,13 @@ describe('GpuCard', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [GpuCard],
-      providers: [provideRouter([])],                      // la carte utilise routerLink
+      providers: [provideRouter([])],
     }).compileComponents();
   });
 
   it('should show the GPU name, price and availability', async () => {
     const fixture = TestBed.createComponent(GpuCard);
-    fixture.componentRef.setInput('gpu', MOCK_GPUS[0]);    // NVIDIA H100 80GB, 6 unités libres sur 8
+    fixture.componentRef.setInput('gpu', MOCK_GPUS[0]);
     await fixture.whenStable();
     const text = (fixture.nativeElement as HTMLElement).textContent ?? '';
     expect(text).toContain('NVIDIA H100 80GB');
@@ -23,7 +23,7 @@ describe('GpuCard', () => {
 
   it('should show "Fully booked" when no unit is available', async () => {
     const fixture = TestBed.createComponent(GpuCard);
-    fixture.componentRef.setInput('gpu', MOCK_GPUS[3]);    // AMD Instinct MI300X, 0 unité libre
+    fixture.componentRef.setInput('gpu', MOCK_GPUS[3]);
     await fixture.whenStable();
     expect((fixture.nativeElement as HTMLElement).textContent).toContain('Fully booked');
   });

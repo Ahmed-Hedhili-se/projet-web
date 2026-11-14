@@ -5,10 +5,10 @@ import { RentalStatus } from '../../../core/models/rental';
   selector: 'app-status-badge',
   templateUrl: './status-badge.html',
 })
-export class StatusBadge {                                 // statut d'une location (UPCOMING, ACTIVE, COMPLETED, CANCELLED)
+export class StatusBadge {
   readonly status = input.required<RentalStatus>();
 
-  protected readonly labels: Record<RentalStatus, string> = { // texte affiché pour chaque statut
+  protected readonly labels: Record<RentalStatus, string> = {
     UPCOMING: 'Upcoming',
     ACTIVE: 'Active',
     COMPLETED: 'Completed',

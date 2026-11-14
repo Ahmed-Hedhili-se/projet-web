@@ -1,21 +1,21 @@
 import { z } from 'zod';
 
-export const isoDateField = z                               // date ISO 8601, ex. "2026-11-02T09:00:00.000Z"
+export const isoDateField = z
   .iso.datetime({ offset: true, error: 'Invalid date (ISO 8601 expected).' })
   .transform((value) => new Date(value));
 
-export const durationHoursField = z.coerce                  // la query arrive en texte : "48" → 48
+export const durationHoursField = z.coerce
   .number({ error: 'Duration must be a number.' })
   .int({ error: 'Duration must be a whole number of hours.' })
   .min(1, { error: 'Duration must be at least 1 hour.' })
   .max(720, { error: 'Duration must be at most 720 hours (30 days).' });
 
-export const periodQuerySchema = z.object({                 // période facultative pour calculer availableUnits
+export const periodQuerySchema = z.object({
   startDate: isoDateField.optional(),
   durationHours: durationHoursField.optional(),
 });
 
-export const gpuListQuerySchema = periodQuerySchema.extend({ // query de GET /gpus (tout est optionnel)
+export const gpuListQuerySchema = periodQuerySchema.extend({
   search: z.string().trim().max(100, { error: 'Search must be at most 100 characters.' }).optional(),
   manufacturer: z.string().trim().max(50, { error: 'Manufacturer must be at most 50 characters.' }).optional(),
   minVram: z.coerce.number({ error: 'Minimum VRAM must be a number.' })
@@ -32,7 +32,7 @@ export const gpuListQuerySchema = periodQuerySchema.extend({ // query de GET /gp
     .default('price_asc'),
 });
 
-export const idParamSchema = z.object({                     // paramètre :id d'une URL
+export const idParamSchema = z.object({
   id: z.coerce.number({ error: 'Id must be a number.' })
     .int({ error: 'Id must be a whole number.' })
     .positive({ error: 'Id must be positive.' }),

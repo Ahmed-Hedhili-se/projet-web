@@ -1,36 +1,36 @@
-export type AgentRole = 'USER' | 'ASSISTANT';             // objets de docs/API.md, section 10 (conseiller IA)
+export type AgentRole = 'USER' | 'ASSISTANT';
 export type Verdict = 'BEST_CHOICE' | 'CHEAPEST' | 'FASTEST' | 'ALTERNATIVE';
 export type AgentWorkloadMode = 'PRETRAINING' | 'FULL_FINETUNE' | 'LORA' | 'QLORA' | 'INFERENCE';
 export type AgentPrecision = 'FP32' | 'BF16' | 'FP16' | 'FP8' | 'INT8' | 'INT4';
 
-export interface AgentStatus {                             // réponse de GET /agent/status
-  available: boolean;                                      // false → afficher le formulaire de secours
+export interface AgentStatus {
+  available: boolean;
   model: string;
   dailyMessageLimit: number;
   messagesUsedToday: number;
 }
 
-export interface AgentConversation {                       // objet « AgentConversation »
+export interface AgentConversation {
   id: number;
-  title: string;                                           // "New conversation" puis le début du premier message
-  repoUrl: string | null;                                  // dernier dépôt analysé
+  title: string;
+  repoUrl: string | null;
   messageCount: number;
   createdAt: string;
   updatedAt: string;
 }
 
-export interface AgentStep {                               // étape de travail de l'agent (« 3 steps »)
+export interface AgentStep {
   tool: string;
   label: string;
 }
 
-export interface ProfileFact {                             // fait trouvé dans le dépôt, avec le fichier qui le prouve
+export interface ProfileFact {
   field: string;
   value: string | number | boolean;
   evidence: string;
 }
 
-export interface WorkloadProfile {                         // ce que l'IA a compris du travail (tous les champs sont optionnels)
+export interface WorkloadProfile {
   mode?: AgentWorkloadMode;
   paramsBillions?: number;
   activeParamsBillions?: number;
@@ -45,61 +45,61 @@ export interface WorkloadProfile {                         // ce que l'IA a comp
   flashAttention?: 'NONE' | 'FA2' | 'FA3';
 }
 
-export interface ProfileCard {                             // carte « profile »
+export interface ProfileCard {
   type: 'profile';
   repoUrl: string | null;
   profile: WorkloadProfile;
   facts: ProfileFact[];
-  missing: string[];                                       // mode, paramsBillions, precision, trainingTokens
+  missing: string[];
 }
 
-export interface ConfigItem {                              // une configuration recommandée
+export interface ConfigItem {
   rank: number;
   verdict: Verdict;
   gpu: { id: number; name: string; manufacturer: string; architecture: string; vramGb: number; pricePerHour: number };
   gpuCount: number;
-  pricePerHour: number;                                    // prix de la configuration entière
+  pricePerHour: number;
   availableUnits: number;
   estimate: {
     memoryRequiredGb: number;
     memoryPerGpuGb: number;
-    hours: number | null;                                  // entraînement
+    hours: number | null;
     totalCost: number | null;
-    tokensPerSecond: number | null;                        // inférence
+    tokensPerSecond: number | null;
     costPerMillionTokens: number | null;
   };
-  reasons: string[];                                       // phrases en anglais, affichées telles quelles
+  reasons: string[];
   warnings: string[];
-  rentPath: string;                                        // ex. /account/rentals/new?gpuId=1&quantity=8
+  rentPath: string;
 }
 
-export interface ConfigsCard {                             // carte « configs » (1 à 3 configurations)
+export interface ConfigsCard {
   type: 'configs';
   items: ConfigItem[];
 }
 
-export interface RepliesCard {                             // carte « replies » : boutons de réponse rapide
+export interface RepliesCard {
   type: 'replies';
   options: string[];
 }
 
 export type AgentCard = ProfileCard | ConfigsCard | RepliesCard;
 
-export interface AgentMessage {                            // objet « AgentMessage »
+export interface AgentMessage {
   id: number;
   role: AgentRole;
-  content: string;                                         // Markdown
+  content: string;
   steps: AgentStep[];
-  cards: AgentCard[];                                      // dans l'ordre : profile, configs, replies
+  cards: AgentCard[];
   createdAt: string;
 }
 
-export interface AgentError {                              // erreur renvoyée par l'agent (avant ou pendant le flux)
+export interface AgentError {
   code: string;
   message: string;
 }
 
-export type AgentEvent =                                   // événements du flux SSE de POST /agent/conversations/:id/messages
+export type AgentEvent =
   | { event: 'user_message'; data: { message: AgentMessage } }
   | { event: 'step'; data: AgentStep }
   | { event: 'card'; data: { card: AgentCard } }

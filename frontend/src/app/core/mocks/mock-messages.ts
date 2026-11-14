@@ -1,4 +1,4 @@
-export interface MockContactMessage {                      // objet « ContactMessage » de docs/API.md (table contact_messages)
+export interface MockContactMessage {
   id: number;
   name: string;
   email: string;
@@ -8,14 +8,14 @@ export interface MockContactMessage {                      // objet « ContactMe
   createdAt: string;
 }
 
-const MESSAGES_KEY = 'teramind_mock_messages';            // messages fictifs, gardés dans le navigateur
+const MESSAGES_KEY = 'teramind_mock_messages';
 const HOUR_MS = 60 * 60 * 1000;
-let memoryMessages: MockContactMessage[] | null = null;    // secours si le localStorage est indisponible
+let memoryMessages: MockContactMessage[] | null = null;
 
 export function allMockMessages(): MockContactMessage[] {
   try {
     const json = localStorage.getItem(MESSAGES_KEY);
-    return json ? (JSON.parse(json) as MockContactMessage[]) : seedMessages(); // vide = messages d'exemple
+    return json ? (JSON.parse(json) as MockContactMessage[]) : seedMessages();
   } catch {
     return memoryMessages ?? seedMessages();
   }
@@ -25,16 +25,16 @@ export function saveMockMessages(messages: MockContactMessage[]): void {
   memoryMessages = messages;
   try {
     localStorage.setItem(MESSAGES_KEY, JSON.stringify(messages));
-  } catch {                                                // stockage indisponible : la liste reste en mémoire
+  } catch {
     return;
   }
 }
 
-export function addMockMessage(message: Omit<MockContactMessage, 'id' | 'isRead' | 'createdAt'>): MockContactMessage { // POST /contact
+export function addMockMessage(message: Omit<MockContactMessage, 'id' | 'isRead' | 'createdAt'>): MockContactMessage {
   const messages = allMockMessages();
   const saved: MockContactMessage = {
     ...message,
-    id: Math.max(12, ...messages.map((item) => item.id)) + 1, // continue après l'exemple n° 12 de docs/API.md
+    id: Math.max(12, ...messages.map((item) => item.id)) + 1,
     isRead: false,
     createdAt: new Date().toISOString(),
   };
@@ -42,7 +42,7 @@ export function addMockMessage(message: Omit<MockContactMessage, 'id' | 'isRead'
   return saved;
 }
 
-function seedMessages(): MockContactMessage[] {            // quelques messages d'exemple, des plus anciens aux plus récents
+function seedMessages(): MockContactMessage[] {
   const ago = (hours: number) => new Date(Date.now() - hours * HOUR_MS).toISOString();
   return [
     { id: 7, name: 'Nadia Karim', email: 'nadia.karim@example.com', subject: 'Invoice for October', message: 'Hello, could you send me the invoice for my October rentals? Thanks.', isRead: true, createdAt: ago(400) },
