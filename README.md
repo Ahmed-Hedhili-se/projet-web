@@ -201,6 +201,8 @@ npm run build      # production build in frontend/dist/
 - **Person A** owns `backend/` and `docker-compose.yml`.
 - **Person B** owns `frontend/`.
 - Everyone commits and pushes directly to `main`; run `git pull --rebase origin main` before pushing.
+- Tasks are tracked on a GitHub Projects board: [TeraMind – Projet Web](https://github.com/users/ademyoussfi52-lang/projects/1)
+  (steps B1–B9 for the backend, F1–F10 for the frontend, with their status and owner).
 - `docs/API.md` is the contract between frontend and backend: any change is discussed first.
 - Secrets live in `backend/.env`, which is never committed.
 
