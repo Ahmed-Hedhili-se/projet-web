@@ -346,16 +346,16 @@ Une étape à la fois, testée puis validée avant de passer à la suivante.
 ### Frontend — personne B
 | Étape | Contenu | Terminée quand… |
 |---|---|---|
-| F1 | Projet Angular (standalone, strict), Tailwind avec tokens de DESIGN.md, routes, Navbar, Footer, page 404 | `npm start` affiche le layout responsive |
-| F2 | Home et About | Pages complètes et responsives |
-| F3 | Modèles TypeScript, `GpuService`, catalogue avec filtres, fiche GPU | Le catalogue s'affiche à partir de l'API |
-| F4 | Recommandation | Le formulaire affiche le GPU conseillé et les alternatives |
-| F5 | Contact | Message envoyé, confirmation affichée |
-| F6 | Login, Register, `AuthService`, interceptors, guards | Connexion, déconnexion et routes protégées OK |
-| F7 | Espace utilisateur : nouvelle location, mes locations, profil | Location créée puis annulée depuis l'interface |
-| F8 | Espace admin : dashboard, GPU, utilisateurs, locations, messages | Toutes les actions admin fonctionnent |
-| F9 | Motion & 3D (`docs/DESIGN-MOTION.md`) : planète Three.js synchronisée avec le réseau neuronal (`SceneSync`), défilement Lenis, cartes en verre | Planète grande sur Home et petite ailleurs, réseau relié au curseur conservé, versions légères (mobile, animations réduites, sans WebGL) |
-| F10 | Conseiller IA sur `/recommend` (après B9 : attend la route dans API.md) : lien GitHub puis conversation, formulaire de F4 gardé en secours | L'utilisateur colle un lien et obtient un classement de configurations |
+| F1 ✅ | Projet Angular (standalone, strict), Tailwind avec tokens de DESIGN.md, routes, Navbar, Footer, page 404 | `npm start` affiche le layout responsive |
+| F2 ✅ | Home et About | Pages complètes et responsives |
+| F3 ✅ | Modèles TypeScript, `GpuService`, catalogue avec filtres, fiche GPU | Le catalogue s'affiche à partir de l'API |
+| F4 ✅ | Recommandation | Le formulaire affiche le GPU conseillé et les alternatives |
+| F5 ✅ | Contact | Message envoyé, confirmation affichée |
+| F6 ✅ | Login, Register, `AuthService`, interceptors, guards | Connexion, déconnexion et routes protégées OK |
+| F7 ✅ | Espace utilisateur : nouvelle location, mes locations, profil | Location créée puis annulée depuis l'interface |
+| F8 ✅ | Espace admin : dashboard, GPU, utilisateurs, locations, messages | Toutes les actions admin fonctionnent |
+| F9 ✅ | Motion & 3D (`docs/DESIGN-MOTION.md`) : planète Three.js synchronisée avec le réseau neuronal (`SceneSync`), défilement Lenis, cartes en verre | Planète grande sur Home et petite ailleurs, réseau relié au curseur conservé, versions légères (mobile, animations réduites, sans WebGL) |
+| F10 ✅ | Conseiller IA sur `/recommend` (routes de API.md, section 10) : lien GitHub puis conversation, formulaire de F4 gardé en secours | L'utilisateur colle un lien et obtient un classement de configurations |
 
 Tant qu'une route backend n'est pas prête, le frontend peut utiliser des données fictives
 qui respectent **exactement** le format de API.md.

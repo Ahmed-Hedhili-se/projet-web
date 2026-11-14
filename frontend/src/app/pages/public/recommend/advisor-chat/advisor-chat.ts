@@ -6,6 +6,8 @@ import { getErrorMessage } from '../../../../core/models/api-error';
 import { AgentService } from '../../../../core/services/agent-service';
 import { SmoothScroll } from '../../../../core/services/smooth-scroll';
 import { Alert } from '../../../../shared/components/alert/alert';
+import { ConfirmDialog } from '../../../../shared/components/confirm-dialog/confirm-dialog';
+import { AdvisorHistory } from '../advisor-history/advisor-history';
 import { AdvisorMessage } from '../advisor-message/advisor-message';
 
 const REPO_URL = /^(https?:\/\/)?(www\.)?github\.com\/[\w.-]+\/[\w.-]+\/?$/i; // https://github.com/<owner>/<repo>
@@ -17,7 +19,7 @@ function isAgentError(err: unknown): err is AgentError {   // erreur de l'agent 
 
 @Component({
   selector: 'app-advisor-chat',                            // conversation avec le conseiller IA (docs/API.md, section 10)
-  imports: [Alert, AdvisorMessage],
+  imports: [Alert, ConfirmDialog, AdvisorHistory, AdvisorMessage],
   templateUrl: './advisor-chat.html',
 })
 export class AdvisorChat implements OnInit {
@@ -46,6 +48,12 @@ export class AdvisorChat implements OnInit {
   protected readonly draft = signal('');                   // champ du message
   protected readonly used = signal(0);                     // messages envoyés aujourd'hui
 
+  protected readonly history = signal<AgentConversation[]>([]); // mes conversations, la plus récente d'abord
+  protected readonly loadingHistory = signal(true);
+  protected readonly opening = signal(false);              // conversation de l'historique en cours de chargement
+  protected readonly toDelete = signal<AgentConversation | null>(null);
+  protected readonly deleting = signal(false);
+
   protected readonly remaining = computed(() => Math.max(0, this.status().dailyMessageLimit - this.used()));
   protected readonly canSend = computed(() => !this.sending() && this.remaining() > 0 && (this.draft().trim() !== '' || this.repo().trim() !== ''));
 
@@ -60,6 +68,59 @@ export class AdvisorChat implements OnInit {
 
   ngOnInit(): void {
     this.used.set(this.status().messagesUsedToday);
+    this.refreshHistory();
+  }
+
+  private refreshHistory(): void {                         // GET /agent/conversations
+    this.agentService.list().subscribe({
+      next: (response) => {
+        this.history.set(response.conversations);
+        this.loadingHistory.set(false);
+      },
+      error: () => this.loadingHistory.set(false),         // l'historique n'est pas bloquant : le chat reste utilisable
+    });
+  }
+
+  protected openConversation(conversation: AgentConversation): void { // rouvre une conversation de l'historique
+    if (this.sending() || this.opening() || conversation.id === this.conversation()?.id) {
+      return;
+    }
+    this.opening.set(true);
+    this.errorMessage.set(null);
+    this.agentService.get(conversation.id).subscribe({     // GET /agent/conversations/:id : messages et cartes
+      next: (response) => {
+        this.conversation.set(response.conversation);
+        this.messages.set(response.messages);
+        this.opening.set(false);
+      },
+      error: (err: unknown) => {
+        this.errorMessage.set(getErrorMessage(err));
+        this.opening.set(false);
+      },
+    });
+  }
+
+  protected confirmDelete(): void {                        // DELETE /agent/conversations/:id
+    const conversation = this.toDelete();
+    if (!conversation) {
+      return;
+    }
+    this.deleting.set(true);
+    this.agentService.remove(conversation.id).subscribe({
+      next: () => {
+        this.history.update((list) => list.filter((item) => item.id !== conversation.id));
+        if (this.conversation()?.id === conversation.id) {
+          this.newConversation();                          // la conversation ouverte vient d'être supprimée
+        }
+        this.deleting.set(false);
+        this.toDelete.set(null);
+      },
+      error: (err: unknown) => {
+        this.errorMessage.set(getErrorMessage(err));
+        this.deleting.set(false);
+        this.toDelete.set(null);
+      },
+    });
   }
 
   protected useExample(example: { message: string; repo: string }): void { // remplit les champs, sans envoyer
@@ -108,6 +169,7 @@ export class AdvisorChat implements OnInit {
     } finally {
       this.sending.set(false);
       this.pending.set(null);
+      this.refreshHistory();                               // nouveau titre, nouvelle date, nouvel ordre
     }
   }
 

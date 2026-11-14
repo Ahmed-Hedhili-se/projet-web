@@ -55,13 +55,13 @@ export class HomePage {
   ];
 
   protected readonly statement =                           // grande phrase qui s'éclaire en défilant
-    'Every AI model has a perfect GPU. TeraMind finds it in seconds, books it in one click, and bills only the hours you actually use.';
+    'Every AI model has a perfect GPU. Our AI advisor finds it, you book it in one click, and you pay only for the hours you actually use.';
 
   protected readonly features: Feature[] = [
     {
       icon: 'target',
-      title: 'Right-sized recommendations',
-      text: 'Describe your model and we suggest the GPU that fits its memory needs and your budget.',
+      title: 'An AI advisor that reads your code',
+      text: 'Share your GitHub repository or describe your workload. The advisor simulates every configuration and explains its choice.',
     },
     {
       icon: 'clock',
@@ -82,7 +82,7 @@ export class HomePage {
   ];
 
   protected readonly steps: Step[] = [
-    { number: '01', title: 'Describe your model', text: 'Model type, size, training or inference, and your hourly budget.' },
+    { number: '01', title: 'Ask the AI advisor', text: 'Paste your GitHub repository or describe your workload to get the best GPU configuration.' },
     { number: '02', title: 'Book your GPU', text: 'Pick a start date and a duration in hours. The price is shown instantly.' },
     { number: '03', title: 'Start computing', text: 'Your GPU is ready at the scheduled time. Cancel for free before it starts.' },
   ];

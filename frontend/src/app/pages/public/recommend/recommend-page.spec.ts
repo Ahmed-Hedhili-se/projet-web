@@ -58,4 +58,29 @@ describe('RecommendPage', () => {
     expect(compiled.querySelector('a[href="/account/rentals/new?gpuId=1&quantity=4"]')?.textContent).toContain('Rent this');
     expect(compiled.textContent).toContain('What if I use FP8?');    // réponses rapides
   });
+
+  it('should keep the conversation in the history, reopen it and delete it', async () => {
+    const { fixture, compiled } = await setup(true);
+    await until(fixture, () => compiled.querySelector('textarea') !== null);
+    clickButton(compiled, 'Serve Mistral 7B');
+    fixture.detectChanges();
+    clickButton(compiled, 'Send');
+    await until(fixture, () => compiled.querySelector('app-advisor-history li button') !== null); // la conversation arrive dans l'historique
+    expect(compiled.querySelector('app-advisor-history')?.textContent).toContain('Serve Mistral 7B for 50 concurrent users');
+
+    clickButton(compiled, 'New conversation');
+    fixture.detectChanges();
+    expect(compiled.textContent).toContain('What do you want to run?'); // chat vide
+
+    (compiled.querySelector('app-advisor-history li button') as HTMLButtonElement).click(); // rouvre la conversation
+    await until(fixture, () => compiled.querySelectorAll('app-advisor-message').length === 2);
+    expect(compiled.textContent).toContain('Best architecture');
+
+    (compiled.querySelector('app-advisor-history button[aria-label^="Delete"]') as HTMLButtonElement).click();
+    fixture.detectChanges();
+    expect(compiled.textContent).toContain('Delete this conversation?');
+    clickButton(compiled, 'Delete');                       // confirmation
+    await until(fixture, () => compiled.textContent?.includes('No conversation yet') ?? false);
+    expect(compiled.textContent).toContain('What do you want to run?'); // la conversation ouverte a été supprimée
+  });
 });

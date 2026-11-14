@@ -1,0 +1,47 @@
+<aside class="animate-fade-up rounded-card border border-steel bg-carbon p-3 lg:sticky lg:top-16" aria-label="Conversation history">
+  <div class="flex gap-2">
+    <button type="button" (click)="created.emit()" [disabled]="disabled()" class="btn-outline flex-1 justify-center disabled:opacity-40">New conversation</button>
+    <button type="button" (click)="open.set(!open())" [attr.aria-expanded]="open()" class="btn-outline lg:hidden">   <!-- mobile : ouvre ou referme la liste -->
+      History ({{ conversations().length }})
+    </button>
+  </div>
+
+  <div class="mt-3 lg:block" [class.hidden]="!open()">                                         <!-- toujours visible sur grand écran -->
+    <p class="px-3 pb-2 text-utility-nav font-semibold text-ash">History</p>
+    @if (loading()) {
+      <div class="flex flex-col gap-2">                                                        <!-- squelettes pendant le chargement -->
+        @for (item of [1, 2, 3]; track item) {
+          <div class="h-12 animate-pulse rounded-[14px] bg-obsidian"></div>
+        }
+      </div>
+    } @else {
+      <ul class="flex max-h-[50vh] flex-col gap-1 overflow-y-auto" data-lenis-prevent>           <!-- longue liste : défile dans le panneau -->
+        @for (conversation of conversations(); track conversation.id) {
+          <li class="flex items-center rounded-[14px] transition-colors duration-300" [class]="conversation.id === activeId() ? 'bg-obsidian' : 'hover:bg-obsidian/60'">
+            <button
+              type="button"
+              (click)="select(conversation)"
+              [disabled]="disabled()"
+              [attr.aria-current]="conversation.id === activeId() ? 'true' : null"
+              class="min-w-0 flex-1 px-3 py-2 text-left disabled:opacity-40"
+            >
+              <span class="block truncate text-body" [class]="conversation.id === activeId() ? 'text-porcelain' : 'text-porcelain/80'">{{ conversation.title }}</span>
+              <span class="block text-utility-nav text-ash">{{ timeAgo(conversation.updatedAt) }} · {{ conversation.messageCount }} message{{ conversation.messageCount === 1 ? '' : 's' }}</span>
+            </button>
+            <button
+              type="button"
+              (click)="removed.emit(conversation)"
+              [disabled]="disabled()"
+              [attr.aria-label]="'Delete the conversation ' + conversation.title"
+              class="mr-1 flex size-8 shrink-0 items-center justify-center rounded-full text-ash transition-colors duration-300 hover:bg-carbon hover:text-porcelain disabled:opacity-40"
+            >
+              <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M5 7h14M10 7V5h4v2m-7 0 1 12h8l1-12M10 11v5m4-5v5" /></svg>
+            </button>
+          </li>
+        } @empty {
+          <li class="px-3 py-3 text-utility-nav text-ash">No conversation yet. Your conversations are saved here.</li>
+        }
+      </ul>
+    }
+  </div>
+</aside>

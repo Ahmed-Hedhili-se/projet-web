@@ -1,7 +1,7 @@
 # TeraMind
 
-Corporate website of **TeraMind**, a fictional company that rents GPUs for AI workloads
-and recommends the best GPU for a given model.
+Corporate website of **TeraMind**, a fictional company that rents GPUs for AI workloads.
+An AI advisor reads the GitHub repository of a model and recommends the best GPU configuration for it.
 
 SUP'COM web project — team of 2: **Adem YOUSSFI** (frontend) and **Ahmed HEDHILI** (backend).
 
@@ -46,7 +46,7 @@ Clear the site data to go back to the demo data.
 
 | Part | Technologies |
 |---|---|
-| Frontend (`frontend/`) | Angular, Angular Router, HttpClient, Reactive Forms, Tailwind CSS 4, Three.js, Lenis, Vitest |
+| Frontend (`frontend/`) | Angular, Angular Router, HttpClient, Reactive Forms, Tailwind CSS 4, Three.js, Lenis, marked, Vitest |
 | Backend (`backend/`) | Node.js, Express, TypeScript, Prisma, Zod, bcrypt, JWT, Vitest |
 | Database | PostgreSQL |
 | Cache | Redis (login rate limiting only) |
@@ -68,7 +68,7 @@ All pages are responsive (phone, tablet, desktop).
 | About | `/about` | Mission, key figures, values, timeline, team |
 | GPU catalog | `/gpus` | Search, filters (manufacturer, minimum VRAM, maximum price, availability on a period), sorting |
 | GPU details | `/gpus/:id` | Specifications, price per hour, free units, "Rent this GPU" |
-| GPU recommendation | `/recommend` | Form (model type, size, training or inference, budget per hour) → recommended configuration, alternatives and an explanation |
+| GPU recommendation | `/recommend` | **AI advisor** (signed-in users): a conversation that starts from a GitHub repository link or a free description, and answers with up to three GPU configurations. **Quick form** as a fallback: model type, size, training or inference, budget per hour |
 | Contact | `/contact` | Validated form; the message arrives in the admin inbox |
 | Sign in / Create account | `/login`, `/register` | Validation, password strength meter, blocked-account message |
 
@@ -97,11 +97,24 @@ All pages are responsive (phone, tablet, desktop).
 - **Feedback**: loading skeletons, success and error alerts, confirmation dialogs before destructive actions.
 - **Accessibility**: semantic HTML, keyboard focus, ARIA labels, contrast checked in the design charter,
   `prefers-reduced-motion` respected.
-- **Tests**: 64 unit tests (Vitest) on services, pages and the simulated API.
+- **Tests**: 77 unit tests (Vitest) on services, pages and the simulated API.
 
-**Planned:** an AI advisor on the recommendation page. The user pastes the link of a public GitHub repository,
-the AI reads it and ranks the GPU configurations. The backend tools exist (step B8); the conversation route (B9)
-and the page (F10) come next. The current form stays as a fallback.
+### AI GPU advisor
+
+The recommendation page is a conversation with an AI agent (`docs/API.md`, section 10):
+
+- The user pastes the link of a public GitHub repository, describes the workload in plain text, or both.
+- The agent reads the repository (model size, precision, LoRA / QLoRA, FlashAttention...) and shows what it understood,
+  with the file that proves each fact. If something essential is missing, such as the dataset size, it asks.
+- It simulates every configuration of the catalog (1, 2, 4 or 8 GPUs of each model) and answers with up to three
+  configurations (best choice, cheapest, fastest), each with a time and cost estimate, warnings and a **Rent this** button.
+- The answer arrives as a live stream: the steps of the agent, then the cards, then the text.
+- Conversations are saved: the history lets the user reopen or delete them. There is a daily message limit.
+- Prices, stock and estimates always come from the backend, never from the language model.
+
+With the simulated API (the default), the advisor's answers are **simulated in the browser**: keywords are recognised
+and the estimates use the same formulas as the backend simulator, but no language model is called and no repository
+is really read. The real agent runs in the backend.
 
 ## Simulated API and real backend
 
@@ -112,8 +125,10 @@ and the page (F10) come next. The current form stays as a fallback.
   including errors (401, 403, 404, 409, validation).
 - The setting is `useMockApi` in `frontend/src/environments/environment.ts`. Setting it to `false` sends the
   calls to the real backend on `http://localhost:3000/api`.
-- Today the real backend implements authentication and the GPU catalog. The other pages still need the
-  simulated API, so keep `useMockApi: true` for now.
+- Today the real backend implements authentication, the GPU catalog and the AI advisor. The other pages still need
+  the simulated API, so keep `useMockApi: true` for now.
+- The AI advisor of the backend needs a language model: see the `GITHUB_TOKEN` and `LLM_*` settings in
+  `backend/.env.example`. Without them the advisor is disabled and the quick form is shown instead.
 
 ## Motion & 3D
 
@@ -163,8 +178,8 @@ Performance and accessibility:
 
 | Part | Done | Next |
 |---|---|---|
-| Backend | B1 setup (Docker, Prisma, seed, health) · B2 authentication (JWT, roles, Redis login rate limit) · security hardening · B3 GPU catalog (`GET /gpus`, `GET /gpus/:id`, availability) · B8 AI advisor tools (workload simulator, GitHub repo analysis, configuration ranking) | B4–B7 (recommendation, contact, rentals, admin) · B9 AI advisor chat |
-| Frontend | F1–F9: layout, every public page, user area, admin area, motion & 3D — all on the simulated API | F10 AI advisor page (after B9) · switch to the real API |
+| Backend | B1 setup (Docker, Prisma, seed, health) · B2 authentication (JWT, roles, Redis login rate limit) · security hardening · B3 GPU catalog (`GET /gpus`, `GET /gpus/:id`, availability) · B8 AI advisor tools (workload simulator, GitHub repo analysis, configuration ranking) · B9 AI advisor (conversations, live stream, daily quota) | B4–B7 (recommendation form, contact, rentals, admin) |
+| Frontend | F1–F10: layout, every public page, user area, admin area, motion & 3D, AI advisor — all on the simulated API | Switch to the real API |
 
 ## Getting started (full stack)
 

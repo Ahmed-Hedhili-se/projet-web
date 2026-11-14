@@ -117,7 +117,7 @@
       <h2 class="mt-2 font-display text-hero-product-name font-semibold md:text-section-title">The people behind the grid.</h2>
     </div>
 
-    <div class="mt-12 grid grid-cols-2 gap-4 lg:grid-cols-4">
+    <div class="mx-auto mt-12 grid max-w-2xl gap-4 sm:grid-cols-2">                          <!-- deux cartes, centrées -->
       @for (member of team; track member.name) {
         <div appReveal [revealDelay]="$index * 100">
           <div appTilt class="glass-card group flex h-full flex-col items-center p-6 text-center hover:-translate-y-1"> <!-- carte en verre qui s'incline -->

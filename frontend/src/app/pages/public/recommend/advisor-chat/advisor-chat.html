@@ -1,5 +1,18 @@
-<div class="mx-auto max-w-4xl">
-  @if (messages().length === 0 && !pending()) {
+<div class="mx-auto grid max-w-6xl items-start gap-6 lg:grid-cols-[260px_minmax(0,1fr)]"> <!-- historique à gauche, conversation à droite -->
+  <app-advisor-history
+    [conversations]="history()"
+    [activeId]="conversation()?.id ?? null"
+    [loading]="loadingHistory()"
+    [disabled]="sending() || opening()"
+    (selected)="openConversation($event)"
+    (created)="newConversation()"
+    (removed)="toDelete.set($event)"
+  />
+
+  <div class="min-w-0">
+  @if (opening()) {
+    <div class="h-72 animate-pulse rounded-card bg-carbon"></div>                               <!-- conversation en cours de chargement -->
+  } @else if (messages().length === 0 && !pending()) {
     <div class="animate-fade-up glass-card px-6 py-10 text-center md:px-10">                    <!-- avant le premier message : accueil + exemples -->
       <span class="mx-auto flex size-12 items-center justify-center rounded-full border border-aurora-glow/50 bg-aurora-glow/10 text-aurora" aria-hidden="true">
         <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v3m0 12v3M3 12h3m12 0h3M6.3 6.3l2 2m7.4 7.4 2 2m0-11.4-2 2m-7.4 7.4-2 2" /><circle cx="12" cy="12" r="2.5" /></svg>
@@ -16,10 +29,7 @@
       </ul>
     </div>
   } @else {
-    <div class="flex items-center justify-between gap-4">                                       <!-- titre de la conversation + nouvelle conversation -->
-      <p class="min-w-0 truncate text-utility-nav font-semibold text-ash">{{ conversation()?.title ?? 'New conversation' }}</p>
-      <button type="button" (click)="newConversation()" [disabled]="sending()" class="btn-outline shrink-0 disabled:opacity-40">New conversation</button>
-    </div>
+    <p class="truncate text-utility-nav font-semibold text-ash">{{ conversation()?.title ?? 'New conversation' }}</p> <!-- titre de la conversation -->
     <div class="mt-6 flex flex-col gap-6" aria-live="polite">                                   <!-- messages, du plus ancien au plus récent -->
       @for (message of messages(); track message.id) {
         <app-advisor-message [message]="message" [interactive]="$last && !sending()" (reply)="send($event)" />
@@ -92,4 +102,17 @@
     Prefer to enter the figures yourself?
     <button type="button" (click)="useForm.emit()" class="text-link">Use the quick form</button>
   </p>
+  </div>
 </div>
+
+@if (toDelete(); as item) {
+  <app-confirm-dialog
+    title="Delete this conversation?"
+    [message]="'“' + item.title + '” and its messages will be deleted permanently.'"
+    confirmLabel="Delete"
+    cancelLabel="Keep it"
+    [busy]="deleting()"
+    (confirmed)="confirmDelete()"
+    (cancelled)="toDelete.set(null)"
+  />
+}

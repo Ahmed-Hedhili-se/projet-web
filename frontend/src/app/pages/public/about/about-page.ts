@@ -57,20 +57,18 @@ export class AboutPage {
   protected readonly milestones: Milestone[] = [
     { year: '2024', title: 'TeraMind is founded', text: 'A small team of ML engineers sets out to make GPU compute simple and affordable.' },
     { year: '2025', title: 'First H100 cluster', text: 'Our first data center goes live with H100 and A100 GPUs for training workloads.' },
-    { year: '2026', title: 'GPU recommender launch', text: 'Customers can now describe their model and get the most cost-effective GPU instantly.' },
+    { year: '2026', title: 'AI GPU advisor launch', text: 'Customers can now share the GitHub repository of their model and get the best GPU configuration, with time and cost estimates.' },
   ];
 
   protected readonly team: TeamMember[] = [
-    { name: 'Amira Haddad', role: 'Chief Executive Officer' },
-    { name: 'Youssef Trabelsi', role: 'Head of Infrastructure' },
-    { name: 'Lina Mansour', role: 'ML Solutions Lead' },
-    { name: 'Karim Jaziri', role: 'Customer Success' },
+    { name: 'Adem YOUSSFI', role: 'Co-founder · Frontend & design' },
+    { name: 'Ahmed HEDHILI', role: 'Co-founder · Backend & AI' },
   ];
 
   protected initials(name: string): string {
     return name
       .split(' ')
       .map((part) => part[0])                              // première lettre de chaque mot
-      .join('');                                           // ex. « Amira Haddad » → « AH »
+      .join('');                                           // ex. « Adem YOUSSFI » → « AY »
   }
 }

@@ -15,6 +15,7 @@ describe('AboutPage', () => {
     await fixture.whenStable();
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.querySelector('h1')?.textContent).toContain('We make AI compute simple.');
-    expect(compiled.textContent).toContain('AH');          // initiales d'« Amira Haddad »
+    expect(compiled.textContent).toContain('AY');          // initiales d'« Adem YOUSSFI »
+    expect(compiled.textContent).toContain('Ahmed HEDHILI');
   });
 });

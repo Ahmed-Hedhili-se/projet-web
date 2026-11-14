@@ -7,12 +7,12 @@
       <app-split-text text="Compute for every model." highlight="model." [delay]="160" />   <!-- mots qui sortent du flou -->
     </h1>
     <p class="animate-fade-up mx-auto mt-5 max-w-xl text-section-nav text-porcelain/90" style="animation-delay: 520ms"> <!-- texte clair : reste lisible au-dessus de la planète -->
-      Rent data-center GPUs by the hour and find the right one for your AI workload in seconds.
+      Rent data-center GPUs by the hour. Our AI advisor reads your model's code and finds the right one.
     </p>
     <div class="animate-fade-up mt-8 flex flex-wrap items-center justify-center gap-3" style="animation-delay: 620ms"> <!-- capsule + boutons -->
       <span class="capsule">From $0.69 / hour</span>
       <a routerLink="/gpus" class="btn-primary">Explore GPUs</a>
-      <a routerLink="/recommend" class="btn-outline bg-obsidian/45 backdrop-blur-md">Get a recommendation</a> <!-- fond flouté : lisible sur la planète -->
+      <a routerLink="/recommend" class="btn-outline bg-obsidian/45 backdrop-blur-md">Ask the AI advisor</a> <!-- fond flouté : lisible sur la planète -->
     </div>
   </div>
   <p class="animate-fade-up absolute bottom-6 text-utility-nav text-porcelain/70" style="animation-delay: 1200ms" aria-hidden="true">Scroll to explore ↓</p>
@@ -109,34 +109,32 @@
 
     <div appReveal [revealDelay]="150">
     <div class="glass-card p-6 md:p-8">                                                   <!-- texte dans une carte en verre -->
-      <p class="font-display text-product-label font-semibold text-aurora">GPU Recommendation</p>
+      <p class="font-display text-product-label font-semibold text-aurora">AI GPU advisor</p>
       <h2 class="mt-2 font-display text-hero-product-name font-semibold md:text-section-title">Not sure which GPU you need?</h2>
       <p class="mt-4 text-section-nav text-porcelain/70">
-        Answer four questions about your model. We estimate the memory it needs and match it with the most cost-effective GPU.
+        Paste the link of your model's GitHub repository or describe your workload. Our AI advisor reads the code, simulates
+        every configuration of our catalog and explains which GPU architecture fits best.
       </p>
 
-      <div class="mt-8 rounded-card bg-obsidian/55 p-6">                                      <!-- exemple de résultat (API.md) -->
-        <dl class="grid grid-cols-2 gap-x-6 gap-y-3 text-body">
-          <dt class="text-porcelain/70">Model type</dt><dd class="text-right">LLM</dd>
-          <dt class="text-porcelain/70">Parameters</dt><dd class="text-right">7 billion</dd>
-          <dt class="text-porcelain/70">Mode</dt><dd class="text-right">Inference</dd>
-          <dt class="text-porcelain/70">Budget</dt><dd class="text-right">$2.00 / hour</dd>
-        </dl>
+      <div class="mt-8 rounded-card bg-obsidian/55 p-6">                                      <!-- exemple de réponse du conseiller (docs/API.md, section 10) -->
+        <p class="text-utility-nav text-porcelain/70">You</p>
+        <p class="mt-1 text-body">github.com/acme/legal-llama, about 300M tokens</p>
+        <p class="mt-4 text-utility-nav text-porcelain/70">What the AI understood</p>
+        <ul class="mt-2 flex flex-wrap gap-2">
+          @for (badge of ['QLoRA', '8B parameters', 'BF16']; track badge) {
+            <li class="rounded-pill border border-aurora-glow/50 bg-aurora-glow/10 px-3 py-1 text-utility-nav font-semibold">{{ badge }}</li>
+          }
+        </ul>
         <div class="mt-5 border-t border-steel pt-5">
-          <p class="text-utility-nav text-porcelain/70">Recommended · about 16.8 GB of VRAM needed</p>
-          <div class="mt-3 h-2 overflow-hidden rounded-pill bg-carbon">                      <!-- jauge mémoire : 16.8 Go sur 24 Go -->
-            <div appReveal class="h-full">
-              <div class="animate-grow-x h-full w-[70%] origin-left rounded-pill bg-aurora-glow"></div> <!-- jauge à la couleur Aurore -->
-            </div>
-          </div>
-          <div class="mt-3 flex items-baseline justify-between gap-4">
-            <p class="font-display text-product-label font-semibold">NVIDIA RTX 4090 · 24 GB</p>
-            <p class="text-body text-aurora">$0.69 / hour</p>
+          <p class="text-utility-nav text-porcelain/70">Best choice · Hopper architecture</p>
+          <div class="mt-2 flex flex-wrap items-baseline justify-between gap-x-4">
+            <p class="font-display text-product-label font-semibold">4 × NVIDIA H100 80GB</p>
+            <p class="text-body text-aurora">~3 h · ~$38</p>
           </div>
         </div>
       </div>
 
-      <a routerLink="/recommend" class="btn-primary mt-8">Try the recommender</a>
+      <a routerLink="/recommend" class="btn-primary mt-8">Ask the AI advisor</a>
     </div>
     </div>
   </div>

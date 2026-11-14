@@ -23,7 +23,7 @@ export class LoginPage {
   protected readonly benefits = [                          // avantages listés dans le panneau de gauche
     'Book GPUs by the hour, in under a minute',
     'Track and cancel your rentals',
-    'Get GPU recommendations for your models',
+    'Ask the AI advisor which GPU fits your model',
   ];
 
   protected readonly demoAccounts = environment.useMockApi // comptes fictifs, affichés seulement avec les données de démonstration
