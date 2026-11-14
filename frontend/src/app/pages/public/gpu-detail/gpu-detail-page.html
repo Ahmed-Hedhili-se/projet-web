@@ -42,7 +42,7 @@
         <p class="animate-fade-up mt-4 text-section-nav text-ash" style="animation-delay: 360ms">{{ gpu.description }}</p>
 
         <p class="animate-fade-up mt-6 font-display text-feature-stat font-semibold" style="animation-delay: 440ms">
-          <span class="tabular-nums" [appCountUp]="gpu.pricePerHour" [countDecimals]="2" countPrefix="$"></span><span class="text-section-nav font-normal text-ash"> / hour per unit</span>
+          <span class="tabular-nums text-aurora" [appCountUp]="gpu.pricePerHour" [countDecimals]="2" countPrefix="$"></span><span class="text-section-nav font-normal text-ash"> / hour per unit</span>
         </p>
 
         <div class="animate-fade-up mt-6 flex flex-wrap items-center gap-3" style="animation-delay: 520ms"> <!-- capsule + boutons -->
@@ -59,22 +59,22 @@
       </div>
     </section>
 
-    <section class="scroll-zoom mt-16 rounded-card bg-carbon p-4">                     <!-- caractéristiques : grandit en défilant -->
+    <section class="scroll-zoom glass-card mt-16 p-4">                                 <!-- caractéristiques : panneau en verre qui grandit en défilant -->
       <h2 class="sr-only">Specifications</h2>
       <div class="grid grid-cols-2 gap-4 md:grid-cols-4">
-        <div class="rounded-card bg-obsidian px-4 py-8 text-center">
+        <div class="rounded-card bg-obsidian/55 px-4 py-8 text-center">
           <p class="font-display text-feature-stat font-semibold tabular-nums" [appCountUp]="gpu.vramGb" countSuffix=" GB"></p> <!-- chiffre qui défile -->
           <p class="mt-2 text-body text-ash">Memory (VRAM)</p>
         </div>
-        <div class="rounded-card bg-obsidian px-4 py-8 text-center">
+        <div class="rounded-card bg-obsidian/55 px-4 py-8 text-center">
           <p class="font-display text-feature-stat font-semibold tabular-nums" [appCountUp]="gpu.fp16Tflops" [countDecimals]="gpu.fp16Tflops % 1 === 0 ? 0 : 1"></p>
           <p class="mt-2 text-body text-ash">FP16 TFLOPS</p>
         </div>
-        <div class="rounded-card bg-obsidian px-4 py-8 text-center">
+        <div class="rounded-card bg-obsidian/55 px-4 py-8 text-center">
           <p class="font-display text-feature-stat font-semibold">{{ gpu.architecture }}</p>
           <p class="mt-2 text-body text-ash">Architecture</p>
         </div>
-        <div class="rounded-card bg-obsidian px-4 py-8 text-center">
+        <div class="rounded-card bg-obsidian/55 px-4 py-8 text-center">
           <p class="font-display text-feature-stat font-semibold tabular-nums" [appCountUp]="gpu.totalUnits"></p>
           <p class="mt-2 text-body text-ash">Units in our fleet</p>
         </div>
@@ -87,9 +87,9 @@
       <div class="mt-6 grid gap-4 sm:grid-cols-3">
         @for (example of costExamples(); track example.hours) {
           <div appReveal [revealDelay]="$index * 100">
-            <div appTilt class="rounded-card border border-steel bg-carbon p-6 transition duration-500 ease-out hover:border-slate"> <!-- s'incline vers la souris -->
+            <div appTilt class="glass-card p-6">                                                 <!-- carte en verre, s'incline vers la souris -->
               <p class="text-utility-nav text-ash">{{ example.label }}</p>
-              <p class="mt-2 font-display text-feature-stat font-semibold tabular-nums" [appCountUp]="example.cost" [countDecimals]="2" countPrefix="$"></p>
+              <p class="mt-2 font-display text-feature-stat font-semibold tabular-nums text-aurora" [appCountUp]="example.cost" [countDecimals]="2" countPrefix="$"></p>
             </div>
           </div>
         }

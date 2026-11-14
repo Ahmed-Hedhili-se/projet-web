@@ -26,10 +26,10 @@
 </section>
 
 <section class="px-4 pb-20 md:pb-28"> <!-- Chiffres clés -->
-  <div class="mx-auto grid max-w-6xl grid-cols-2 gap-4 rounded-card bg-carbon p-4 md:grid-cols-4"> <!-- panneau Carbon, tuiles noires -->
+  <div class="glass-card mx-auto grid max-w-6xl grid-cols-2 gap-4 p-4 md:grid-cols-4">        <!-- panneau en verre, tuiles sombres -->
     @for (stat of stats; track stat.label) {
       <div appReveal [revealDelay]="$index * 90">
-        <div class="flex h-full flex-col items-center justify-center gap-2 rounded-card bg-obsidian px-4 py-8 text-center">
+        <div class="flex h-full flex-col items-center justify-center gap-2 rounded-card bg-obsidian/55 px-4 py-8 text-center">
           <p
             class="font-display text-feature-stat font-semibold tabular-nums text-aurora"
             [appCountUp]="stat.value"
@@ -44,7 +44,7 @@
   </div>
 </section>
 
-<section class="bg-linear-to-b from-carbon/70 to-transparent px-4 py-20 md:py-28"> <!-- Valeurs : fondu Carbon → noir -->
+<section class="aurora-glow px-4 py-20 md:py-28"> <!-- Valeurs : lueur Aurore douce derrière le titre -->
   <div class="mx-auto max-w-6xl">
     <div appReveal class="text-center">
       <p class="font-display text-product-label font-semibold text-aurora">Our values</p>
@@ -54,8 +54,8 @@
     <div class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
       @for (value of values; track value.title) {
         <div appReveal [revealDelay]="$index * 100">
-          <div appTilt class="group h-full rounded-card border border-transparent bg-obsidian p-8 transition duration-500 ease-out hover:-translate-y-1 hover:border-steel"> <!-- s'incline vers la souris -->
-            <div class="flex size-12 items-center justify-center rounded-full bg-carbon text-porcelain transition duration-500 group-hover:scale-110 group-hover:bg-steel"> <!-- pastille qui grossit au survol -->
+          <div appTilt class="glass-card group h-full p-8 hover:-translate-y-1">                 <!-- carte en verre, s'incline vers la souris -->
+            <div class="flex size-12 items-center justify-center rounded-full bg-aurora-glow/15 text-aurora transition duration-500 group-hover:scale-110 group-hover:bg-aurora-glow/25"> <!-- pastille Aurore qui grossit au survol -->
               @switch (value.icon) {
                 @case ('eye') {
                   <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
@@ -97,10 +97,10 @@
 
     <ol class="relative mt-14">
       <span class="absolute top-0 bottom-0 left-0 w-px bg-steel" aria-hidden="true"></span>    <!-- ligne grise de fond -->
-      <span class="scroll-draw-y absolute top-0 bottom-0 left-0 w-px bg-porcelain" aria-hidden="true"></span> <!-- ligne claire qui se dessine en défilant -->
+      <span class="scroll-draw-y absolute top-0 bottom-0 left-0 w-px bg-aurora-glow" aria-hidden="true"></span> <!-- ligne Aurore qui se dessine en défilant -->
       @for (milestone of milestones; track milestone.year) {
         <li class="scroll-highlight relative pb-16 pl-8 last:pb-0">                             <!-- s'illumine au centre de l'écran -->
-          <span class="absolute top-1.5 -left-1 size-[9px] rounded-full bg-porcelain"></span>  <!-- point sur la ligne -->
+          <span class="absolute top-1.5 -left-1 size-[9px] rounded-full bg-aurora-glow"></span> <!-- point sur la ligne -->
           <p class="text-utility-nav font-semibold text-ash">{{ milestone.year }}</p>
           <h3 class="mt-1 font-display text-product-label font-semibold">{{ milestone.title }}</h3>
           <p class="mt-2 text-body text-ash">{{ milestone.text }}</p>
@@ -110,7 +110,7 @@
   </div>
 </section>
 
-<section class="border-y border-steel bg-graphite/70 px-4 py-20 md:py-28"> <!-- Équipe -->
+<section class="aurora-glow px-4 py-20 md:py-28"> <!-- Équipe -->
   <div class="mx-auto max-w-6xl">
     <div appReveal class="text-center">
       <p class="font-display text-product-label font-semibold text-aurora">Our team</p>
@@ -120,8 +120,8 @@
     <div class="mt-12 grid grid-cols-2 gap-4 lg:grid-cols-4">
       @for (member of team; track member.name) {
         <div appReveal [revealDelay]="$index * 100">
-          <div appTilt class="group flex h-full flex-col items-center rounded-card border border-steel bg-obsidian p-6 text-center transition duration-500 ease-out hover:-translate-y-1 hover:border-slate"> <!-- carte qui s'incline -->
-            <div class="flex size-20 items-center justify-center rounded-full border border-steel bg-carbon font-display text-hero-product-name font-semibold text-porcelain transition duration-500 group-hover:scale-110 group-hover:border-porcelain"> <!-- avatar avec initiales, grossit au survol -->
+          <div appTilt class="glass-card group flex h-full flex-col items-center p-6 text-center hover:-translate-y-1"> <!-- carte en verre qui s'incline -->
+            <div class="flex size-20 items-center justify-center rounded-full border border-steel bg-carbon font-display text-hero-product-name font-semibold text-porcelain transition duration-500 group-hover:scale-110 group-hover:border-aurora-glow"> <!-- avatar avec initiales, grossit et se colore au survol -->
               {{ initials(member.name) }}
             </div>
             <h3 class="mt-5 font-display text-product-label font-semibold">{{ member.name }}</h3>
@@ -134,7 +134,7 @@
 </section>
 
 <section class="px-4 py-20 md:py-28"> <!-- Appel à l'action -->
-  <div class="scroll-zoom mx-auto max-w-4xl rounded-card border border-steel bg-carbon px-6 py-14 text-center md:px-12 md:py-20"> <!-- grandit en entrant à l'écran -->
+  <div class="scroll-zoom glass-card mx-auto max-w-4xl px-6 py-14 text-center md:px-12 md:py-20"> <!-- grandit en entrant à l'écran -->
     <h2 class="font-display text-hero-product-name font-semibold md:text-section-title">Let's build something together.</h2>
     <p class="mx-auto mt-4 max-w-lg text-section-nav text-ash">Questions about pricing, capacity or the right GPU for your project? Our team replies within one business day.</p>
     <div class="mt-8 flex flex-wrap justify-center gap-3">

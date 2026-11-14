@@ -1,4 +1,4 @@
-<article appTilt class="group flex h-full flex-col overflow-hidden rounded-card border border-steel bg-carbon transition duration-500 ease-out hover:-translate-y-1 hover:border-slate"> <!-- monte et s'incline vers la souris -->
+<article appTilt class="glass-card group flex h-full flex-col overflow-hidden hover:-translate-y-1"> <!-- carte en verre : monte et s'incline vers la souris -->
   <a [routerLink]="['/gpus', gpu().id]" class="block overflow-hidden bg-obsidian" tabindex="-1" aria-hidden="true"> <!-- image cliquable (le titre suffit au clavier) -->
     <img
       src="images/hero-gpu.svg"
@@ -17,11 +17,11 @@
     </h3>
 
     <div class="mt-5 grid grid-cols-2 gap-3">               <!-- caractéristiques principales -->
-      <div class="rounded-nav bg-obsidian p-4">
+      <div class="rounded-nav bg-obsidian/55 p-4">
         <p class="font-display text-feature-stat font-semibold">{{ gpu().vramGb }} GB</p>
         <p class="mt-1 text-utility-nav text-ash">VRAM</p>
       </div>
-      <div class="rounded-nav bg-obsidian p-4">
+      <div class="rounded-nav bg-obsidian/55 p-4">
         <p class="font-display text-feature-stat font-semibold">{{ gpu().fp16Tflops }}</p>
         <p class="mt-1 text-utility-nav text-ash">FP16 TFLOPS</p>
       </div>

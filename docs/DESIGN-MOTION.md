@@ -63,7 +63,7 @@ Use `THREE.SphereGeometry` (no GLTF needed). Load textures with `TextureLoader`;
 - **Data-center markers**: ~40 points on **land only** (sample the ocean mask), point sprites: core + expanding **radar ring** (`fract(t·0.5 + seed)`), color **warm white `#fff1cf`** with **Optical Yellow `#ffd500`** ring at low alpha. **3 highlighted markers** = TeraMind's 3 data centers (slightly larger, brighter).
 - **Starfield**: ~1400 points on a sphere r = 90, size 1.6, twinkle `0.6 + 0.4·sin(t + seed)`.
 - **Ambient motes**: optional, desktop only, ≤ 200, very faint.
-- **Post-processing**: one `UnrealBloomPass` (strength ≈ 0.5, radius 0.6, threshold 0) — **desktop only**. The brief's 3-composer chain and "corner flame" pass are **dropped** (too heavy for the benefit).
+- **Post-processing**: one `UnrealBloomPass` (strength 0.35, radius 0.6, threshold 0.82) — **desktop only, and only while the frame rate holds** (see adaptive quality, section 8). The brief's 3-composer chain and "corner flame" pass are **dropped** (too heavy for the benefit).
 - Planet radius 1.95 world units, tilt 0.37 rad, base spin 0.03 rad·s⁻¹. Camera `PerspectiveCamera(40)` at z = 8.
 
 ### Two modes (driven by `SceneSync.mode`)
@@ -146,6 +146,10 @@ Lenis must not break: anchored scroll-to-top on navigation (`withInMemoryScrolli
 
 - **Lazy-load Three.js** (`await import('three')` inside the background component) so it is not in the initial bundle.
 - **DPR cap** 1.5 (desktop) / 1.25 (mobile). Pause rendering when `document.hidden`.
+- **Adaptive quality** (`planet-scene.ts`): the scene averages its frame time over 60 frames. Below 45 fps it steps down:
+  level 0 = full (bloom) → level 1 = no bloom → level 2 = render scale ×0.7, one cloud shell less, glass cards without blur (`html.scene-low`).
+  Measured on an Intel UHD integrated GPU (1440×900): ~30 fps before optimisation, 80–115 fps after (settles at level 1).
+- **Shader cost**: one simplex-noise call on the planet (water only, day side only), none in the clouds.
 - **Mobile / coarse pointer / width < 768 px**: no bloom, 2 cloud shells, 1 000 stars, ≤ 24 markers, network count halved, sphere 64×64 segments.
 - **`prefers-reduced-motion`**: no Lenis, no entrance, no scroll travel, render **one static frame** of the planet, static network.
 - **No WebGL / texture error**: hide the planet layer; the neural network and grid alone remain (current behaviour).

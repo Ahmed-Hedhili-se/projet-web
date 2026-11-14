@@ -15,8 +15,8 @@
       <div class="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
         @for (card of infoCards; track card.label) {
           <div class="animate-fade-up" [style.animation-delay.ms]="400 + $index * 100">        <!-- arrivent l'une après l'autre -->
-            <div appTilt [tiltMax]="3" class="group flex items-center gap-4 rounded-card border border-steel bg-carbon p-5 transition duration-500 ease-out hover:border-slate">
-              <div class="flex size-11 shrink-0 items-center justify-center rounded-full bg-obsidian text-porcelain transition duration-500 group-hover:scale-110"> <!-- pastille de l'icône -->
+            <div appTilt [tiltMax]="3" class="glass-card group flex items-center gap-4 p-5">   <!-- carte en verre -->
+              <div class="flex size-11 shrink-0 items-center justify-center rounded-full bg-aurora-glow/15 text-aurora transition duration-500 group-hover:scale-110"> <!-- pastille Aurore de l'icône -->
                 @switch (card.icon) {
                   @case ('mail') {
                     <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">

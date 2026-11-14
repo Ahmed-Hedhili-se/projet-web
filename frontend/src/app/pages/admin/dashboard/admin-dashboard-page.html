@@ -97,7 +97,7 @@
                   [attr.aria-label]="bar.label + ' ' + bar.year + ': ' + bar.count + ' rentals, $' + (bar.revenue | number: '1.2-2') + ' revenue'"
                 >                                                                               <!-- toute la colonne réagit au survol -->
                   <div
-                    class="bar-grow relative w-full max-w-6 rounded-t-[4px] bg-porcelain/80 transition-[height,background-color] duration-700 ease-out group-hover:bg-porcelain group-focus-visible:bg-porcelain"
+                    class="bar-grow relative w-full max-w-6 rounded-t-[4px] bg-aurora-glow/80 transition-[height,background-color] duration-700 ease-out group-hover:bg-aurora-glow group-focus-visible:bg-aurora-glow"
                     [style.height.%]="bar.height"
                     [style.animation-delay.ms]="$index * 90"
                   >                                                                             <!-- colonne : 24 px max, coins arrondis en haut seulement -->
@@ -134,7 +134,7 @@
       <div class="relative mt-6 size-44">
         <svg viewBox="0 0 120 120" class="size-full -rotate-90" aria-hidden="true">          <!-- jauge circulaire qui se remplit -->
           <circle cx="60" cy="60" r="52" fill="none" stroke="#333336" stroke-width="10" />
-          <circle class="ring-fill" cx="60" cy="60" r="52" fill="none" stroke="#f5f5f7" stroke-width="10" stroke-linecap="round" stroke-dasharray="327" [attr.stroke-dashoffset]="occupancy().offset" />
+          <circle class="ring-fill" cx="60" cy="60" r="52" fill="none" style="stroke: var(--aurora)" stroke-width="10" stroke-linecap="round" stroke-dasharray="327" [attr.stroke-dashoffset]="occupancy().offset" />
         </svg>
         <div class="absolute inset-0 flex flex-col items-center justify-center">
           <p class="font-display text-section-title font-semibold tabular-nums" [appCountUp]="occupancy().percent" countSuffix="%"></p>
@@ -157,7 +157,7 @@
             <span></span>
             <div class="col-span-2 flex items-center gap-3">
               <div class="h-2 flex-1 overflow-hidden rounded-pill bg-obsidian">
-                <div class="animate-grow-x h-full origin-left rounded-r-[4px] bg-porcelain/80" [style.width.%]="(gpu.revenue / topRevenueMax()) * 100" [style.animation-delay.ms]="200 + $index * 100"></div> <!-- barre proportionnelle au revenu -->
+                <div class="animate-grow-x h-full origin-left rounded-r-[4px] bg-aurora-glow/80" [style.width.%]="(gpu.revenue / topRevenueMax()) * 100" [style.animation-delay.ms]="200 + $index * 100"></div> <!-- barre proportionnelle au revenu -->
               </div>
               <span class="w-20 text-right text-utility-nav text-porcelain tabular-nums">{{ gpu.revenue | currency: 'USD' : 'symbol' : '1.0-0' }}</span>
             </div>
@@ -176,7 +176,7 @@
           <li>
             <div class="flex justify-between text-body"><span>{{ row.label }}</span><span class="tabular-nums text-ash">{{ row.value }} · {{ row.percent | number: '1.0-0' }}%</span></div>
             <div class="mt-1.5 h-2 overflow-hidden rounded-pill bg-obsidian">
-              <div class="animate-grow-x h-full origin-left rounded-r-[4px] bg-porcelain/80" [style.width.%]="row.percent" [style.animation-delay.ms]="200 + $index * 100"></div>
+              <div class="animate-grow-x h-full origin-left rounded-r-[4px] bg-aurora-glow/80" [style.width.%]="row.percent" [style.animation-delay.ms]="200 + $index * 100"></div>
             </div>
           </li>
         }

@@ -19,6 +19,7 @@ const CAMERA_Z = 8;                                        // distance de la cam
 const ENTRY_DURATION = 1.9;                                // durée de l'entrée (secondes)
 const ENTRY_START_Y = -6.5;                                // la planète arrive par le bas
 const POINTER_TILT = 0.08;                                 // inclinaison maximale vers le curseur (radians)
+const SLOW_FRAME = 1 / 45;                                 // en dessous de 45 images par seconde, on allège la scène
 
 const STOPS_X: Stop[] = [{ p: 0, v: 0 }, { p: 0.32, v: -3.1 }, { p: 0.64, v: 3.2 }, { p: 1, v: 0 }];       // chorégraphie au défilement (docs/DESIGN-MOTION.md, section 4)
 const STOPS_Y: Stop[] = [{ p: 0, v: -4.75 }, { p: 0.32, v: 0.55 }, { p: 0.64, v: 0.45 }, { p: 1, v: 0.15 }];
@@ -52,8 +53,11 @@ export class PlanetScene {                                 // la planète 3D : c
   private readonly markerPositions: THREE.Vector3[] = [];  // positions des data centers sur la planète
   private readonly markerPulses: Float32Array;             // onde renforcée de chaque data center (0 → 1)
   private readonly markerScreen: ScreenPoint[] = [];       // objets réutilisés à chaque image (pas d'allocation)
-  private readonly composer: EffectComposer | null = null; // effet de lueur « bloom » (ordinateur seulement)
-  private readonly bloom: UnrealBloomPass | null = null;
+  private composer: EffectComposer | null = null;          // effet de lueur « bloom » (ordinateur assez rapide seulement)
+  private readonly basePixelRatio: number;                 // résolution de départ du rendu
+  private quality = 0;                                     // 0 = complet (bloom) · 1 = sans bloom · 2 = résolution réduite, sans flou des cartes
+  private sampleTime = 0;                                  // mesure de la fluidité : temps cumulé…
+  private sampleFrames = 0;                                // …sur ce nombre d'images
   private readonly accent = new THREE.Color();             // couleur Aurore actuelle
   private readonly white = new THREE.Color(0xffffff);
   private readonly tmp = new THREE.Vector3();              // vecteurs de calcul réutilisés
@@ -88,7 +92,8 @@ export class PlanetScene {                                 // la planète 3D : c
   ) {
     const [day, night, cloudMap, ocean, relief] = textures;
     this.renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true, powerPreference: 'high-performance' });
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, lite ? 1.25 : 1.5)); // limite la résolution pour rester fluide
+    this.basePixelRatio = Math.min(window.devicePixelRatio || 1, lite ? 1.25 : 1.5);         // limite la résolution pour rester fluide
+    this.renderer.setPixelRatio(this.basePixelRatio);
     this.renderer.setClearColor(0x000000, 0);              // fond transparent : la grille reste visible derrière
     day.colorSpace = THREE.SRGBColorSpace;                 // images de couleur (les masques restent « linéaires »)
     night.colorSpace = THREE.SRGBColorSpace;
@@ -115,9 +120,9 @@ export class PlanetScene {                                 // la planète 3D : c
     this.tilt.add(this.earth);
 
     const shells = [                                       // couches de nuages : hauteur, opacité, vitesse, décalage
-      { height: 1.006, opacity: 0.5, drift: 0.012, offset: 0, phase: 0 },
-      { height: 1.03, opacity: 0.2, drift: 0.03, offset: 2.2, phase: 13 },
-      { height: 1.075, opacity: 0.1, drift: 0.05, offset: 4.3, phase: 27 },
+      { height: 1.006, opacity: 0.5, drift: 0.012, offset: 0 },
+      { height: 1.03, opacity: 0.2, drift: 0.03, offset: 2.2 },
+      { height: 1.075, opacity: 0.1, drift: 0.05, offset: 4.3 },
     ].slice(0, lite ? 2 : 3);
     for (const shell of shells) {
       const mesh = new THREE.Mesh(
@@ -125,7 +130,7 @@ export class PlanetScene {                                 // la planète 3D : c
         new THREE.ShaderMaterial({
           vertexShader: SURFACE_VERTEX,
           fragmentShader: CLOUD_FRAGMENT,
-          uniforms: { cloudMap: { value: cloudMap }, time: { value: 0 }, opacity: { value: shell.opacity }, phase: { value: shell.phase } },
+          uniforms: { cloudMap: { value: cloudMap }, opacity: { value: shell.opacity } },
           transparent: true,
           depthWrite: false,
         }),
@@ -157,12 +162,13 @@ export class PlanetScene {                                 // la planète 3D : c
     this.markers = this.createMarkers(ocean.image as HTMLImageElement, markerCount);
     this.earth.add(this.markers);                          // les data centers tournent avec la planète
 
-    if (!lite) {                                           // lueur « bloom » : ordinateur seulement (trop lourd sur mobile)
+    if (lite) {
+      this.quality = 1;                                    // mobile : jamais de bloom (trop lourd)
+    } else {                                               // lueur « bloom » : retirée automatiquement si l'ordinateur ne suit pas
       const target = new THREE.WebGLRenderTarget(1, 1, { type: THREE.HalfFloatType, samples: 4 });
       this.composer = new EffectComposer(this.renderer, target);
-      this.bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), 0.35, 0.6, 0.82);
       this.composer.addPass(new RenderPass(this.scene, this.camera));
-      this.composer.addPass(this.bloom);
+      this.composer.addPass(new UnrealBloomPass(new THREE.Vector2(1, 1), 0.35, 0.6, 0.82));
       this.composer.addPass(new OutputPass());
     }
 
@@ -210,7 +216,6 @@ export class PlanetScene {                                 // la planète 3D : c
     this.earth.rotation.y = START_ROTATION + this.spinPhase + this.progress * Math.PI * 1.6; // tourne aussi avec le défilement
     for (const cloud of this.clouds) {
       cloud.mesh.rotation.y = this.earth.rotation.y + cloud.offset + this.time * cloud.drift; // les nuages dérivent lentement
-      (cloud.mesh.material as THREE.ShaderMaterial).uniforms['time'].value = this.time / 20;
     }
 
     const pointer = frame.pointer;
@@ -238,6 +243,9 @@ export class PlanetScene {                                 // la planète 3D : c
     this.markers.material.uniforms['pixelScale'].value = (bufferHeight / 900) * Math.pow(this.scale, 0.6);
 
     this.updatePulses(dt);
+    if (!still) {
+      this.adaptQuality(dt);
+    }
     if (this.composer) {
       this.composer.render(dt);
     } else {
@@ -262,8 +270,38 @@ export class PlanetScene {                                 // la planète 3D : c
     });
     this.composer?.dispose();
     this.renderer.dispose();
+    document.documentElement.classList.remove('scene-low');
     this.sync.frame.planet = null;
     this.sync.frame.markers = [];
+  }
+
+  private adaptQuality(dt: number): void {                 // mesure la fluidité et allège la scène si l'ordinateur ne suit pas
+    if (this.quality >= 2 || this.time < 2 || document.hidden) {
+      return;                                              // déjà au plus léger, ou chargement encore en cours
+    }
+    this.sampleTime += dt;
+    this.sampleFrames++;
+    if (this.sampleFrames < 60) {
+      return;                                              // on juge sur 60 images
+    }
+    const average = this.sampleTime / this.sampleFrames;
+    this.sampleTime = 0;
+    this.sampleFrames = 0;
+    if (average <= SLOW_FRAME) {
+      return;                                              // assez fluide : on ne change rien
+    }
+    this.quality++;
+    if (this.quality === 1) {                              // niveau 1 : on retire le bloom
+      this.composer?.dispose();
+      this.composer = null;
+    } else {                                               // niveau 2 : rendu moins fin, une couche de nuages en moins, cartes sans flou
+      this.renderer.setPixelRatio(this.basePixelRatio * 0.7);
+      this.renderer.setSize(this.width, this.height, false);
+      if (this.clouds.length > 2) {
+        this.clouds[2].mesh.visible = false;
+      }
+      document.documentElement.classList.add('scene-low'); // styles.css : .scene-low .glass-card sans flou
+    }
   }
 
   private target(): { x: number; y: number; scale: number } { // où la planète doit aller, selon le mode et le défilement

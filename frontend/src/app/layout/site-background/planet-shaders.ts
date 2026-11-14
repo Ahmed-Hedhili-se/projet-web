@@ -70,11 +70,12 @@ void main(){
   float ndl = dot(N, sun);                                 // > 0 : face au soleil
   float dayAmt = smoothstep(-0.05, 0.35, ndl);             // 1 = plein jour
 
-  float shimmer = snoise(vec3(vUv.x * 30.0 + time * 1.5, vUv.y * 30.0 - time * 2.0, time * 2.5)); // scintillement de l'eau
-  float flowTime = time * 3.2;
-  float warp = snoise(vec3(vUv.x * 8.4 - flowTime * 0.5, vUv.y * 8.4 + flowTime * 0.4, flowTime * 0.5));
-  float flow = snoise(vec3(vUv.x * 16.8 + flowTime * 0.6 + warp, vUv.y * 16.8 - flowTime * 0.5, flowTime * 0.7));
-  color += water * (shimmer * 0.02 + (warp * 0.6 + flow * 0.4) * 0.05); // courants marins très légers
+  float waves = 0.0;
+  if (water > 0.05 && dayAmt > 0.0) {                      // le bruit coûte cher : calculé seulement sur l'eau, côté jour
+    float flowTime = time * 3.2;
+    waves = snoise(vec3(vUv.x * 16.8 + flowTime * 0.6, vUv.y * 16.8 - flowTime * 0.5, flowTime * 0.7));
+  }
+  color += water * waves * 0.06;                                       // courants marins très légers
   color = mix(color, vec3(0.01, 0.06, 0.16), water * 0.12);            // océans un peu plus profonds
 
   vec3 mapN = texture2D(reliefMap, vUv).xyz * 2.0 - 1.0;
@@ -90,8 +91,7 @@ void main(){
   color += cityLights * lightsFactor;                                  // les villes s'allument la nuit
 
   vec3 halfDir = normalize(sun + V);
-  float ripple = snoise(vec3(vUv * 240.0, time * 4.0));
-  float glint = pow(max(dot(N, halfDir) + ripple * 0.02, 0.0), 140.0);
+  float glint = pow(max(dot(N, halfDir) + waves * 0.02, 0.0), 140.0);
   color += glint * water * dayAmt * 0.45 * vec3(1.0, 0.97, 0.88);      // reflet du soleil sur l'océan
 
   float rim = pow(1.0 - max(dot(V, N), 0.0), 2.4) * 0.55;
@@ -104,24 +104,20 @@ void main(){
 
 export const CLOUD_FRAGMENT = /* glsl */ `
 uniform sampler2D cloudMap;
-uniform float time;
 uniform float opacity;
-uniform float phase;                                       // décalage du bruit : chaque couche est différente
 varying vec2 vUv;
 varying vec3 vNormal;
 varying vec3 vViewPosition;
-${SIMPLEX_NOISE}
 void main(){
   vec3 N = normalize(vNormal);
   vec3 V = normalize(vViewPosition);
   vec4 tex = texture2D(cloudMap, vUv);
   float cover = tex.a * tex.r;                             // quantité de nuage à cet endroit
-  float noise = snoise(vec3(vUv.x * 20.0 + time + phase, vUv.y * 20.0 - time * 2.0 + phase, time * 2.0 + phase));
   float edge = pow(1.0 - max(dot(N, V), 0.0), 3.0);        // bord de la planète
   float ndl = dot(N, ${SUN});
   float day = 1.0 - smoothstep(0.30, -0.30, ndl) * 0.9;    // nuages presque invisibles côté nuit
   float light = 0.5 + 0.4 * smoothstep(-0.2, 0.6, ndl);
-  gl_FragColor = vec4(vec3(light), cover * mix(0.7 + 0.3 * noise, 1.0, edge) * opacity * day);
+  gl_FragColor = vec4(vec3(light), cover * mix(0.8, 1.0, edge) * opacity * day);
   #include <colorspace_fragment>
 }
 `;

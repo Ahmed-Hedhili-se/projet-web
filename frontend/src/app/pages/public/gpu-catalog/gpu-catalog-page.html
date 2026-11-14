@@ -32,7 +32,7 @@
     <div>
       <p class="mb-4 flex items-center gap-2 text-body text-ash" aria-live="polite">  <!-- annonce le nombre de résultats -->
         @if (loading() && gpus().length > 0) {
-          <span class="size-2 animate-ping rounded-full bg-porcelain" aria-hidden="true"></span> Updating results…
+          <span class="size-2 animate-ping rounded-full bg-aurora-glow" aria-hidden="true"></span> Updating results…
         } @else if (!loading() && !errorMessage()) {
           {{ gpus().length }} {{ gpus().length === 1 ? 'GPU' : 'GPUs' }} found
         } @else {

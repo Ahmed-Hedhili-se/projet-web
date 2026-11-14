@@ -88,9 +88,9 @@
           <img src="images/ai-chip.svg" alt="" width="600" height="600" class="w-48 animate-pulse" />
           <p class="mt-6 font-display text-product-label font-semibold">Analyzing your model</p>
           <div class="mt-3 flex gap-1.5" aria-hidden="true">                                    <!-- trois points qui rebondissent -->
-            <span class="size-2 animate-bounce rounded-full bg-porcelain"></span>
-            <span class="size-2 animate-bounce rounded-full bg-porcelain [animation-delay:150ms]"></span>
-            <span class="size-2 animate-bounce rounded-full bg-porcelain [animation-delay:300ms]"></span>
+            <span class="size-2 animate-bounce rounded-full bg-aurora-glow"></span>
+            <span class="size-2 animate-bounce rounded-full bg-aurora-glow [animation-delay:150ms]"></span>
+            <span class="size-2 animate-bounce rounded-full bg-aurora-glow [animation-delay:300ms]"></span>
           </div>
         </div>
       } @else {
@@ -98,10 +98,10 @@
           <div class="flex flex-col gap-4 rounded-card bg-carbon p-4">                          <!-- panneau Carbon, tuiles noires -->
             <div class="result-enter rounded-card bg-obsidian p-6">                              <!-- mémoire estimée -->
               <p class="text-utility-nav font-semibold text-ash">Estimated memory needed</p>
-              <p class="mt-1 font-display text-display-sm font-semibold tabular-nums" [appCountUp]="res.requiredVramGb" [countDecimals]="1" countSuffix=" GB"></p>
+              <p class="mt-1 font-display text-display-sm font-semibold tabular-nums text-aurora" [appCountUp]="res.requiredVramGb" [countDecimals]="1" countSuffix=" GB"></p>
               @if (res.recommendation; as rec) {
                 <div class="mt-4 h-3 overflow-hidden rounded-pill bg-carbon">                    <!-- jauge : mémoire utilisée sur la configuration -->
-                  <div class="animate-grow-x h-full origin-left rounded-pill bg-porcelain [animation-delay:300ms]" [style.width.%]="gaugePercent(res.requiredVramGb, rec)"></div>
+                  <div class="animate-grow-x h-full origin-left rounded-pill bg-aurora-glow [animation-delay:300ms]" [style.width.%]="gaugePercent(res.requiredVramGb, rec)"></div>
                 </div>
                 <p class="mt-2 text-utility-nav text-ash">{{ gaugePercent(res.requiredVramGb, rec) }}% of {{ rec.totalVramGb }} GB used</p>
               }
@@ -175,7 +175,7 @@
   </div>
 </section>
 
-<section class="border-t border-steel bg-graphite/70 px-4 py-20 md:py-28"> <!-- Explication du calcul -->
+<section class="aurora-glow px-4 py-20 md:py-28"> <!-- Explication du calcul -->
   <div class="mx-auto max-w-6xl">
     <div appReveal class="text-center">
       <p class="font-display text-product-label font-semibold text-aurora">Transparent by design</p>
@@ -184,8 +184,8 @@
     <div class="mt-12 grid gap-4 md:grid-cols-3">
       @for (item of estimateSteps; track item.title) {
         <div appReveal [revealDelay]="$index * 120">
-          <div appTilt class="h-full rounded-card border border-steel bg-obsidian p-8 transition duration-500 ease-out hover:border-slate">
-            <p class="font-display text-feature-stat font-semibold">{{ item.value }}</p>
+          <div appTilt class="glass-card h-full p-8">                                         <!-- carte en verre -->
+            <p class="font-display text-feature-stat font-semibold text-aurora">{{ item.value }}</p>
             <h3 class="mt-4 font-display text-product-label font-semibold">{{ item.title }}</h3>
             <p class="mt-2 text-body text-ash">{{ item.text }}</p>
           </div>
