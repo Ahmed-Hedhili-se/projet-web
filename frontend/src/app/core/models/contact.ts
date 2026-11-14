@@ -9,3 +9,13 @@ export interface ContactResponse {                         // réponse 201 de PO
   success: boolean;
   id: number;                                              // identifiant du message enregistré
 }
+
+export interface ContactMessage {                          // objet « ContactMessage » de docs/API.md (lu par l'admin)
+  id: number;
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+  isRead: boolean;
+  createdAt: string;                                       // date ISO 8601
+}

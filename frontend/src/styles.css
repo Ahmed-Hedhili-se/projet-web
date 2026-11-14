@@ -366,6 +366,10 @@
     animation: blur-in 0.9s var(--ease-out-expo) both;
   }
 
+  .planning-track {                                        /* rangée du planning admin : un trait vertical par jour (la largeur d'un jour est donnée par la page) */
+    background-image: linear-gradient(to right, var(--color-steel) 1px, transparent 1px);
+  }
+
   .marquee {                                               /* bandeau défilant : bords qui s'estompent */
     overflow: hidden;
     mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent); /* masque de transparence, pas une couleur */

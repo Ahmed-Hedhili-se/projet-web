@@ -16,7 +16,7 @@ export interface MockRentalRecord {                        // ce que la base de 
   createdAt: string;
 }
 
-const RENTALS_KEY = 'teramind_mock_rentals_v2';           // locations fictives, gardées dans le navigateur
+const RENTALS_KEY = 'teramind_mock_rentals_v3';           // locations fictives, gardées dans le navigateur
 const HOUR_MS = 60 * 60 * 1000;
 let memoryRentals: MockRentalRecord[] | null = null;       // secours si le localStorage est indisponible
 
@@ -121,6 +121,11 @@ function seedRentals(): MockRentalRecord[] {               // exemples pour Jane
     make(14, 3, 5, 1, -6, 24),                             // en cours depuis 6 h
     make(15, 3, 1, 2, 48, 48),                             // à venir, dans 2 jours
     make(16, 1, 3, 1, 24, 12),                             // à venir, pour l'admin
+    make(17, 4, 2, 2, -30, 72),                            // en cours, Lucas (remplit le planning de l'admin)
+    make(18, 5, 1, 1, 30, 96),                             // à venir, Sofia
+    make(19, 6, 6, 3, 72, 48),                             // à venir, Omar
+    make(20, 7, 3, 2, -20, 36),                            // en cours, Mia
+    make(21, 4, 5, 1, 110, 24),                            // à venir, Lucas
     ...history,
   ];
 }

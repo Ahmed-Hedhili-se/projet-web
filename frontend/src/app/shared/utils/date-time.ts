@@ -23,6 +23,22 @@ export function relativeTime(target: Date, now = new Date()): string { // ex. "i
   return `in ${days} days`;
 }
 
+export function timeAgo(date: Date, now = new Date()): string { // ex. "just now", "12 minutes ago", "3 hours ago", "5 days ago"
+  const minutes = Math.floor((now.getTime() - date.getTime()) / 60_000);
+  if (minutes < 1) {
+    return 'just now';
+  }
+  if (minutes < 60) {
+    return `${minutes} minute${minutes === 1 ? '' : 's'} ago`;
+  }
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) {
+    return `${hours} hour${hours === 1 ? '' : 's'} ago`;
+  }
+  const days = Math.floor(hours / 24);
+  return `${days} day${days === 1 ? '' : 's'} ago`;
+}
+
 export function formatDuration(hours: number): string {    // ex. 1 → "1 hour", 48 → "2 days", 30 → "30 hours"
   if (hours % 24 === 0) {
     const days = hours / 24;

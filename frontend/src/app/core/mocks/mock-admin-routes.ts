@@ -1,12 +1,12 @@
 import { HttpRequest, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { AdminStats, GpuInput } from '../models/admin';
+import { AdminRental, AdminStats, GpuInput, UserChanges } from '../models/admin';
 import { Gpu } from '../models/gpu';
 import { allMockGpus, saveMockGpus } from './mock-gpus';
 import { FieldError, fail, respond, validationError, withAccount } from './mock-http';
-import { allMockMessages } from './mock-messages';
-import { allMockRentals, availableUnits, rentalStatus } from './mock-rentals';
-import { MockAccount, allMockAccounts } from './mock-users';
+import { allMockMessages, saveMockMessages } from './mock-messages';
+import { MockRentalRecord, allMockRentals, availableUnits, rentalStatus, saveMockRentals, toApiRental } from './mock-rentals';
+import { MockAccount, allMockAccounts, updateMockAccount } from './mock-users';
 
 const HOUR_MS = 60 * 60 * 1000;
 const DAY_MS = 24 * HOUR_MS;
@@ -63,7 +63,126 @@ export function handleAdminRoutes(req: HttpRequest<unknown>, path: string): Obse
       return respond({ gpu: { ...gpu } });
     });
   }
-  return null;                                             // autres routes admin : étapes suivantes
+  if (req.method === 'GET' && path === '/admin/users') {
+    return withAdmin(req, () => {                          // utilisateurs, les plus récents d'abord, avec leur nombre de locations
+      const search = req.params.get('search')?.toLowerCase() ?? '';
+      const role = req.params.get('role');
+      const blocked = req.params.get('blocked');
+      const rentals = allMockRentals();
+      const users = allMockAccounts()
+        .map((account) => account.user)
+        .filter(
+          (user) =>
+            (!search || `${user.email} ${user.firstName} ${user.lastName}`.toLowerCase().includes(search)) &&
+            (!role || user.role === role) &&
+            (!blocked || user.isBlocked === (blocked === 'true')),
+        )
+        .sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt))
+        .map((user) => ({ ...user, rentalCount: rentals.filter((rental) => rental.userId === user.id).length }));
+      return respond({ users, total: users.length });
+    });
+  }
+  const userMatch = path.match(/^\/admin\/users\/(\d+)$/);
+  if (userMatch && req.method === 'PATCH') {
+    return withAdmin(req, (admin) => updateUser(req as HttpRequest<UserChanges>, Number(userMatch[1]), admin));
+  }
+  if (req.method === 'GET' && path === '/admin/rentals') {
+    return withAdmin(req, () => {                          // toutes les locations, les plus récentes d'abord
+      const status = req.params.get('status');
+      const userId = req.params.get('userId');
+      const gpuId = req.params.get('gpuId');
+      const rentals = allMockRentals()
+        .filter(
+          (rental) =>
+            (!status || rentalStatus(rental) === status) &&
+            (!userId || rental.userId === Number(userId)) &&
+            (!gpuId || rental.gpuId === Number(gpuId)),
+        )
+        .sort((a, b) => Date.parse(b.startDate) - Date.parse(a.startDate))
+        .map(toAdminRental);
+      return respond({ rentals, total: rentals.length });
+    });
+  }
+  const cancelMatch = path.match(/^\/admin\/rentals\/(\d+)\/cancel$/);
+  if (cancelMatch && req.method === 'PATCH') {
+    return withAdmin(req, () => {                          // un admin peut annuler une location à venir ou en cours
+      const rentals = allMockRentals();
+      const record = rentals.find((rental) => rental.id === Number(cancelMatch[1]));
+      if (!record) {
+        return fail(req, 404, { error: { code: 'RENTAL_NOT_FOUND', message: 'Rental not found.' } });
+      }
+      const status = rentalStatus(record);
+      if (status !== 'UPCOMING' && status !== 'ACTIVE') {
+        return fail(req, 409, { error: { code: 'RENTAL_NOT_CANCELLABLE', message: 'Only upcoming or active rentals can be cancelled.' } });
+      }
+      record.cancelled = true;
+      record.cancelledAt = new Date().toISOString();
+      saveMockRentals(rentals);
+      return respond({ rental: toAdminRental(record) }, 500);
+    });
+  }
+  if (req.method === 'GET' && path === '/admin/messages') {
+    return withAdmin(req, () => {                          // messages de contact, les plus récents d'abord
+      const isRead = req.params.get('isRead');
+      const all = allMockMessages();
+      const messages = all
+        .filter((message) => !isRead || message.isRead === (isRead === 'true'))
+        .sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt));
+      return respond({ messages, total: messages.length, unread: all.filter((message) => !message.isRead).length }); // unread : indépendant du filtre
+    });
+  }
+  const messageMatch = path.match(/^\/admin\/messages\/(\d+)$/);
+  if (messageMatch && (req.method === 'PATCH' || req.method === 'DELETE')) {
+    return withAdmin(req, () => {
+      const messages = allMockMessages();
+      const message = messages.find((item) => item.id === Number(messageMatch[1]));
+      if (!message) {
+        return fail(req, 404, { error: { code: 'MESSAGE_NOT_FOUND', message: 'Message not found.' } });
+      }
+      if (req.method === 'DELETE') {                       // suppression définitive : 204, pas de contenu
+        saveMockMessages(messages.filter((item) => item.id !== message.id));
+        return respond(null, 400, 204);
+      }
+      const isRead = (req.body as { isRead?: unknown } | null)?.isRead;
+      if (typeof isRead !== 'boolean') {
+        return validationError(req, [{ field: 'isRead', message: 'isRead must be true or false.' }]);
+      }
+      message.isRead = isRead;                             // marquer comme lu / non lu
+      saveMockMessages(messages);
+      return respond({ message: { ...message } }, 200);
+    });
+  }
+  return null;                                             // pas une route admin connue
+}
+
+function updateUser(req: HttpRequest<UserChanges>, id: number, admin: MockAccount): Observable<HttpResponse<unknown>> { // PATCH /admin/users/:id
+  const body = req.body ?? {};
+  const details: FieldError[] = [];                        // mêmes règles que docs/API.md
+  if (body.role !== undefined && body.role !== 'USER' && body.role !== 'ADMIN') details.push({ field: 'role', message: 'Role must be USER or ADMIN.' });
+  if (body.isBlocked !== undefined && typeof body.isBlocked !== 'boolean') details.push({ field: 'isBlocked', message: 'isBlocked must be true or false.' });
+  if (body.role === undefined && body.isBlocked === undefined) details.push({ field: 'role', message: 'Provide a role or a blocked status.' });
+  if (details.length > 0) {
+    return validationError(req, details);
+  }
+  if (id === admin.user.id) {                              // un admin ne peut pas se bloquer ni se retirer son rôle
+    return fail(req, 400, { error: { code: 'CANNOT_MODIFY_SELF', message: 'You cannot change your own role or block yourself.' } });
+  }
+  const changes: UserChanges = {};                         // seulement les champs envoyés
+  if (body.role !== undefined) changes.role = body.role;
+  if (body.isBlocked !== undefined) changes.isBlocked = body.isBlocked;
+  const updated = updateMockAccount(id, { user: changes });
+  if (!updated) {
+    return fail(req, 404, { error: { code: 'USER_NOT_FOUND', message: 'User not found.' } });
+  }
+  return respond({ user: { ...updated.user } }, 500);
+}
+
+function toAdminRental(record: MockRentalRecord): AdminRental { // location + utilisateur (objet « AdminRental » de docs/API.md)
+  const user = allMockAccounts().find((account) => account.user.id === record.userId)?.user;
+  return {
+    ...toApiRental(record),
+    user: { id: record.userId, email: user?.email ?? 'unknown@example.com', firstName: user?.firstName ?? 'Unknown', lastName: user?.lastName ?? 'user' },
+  };
 }
 
 function saveGpu(req: HttpRequest<GpuInput>, id: number | null): Observable<HttpResponse<unknown>> { // POST (id = null) ou PUT

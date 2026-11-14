@@ -2,8 +2,10 @@ import { HttpClient, HttpErrorResponse, provideHttpClient, withInterceptors } fr
 import { TestBed } from '@angular/core/testing';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { AdminGpuListResponse, AdminStats, GpuInput } from '../models/admin';
+import { ContactMessage } from '../models/contact';
+import { AdminGpuListResponse, AdminMessageListResponse, AdminRental, AdminRentalListResponse, AdminStats, AdminUserListResponse, GpuInput } from '../models/admin';
 import { GpuResponse } from '../models/gpu';
+import { User } from '../models/user';
 import { mockApiInterceptor } from './mock-api-interceptor';
 
 describe('mock admin routes (/admin/*)', () => {
@@ -59,5 +61,77 @@ describe('mock admin routes (/admin/*)', () => {
     expect(response.gpu.isActive).toBe(false);
     const error = await expectError(firstValueFrom(http.get(`${environment.apiUrl}/gpus/1`)));
     expect(error.status).toBe(404);                        // plus visible dans le catalogue public
+  });
+
+  it('should list the users with their rental count and filter them', async () => {
+    const all = await firstValueFrom(http.get<AdminUserListResponse>(`${environment.apiUrl}/admin/users`, admin));
+    expect(all.total).toBe(7);
+    expect(all.users[0].email).toBe('jane.doe@example.com'); // la plus récente d'abord
+    expect(all.users[0].rentalCount).toBe(4);
+
+    const blocked = await firstValueFrom(http.get<AdminUserListResponse>(`${environment.apiUrl}/admin/users`, { ...admin, params: { blocked: 'true' } }));
+    expect(blocked.users.map((item) => item.email)).toEqual(['blocked@example.com']);
+  });
+
+  it('should block a user, who can then no longer use the API', async () => {
+    const response = await firstValueFrom(http.patch<{ user: User }>(`${environment.apiUrl}/admin/users/3`, { isBlocked: true }, admin));
+    expect(response.user.isBlocked).toBe(true);
+    expect(response.user.role).toBe('USER');               // le rôle n'a pas changé
+
+    const error = await expectError(firstValueFrom(http.get(`${environment.apiUrl}/rentals/me`, user)));
+    expect(error.status).toBe(403);
+    expect(error.error.error.code).toBe('ACCOUNT_BLOCKED');
+  });
+
+  it('should refuse an admin who changes their own account, and an empty body', async () => {
+    const self = await expectError(firstValueFrom(http.patch(`${environment.apiUrl}/admin/users/1`, { role: 'USER' }, admin)));
+    expect(self.status).toBe(400);
+    expect(self.error.error.code).toBe('CANNOT_MODIFY_SELF');
+
+    const empty = await expectError(firstValueFrom(http.patch(`${environment.apiUrl}/admin/users/3`, {}, admin)));
+    expect(empty.error.error.code).toBe('VALIDATION_ERROR');
+
+    const missing = await expectError(firstValueFrom(http.patch(`${environment.apiUrl}/admin/users/999`, { role: 'ADMIN' }, admin)));
+    expect(missing.error.error.code).toBe('USER_NOT_FOUND');
+  });
+
+  it('should list every rental with its user and filter by user', async () => {
+    const all = await firstValueFrom(http.get<AdminRentalListResponse>(`${environment.apiUrl}/admin/rentals`, admin));
+    expect(all.total).toBe(50);                            // 10 locations d'exemple + 40 d'historique
+    expect(all.rentals.map((rental) => rental.startDate)).toEqual([...all.rentals.map((rental) => rental.startDate)].sort().reverse());
+
+    const janes = await firstValueFrom(http.get<AdminRentalListResponse>(`${environment.apiUrl}/admin/rentals`, { ...admin, params: { userId: '3', status: 'ACTIVE' } }));
+    expect(janes.rentals.map((rental) => rental.id)).toEqual([14]);
+    expect(janes.rentals[0].user.email).toBe('jane.doe@example.com');
+  });
+
+  it('should cancel an active rental of any user, but not a completed one', async () => {
+    const response = await firstValueFrom(http.patch<{ rental: AdminRental }>(`${environment.apiUrl}/admin/rentals/14/cancel`, {}, admin));
+    expect(response.rental.status).toBe('CANCELLED');      // un admin peut annuler une location en cours
+    expect(response.rental.cancelledAt).not.toBeNull();
+
+    const error = await expectError(firstValueFrom(http.patch(`${environment.apiUrl}/admin/rentals/12/cancel`, {}, admin)));
+    expect(error.status).toBe(409);                        // la location 12 est terminée
+    expect(error.error.error.code).toBe('RENTAL_NOT_CANCELLABLE');
+  });
+
+  it('should list the messages, mark one as read and delete it', async () => {
+    const url = `${environment.apiUrl}/admin/messages`;
+    const unreadOnly = await firstValueFrom(http.get<AdminMessageListResponse>(url, { ...admin, params: { isRead: 'false' } }));
+    expect(unreadOnly.messages.map((message) => message.id)).toEqual([12, 11, 10]); // les plus récents d'abord
+    expect(unreadOnly.unread).toBe(3);
+
+    const read = await firstValueFrom(http.patch<{ message: ContactMessage }>(`${url}/12`, { isRead: true }, admin));
+    expect(read.message.isRead).toBe(true);
+
+    const deleted = await firstValueFrom(http.delete(`${url}/12`, { ...admin, observe: 'response' }));
+    expect(deleted.status).toBe(204);                      // pas de contenu
+
+    const all = await firstValueFrom(http.get<AdminMessageListResponse>(url, admin));
+    expect(all.total).toBe(5);
+    expect(all.unread).toBe(2);                            // indépendant du filtre
+
+    const missing = await expectError(firstValueFrom(http.delete(`${url}/12`, admin)));
+    expect(missing.error.error.code).toBe('MESSAGE_NOT_FOUND');
   });
 });

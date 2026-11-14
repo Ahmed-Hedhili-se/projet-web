@@ -50,7 +50,7 @@ Responsive : mobile d'abord, navigation repliée en menu sur petit écran.
 | `/about` | About | Mission, valeurs, équipe, chiffres clés |
 | `/gpus` | GPU catalog | Liste des GPU + filtres (recherche, fabricant, VRAM min, prix max, disponibilité sur une période), tri |
 | `/gpus/:id` | GPU detail | Caractéristiques, prix/heure, unités disponibles, bouton « Rent this GPU » |
-| `/recommend` | GPU Recommendation | Formulaire (type de modèle, nombre de paramètres, training/inference, budget/heure) → GPU conseillé + 2 alternatives |
+| `/recommend` | GPU Recommendation | **Conseiller IA** (mode principal) : l'utilisateur colle le lien d'un dépôt GitHub public, l'IA l'analyse et recommande les configurations de GPU ; c'est une conversation, l'IA peut poser une question s'il manque une information. **Formulaire de secours** (pas de dépôt, ou IA indisponible) : type de modèle, nombre de paramètres, training/inference, budget/heure → GPU conseillé + 2 alternatives |
 | `/contact` | Contact | Formulaire enregistré en base, message de confirmation |
 | `/login` | Login | Email + mot de passe |
 | `/register` | Register | Prénom, nom, email, mot de passe |
@@ -302,6 +302,12 @@ model ContactMessage {
 
 ## 8. Algorithme de recommandation
 
+> **Deux modes sur la page `/recommend`.**
+> Le mode principal est le **conseiller IA** : il lit un dépôt GitHub public et classe les configurations de GPU
+> avec le simulateur du backend (`backend/src/agent/`, étapes B8 et B9). Sa route n'est **pas encore dans
+> `docs/API.md`** : elle sera ajoutée par la personne A, puis le frontend s'y branchera (étape F10).
+> L'algorithme ci-dessous est celui du **formulaire de secours** (`POST /recommendations`).
+
 Entrées : `modelType` (LLM, VISION, DIFFUSION, AUDIO, OTHER), `parametersBillions`, `mode` (TRAINING, INFERENCE), `budgetPerHour`.
 
 1. **VRAM nécessaire** (Go) :
@@ -334,6 +340,8 @@ Une étape à la fois, testée puis validée avant de passer à la suivante.
 | B5 | Contact | Le message est enregistré en base |
 | B6 | Profil et locations utilisateur (créer, lister, annuler) | Une location qui dépasse le stock → 409 |
 | B7 | Admin : stats, GPU, utilisateurs, locations, messages | Toutes les routes `/api/admin/*` répondent selon API.md |
+| B8 | Outils du conseiller IA : caractéristiques des GPU, simulateur, analyse d'un dépôt GitHub, classement des configurations | Les tests du simulateur et de l'analyse passent |
+| B9 | Conseiller IA : route de conversation, ajoutée à API.md | À partir d'un lien GitHub, l'IA renvoie un classement de configurations |
 
 ### Frontend — personne B
 | Étape | Contenu | Terminée quand… |
@@ -347,6 +355,7 @@ Une étape à la fois, testée puis validée avant de passer à la suivante.
 | F7 | Espace utilisateur : nouvelle location, mes locations, profil | Location créée puis annulée depuis l'interface |
 | F8 | Espace admin : dashboard, GPU, utilisateurs, locations, messages | Toutes les actions admin fonctionnent |
 | F9 | Motion & 3D (`docs/DESIGN-MOTION.md`) : planète Three.js synchronisée avec le réseau neuronal (`SceneSync`), défilement Lenis, cartes en verre | Planète grande sur Home et petite ailleurs, réseau relié au curseur conservé, versions légères (mobile, animations réduites, sans WebGL) |
+| F10 | Conseiller IA sur `/recommend` (après B9 : attend la route dans API.md) : lien GitHub puis conversation, formulaire de F4 gardé en secours | L'utilisateur colle un lien et obtient un classement de configurations |
 
 Tant qu'une route backend n'est pas prête, le frontend peut utiliser des données fictives
 qui respectent **exactement** le format de API.md.

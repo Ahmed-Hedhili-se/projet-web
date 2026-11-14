@@ -3,9 +3,6 @@ import { adminGuard } from './core/guards/admin-guard';
 import { authGuard } from './core/guards/auth-guard';
 import { guestGuard } from './core/guards/guest-guard';
 
-const comingSoon = () =>                                   // page provisoire, chargée seulement si on visite la route
-  import('./pages/coming-soon/coming-soon-page').then((m) => m.ComingSoonPage);
-
 export const routes: Routes = [
   {
     path: '',
@@ -82,9 +79,21 @@ export const routes: Routes = [
         title: 'GPU management | TeraMind',
         loadComponent: () => import('./pages/admin/gpus/admin-gpus-page').then((m) => m.AdminGpusPage),
       },
-      { path: 'users', title: 'Users | TeraMind', loadComponent: comingSoon, data: { heading: 'User management' } },          // F8, partie 2
-      { path: 'rentals', title: 'Rentals | TeraMind', loadComponent: comingSoon, data: { heading: 'Rental management' } },    // F8, partie 2
-      { path: 'messages', title: 'Messages | TeraMind', loadComponent: comingSoon, data: { heading: 'Contact messages' } },   // F8, partie 3
+      {
+        path: 'users',
+        title: 'User management | TeraMind',
+        loadComponent: () => import('./pages/admin/users/admin-users-page').then((m) => m.AdminUsersPage),
+      },
+      {
+        path: 'rentals',                                   // ?userId=3 ou ?gpuId=1 : filtre déjà choisi
+        title: 'Rental management | TeraMind',
+        loadComponent: () => import('./pages/admin/rentals/admin-rentals-page').then((m) => m.AdminRentalsPage),
+      },
+      {
+        path: 'messages',
+        title: 'Contact messages | TeraMind',
+        loadComponent: () => import('./pages/admin/messages/admin-messages-page').then((m) => m.AdminMessagesPage),
+      },
     ],
   },
   {
