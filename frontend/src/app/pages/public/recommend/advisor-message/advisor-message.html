@@ -1,0 +1,112 @@
+@if (message().role === 'USER') {
+  <div class="result-enter flex justify-end">                                                  <!-- message de l'utilisateur : bulle à droite -->
+    <p class="max-w-[85%] rounded-[20px] rounded-br-[6px] border border-steel bg-carbon px-4 py-3 text-body break-words whitespace-pre-line">{{ message().content }}</p>
+  </div>
+} @else {
+  <article class="result-enter flex gap-3">                                                     <!-- réponse de l'IA -->
+    <span class="mt-1 flex size-8 shrink-0 items-center justify-center rounded-full border border-steel bg-obsidian text-aurora" aria-hidden="true"> <!-- pastille « IA » -->
+      <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v3m0 12v3M3 12h3m12 0h3M6.3 6.3l2 2m7.4 7.4 2 2m0-11.4-2 2m-7.4 7.4-2 2" /><circle cx="12" cy="12" r="2.5" /></svg>
+    </span>
+    <div class="flex min-w-0 flex-1 flex-col gap-4">
+      @if (working()) {
+        <p class="flex items-center gap-2 text-body text-ash" role="status">                    <!-- en cours : roue + dernière étape -->
+          <svg class="size-4 shrink-0 animate-spin text-aurora" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-opacity="0.3" stroke-width="2.5" />
+            <path d="M21 12a9 9 0 0 0-9-9" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+          </svg>
+          {{ message().steps.at(-1)?.label ?? 'Thinking' }}…
+        </p>
+      } @else if (message().steps.length > 0) {
+        <div>
+          <button type="button" (click)="stepsOpen.set(!stepsOpen())" [attr.aria-expanded]="stepsOpen()" class="flex items-center gap-1.5 text-utility-nav font-semibold text-ash transition-colors duration-300 hover:text-porcelain"> <!-- étapes repliables -->
+            <svg class="size-3 transition-transform duration-300" [class.rotate-90]="stepsOpen()" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="m9 6 6 6-6 6" /></svg>
+            {{ message().steps.length }} step{{ message().steps.length === 1 ? '' : 's' }}
+          </button>
+          @if (stepsOpen()) {
+            <ol animate.enter="result-enter" class="mt-2 flex flex-col gap-1 border-l border-steel pl-4 text-utility-nav text-ash">
+              @for (step of message().steps; track $index) {
+                <li>{{ step.label }}</li>
+              }
+            </ol>
+          }
+        </div>
+      }
+
+      @if (profileCard(); as card) {
+        <section class="result-enter rounded-card border border-steel bg-carbon p-5" aria-label="What the AI understood"> <!-- carte « profile » -->
+          <p class="text-utility-nav font-semibold text-ash">What the AI understood</p>
+          <ul class="mt-3 flex flex-wrap gap-2">
+            @for (badge of badges(); track badge) {
+              <li class="rounded-pill border border-aurora-glow/50 bg-aurora-glow/10 px-3 py-1 text-utility-nav font-semibold text-porcelain">{{ badge }}</li>
+            }
+          </ul>
+          @if (evidence().length > 0) {
+            <p class="mt-3 text-utility-nav text-ash">                                           <!-- preuves : fichiers du dépôt -->
+              Found in
+              @for (item of evidence(); track item.file) {
+                @if (item.url) {
+                  <a [href]="item.url" target="_blank" rel="noopener noreferrer" class="text-link">{{ item.file }}</a>{{ $last ? '' : ' · ' }}
+                } @else {
+                  <span>{{ item.file }}</span>{{ $last ? '' : ' · ' }}
+                }
+              }
+            </p>
+          }
+          @if (missing()) {
+            <p class="mt-3 text-utility-nav font-semibold text-optical-yellow">Still needed: {{ missing() }}</p>
+          }
+        </section>
+      }
+
+      @if (message().content) {
+        <div class="markdown text-body text-porcelain" [innerHTML]="html()"></div>               <!-- texte de l'IA (Markdown → HTML sûr) -->
+      }
+
+      @if (configs().length > 0) {
+        <section aria-label="Recommended configurations">                                       <!-- carte « configs » -->
+          <ul class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            @for (config of configs(); track config.item.rank) {
+              <li class="result-enter flex flex-col rounded-card border bg-carbon p-5" [class]="config.item.verdict === 'BEST_CHOICE' ? 'border-porcelain/70' : 'border-steel'" [style.animation-delay.ms]="$index * 120">
+                <span class="self-start rounded-pill px-3 py-1 text-utility-nav font-semibold" [class]="config.item.verdict === 'BEST_CHOICE' ? 'border border-porcelain bg-porcelain text-obsidian' : 'border border-steel text-ash'">{{ verdictLabels[config.item.verdict] }}</span>
+                <p class="mt-3 font-display text-product-label font-semibold">
+                  <span class="text-ash">{{ config.item.gpuCount }} ×</span> {{ config.item.gpu.name }}
+                </p>
+                <p class="text-utility-nav font-semibold text-aurora">{{ config.item.gpu.architecture }} architecture</p>
+                <p class="mt-3 text-body font-semibold tabular-nums">{{ estimateText(config.item) }}</p>
+                <p class="text-utility-nav text-ash tabular-nums">{{ config.item.pricePerHour | currency: 'USD' }} / hour · {{ config.item.estimate.memoryPerGpuGb }} of {{ config.item.gpu.vramGb }} GB per GPU</p>
+                <ul class="mt-3 flex flex-col gap-1.5 text-utility-nav">
+                  @for (reason of config.item.reasons; track reason) {
+                    <li class="flex gap-2 text-porcelain/80">
+                      <svg class="mt-0.5 size-3.5 shrink-0 text-aurora" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="m5 12.5 4.5 4.5L19 7.5" /></svg>
+                      <span>{{ reason }}</span>
+                    </li>
+                  }
+                  @for (warning of config.item.warnings; track warning) {
+                    <li class="flex gap-2 text-optical-yellow">
+                      <svg class="mt-0.5 size-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v4m0 3.5v.01M10.3 4.3 2.8 17.5A2 2 0 0 0 4.5 20.5h15a2 2 0 0 0 1.7-3L13.7 4.3a2 2 0 0 0-3.4 0Z" /></svg>
+                      <span><span class="sr-only">Warning: </span>{{ warning }}</span>
+                    </li>
+                  }
+                </ul>
+                <div class="mt-auto flex flex-wrap items-center gap-3 pt-4">
+                  <a [routerLink]="config.rentUrl" class="btn-primary">Rent this</a>
+                  <a [routerLink]="['/gpus', config.item.gpu.id]" class="text-link text-utility-nav">Details ›</a>
+                </div>
+                <p class="mt-2 text-utility-nav text-ash">{{ config.item.availableUnits }} unit{{ config.item.availableUnits === 1 ? '' : 's' }} free now</p>
+              </li>
+            }
+          </ul>
+          <p class="mt-2 text-utility-nav text-ash">Estimates are approximate (±30%). Prices and stock come from the TeraMind catalog.</p>
+        </section>
+      }
+
+      @if (repliesCard(); as card) {
+        <ul class="flex flex-wrap gap-2" aria-label="Suggested replies">                         <!-- carte « replies » : un clic envoie le texte -->
+          @for (option of card.options; track option) {
+            <li><button type="button" (click)="reply.emit(option)" [disabled]="!interactive()" class="btn-outline disabled:opacity-40">{{ option }}</button></li>
+          }
+        </ul>
+      }
+    </div>
+  </article>
+}

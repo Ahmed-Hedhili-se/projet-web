@@ -7,6 +7,7 @@ import { RecommendationRequest } from '../models/recommendation';
 import { LoginRequest, RegisterRequest, User } from '../models/user';
 import { handleAccountRoutes } from './mock-account-routes';
 import { handleAdminRoutes } from './mock-admin-routes';
+import { handleAgentRoutes } from './mock-agent-routes';
 import { allMockGpus } from './mock-gpus';
 import { addMockMessage } from './mock-messages';
 import { EMAIL_PATTERN, FieldError, fail, respond, validationError, withAccount } from './mock-http';
@@ -46,6 +47,11 @@ export const mockApiInterceptor: HttpInterceptorFn = (req, next) => { // répond
   const adminResponse = handleAdminRoutes(req, path);      // /admin/* (mock-admin-routes.ts)
   if (adminResponse) {
     return adminResponse;
+  }
+
+  const agentResponse = handleAgentRoutes(req, path);      // /agent/* (mock-agent-routes.ts)
+  if (agentResponse) {
+    return agentResponse;
   }
 
   if (req.method === 'GET' && path === '/gpus') {

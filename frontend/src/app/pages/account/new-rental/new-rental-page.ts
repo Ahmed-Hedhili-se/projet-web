@@ -22,6 +22,7 @@ const HOUR_MS = 60 * 60 * 1000;
 })
 export class NewRentalPage implements OnInit {
   readonly gpuId = input<string>();                        // ?gpuId=… (lien « Rent this GPU »)
+  readonly quantity = input<string>();                     // ?quantity=… (bouton « Rent this » du conseiller IA)
 
   private readonly gpuService = inject(GpuService);
   private readonly rentalService = inject(RentalService);
@@ -111,6 +112,10 @@ export class NewRentalPage implements OnInit {
           const requested = Number(this.gpuId());          // GPU demandé dans l'URL, sinon le premier de la liste
           const initial = response.gpus.find((gpu) => gpu.id === requested) ?? response.gpus[0];
           this.form.controls.gpuId.setValue(initial?.id ?? null); // déclenche la vérification de disponibilité
+          const wanted = Math.floor(Number(this.quantity())); // quantité demandée dans l'URL, bornée par le stock du GPU
+          if (initial && wanted >= 1) {
+            this.form.controls.quantity.setValue(Math.min(wanted, Math.max(1, initial.totalUnits)));
+          }
         },
         error: (err: unknown) => {
           this.errorMessage.set(getErrorMessage(err));

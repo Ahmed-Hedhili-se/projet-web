@@ -366,6 +366,77 @@
     animation: blur-in 0.9s var(--ease-out-expo) both;
   }
 
+  .markdown {                                              /* réponse du conseiller IA : HTML produit à partir du Markdown (shared/utils/markdown.ts) */
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    line-height: 1.55;
+    overflow-wrap: anywhere;                               /* un long lien ne dépasse pas de la bulle */
+  }
+
+  .markdown strong {
+    font-weight: 600;
+    color: #fff;
+  }
+
+  .markdown ul,
+  .markdown ol {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding-left: 20px;
+  }
+
+  .markdown ul {
+    list-style: disc;
+  }
+
+  .markdown ol {
+    list-style: decimal;
+  }
+
+  .markdown a {
+    color: var(--color-electric-link);
+  }
+
+  .markdown a:hover {
+    text-decoration: underline;
+  }
+
+  .markdown code {
+    padding: 1px 6px;
+    border-radius: 6px;
+    background-color: var(--color-carbon);
+    font-size: 0.9em;
+  }
+
+  .markdown h1,
+  .markdown h2,
+  .markdown h3 {
+    font-family: var(--font-display);
+    font-size: var(--text-product-label);
+    font-weight: 600;
+  }
+
+  .markdown table {                                        /* tableaux simples (comparaison de configurations) */
+    display: block;
+    overflow-x: auto;
+    border-collapse: collapse;
+    font-size: var(--text-utility-nav);
+  }
+
+  .markdown th,
+  .markdown td {
+    padding: 6px 12px;
+    border-bottom: 1px solid var(--color-steel);
+    text-align: left;
+  }
+
+  .markdown th {
+    color: var(--color-ash);
+    font-weight: 600;
+  }
+
   .planning-track {                                        /* rangée du planning admin : un trait vertical par jour (la largeur d'un jour est donnée par la page) */
     background-image: linear-gradient(to right, var(--color-steel) 1px, transparent 1px);
   }

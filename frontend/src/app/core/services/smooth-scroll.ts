@@ -21,4 +21,17 @@ export class SmoothScroll {                                // défilement adouci
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe(() => this.lenis?.scrollTo(0, { immediate: true, force: true })); // nouvelle page : retour en haut, sans animation
   }
+
+  showBottomOf(element: HTMLElement): void {               // descend la page jusqu'à ce que le bas de l'élément soit visible (chat du conseiller IA)
+    const overflow = element.getBoundingClientRect().bottom - window.innerHeight + 24;
+    if (overflow <= 0) {
+      return;                                              // déjà visible
+    }
+    const top = window.scrollY + overflow;
+    if (this.lenis) {
+      this.lenis.scrollTo(top);                            // avec le défilement adouci
+    } else {
+      window.scrollTo({ top });
+    }
+  }
 }

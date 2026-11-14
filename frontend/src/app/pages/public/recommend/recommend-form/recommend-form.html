@@ -1,0 +1,189 @@
+<section class="px-4 pb-20 md:pb-28"> <!-- Formulaire + résultat -->
+  <div class="mx-auto grid max-w-6xl items-start gap-8 lg:grid-cols-2">
+
+    <form [formGroup]="form" (ngSubmit)="submit()" class="animate-fade-up flex flex-col gap-8 rounded-card border border-steel bg-carbon p-6 md:p-8" novalidate> <!-- formulaire -->
+      <fieldset>                                                                               <!-- 1. type de modèle -->
+        <legend class="form-label"><span class="text-porcelain">1.</span> Model type</legend>
+        <div class="grid grid-cols-2 gap-2 sm:grid-cols-3">
+          @for (type of modelTypes; track type.value) {
+            <label class="cursor-pointer rounded-nav border border-steel bg-obsidian px-4 py-3 transition duration-300 hover:border-slate has-checked:border-porcelain has-checked:bg-porcelain has-checked:text-obsidian has-focus-visible:outline has-focus-visible:outline-action-blue"> <!-- carte choisie = claire -->
+              <input type="radio" formControlName="modelType" [value]="type.value" class="sr-only" />
+              <span class="block text-body font-semibold">{{ type.label }}</span>
+              <span class="mt-0.5 block text-utility-nav opacity-70">{{ type.hint }}</span>
+            </label>
+          }
+        </div>
+      </fieldset>
+
+      <div>                                                                                    <!-- 2. nombre de paramètres -->
+        <label for="parameters" class="form-label"><span class="text-porcelain">2.</span> Number of parameters (billions)</label>
+        <input id="parameters" type="number" formControlName="parametersBillions" min="0.01" max="2000" step="any" class="form-field" />
+        <div class="mt-3 flex flex-wrap gap-2">                                                 <!-- tailles courantes -->
+          @for (preset of parameterPresets; track preset) {
+            <button
+              type="button"
+              (click)="setParameters(preset)"
+              class="rounded-pill border px-3 py-1 text-utility-nav transition duration-300"
+              [class]="form.controls.parametersBillions.value === preset ? 'border-porcelain bg-porcelain text-obsidian' : 'border-steel text-ash hover:border-slate hover:text-porcelain'"
+            >{{ preset }}B</button>
+          }
+        </div>
+        @if (form.controls.parametersBillions.invalid && form.controls.parametersBillions.touched) {
+          <p class="mt-2 text-utility-nav text-optical-yellow" role="alert">Enter a number between 0.01 and 2000.</p> <!-- message d'erreur -->
+        }
+      </div>
+
+      <fieldset>                                                                               <!-- 3. entraînement ou inférence -->
+        <legend class="form-label"><span class="text-porcelain">3.</span> Workload</legend>
+        <div class="grid grid-cols-2 gap-2">
+          @for (mode of modes; track mode.value) {
+            <label class="cursor-pointer rounded-nav border border-steel bg-obsidian px-4 py-3 transition duration-300 hover:border-slate has-checked:border-porcelain has-checked:bg-porcelain has-checked:text-obsidian has-focus-visible:outline has-focus-visible:outline-action-blue">
+              <input type="radio" formControlName="mode" [value]="mode.value" class="sr-only" />
+              <span class="block text-body font-semibold">{{ mode.label }}</span>
+              <span class="mt-0.5 block text-utility-nav opacity-70">{{ mode.hint }}</span>
+            </label>
+          }
+        </div>
+      </fieldset>
+
+      <div>                                                                                    <!-- 4. budget -->
+        <div class="flex items-baseline justify-between">
+          <label for="budget" class="form-label"><span class="text-porcelain">4.</span> Budget per hour</label>
+          <p class="font-display text-product-label font-semibold tabular-nums">{{ form.controls.budgetPerHour.value | currency: 'USD' }}</p> <!-- valeur en direct -->
+        </div>
+        <input id="budget" type="range" formControlName="budgetPerHour" min="0.5" max="40" step="0.5" class="form-range mt-2" />
+        <div class="mt-1 flex justify-between text-utility-nav text-ash">
+          <span>$0.50</span><span>$40.00</span>
+        </div>
+      </div>
+
+      <button type="submit" class="btn-primary w-full gap-2 py-3 text-body disabled:opacity-60" [disabled]="loading()">
+        @if (loading()) {
+          <svg class="size-4 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden="true">  <!-- roue de chargement -->
+            <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-opacity="0.3" stroke-width="2.5" />
+            <path d="M21 12a9 9 0 0 0-9-9" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+          </svg>
+          Analyzing…
+        } @else {
+          Get recommendation
+        }
+      </button>
+    </form>
+
+    <div id="recommendation-result" class="animate-fade-up scroll-mt-20 lg:sticky lg:top-16" style="animation-delay: 100ms" aria-live="polite"> <!-- résultat, collant sur grand écran -->
+      @if (errorMessage(); as message) {
+        <app-alert [message]="message" />
+      } @else if (loading()) {
+        <div class="flex flex-col items-center rounded-card border border-steel bg-carbon px-6 py-12 text-center"> <!-- analyse en cours -->
+          <img src="images/ai-chip.svg" alt="" width="600" height="600" class="w-48 animate-pulse" />
+          <p class="mt-6 font-display text-product-label font-semibold">Analyzing your model</p>
+          <div class="mt-3 flex gap-1.5" aria-hidden="true">                                    <!-- trois points qui rebondissent -->
+            <span class="size-2 animate-bounce rounded-full bg-aurora-glow"></span>
+            <span class="size-2 animate-bounce rounded-full bg-aurora-glow [animation-delay:150ms]"></span>
+            <span class="size-2 animate-bounce rounded-full bg-aurora-glow [animation-delay:300ms]"></span>
+          </div>
+        </div>
+      } @else {
+        @for (res of resultList(); track res) {                                                <!-- recréé à chaque résultat : animations rejouées -->
+          <div class="flex flex-col gap-4 rounded-card bg-carbon p-4">                          <!-- panneau Carbon, tuiles noires -->
+            <div class="result-enter rounded-card bg-obsidian p-6">                              <!-- mémoire estimée -->
+              <p class="text-utility-nav font-semibold text-ash">Estimated memory needed</p>
+              <p class="mt-1 font-display text-display-sm font-semibold tabular-nums text-aurora" [appCountUp]="res.requiredVramGb" [countDecimals]="1" countSuffix=" GB"></p>
+              @if (res.recommendation; as rec) {
+                <div class="mt-4 h-3 overflow-hidden rounded-pill bg-carbon">                    <!-- jauge : mémoire utilisée sur la configuration -->
+                  <div class="animate-grow-x h-full origin-left rounded-pill bg-aurora-glow [animation-delay:300ms]" [style.width.%]="gaugePercent(res.requiredVramGb, rec)"></div>
+                </div>
+                <p class="mt-2 text-utility-nav text-ash">{{ gaugePercent(res.requiredVramGb, rec) }}% of {{ rec.totalVramGb }} GB used</p>
+              }
+            </div>
+
+            @if (res.recommendation; as rec) {
+              <div class="result-enter [animation-delay:150ms]">                                <!-- l'animation d'entrée est sur le parent, l'inclinaison sur l'enfant -->
+              <div appTilt [tiltMax]="2" class="rounded-card bg-obsidian p-6 transition duration-500 ease-out"> <!-- GPU conseillé -->
+                <div class="flex flex-wrap items-center justify-between gap-2">
+                  <p class="text-utility-nav font-semibold text-ash">Recommended</p>
+                  <span class="capsule">{{ rec.withinBudget ? 'Within your budget' : 'Over your budget' }}</span>
+                </div>
+                <p class="mt-3 font-display text-hero-product-name font-semibold">
+                  @if (rec.gpuCount > 1) { <span class="text-ash">{{ rec.gpuCount }} ×</span> }
+                  {{ rec.gpu.name }}
+                </p>
+                <div class="mt-4 grid grid-cols-2 gap-3">
+                  <div class="rounded-nav bg-carbon p-4">
+                    <p class="font-display text-feature-stat font-semibold tabular-nums" [appCountUp]="rec.totalPricePerHour" [countDecimals]="2" countPrefix="$"></p>
+                    <p class="mt-1 text-utility-nav text-ash">per hour</p>
+                  </div>
+                  <div class="rounded-nav bg-carbon p-4">
+                    <p class="font-display text-feature-stat font-semibold tabular-nums" [appCountUp]="rec.totalVramGb" countSuffix=" GB"></p>
+                    <p class="mt-1 text-utility-nav text-ash">total VRAM</p>
+                  </div>
+                </div>
+                <p class="mt-4 text-body text-ash">{{ res.explanation }}</p>
+                <div class="mt-5 flex flex-wrap gap-3">
+                  <a routerLink="/account/rentals/new" [queryParams]="{ gpuId: rec.gpu.id }" class="btn-primary">Rent this GPU</a>
+                  <a [routerLink]="['/gpus', rec.gpu.id]" class="btn-outline">View details</a>
+                </div>
+              </div>
+              </div>
+            } @else {
+              <div class="result-enter rounded-card bg-obsidian p-6 [animation-delay:150ms]">     <!-- aucun GPU ne convient -->
+                <p class="font-display text-product-label font-semibold">No single configuration fits.</p>
+                <p class="mt-2 text-body text-ash">{{ res.explanation }}</p>
+                <a routerLink="/contact" class="btn-primary mt-5">Contact our team</a>
+              </div>
+            }
+
+            @if (res.alternatives.length > 0) {
+              <div class="result-enter rounded-card bg-obsidian p-6 [animation-delay:300ms]">     <!-- alternatives -->
+                <p class="text-utility-nav font-semibold text-ash">Alternatives</p>
+                <ul class="mt-3 divide-y divide-steel">
+                  @for (alt of res.alternatives; track alt.gpu.id) {
+                    <li class="result-enter flex items-center justify-between gap-4 py-3" [style.animation-delay.ms]="450 + $index * 120"> <!-- arrivent l'une après l'autre -->
+                      <div>
+                        <p class="text-body font-semibold">{{ alt.gpuCount > 1 ? alt.gpuCount + ' × ' : '' }}{{ alt.gpu.name }}</p>
+                        <p class="text-utility-nav text-ash">{{ alt.totalVramGb }} GB · {{ alt.withinBudget ? 'within budget' : 'over budget' }}</p>
+                      </div>
+                      <div class="text-right">
+                        <p class="text-body tabular-nums">{{ alt.totalPricePerHour | currency: 'USD' }}<span class="text-ash"> / h</span></p>
+                        <a [routerLink]="['/gpus', alt.gpu.id]" class="text-link text-utility-nav">View ›</a>
+                      </div>
+                    </li>
+                  }
+                </ul>
+              </div>
+            }
+          </div>
+        } @empty {
+          <div class="flex flex-col items-center rounded-card border border-steel bg-carbon px-6 py-12 text-center"> <!-- avant la première recherche -->
+            <img src="images/ai-chip.svg" alt="" width="600" height="600" class="animate-float w-48" />
+            <p class="mt-6 font-display text-product-label font-semibold">Your recommendation will appear here.</p>
+            <p class="mt-2 max-w-xs text-body text-ash">Fill in the form and press “Get recommendation”.</p>
+          </div>
+        }
+      }
+    </div>
+  </div>
+</section>
+
+<section class="aurora-glow px-4 py-20 md:py-28"> <!-- Explication du calcul -->
+  <div class="mx-auto max-w-6xl">
+    <div appReveal class="text-center">
+      <p class="font-display text-product-label font-semibold text-aurora">Transparent by design</p>
+      <h2 class="mt-2 font-display text-hero-product-name font-semibold md:text-section-title">How we estimate.</h2>
+    </div>
+    <div class="mt-12 grid gap-4 md:grid-cols-3">
+      @for (item of estimateSteps; track item.title) {
+        <div appReveal [revealDelay]="$index * 120">
+          <div appTilt class="glass-card h-full p-8">                                         <!-- carte en verre -->
+            <p class="font-display text-feature-stat font-semibold text-aurora">{{ item.value }}</p>
+            <h3 class="mt-4 font-display text-product-label font-semibold">{{ item.title }}</h3>
+            <p class="mt-2 text-body text-ash">{{ item.text }}</p>
+          </div>
+        </div>
+      }
+    </div>
+    <p appReveal class="mx-auto mt-10 max-w-2xl text-center text-body text-ash">
+      We then pick the cheapest GPU configuration, up to 8 units, that holds your model and fits your hourly budget.
+    </p>
+  </div>
+</section>

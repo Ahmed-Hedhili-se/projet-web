@@ -1,0 +1,95 @@
+<div class="mx-auto max-w-4xl">
+  @if (messages().length === 0 && !pending()) {
+    <div class="animate-fade-up glass-card px-6 py-10 text-center md:px-10">                    <!-- avant le premier message : accueil + exemples -->
+      <span class="mx-auto flex size-12 items-center justify-center rounded-full border border-aurora-glow/50 bg-aurora-glow/10 text-aurora" aria-hidden="true">
+        <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v3m0 12v3M3 12h3m12 0h3M6.3 6.3l2 2m7.4 7.4 2 2m0-11.4-2 2m-7.4 7.4-2 2" /><circle cx="12" cy="12" r="2.5" /></svg>
+      </span>
+      <h2 class="mt-4 font-display text-hero-product-name font-semibold">What do you want to run?</h2>
+      <p class="mx-auto mt-2 max-w-xl text-body text-porcelain/70">
+        Paste the link of your model's GitHub repository, describe your workload, or both. The advisor reads the code,
+        simulates every GPU configuration of our catalog and explains its choice.
+      </p>
+      <ul class="mt-6 flex flex-wrap justify-center gap-2" aria-label="Examples">
+        @for (example of examples; track example.label) {
+          <li><button type="button" (click)="useExample(example)" class="btn-outline">{{ example.label }}</button></li>
+        }
+      </ul>
+    </div>
+  } @else {
+    <div class="flex items-center justify-between gap-4">                                       <!-- titre de la conversation + nouvelle conversation -->
+      <p class="min-w-0 truncate text-utility-nav font-semibold text-ash">{{ conversation()?.title ?? 'New conversation' }}</p>
+      <button type="button" (click)="newConversation()" [disabled]="sending()" class="btn-outline shrink-0 disabled:opacity-40">New conversation</button>
+    </div>
+    <div class="mt-6 flex flex-col gap-6" aria-live="polite">                                   <!-- messages, du plus ancien au plus récent -->
+      @for (message of messages(); track message.id) {
+        <app-advisor-message [message]="message" [interactive]="$last && !sending()" (reply)="send($event)" />
+      }
+      @if (pending(); as message) {
+        <app-advisor-message [message]="message" [working]="true" />                            <!-- réponse en cours d'arrivée -->
+      }
+    </div>
+  }
+
+  @if (errorMessage(); as message) {
+    <div animate.enter="result-enter" class="mt-6">
+      <app-alert [message]="message">
+        <button type="button" (click)="useForm.emit()" class="text-link mt-1 text-utility-nav">Use the quick form instead</button>
+      </app-alert>
+    </div>
+  }
+
+  <form #composer (submit)="$event.preventDefault(); send()" class="animate-fade-up mt-6 rounded-card border border-steel bg-carbon p-4 md:p-5" style="animation-delay: 150ms" novalidate> <!-- zone de saisie -->
+    <label for="advisor-repo" class="form-label">GitHub repository <span class="font-normal">(optional)</span></label>
+    <input
+      id="advisor-repo"
+      type="url"
+      inputmode="url"
+      autocomplete="off"
+      placeholder="https://github.com/owner/repo"
+      class="form-field"
+      [value]="repo()"
+      (input)="repo.set($any($event.target).value); repoError.set(null)"
+      [attr.aria-invalid]="repoError() !== null"
+      [attr.aria-describedby]="repoError() ? 'advisor-repo-error' : null"
+    />
+    @if (repoError(); as error) {
+      <p id="advisor-repo-error" class="mt-2 text-utility-nav text-optical-yellow" role="alert">{{ error }}</p>
+    }
+
+    <label for="advisor-message" class="form-label mt-4">Your message</label>
+    <textarea
+      id="advisor-message"
+      rows="2"
+      maxlength="3800"
+      placeholder="Example: fine-tune an 8B model with QLoRA on 300M tokens"
+      class="form-field h-auto resize-y rounded-nav py-3"
+      [value]="draft()"
+      (input)="draft.set($any($event.target).value)"
+      (keydown.enter)="onEnter($event)"
+    ></textarea>
+
+    <div class="mt-4 flex flex-wrap items-center justify-between gap-3">
+      <p class="text-utility-nav text-ash">
+        <span class="tabular-nums" [class.text-optical-yellow]="remaining() === 0">{{ used() }} / {{ status().dailyMessageLimit }}</span> messages today
+        @if (demo) { · demo mode: answers are simulated }
+      </p>
+      <button type="submit" class="btn-primary gap-2 disabled:opacity-60" [disabled]="!canSend()">
+        @if (sending()) {
+          <svg class="size-3.5 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-opacity="0.3" stroke-width="2.5" />
+            <path d="M21 12a9 9 0 0 0-9-9" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+          </svg>
+        }
+        Send
+      </button>
+    </div>
+    @if (remaining() === 0) {
+      <p class="mt-3 text-utility-nav text-optical-yellow" role="status">You have reached today's message limit. Try again tomorrow, or use the quick form.</p>
+    }
+  </form>
+
+  <p class="mt-4 text-center text-utility-nav text-ash">
+    Prefer to enter the figures yourself?
+    <button type="button" (click)="useForm.emit()" class="text-link">Use the quick form</button>
+  </p>
+</div>
