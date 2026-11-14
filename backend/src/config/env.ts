@@ -13,6 +13,9 @@ const envSchema = z.object({
   GITHUB_TOKEN: z.string().default(''),                     // vide = conseiller IA désactivé, le reste du site marche
   LLM_PROVIDER: z.enum(['github']).default('github'),       // fournisseur du modèle de langage (GitHub Models)
   LLM_MODEL: z.string().default('openai/gpt-4.1'),          // modèle utilisé par l'agent
+  LLM_BASE_URL: z.url().default('https://models.github.ai/inference'), // toute API compatible OpenAI (/chat/completions)
+  LLM_API_KEY: z.string().default(''),                      // vide = GITHUB_TOKEN est utilisé
+  AGENT_DAILY_LIMIT: z.coerce.number().int().positive().default(30), // messages par utilisateur et par jour
 });
 
 const parsed = envSchema.safeParse(process.env);

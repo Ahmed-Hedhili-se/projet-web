@@ -18,6 +18,7 @@ export interface RankedConfig {                             // une ligne du clas
   verdict: Verdict;
   gpuId: number;
   gpuName: string;
+  architecture: string;                                     // ex. "Hopper" : ce que l'utilisateur veut comprendre
   gpuCount: number;
   pricePerHour: number;                                     // prix de la configuration entière
   availableUnits: number;                                   // GPU de ce modèle libres sur la période
@@ -109,7 +110,8 @@ function pickItems(ranked: Simulation[], highlights: [Verdict, Simulation | unde
 function toRanked(sim: Simulation, verdict: Verdict, rank: number, free: number): RankedConfig {
   return {
     rank, verdict,
-    gpuId: sim.config.gpu.id, gpuName: sim.config.gpu.name, gpuCount: sim.config.gpuCount,
+    gpuId: sim.config.gpu.id, gpuName: sim.config.gpu.name, architecture: sim.config.gpu.architecture,
+    gpuCount: sim.config.gpuCount,
     pricePerHour: sim.config.pricePerHour, availableUnits: free,
     estimate: {
       memoryRequiredGb: sim.memoryRequiredGb, memoryPerGpuGb: sim.memoryPerGpuGb,

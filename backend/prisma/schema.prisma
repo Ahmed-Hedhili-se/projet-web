@@ -33,8 +33,46 @@ model User {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
   rentals      Rental[]                                  // locations de l'utilisateur
+  agentConversations AgentConversation[]                 // conversations avec le conseiller IA
 
   @@map("users")
+}
+
+enum AgentRole {
+  USER                                                     // message écrit par l'utilisateur
+  ASSISTANT                                                // réponse du conseiller IA
+}
+
+model AgentConversation {
+  id              Int            @id @default(autoincrement())
+  userId          Int
+  title           String         @default("New conversation")
+  repoUrl         String?                                // dernier repo GitHub analysé
+  workloadProfile Json           @default("{}")          // ce que l'agent sait du travail (mémoire de la conversation)
+  lastRanking     Json?                                  // dernier classement calculé (pour afficher les cartes)
+  inputTokens     Int            @default(0)             // consommation cumulée du LLM (suivi des coûts)
+  outputTokens    Int            @default(0)
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  user            User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages        AgentMessage[]
+
+  @@index([userId, updatedAt])
+  @@map("agent_conversations")
+}
+
+model AgentMessage {
+  id             Int               @id @default(autoincrement())
+  conversationId Int
+  role           AgentRole
+  content        String                                  // texte affiché (Markdown)
+  steps          Json              @default("[]")        // étapes de travail de l'agent
+  cards          Json              @default("[]")        // cartes d'interface (profil, configurations, réponses rapides)
+  createdAt      DateTime          @default(now())
+  conversation   AgentConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  @@index([conversationId, createdAt])
+  @@map("agent_messages")
 }
 
 model Gpu {

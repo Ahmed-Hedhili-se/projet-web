@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { adminRouter } from './admin.routes';
+import { agentRouter } from './agent.routes';
 import { authRouter } from './auth.routes';
 import { gpuRouter } from './gpu.routes';
 
@@ -11,4 +12,5 @@ apiRouter.get('/health', (_req, res) => {                   // vérifie que l'AP
 
 apiRouter.use('/auth', authRouter);
 apiRouter.use('/gpus', gpuRouter);                          // catalogue public (B3)
+apiRouter.use('/agent', agentRouter);                       // conseiller IA (B9)
 apiRouter.use('/admin', adminRouter);

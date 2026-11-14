@@ -1,4 +1,26 @@
-import { Gpu, Prisma, User } from '@prisma/client';
+import { AgentConversation, AgentMessage, Gpu, Prisma, User } from '@prisma/client';
+
+export function toConversation(conversation: AgentConversation & { _count: { messages: number } }) { // objet "AgentConversation"
+  return {
+    id: conversation.id,
+    title: conversation.title,
+    repoUrl: conversation.repoUrl,
+    messageCount: conversation._count.messages,
+    createdAt: conversation.createdAt.toISOString(),
+    updatedAt: conversation.updatedAt.toISOString(),
+  };
+}
+
+export function toAgentMessage(message: AgentMessage) {     // objet "AgentMessage" de API.md
+  return {
+    id: message.id,
+    role: message.role,
+    content: message.content,
+    steps: message.steps,
+    cards: message.cards,
+    createdAt: message.createdAt.toISOString(),
+  };
+}
 
 export function toPrice(value: Prisma.Decimal | number): number { // Decimal Prisma → nombre à 2 décimales
   return Math.round(Number(value) * 100) / 100;
