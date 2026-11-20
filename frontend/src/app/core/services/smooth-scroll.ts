@@ -22,6 +22,15 @@ export class SmoothScroll {
       .subscribe(() => this.lenis?.scrollTo(0, { immediate: true, force: true }));
   }
 
+  showTopOf(element: HTMLElement, offset = 72): void {
+    const top = window.scrollY + element.getBoundingClientRect().top - offset;
+    if (this.lenis) {
+      this.lenis.scrollTo(top);
+    } else {
+      window.scrollTo({ top, behavior: this.sync.reduceMotion ? 'auto' : 'smooth' });
+    }
+  }
+
   showBottomOf(element: HTMLElement): void {
     const overflow = element.getBoundingClientRect().bottom - window.innerHeight + 24;
     if (overflow <= 0) {

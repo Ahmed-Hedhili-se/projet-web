@@ -1,4 +1,5 @@
 import { Component, DestroyRef, ElementRef, OnInit, computed, effect, inject, input, output, signal, viewChild } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
 import { AgentCard, AgentConversation, AgentError, AgentEvent, AgentMessage, AgentStatus } from '../../../../core/models/agent';
@@ -19,7 +20,7 @@ function isAgentError(err: unknown): err is AgentError {
 
 @Component({
   selector: 'app-advisor-chat',
-  imports: [Alert, ConfirmDialog, AdvisorHistory, AdvisorMessage],
+  imports: [RouterLink, Alert, ConfirmDialog, AdvisorHistory, AdvisorMessage],
   templateUrl: './advisor-chat.html',
 })
 export class AdvisorChat implements OnInit {

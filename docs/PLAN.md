@@ -54,6 +54,8 @@ Responsive : mobile d'abord, navigation repliée en menu sur petit écran.
 | `/contact` | Contact | Formulaire enregistré en base, message de confirmation |
 | `/login` | Login | Email + mot de passe |
 | `/register` | Register | Prénom, nom, email, mot de passe |
+| `/legal` | Legal notice | Éditeur du site, conditions d'utilisation, propriété intellectuelle, crédits |
+| `/privacy` | Privacy policy | Données personnelles collectées, finalités, durée de conservation, droits de l'utilisateur |
 | `**` | Not found | Page 404 |
 
 ### Espace utilisateur (`authGuard`)
@@ -94,7 +96,7 @@ frontend/src/app/
 │   └── footer/
 ├── shared/components/            (composants réutilisables)
 └── pages/
-    ├── public/                   (home, about, gpu-catalog, gpu-detail, recommend, contact, login, register, not-found)
+    ├── public/                   (home, about, gpu-catalog, gpu-detail, recommend, contact, login, register, legal, privacy, not-found)
     ├── account/                  (my-rentals, new-rental, profile)
     └── admin/                    (dashboard, gpus, users, rentals, messages)
 ```
@@ -102,7 +104,7 @@ frontend/src/app/
 
 ### Pages
 `HomePage`, `AboutPage`, `GpuCatalogPage`, `GpuDetailPage`, `RecommendPage`, `ContactPage`, `LoginPage`,
-`RegisterPage`, `NotFoundPage`, `MyRentalsPage`, `NewRentalPage`, `ProfilePage`, `AdminDashboardPage`,
+`RegisterPage`, `LegalPage`, `PrivacyPage`, `NotFoundPage`, `MyRentalsPage`, `NewRentalPage`, `ProfilePage`, `AdminDashboardPage`,
 `AdminGpusPage`, `AdminUsersPage`, `AdminRentalsPage`, `AdminMessagesPage`.
 
 ### Composants partagés

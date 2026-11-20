@@ -1,6 +1,7 @@
 import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { getErrorDetails, getErrorMessage } from '../../../core/models/api-error';
 import { ContactService } from '../../../core/services/contact-service';
 import { Alert } from '../../../shared/components/alert/alert';
@@ -12,7 +13,7 @@ type ContactField = 'name' | 'email' | 'subject' | 'message';
 
 @Component({
   selector: 'app-contact-page',
-  imports: [ReactiveFormsModule, Alert, SplitText, Reveal, Tilt],
+  imports: [ReactiveFormsModule, RouterLink, Alert, SplitText, Reveal, Tilt],
   templateUrl: './contact-page.html',
 })
 export class ContactPage {

@@ -1,0 +1,56 @@
+<section class="px-4 pt-16 pb-10 text-center md:pt-24">
+  <p class="animate-fade-up font-display text-product-label font-semibold text-aurora">{{ eyebrow() }}</p>
+  <h1 class="mx-auto mt-2 max-w-4xl font-display text-display-sm font-semibold md:text-display">
+    <app-split-text [text]="title()" [delay]="100" />
+  </h1>
+  <p class="animate-fade-up mx-auto mt-4 max-w-2xl text-section-nav text-porcelain/70" style="animation-delay: 400ms">{{ intro() }}</p>
+  <p class="animate-fade-up mt-3 text-utility-nav text-ash" style="animation-delay: 480ms">Last updated: {{ updated() }}</p>
+</section>
+
+<section class="px-4 pb-20 md:pb-28">
+  <div class="mx-auto grid max-w-6xl items-start gap-6 lg:grid-cols-[240px_minmax(0,1fr)]">
+    <nav aria-label="On this page" class="animate-fade-up rounded-card border border-steel bg-carbon p-4 lg:sticky lg:top-16" style="animation-delay: 500ms">
+      <p class="px-2 pb-2 text-utility-nav font-semibold text-ash">On this page</p>
+      <ol class="flex flex-col gap-1">
+        @for (section of sections(); track section.id; let index = $index) {
+          <li>
+            <a [href]="sectionLink(section.id)" (click)="goTo($event, section.id)" class="flex gap-2 rounded-[12px] px-2 py-1.5 text-utility-nav text-porcelain/80 transition-colors duration-300 hover:bg-obsidian hover:text-porcelain">
+              <span class="text-aurora tabular-nums">{{ index + 1 }}.</span>{{ section.title }}
+            </a>
+          </li>
+        }
+      </ol>
+    </nav>
+
+    <article class="animate-fade-up flex flex-col gap-4" style="animation-delay: 600ms">
+      @for (section of sections(); track section.id; let index = $index) {
+        <section [id]="section.id" tabindex="-1" class="scroll-mt-20 rounded-card outline-none border border-steel bg-carbon p-6 md:p-8" [attr.aria-labelledby]="section.id + '-title'">
+          <h2 [id]="section.id + '-title'" class="font-display text-product-label font-semibold">
+            <span class="text-aurora tabular-nums">{{ index + 1 }}.</span> {{ section.title }}
+          </h2>
+          @for (paragraph of section.paragraphs; track $index) {
+            <p class="mt-3 text-body leading-relaxed text-porcelain/80">{{ paragraph }}</p>
+          }
+          @if (section.items; as items) {
+            <ul class="mt-3 flex list-disc flex-col gap-2 pl-5 text-body leading-relaxed text-porcelain/80">
+              @for (item of items; track $index) {
+                <li>{{ item }}</li>
+              }
+            </ul>
+          }
+        </section>
+      }
+
+      <div class="rounded-card border border-steel bg-carbon p-6 text-body text-porcelain/80 md:p-8">
+        <p>
+          TeraMind is a fictional company created for a SUP'COM student web project. This page is an example and is not a
+          real legal document.
+        </p>
+        <p class="mt-3">
+          A question about this page?
+          <a routerLink="/contact" class="text-link">Contact us</a>.
+        </p>
+      </div>
+    </article>
+  </div>
+</section>

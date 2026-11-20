@@ -71,6 +71,7 @@ All pages are responsive (phone, tablet, desktop).
 | GPU recommendation | `/recommend` | **AI advisor** (signed-in users): a conversation that starts from a GitHub repository link or a free description, and answers with up to three GPU configurations. **Quick form** as a fallback: model type, size, training or inference, budget per hour |
 | Contact | `/contact` | Validated form; the message arrives in the admin inbox |
 | Sign in / Create account | `/login`, `/register` | Validation, password strength meter, blocked-account message |
+| Legal notice / Privacy policy | `/legal`, `/privacy` | Publisher, terms of service, credits; personal data collected, why, how long, and the user's rights. Linked from the footer, the sign-up form, the contact form and the AI advisor |
 
 ### User area (signed in)
 
@@ -97,7 +98,7 @@ All pages are responsive (phone, tablet, desktop).
 - **Feedback**: loading skeletons, success and error alerts, confirmation dialogs before destructive actions.
 - **Accessibility**: semantic HTML, keyboard focus, ARIA labels, contrast checked in the design charter,
   `prefers-reduced-motion` respected.
-- **Tests**: 77 unit tests (Vitest) on services, pages and the simulated API.
+- **Tests**: 79 unit tests (Vitest) on services, pages and the simulated API.
 
 ### AI GPU advisor
 

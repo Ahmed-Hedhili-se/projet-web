@@ -21,8 +21,11 @@
     </div>
 
     <div class="mt-10 flex flex-col gap-2 border-t border-steel pt-6 text-utility-nav text-ash sm:flex-row sm:justify-between">
-      <p>© {{ year }} TeraMind. All rights reserved.</p>
-      <p>Fictional company — SUP'COM web project.</p>
+      <p>© {{ year }} TeraMind. All rights reserved. Fictional company — SUP'COM web project.</p>
+      <ul class="flex flex-wrap gap-x-5 gap-y-2" aria-label="Legal">
+        <li><a routerLink="/legal" class="transition-colors hover:text-porcelain">Legal notice</a></li>
+        <li><a routerLink="/privacy" class="transition-colors hover:text-porcelain">Privacy policy</a></li>
+      </ul>
     </div>
   </div>
 </footer>

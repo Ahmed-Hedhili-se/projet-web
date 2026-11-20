@@ -35,6 +35,16 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/public/contact/contact-page').then((m) => m.ContactPage),
   },
   {
+    path: 'legal',
+    title: 'Legal notice | TeraMind',
+    loadComponent: () => import('./pages/public/legal/legal-page').then((m) => m.LegalPage),
+  },
+  {
+    path: 'privacy',
+    title: 'Privacy policy | TeraMind',
+    loadComponent: () => import('./pages/public/privacy/privacy-page').then((m) => m.PrivacyPage),
+  },
+  {
     path: 'login',
     title: 'Sign in | TeraMind',
     canActivate: [guestGuard],

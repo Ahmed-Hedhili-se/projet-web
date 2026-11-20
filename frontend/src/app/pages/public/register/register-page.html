@@ -91,7 +91,12 @@
           <div>
             <label class="flex cursor-pointer items-start gap-3 text-body text-ash">
               <input type="checkbox" formControlName="acceptTerms" class="form-checkbox mt-0.5" />
-              I agree to the TeraMind terms of service and privacy policy.
+              <span>
+                I agree to the TeraMind
+                <a routerLink="/legal" fragment="terms" target="_blank" class="text-link">terms of service</a>
+                and
+                <a routerLink="/privacy" target="_blank" class="text-link">privacy policy</a>.
+              </span>
             </label>
             @if (fieldError('acceptTerms'); as error) {
               <p class="mt-2 text-utility-nav text-optical-yellow">{{ error }}</p>
