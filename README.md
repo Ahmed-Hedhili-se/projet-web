@@ -99,7 +99,8 @@ All pages are responsive (phone, tablet, desktop).
 - **Accessibility**: semantic HTML, keyboard focus, ARIA labels, contrast checked in the design charter,
   `prefers-reduced-motion` respected.
 - **Tests**: 79 unit tests (Vitest) on services, pages and the simulated API.
-- **Code quality**: ESLint (Angular, TypeScript and accessibility rules) and Prettier run on the whole frontend with no remaining issue.
+- **Code quality**: ESLint (Angular, TypeScript and accessibility rules) and Prettier run on the whole frontend with no remaining issue;
+  the source code is commented in French.
 - **Lighthouse** (production build, desktop): Accessibility 100, Best Practices 100 and SEO 100 on Home, GPU catalog,
   Recommendation, About and Contact; Performance 96–98 on these pages, 86–95 on Home (the 3D scene starts there).
   On a simulated mid-range phone, Performance is about 60–66 because of the 3D scene; the other three categories stay at 100.
@@ -184,7 +185,7 @@ Performance and accessibility:
 | Part | Done | Next |
 |---|---|---|
 | Backend | B1 setup (Docker, Prisma, seed, health) · B2 authentication (JWT, roles, Redis login rate limit) · security hardening · B3 GPU catalog (`GET /gpus`, `GET /gpus/:id`, availability) · B8 AI advisor tools (workload simulator, GitHub repo analysis, configuration ranking) · B9 AI advisor (conversations, live stream, daily quota) | B4–B7 (recommendation form, contact, rentals, admin) |
-| Frontend | F1–F10: layout, every public page, user area, admin area, motion & 3D, AI advisor — all on the simulated API | F11 switch to the real API as the backend routes arrive |
+| Frontend | F1–F10: layout, every public page, user area, admin area, motion & 3D, AI advisor · F12 legal notice and privacy policy pages · F13 code quality and optimization (ESLint, Prettier, Lighthouse, commented code) — all on the simulated API | F11 switch to the real API as the backend routes arrive |
 
 ## Getting started (full stack)
 
@@ -220,11 +221,13 @@ npm run build      # production build in frontend/dist/
 
 ## Team workflow
 
-- **Person A** owns `backend/` and `docker-compose.yml`.
-- **Person B** owns `frontend/`.
+- **Ahmed HEDHILI** (person A) owns `backend/` and `docker-compose.yml`.
+- **Adem YOUSSFI** (person B) owns `frontend/`.
 - Everyone commits and pushes directly to `main`; run `git pull --rebase origin main` before pushing.
+- Commit messages follow one format: `type(scope): summary`, for example `feat(frontend): …`, `docs: …`, `chore(backend): …`.
+- Before pushing frontend changes: `npm run lint`, `npm test` and `npm run format` (from `frontend/`) must pass.
 - Tasks are tracked on a GitHub Projects board: [TeraMind – Projet Web](https://github.com/users/ademyoussfi52-lang/projects/1)
-  (steps B1–B9 for the backend, F1–F10 for the frontend, with their status and owner).
+  (steps B1–B9 for the backend, F1–F13 for the frontend, with their status and owner).
 - `docs/API.md` is the contract between frontend and backend: any change is discussed first.
 - Secrets live in `backend/.env`, which is never committed.
 
