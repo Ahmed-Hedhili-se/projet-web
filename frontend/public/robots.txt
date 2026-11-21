@@ -1,3 +1,4 @@
+# moteurs de recherche : les espaces privés (compte et administration) ne sont pas indexés
 User-agent: *
 Disallow: /account/
 Disallow: /admin/

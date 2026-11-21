@@ -2,7 +2,9 @@
   class="relative flex min-h-[calc(100svh-44px)] flex-col items-center justify-center px-4 text-center"
 >
   <div class="hero-scrim" aria-hidden="true"></div>
+  <!-- voile sombre en haut : menu et titre restent lisibles -->
   <div class="relative -translate-y-[13vh]">
+    <!-- contenu remonté : la planète reste visible en dessous -->
     <p class="animate-fade-up text-utility-nav font-semibold text-aurora">
       New · H100 clusters available
     </p>
@@ -14,6 +16,7 @@
     </p>
     <h1 class="mx-auto mt-2 max-w-4xl font-display text-display-sm font-semibold md:text-display">
       <app-split-text text="Compute for every model." highlight="model." [delay]="160" />
+      <!-- mots qui sortent du flou -->
     </h1>
     <p
       class="animate-fade-up mx-auto mt-5 max-w-xl text-section-nav text-porcelain/90"
@@ -47,7 +50,9 @@
   aria-label="GPUs available on TeraMind"
 >
   <div class="animate-marquee flex w-max gap-12">
+    <!-- piste plus large que l'écran -->
     @for (copy of [1, 2]; track copy) {
+      <!-- liste doublée pour une boucle sans saut -->
       <ul class="flex shrink-0 gap-12" [attr.aria-hidden]="copy === 2">
         @for (name of marqueeGpus; track name) {
           <li
@@ -62,9 +67,12 @@
 </section>
 
 <section class="px-4 py-12 md:py-20">
+  <!-- Chiffres clés -->
   <div class="glass-card mx-auto grid max-w-6xl grid-cols-2 gap-4 p-4 md:grid-cols-4">
+    <!-- panneau en verre, tuiles sombres -->
     @for (stat of stats; track stat.label) {
       <div appReveal [revealDelay]="$index * 90">
+        <!-- apparition en cascade -->
         <div
           class="flex h-full flex-col items-center justify-center gap-2 rounded-card bg-obsidian/55 px-4 py-8 text-center"
         >
@@ -75,6 +83,7 @@
             [countPrefix]="stat.prefix ?? ''"
             [countSuffix]="stat.suffix ?? ''"
           ></p>
+          <!-- chiffre qui défile jusqu'à sa valeur -->
           <p class="text-body text-porcelain/70">{{ stat.label }}</p>
         </div>
       </div>
@@ -83,6 +92,7 @@
 </section>
 
 <section class="px-4 py-16 md:py-28">
+  <!-- Grande phrase : les mots apparaissent un à un au défilement -->
   <div class="glass-card mx-auto max-w-4xl p-8 md:p-14">
     <p class="font-display text-hero-product-name font-semibold md:text-section-title">
       <app-scroll-text [text]="statement" />
@@ -91,6 +101,7 @@
 </section>
 
 <section class="aurora-glow px-4 py-20 md:py-28">
+  <!-- Points forts : lueur Aurore douce en haut de section -->
   <div class="mx-auto max-w-6xl">
     <div appReveal class="mx-auto max-w-2xl text-center">
       <p class="font-display text-product-label font-semibold text-aurora">Why TeraMind</p>
@@ -103,6 +114,7 @@
       @for (feature of features; track feature.title) {
         <div appReveal [revealDelay]="$index * 120">
           <div appTilt class="glass-card group h-full p-8 hover:-translate-y-1">
+            <!-- carte en verre, s'incline vers la souris -->
             <div
               class="flex size-12 items-center justify-center rounded-full bg-aurora-glow/15 text-aurora transition duration-500 group-hover:scale-110 group-hover:bg-aurora-glow/25"
             >
@@ -163,9 +175,12 @@
 </section>
 
 <section class="px-4 py-20 md:py-28">
+  <!-- Mise en avant de la recommandation -->
   <div class="mx-auto grid max-w-6xl items-center gap-12 md:grid-cols-2">
     <div class="scroll-zoom">
+      <!-- grandit en entrant à l'écran -->
       <div class="glass-card overflow-hidden">
+        <!-- cadre média en verre, sans ombre -->
         <img
           src="images/ai-chip.svg"
           alt="AI processor with data flowing through its circuits"
@@ -179,6 +194,7 @@
 
     <div appReveal [revealDelay]="150">
       <div class="glass-card p-6 md:p-8">
+        <!-- texte dans une carte en verre -->
         <p class="font-display text-product-label font-semibold text-aurora">AI GPU advisor</p>
         <h2 class="mt-2 font-display text-hero-product-name font-semibold md:text-section-title">
           Not sure which GPU you need?
@@ -190,6 +206,7 @@
         </p>
 
         <div class="mt-8 rounded-card bg-obsidian/55 p-6">
+          <!-- exemple de réponse du conseiller (docs/API.md, section 10) -->
           <p class="text-utility-nav text-porcelain/70">You</p>
           <p class="mt-1 text-body">github.com/acme/legal-llama, about 300M tokens</p>
           <p class="mt-4 text-utility-nav text-porcelain/70">What the AI understood</p>
@@ -218,6 +235,7 @@
 </section>
 
 <section class="aurora-glow px-4 py-20 md:py-28">
+  <!-- GPU mis en avant -->
   <div class="mx-auto max-w-6xl">
     <div appReveal class="flex flex-wrap items-end justify-between gap-4">
       <div>
@@ -235,11 +253,13 @@
       @for (gpu of featuredGpus; track gpu.name) {
         <div appReveal [revealDelay]="$index * 120">
           <article appTilt class="glass-card flex h-full flex-col p-6 hover:-translate-y-1">
+            <!-- carte GPU en verre qui s'incline -->
             <p class="text-utility-nav text-aurora">{{ gpu.useCase }}</p>
             <h3 class="mt-1 font-display text-product-label font-semibold">{{ gpu.name }}</h3>
             <p class="text-body text-porcelain/70">{{ gpu.architecture }}</p>
 
             <div class="mt-6 grid grid-cols-2 gap-3">
+              <!-- caractéristiques -->
               <div class="rounded-nav bg-obsidian/55 p-4">
                 <p
                   class="font-display text-feature-stat font-semibold tabular-nums"
@@ -259,6 +279,7 @@
             </div>
 
             <div class="mt-auto flex items-center justify-between pt-6">
+              <!-- prix + lien, collés en bas -->
               <p class="text-section-nav">
                 {{ gpu.pricePerHour | currency: 'USD'
                 }}<span class="text-body text-porcelain/70"> / hour</span>
@@ -273,8 +294,10 @@
 </section>
 
 <section class="px-4 py-20 md:py-28">
+  <!-- Fonctionnement : titre collant + étapes qui s'illuminent -->
   <div class="mx-auto grid max-w-6xl gap-10 md:grid-cols-2 md:gap-16">
     <div class="glass-card p-6 md:sticky md:top-32 md:self-start md:p-8">
+      <!-- reste en place pendant le défilement -->
       <p class="font-display text-product-label font-semibold text-aurora">How it works</p>
       <h2 class="mt-2 font-display text-hero-product-name font-semibold md:text-section-title">
         From idea to GPU in three steps.
@@ -287,6 +310,7 @@
     <ol class="flex flex-col gap-6 md:gap-24 md:py-16">
       @for (step of steps; track step.number) {
         <li class="scroll-highlight glass-card p-8">
+          <!-- s'illumine au centre de l'écran -->
           <p class="font-display text-section-title font-semibold text-aurora">{{ step.number }}</p>
           <h3 class="mt-3 font-display text-product-label font-semibold">{{ step.title }}</h3>
           <p class="mt-2 text-body text-porcelain/70">{{ step.text }}</p>
@@ -297,7 +321,9 @@
 </section>
 
 <section class="aurora-glow px-4 py-20 md:py-28">
+  <!-- Appel à l'action -->
   <div class="scroll-zoom glass-card mx-auto max-w-4xl px-6 py-14 text-center md:px-12 md:py-20">
+    <!-- grandit en entrant à l'écran -->
     <h2 class="font-display text-hero-product-name font-semibold md:text-section-title">
       Ready to train your next model?
     </h2>

@@ -5,6 +5,7 @@
   [class.border-steel]="status() !== 'ACTIVE'"
   [class.text-ash]="status() === 'COMPLETED' || status() === 'CANCELLED'"
 >
+  <!-- pilule : contour clair si la location est en cours -->
   <span class="relative flex size-2">
     @if (status() === 'ACTIVE') {
       <span

@@ -64,26 +64,26 @@ describe('AdminUsersPage', () => {
     expect(compiled.textContent).toContain('3 of 3 users');
     expect(compiled.textContent).toContain('jane.doe@example.com');
 
-    clickButton(compiled, 'Blocked');
+    clickButton(compiled, 'Blocked'); // filtre : comptes bloqués
     await fixture.whenStable();
     expect(compiled.textContent).toContain('1 of 3 users');
 
     clickButton(compiled, 'All');
     await fixture.whenStable();
-    clickButton(compiled, 'Block');
+    clickButton(compiled, 'Block'); // première ligne : Jane
     await fixture.whenStable();
     expect(compiled.textContent).toContain('Block this account?');
 
-    clickButton(compiled, 'Block account');
+    clickButton(compiled, 'Block account'); // confirmation
     const request = httpTesting.expectOne(`${environment.apiUrl}/admin/users/3`);
     expect(request.request.method).toBe('PATCH');
     expect(request.request.body).toEqual({ isBlocked: true });
-    const { rentalCount, ...jane } = users[0];
+    const { rentalCount, ...jane } = users[0]; // la réponse de l'API est un « User », sans rentalCount
     request.flush({ user: { ...jane, isBlocked: true } });
     await fixture.whenStable();
 
     expect(compiled.textContent).toContain('Jane Doe was blocked.');
-    expect(compiled.querySelector('tbody tr')?.textContent).toContain('Unblock');
-    expect(compiled.querySelector('tbody tr')?.textContent).toContain('4');
+    expect(compiled.querySelector('tbody tr')?.textContent).toContain('Unblock'); // le bouton a changé
+    expect(compiled.querySelector('tbody tr')?.textContent).toContain('4'); // le nombre de locations est conservé
   });
 });

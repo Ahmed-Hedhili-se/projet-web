@@ -1,4 +1,5 @@
 <article appTilt class="glass-card group flex h-full flex-col overflow-hidden hover:-translate-y-1">
+  <!-- carte en verre : monte et s'incline vers la souris -->
   <a
     [routerLink]="['/gpus', gpu().id]"
     class="block overflow-hidden bg-obsidian"
@@ -13,6 +14,7 @@
       loading="lazy"
       class="h-auto w-full transition-transform duration-700 group-hover:scale-105"
     />
+    <!-- zoom doux au survol -->
   </a>
 
   <div class="flex flex-1 flex-col p-6">
@@ -22,6 +24,7 @@
     </h3>
 
     <div class="mt-5 grid grid-cols-2 gap-3">
+      <!-- caractéristiques principales -->
       <div class="rounded-nav bg-obsidian/55 p-4">
         <p class="font-display text-feature-stat font-semibold">{{ gpu().vramGb }} GB</p>
         <p class="mt-1 text-utility-nav text-ash">VRAM</p>
@@ -33,6 +36,7 @@
     </div>
 
     <p class="mt-4 flex items-center gap-2 text-body" [class.text-ash]="gpu().availableUnits === 0">
+      <!-- disponibilité -->
       <span
         class="size-2 rounded-full"
         [class.bg-porcelain]="gpu().availableUnits > 0"
@@ -46,6 +50,7 @@
     </p>
 
     <div class="mt-auto flex items-center justify-between gap-4 pt-6">
+      <!-- prix + lien, collés en bas -->
       <p class="text-section-nav">
         {{ gpu().pricePerHour | currency: 'USD' }}<span class="text-body text-ash"> / hour</span>
       </p>

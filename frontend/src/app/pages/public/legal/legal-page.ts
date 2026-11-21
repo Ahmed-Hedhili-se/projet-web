@@ -5,6 +5,7 @@ import {
 } from '../../../shared/components/legal-document/legal-document';
 
 @Component({
+  // page « Legal notice » (/legal) : uniquement le texte, la mise en page vient de LegalDocument
   selector: 'app-legal-page',
   imports: [LegalDocument],
   template: `
@@ -19,6 +20,7 @@ import {
 })
 export class LegalPage {
   protected readonly sections: LegalSection[] = [
+    // une entrée = une section de la page (et une ligne du sommaire)
     {
       id: 'publisher',
       title: 'Website publisher',
@@ -36,7 +38,7 @@ export class LegalPage {
       ],
     },
     {
-      id: 'terms',
+      id: 'terms', // ouvert directement depuis la case à cocher de l'inscription
       title: 'Terms of service',
       paragraphs: ['By creating an account or renting a GPU, you accept the following rules:'],
       items: [

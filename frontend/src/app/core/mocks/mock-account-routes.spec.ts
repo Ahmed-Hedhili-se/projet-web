@@ -12,11 +12,11 @@ import { mockApiInterceptor } from './mock-api-interceptor';
 
 describe('mock account routes (/rentals, /users/me)', () => {
   let http: HttpClient;
-  const auth = { headers: { Authorization: 'Bearer mock-token-3' } };
+  const auth = { headers: { Authorization: 'Bearer mock-token-3' } }; // Jane (USER de démonstration)
   const inTwoDays = () => new Date(Date.now() + 48 * 3600_000).toISOString();
 
   beforeEach(() => {
-    localStorage.clear();
+    localStorage.clear(); // repart des données de démonstration
     TestBed.configureTestingModule({
       providers: [provideHttpClient(withInterceptors([mockApiInterceptor]))],
     });
@@ -52,7 +52,7 @@ describe('mock account routes (/rentals, /users/me)', () => {
         auth,
       ),
     );
-    expect(response.rental.totalPrice).toBe(64);
+    expect(response.rental.totalPrice).toBe(64); // 3.20 × 2 × 10
     expect(response.rental.status).toBe('UPCOMING');
   });
 
@@ -66,7 +66,7 @@ describe('mock account routes (/rentals, /users/me)', () => {
         ),
       ),
     );
-    expect(error.status).toBe(409);
+    expect(error.status).toBe(409); // le MI300X n'a aucune unité libre
     expect(error.error.error.code).toBe('NOT_ENOUGH_UNITS');
   });
 
@@ -79,7 +79,7 @@ describe('mock account routes (/rentals, /users/me)', () => {
     const error = await expectError(
       firstValueFrom(http.patch(`${environment.apiUrl}/rentals/14/cancel`, {}, auth)),
     );
-    expect(error.status).toBe(409);
+    expect(error.status).toBe(409); // la location 14 est en cours
     expect(error.error.error.code).toBe('RENTAL_NOT_CANCELLABLE');
   });
 
@@ -87,7 +87,7 @@ describe('mock account routes (/rentals, /users/me)', () => {
     const error = await expectError(
       firstValueFrom(http.patch(`${environment.apiUrl}/rentals/16/cancel`, {}, auth)),
     );
-    expect(error.status).toBe(404);
+    expect(error.status).toBe(404); // la location 16 appartient à l'admin
   });
 
   it('should check the current password before changing it', async () => {

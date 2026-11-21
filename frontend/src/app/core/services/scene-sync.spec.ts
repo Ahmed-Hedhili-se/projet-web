@@ -4,9 +4,10 @@ import { Component } from '@angular/core';
 import { RGB, SceneSync, auroraForPage, auroraForProgress } from './scene-sync';
 
 @Component({ template: '' })
-class EmptyPage {}
+class EmptyPage {} // page vide, juste pour naviguer
 
 const hex = (c: RGB) =>
+  // couleur → "#rrggbb" (évite les erreurs d'arrondi des nombres à virgule)
   '#' +
   [c.r, c.g, c.b]
     .map((v) =>
@@ -36,25 +37,25 @@ describe('SceneSync', () => {
     expect(sync.mode()).toBe('hero');
 
     await router.navigateByUrl('/gpus?minVram=40');
-    expect(sync.mode()).toBe('corner');
+    expect(sync.mode()).toBe('corner'); // la query string est ignorée
   });
 
   it('should give each page its aurora tint and follow the scroll on Home', () => {
     const blue = auroraForPage('/gpus', 0);
     const violet = auroraForPage('/recommend', 0);
     const cyan = auroraForPage('/contact', 0);
-    expect(Math.round(blue.b * 255)).toBe(0xff);
-    expect(Math.round(violet.r * 255)).toBe(0x8b);
-    expect(Math.round(cyan.g * 255)).toBe(0xd3);
-    expect(hex(auroraForPage('/', 0))).toBe(hex(blue));
-    expect(hex(auroraForPage('/', 1))).toBe(hex(cyan));
-    expect(hex(auroraForProgress(0.5))).toBe(hex(violet));
+    expect(Math.round(blue.b * 255)).toBe(0xff); // #2997ff
+    expect(Math.round(violet.r * 255)).toBe(0x8b); // #8b5cf6
+    expect(Math.round(cyan.g * 255)).toBe(0xd3); // #22d3ee
+    expect(hex(auroraForPage('/', 0))).toBe(hex(blue)); // haut de Home : bleu
+    expect(hex(auroraForPage('/', 1))).toBe(hex(cyan)); // bas de Home : cyan
+    expect(hex(auroraForProgress(0.5))).toBe(hex(violet)); // milieu : violet
   });
 
   it('should glide the accent toward the page tint and write the CSS variables', async () => {
     const sync = TestBed.inject(SceneSync);
     await TestBed.inject(Router).navigateByUrl('/gpus');
-    sync.tickAccent(10);
+    sync.tickAccent(10); // grand dt : la couleur atteint la cible
     expect(hex(sync.frame.accent)).toBe('#2997ff');
     expect(document.documentElement.style.getPropertyValue('--aurora-rgb')).toBe('41 151 255');
   });

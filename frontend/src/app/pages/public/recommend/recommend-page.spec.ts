@@ -10,6 +10,7 @@ describe('RecommendPage', () => {
   const setup = async (loggedIn: boolean) => {
     localStorage.clear();
     if (loggedIn) {
+      // session de Jane, relue par AuthService au démarrage
       localStorage.setItem('teramind_token', 'mock-token-3');
       localStorage.setItem('teramind_user', JSON.stringify(MOCK_ACCOUNTS[0].user));
     }
@@ -26,9 +27,10 @@ describe('RecommendPage', () => {
   };
 
   const until = async (fixture: ComponentFixture<RecommendPage>, check: () => boolean) => {
+    // attend une réponse de l'API simulée (délais réels)
     for (let i = 0; i < 80 && !check(); i++) {
       await new Promise((resolve) => setTimeout(resolve, 50));
-      fixture.detectChanges();
+      fixture.detectChanges(); // met la page à jour
     }
   };
   const clickButton = (root: HTMLElement, label: string) =>
@@ -50,10 +52,10 @@ describe('RecommendPage', () => {
 
   it('should send a message to the AI advisor and show the recommended configurations', async () => {
     const { fixture, compiled } = await setup(true);
-    await until(fixture, () => compiled.querySelector('textarea') !== null);
+    await until(fixture, () => compiled.querySelector('textarea') !== null); // statut chargé : le chat est affiché
     expect(compiled.textContent).toContain('0 / 30 messages today');
 
-    clickButton(compiled, 'Fine-tune Llama 3.1 8B with QLoRA');
+    clickButton(compiled, 'Fine-tune Llama 3.1 8B with QLoRA'); // exemple cliquable : remplit le message
     fixture.detectChanges();
     expect((compiled.querySelector('textarea') as HTMLTextAreaElement).value).toContain(
       '300M tokens',
@@ -67,7 +69,7 @@ describe('RecommendPage', () => {
     expect(
       compiled.querySelector('a[href="/account/rentals/new?gpuId=1&quantity=4"]')?.textContent,
     ).toContain('Rent this');
-    expect(compiled.textContent).toContain('What if I use FP8?');
+    expect(compiled.textContent).toContain('What if I use FP8?'); // réponses rapides
   });
 
   it('should keep the conversation in the history, reopen it and delete it', async () => {
@@ -76,16 +78,16 @@ describe('RecommendPage', () => {
     clickButton(compiled, 'Serve Mistral 7B');
     fixture.detectChanges();
     clickButton(compiled, 'Send');
-    await until(fixture, () => compiled.querySelector('app-advisor-history li button') !== null);
+    await until(fixture, () => compiled.querySelector('app-advisor-history li button') !== null); // la conversation arrive dans l'historique
     expect(compiled.querySelector('app-advisor-history')?.textContent).toContain(
       'Serve Mistral 7B for 50 concurrent users',
     );
 
     clickButton(compiled, 'New conversation');
     fixture.detectChanges();
-    expect(compiled.textContent).toContain('What do you want to run?');
+    expect(compiled.textContent).toContain('What do you want to run?'); // chat vide
 
-    (compiled.querySelector('app-advisor-history li button') as HTMLButtonElement).click();
+    (compiled.querySelector('app-advisor-history li button') as HTMLButtonElement).click(); // rouvre la conversation
     await until(fixture, () => compiled.querySelectorAll('app-advisor-message').length === 2);
     expect(compiled.textContent).toContain('Best architecture');
 
@@ -96,8 +98,8 @@ describe('RecommendPage', () => {
     ).click();
     fixture.detectChanges();
     expect(compiled.textContent).toContain('Delete this conversation?');
-    clickButton(compiled, 'Delete');
+    clickButton(compiled, 'Delete'); // confirmation
     await until(fixture, () => compiled.textContent?.includes('No conversation yet') ?? false);
-    expect(compiled.textContent).toContain('What do you want to run?');
+    expect(compiled.textContent).toContain('What do you want to run?'); // la conversation ouverte a été supprimée
   });
 });

@@ -3,8 +3,9 @@ import { CanActivateFn, Router } from '@angular/router';
 import { AuthService } from '../services/auth-service';
 
 export const authGuard: CanActivateFn = (_route, state) => {
+  // espace utilisateur : il faut être connecté
   if (inject(AuthService).isLoggedIn()) {
     return true;
   }
-  return inject(Router).createUrlTree(['/login'], { queryParams: { returnUrl: state.url } });
+  return inject(Router).createUrlTree(['/login'], { queryParams: { returnUrl: state.url } }); // revient ici après la connexion
 };

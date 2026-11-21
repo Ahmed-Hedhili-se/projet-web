@@ -1,4 +1,5 @@
 <form [formGroup]="form" class="flex flex-col gap-5" (submit)="$event.preventDefault()">
+  <!-- les filtres s'appliquent tout seuls -->
   <div>
     <label for="filter-search" class="form-label">Search</label>
     <input
@@ -30,6 +31,7 @@
   </div>
 
   <div class="grid grid-cols-2 gap-3">
+    <!-- deux filtres côte à côte -->
     <div>
       <label for="filter-vram" class="form-label">Min. memory</label>
       <select id="filter-vram" formControlName="minVram" class="form-field">
@@ -51,6 +53,7 @@
   </div>
 
   <fieldset class="rounded-nav border border-steel p-4">
+    <!-- groupe « disponibilité » -->
     <legend class="px-1 text-utility-nav font-semibold text-ash">Availability</legend>
     <label class="flex cursor-pointer items-center gap-3 text-body">
       <input type="checkbox" formControlName="available" class="form-checkbox" />

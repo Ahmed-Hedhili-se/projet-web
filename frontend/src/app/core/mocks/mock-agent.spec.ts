@@ -40,7 +40,7 @@ describe('mock AI advisor', () => {
     },
   });
 
-  beforeEach(() => localStorage.clear());
+  beforeEach(() => localStorage.clear()); // repart des données de démonstration
 
   it('should rank configurations with the same formulas as the backend simulator', () => {
     const reply = buildMockReply(newRecord(), 'Fine-tune Llama 3.1 8B with QLoRA on 300M tokens');
@@ -52,11 +52,11 @@ describe('mock AI advisor', () => {
     expect(`${best.gpuCount} x ${best.gpu.name}`).toBe('4 x NVIDIA H100 80GB');
     expect(best.rentPath).toBe('/account/rentals/new?gpuId=1&quantity=4');
     expect(cheapest.gpuCount).toBe(1);
-    expect(cheapest.estimate.hours).toBe(10.78);
+    expect(cheapest.estimate.hours).toBe(10.78); // même valeur que l'exemple du backend (~10.8 h)
     expect(cheapest.estimate.totalCost).toBe(34.5);
     expect(cheapest.estimate.memoryPerGpuGb).toBe(6.4);
     expect(reply.text).toContain('Best architecture: **Hopper**');
-    expect(configs.items.some((item) => item.gpu.manufacturer === 'AMD')).toBe(false);
+    expect(configs.items.some((item) => item.gpu.manufacturer === 'AMD')).toBe(false); // MI300X : aucune unité libre
   });
 
   it('should read a repository, then ask for the dataset size before simulating', () => {
@@ -79,7 +79,7 @@ describe('mock AI advisor', () => {
     ).toContain('300M tokens');
     expect(first.cards.some((card) => card.type === 'configs')).toBe(false);
 
-    const second = buildMockReply(record, '300M tokens');
+    const second = buildMockReply(record, '300M tokens'); // la conversation se souvient du dépôt
     expect(second.cards.some((card) => card.type === 'configs')).toBe(true);
     expect(second.text).toContain('artidoro/qlora');
   });
@@ -133,7 +133,7 @@ describe('mock AI advisor', () => {
     const list = await firstValueFrom(http.get<{ total: number }>(`${url}/conversations`, jane));
     expect(list.total).toBe(1);
 
-    const other = { headers: { Authorization: 'Bearer mock-token-1' } };
+    const other = { headers: { Authorization: 'Bearer mock-token-1' } }; // l'admin ne voit pas la conversation de Jane
     const error = (await firstValueFrom(
       http.get(`${url}/conversations/${created.conversation.id}`, other),
     ).catch((err: unknown) => err)) as HttpErrorResponse;

@@ -23,8 +23,8 @@ describe('mockApiInterceptor', () => {
 
   it('should hide inactive GPUs and sort by price by default', async () => {
     const response = await firstValueFrom(http.get<GpuListResponse>(`${environment.apiUrl}/gpus`));
-    expect(response.gpus.some((gpu) => !gpu.isActive)).toBe(false);
-    expect(response.gpus[0].name).toBe('NVIDIA RTX 4090');
+    expect(response.gpus.some((gpu) => !gpu.isActive)).toBe(false); // le V100 désactivé n'apparaît pas
+    expect(response.gpus[0].name).toBe('NVIDIA RTX 4090'); // le moins cher en premier
     expect(response.manufacturers).toEqual(['AMD', 'NVIDIA']);
   });
 
@@ -48,7 +48,7 @@ describe('mockApiInterceptor', () => {
       }),
     );
     expect(response.success).toBe(true);
-    expect(response.id).toBeGreaterThan(12);
+    expect(response.id).toBeGreaterThan(12); // continue après l'exemple n° 12 de docs/API.md
   });
 
   it('should reject an invalid contact message with VALIDATION_ERROR', async () => {
@@ -59,7 +59,7 @@ describe('mockApiInterceptor', () => {
         subject: 'Hi',
         message: 'Too short',
       }),
-    ).catch((err: unknown) => err)) as HttpErrorResponse;
+    ).catch((err: unknown) => err)) as HttpErrorResponse; // on attend une erreur HTTP
     expect(error.status).toBe(400);
     expect(error.error.error.code).toBe('VALIDATION_ERROR');
     expect(error.error.error.details.map((detail: { field: string }) => detail.field)).toEqual([
@@ -78,7 +78,7 @@ describe('mockApiInterceptor', () => {
     );
     expect(response.token).toBe('mock-token-3');
     expect(response.user.role).toBe('USER');
-    expect('password' in response.user).toBe(false);
+    expect('password' in response.user).toBe(false); // jamais de mot de passe dans la réponse
   });
 
   it('should refuse a blocked account with ACCOUNT_BLOCKED', async () => {
@@ -102,15 +102,15 @@ describe('mockApiInterceptor', () => {
       ).catch((err: unknown) => err)) as HttpErrorResponse;
 
     for (let attempt = 1; attempt <= 5; attempt++) {
-      expect((await tryWrongPassword()).status).toBe(401);
+      expect((await tryWrongPassword()).status).toBe(401); // échecs 1 à 5
     }
     const sixth = await tryWrongPassword();
-    expect(sixth.status).toBe(429);
+    expect(sixth.status).toBe(429); // 6e tentative bloquée
     expect(sixth.error.error.code).toBe('TOO_MANY_ATTEMPTS');
   });
 
   it('should create an account, then refuse the same email with EMAIL_TAKEN', async () => {
-    localStorage.clear();
+    localStorage.clear(); // aucun compte créé auparavant
     const account = {
       email: 'new.user@example.com',
       password: 'Password123',
@@ -130,7 +130,7 @@ describe('mockApiInterceptor', () => {
         password: account.password,
       }),
     );
-    expect(login.user.id).toBe(created.user.id);
+    expect(login.user.id).toBe(created.user.id); // le nouveau compte peut se connecter
 
     const error = (await firstValueFrom(
       http.post(`${environment.apiUrl}/auth/register`, account),

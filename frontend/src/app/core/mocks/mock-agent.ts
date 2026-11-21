@@ -15,25 +15,28 @@ import {
 import { Gpu } from '../models/gpu';
 import { allMockGpus } from './mock-gpus';
 
+// puis applique les mêmes formules d'estimation que le simulateur du backend. Les réponses suivent docs/API.md, section 10.
 export interface MockConversationRecord {
+  // ce que la base stockerait pour une conversation
   userId: number;
   conversation: AgentConversation;
   messages: AgentMessage[];
-  profile: WorkloadProfile;
+  profile: WorkloadProfile; // mémoire de la conversation : ce que l'agent sait du travail
   facts: ProfileFact[];
 }
 
 export interface MockReply {
+  // réponse de l'agent, avant d'être envoyée événement par événement
   steps: AgentStep[];
   cards: AgentCard[];
   text: string;
 }
 
-const AGENT_KEY = 'teramind_mock_agent';
+const AGENT_KEY = 'teramind_mock_agent'; // conversations fictives, gardées dans le navigateur
 export const MOCK_AGENT_DAILY_LIMIT = 30;
 export const MOCK_AGENT_MODEL = 'demo (simulated answers)';
-const STEP_DELAY_MS = navigator.userAgent.includes('jsdom') ? 0 : 900;
-let memoryRecords: MockConversationRecord[] | null = null;
+const STEP_DELAY_MS = navigator.userAgent.includes('jsdom') ? 0 : 900; // pas d'attente dans les tests
+let memoryRecords: MockConversationRecord[] | null = null; // secours si le localStorage est indisponible
 
 export function allMockConversations(): MockConversationRecord[] {
   try {
@@ -49,11 +52,13 @@ export function saveMockConversations(records: MockConversationRecord[]): void {
   try {
     localStorage.setItem(AGENT_KEY, JSON.stringify(records));
   } catch {
+    // stockage indisponible : la liste reste en mémoire
     return;
   }
 }
 
 export function createMockConversation(userId: number): AgentConversation {
+  // POST /agent/conversations
   const records = allMockConversations();
   const now = new Date().toISOString();
   const conversation: AgentConversation = {
@@ -72,6 +77,7 @@ export function createMockConversation(userId: number): AgentConversation {
 }
 
 export function mockMessagesUsedToday(userId: number): number {
+  // quota : messages envoyés aujourd'hui par cet utilisateur
   const today = new Date().toDateString();
   return allMockConversations()
     .filter((record) => record.userId === userId)
@@ -81,10 +87,12 @@ export function mockMessagesUsedToday(userId: number): number {
     ).length;
 }
 
+// ---------- 1. Comprendre le message ----------
 const REPO_PATTERN = /(?:https?:\/\/)?(?:www\.)?github\.com\/([\w.-]+)\/([\w.-]+)/i;
 const TRAINING_MODES: AgentWorkloadMode[] = ['PRETRAINING', 'FULL_FINETUNE', 'LORA', 'QLORA'];
 
 function detectMode(text: string): AgentWorkloadMode | undefined {
+  // mots-clés → type de travail
   if (/qlora/i.test(text)) return 'QLORA';
   if (/\blora\b/i.test(text)) return 'LORA';
   if (/pre-?train/i.test(text)) return 'PRETRAINING';
@@ -94,11 +102,13 @@ function detectMode(text: string): AgentWorkloadMode | undefined {
 }
 
 function detectSize(text: string): number | undefined {
+  // « Llama 3.1 8B » → 8 (mais pas « 1B tokens »)
   const match = text.match(/(\d+(?:\.\d+)?)\s?b\b(?!\s*tokens)/i);
   return match ? Number(match[1]) : undefined;
 }
 
 function detectTokens(text: string): number | undefined {
+  // « 300M tokens » → 300 000 000
   const match = text.match(/(\d+(?:\.\d+)?)\s?(k|m|b|million|billion)\s*tokens/i);
   if (!match) return undefined;
   const unit = match[2].toLowerCase();
@@ -114,6 +124,7 @@ function detectPrecision(text: string): AgentPrecision | undefined {
 }
 
 function analyzeMockRepo(record: MockConversationRecord, owner: string, repo: string): void {
+  // faux « analyze_repo » : déduit tout du nom du dépôt
   const name = `${owner}/${repo}`;
   const mode = detectMode(name) ?? 'QLORA';
   const script = mode === 'INFERENCE' ? 'serve.py' : 'train.py';
@@ -136,7 +147,7 @@ function analyzeMockRepo(record: MockConversationRecord, owner: string, repo: st
     facts.push({ field: 'gradientCheckpointing', value: true, evidence: script });
   }
   record.conversation.repoUrl = `https://github.com/${name}`;
-  record.profile = profile;
+  record.profile = profile; // un nouveau dépôt remplace ce qu'on savait
   record.facts = facts;
 }
 
@@ -152,23 +163,25 @@ const GPU_EXTRAS: Record<
   number,
   { bandwidthGbs: number; fastInterconnect: boolean; ecc: boolean }
 > = {
-  1: { bandwidthGbs: 3350, fastInterconnect: true, ecc: true },
-  2: { bandwidthGbs: 2039, fastInterconnect: true, ecc: true },
-  3: { bandwidthGbs: 1555, fastInterconnect: false, ecc: true },
-  4: { bandwidthGbs: 5300, fastInterconnect: true, ecc: true },
-  5: { bandwidthGbs: 1008, fastInterconnect: false, ecc: false },
-  6: { bandwidthGbs: 300, fastInterconnect: false, ecc: true },
+  1: { bandwidthGbs: 3350, fastInterconnect: true, ecc: true }, // H100
+  2: { bandwidthGbs: 2039, fastInterconnect: true, ecc: true }, // A100 80GB
+  3: { bandwidthGbs: 1555, fastInterconnect: false, ecc: true }, // A100 40GB (PCIe)
+  4: { bandwidthGbs: 5300, fastInterconnect: true, ecc: true }, // MI300X
+  5: { bandwidthGbs: 1008, fastInterconnect: false, ecc: false }, // RTX 4090
+  6: { bandwidthGbs: 300, fastInterconnect: false, ecc: true }, // L4
 };
 const round = (value: number, digits = 1) => Math.round(value * 10 ** digits) / 10 ** digits;
 
 interface MockSimulation {
+  // une configuration simulée (N GPU d'un même modèle)
   gpu: Gpu;
   gpuCount: number;
-  excluded: string | null;
-  item: ConfigItem;
+  excluded: string | null; // pourquoi elle est écartée
+  item: ConfigItem; // prête à afficher (rank et verdict remplis plus tard)
 }
 
 function memoryNeededGb(profile: WorkloadProfile): number {
+  // mémoire totale du travail
   const params = profile.paramsBillions!;
   const bytes = BYTES_PER_PARAM[profile.precision!];
   switch (profile.mode) {
@@ -192,7 +205,7 @@ function simulate(profile: WorkloadProfile, gpu: Gpu, gpuCount: number): MockSim
   const training = TRAINING_MODES.includes(profile.mode!);
   const adapters = profile.mode === 'LORA' || profile.mode === 'QLORA';
   const memoryRequiredGb = round(memoryNeededGb(profile));
-  const memoryPerGpuGb = round(adapters ? memoryRequiredGb : memoryRequiredGb / gpuCount);
+  const memoryPerGpuGb = round(adapters ? memoryRequiredGb : memoryRequiredGb / gpuCount); // LoRA : chaque GPU porte le modèle entier
   const pricePerHour = round(gpu.pricePerHour * gpuCount, 2);
 
   let excluded: string | null = null;
@@ -210,6 +223,7 @@ function simulate(profile: WorkloadProfile, gpu: Gpu, gpuCount: number): MockSim
   let hours: number | null = null;
   let tokensPerSecond: number | null = null;
   if (training) {
+    // durée = calcul total ÷ puissance réellement utilisée
     const flopsPerParamToken = adapters ? 4 : 6;
     const efficiency = profile.mode === 'QLORA' ? 0.25 : 0.4;
     const scaling = gpuCount === 1 ? 1 : extras.fastInterconnect ? 0.9 : 0.7;
@@ -221,6 +235,7 @@ function simulate(profile: WorkloadProfile, gpu: Gpu, gpuCount: number): MockSim
       flopsPerParamToken;
     hours = round(totalFlops / (gpu.fp16Tflops * 1e12 * efficiency * gpuCount * scaling) / 3600, 2);
   } else {
+    // inférence : limitée par la bande passante mémoire
     const weightsGb = profile.paramsBillions! * BYTES_PER_PARAM[profile.precision!];
     tokensPerSecond = Math.max(1, Math.round((extras.bandwidthGbs * 0.6) / weightsGb));
   }
@@ -279,6 +294,7 @@ function simulate(profile: WorkloadProfile, gpu: Gpu, gpuCount: number): MockSim
 }
 
 function rankConfigs(profile: WorkloadProfile, objective: 'balance' | 'cost' | 'speed') {
+  // simule tout, garde 3 configurations au plus
   const sims = allMockGpus()
     .filter((gpu) => gpu.isActive)
     .flatMap((gpu) =>
@@ -293,7 +309,7 @@ function rankConfigs(profile: WorkloadProfile, objective: 'balance' | 'cost' | '
     sim.item.estimate.hours ?? 1 / sim.item.estimate.tokensPerSecond!;
   const minCost = Math.min(...valid.map(cost));
   const minSlowness = Math.min(...valid.map(slowness));
-  const balance = (sim: MockSimulation) => cost(sim) / minCost + slowness(sim) / minSlowness;
+  const balance = (sim: MockSimulation) => cost(sim) / minCost + slowness(sim) / minSlowness; // 2 = le meilleur sur les deux critères
   const by = (score: (sim: MockSimulation) => number) =>
     [...valid].sort((a, b) => score(a) - score(b) || a.gpuCount - b.gpuCount);
 
@@ -309,11 +325,12 @@ function rankConfigs(profile: WorkloadProfile, objective: 'balance' | 'cost' | '
   add('CHEAPEST', by(cost)[0]);
   add('FASTEST', by(slowness)[0]);
   for (const sim of by(balance)) {
+    // complète avec d'autres modèles de GPU
     if (!picked.some(([, other]) => other.gpu.id === sim.gpu.id)) add('ALTERNATIVE', sim);
   }
   const items = picked.map(([verdict, sim], index) => ({ ...sim.item, rank: index + 1, verdict }));
 
-  const excluded = allMockGpus()
+  const excluded = allMockGpus() // GPU dont aucune configuration ne convient
     .filter(
       (gpu) =>
         gpu.isActive &&
@@ -323,6 +340,7 @@ function rankConfigs(profile: WorkloadProfile, objective: 'balance' | 'cost' | '
   return { simulated: sims.length, items, excluded };
 }
 
+// ---------- 3. Construire la réponse ----------
 const MODE_LABELS: Record<AgentWorkloadMode, string> = {
   PRETRAINING: 'pre-training',
   FULL_FINETUNE: 'full fine-tuning',
@@ -336,6 +354,7 @@ function formatHours(hours: number): string {
 }
 
 function describe(item: ConfigItem): string {
+  // « about 1.5 h for about $38 »
   const { hours, totalCost, tokensPerSecond, costPerMillionTokens } = item.estimate;
   return hours !== null
     ? `about **${formatHours(hours)}** for about **$${Math.round(totalCost!)}**`
@@ -343,9 +362,10 @@ function describe(item: ConfigItem): string {
 }
 
 export function buildMockReply(record: MockConversationRecord, content: string): MockReply {
+  // met à jour la mémoire et prépare la réponse
   const steps: AgentStep[] = [];
   const repo = content.match(REPO_PATTERN);
-  const text = content.replace(REPO_PATTERN, ' ');
+  const text = content.replace(REPO_PATTERN, ' '); // le reste du message, sans le lien
   if (repo) {
     const name = `${repo[1]}/${repo[2].replace(/\.git$/, '').replace(/\.+$/, '')}`;
     if (record.conversation.repoUrl !== `https://github.com/${name}`) {
@@ -356,7 +376,7 @@ export function buildMockReply(record: MockConversationRecord, content: string):
   }
 
   const profile = record.profile;
-  const told: string[] = [];
+  const told: string[] = []; // ce que l'utilisateur vient de préciser
   const mode = detectMode(text);
   const size = detectSize(text);
   const tokens = detectTokens(text);
@@ -385,6 +405,7 @@ export function buildMockReply(record: MockConversationRecord, content: string):
 
   const assumptions: string[] = [];
   if (profile.mode && !profile.precision) {
+    // valeur par défaut, annoncée dans la réponse
     profile.precision = profile.mode === 'INFERENCE' ? 'FP16' : 'BF16';
     assumptions.push(`I assumed ${profile.precision} precision.`);
   }
@@ -406,6 +427,7 @@ export function buildMockReply(record: MockConversationRecord, content: string):
   }
 
   if (missing.includes('mode')) {
+    // une seule question à la fois
     cards.push({
       type: 'replies',
       options: ['Fine-tune with QLoRA', 'Full fine-tuning', 'Serve it (inference)'],
@@ -483,6 +505,7 @@ export function buildMockReply(record: MockConversationRecord, content: string):
         `- **${verdictLabels[item.verdict]}**: ${item.gpuCount} × ${item.gpu.name}, ${describe(item)}.`,
     );
   const paragraphs = [
+    // paragraphes Markdown, séparés par une ligne vide
     subject,
     `Best architecture: **${best.gpu.architecture}**. **${best.gpuCount} × ${best.gpu.name}** would take ${describe(best)}.`,
   ];
@@ -492,11 +515,12 @@ export function buildMockReply(record: MockConversationRecord, content: string):
   return { steps, cards, text: paragraphs.join('\n\n') };
 }
 
+// ---------- 4. Rejouer la réponse comme un flux d'événements ----------
 function wait(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-export async function replayMockAgent(
+export async function replayMockAgent( // équivalent fictif de POST /agent/conversations/:id/messages
   userId: number,
   conversationId: number,
   content: string,
@@ -509,6 +533,7 @@ export async function replayMockAgent(
   );
   const text = content.trim();
   if (!record) {
+    // erreurs AVANT le flux : mêmes codes que le backend
     throw {
       code: 'CONVERSATION_NOT_FOUND',
       message: 'Conversation not found.',
@@ -539,17 +564,17 @@ export async function replayMockAgent(
   };
   record.messages.push(userMessage);
   if (record.conversation.title === 'New conversation') {
-    record.conversation.title = text.length > 60 ? `${text.slice(0, 57)}...` : text;
+    record.conversation.title = text.length > 60 ? `${text.slice(0, 57)}...` : text; // début du premier message
   }
   record.conversation.messageCount = record.messages.length;
   record.conversation.updatedAt = userMessage.createdAt;
-  saveMockConversations(records);
+  saveMockConversations(records); // le message de l'utilisateur est enregistré tout de suite
   onEvent({ event: 'user_message', data: { message: userMessage } });
 
   const reply = buildMockReply(record, text);
   for (const step of reply.steps) {
     await wait(STEP_DELAY_MS);
-    if (signal?.aborted) return;
+    if (signal?.aborted) return; // l'utilisateur a quitté la page
     onEvent({ event: 'step', data: step });
   }
   await wait(STEP_DELAY_MS);

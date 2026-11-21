@@ -7,7 +7,7 @@ describe('mockRecommend', () => {
       { modelType: 'LLM', parametersBillions: 7, mode: 'INFERENCE', budgetPerHour: 2 },
       MOCK_GPUS,
     );
-    expect(result.requiredVramGb).toBe(16.8);
+    expect(result.requiredVramGb).toBe(16.8); // 7 × 2 × 1.2
     expect(result.recommendation?.gpu.name).toBe('NVIDIA RTX 4090');
     expect(result.recommendation?.gpuCount).toBe(1);
     expect(result.recommendation?.withinBudget).toBe(true);
@@ -19,7 +19,7 @@ describe('mockRecommend', () => {
       { modelType: 'LLM', parametersBillions: 13, mode: 'TRAINING', budgetPerHour: 40 },
       MOCK_GPUS,
     );
-    expect(result.requiredVramGb).toBe(249.6);
+    expect(result.requiredVramGb).toBe(249.6); // 13 × 16 × 1.2
     expect(result.recommendation?.gpuCount).toBeGreaterThan(1);
   });
 

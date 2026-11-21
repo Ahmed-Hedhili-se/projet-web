@@ -29,12 +29,12 @@ describe('LoginPage', () => {
 
     expect(compiled.textContent).toContain('Enter a valid email address.');
     expect(compiled.textContent).toContain('Enter your password.');
-    httpTesting.expectNone(`${environment.apiUrl}/auth/login`);
+    httpTesting.expectNone(`${environment.apiUrl}/auth/login`); // aucune requête envoyée
   });
 
   it('should display the API message when the credentials are wrong', async () => {
     const fixture = TestBed.createComponent(LoginPage);
-    const page = fixture.componentInstance as unknown as { form: LoginPage['form'] };
+    const page = fixture.componentInstance as unknown as { form: LoginPage['form'] }; // accès au formulaire (protected)
     page.form.setValue({ email: 'jane.doe@example.com', password: 'wrong' });
     await fixture.whenStable();
 

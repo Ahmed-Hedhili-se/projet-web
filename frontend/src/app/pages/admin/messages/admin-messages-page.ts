@@ -20,14 +20,14 @@ export class AdminMessagesPage implements OnInit {
   private readonly adminService = inject(AdminService);
   private readonly destroyRef = inject(DestroyRef);
 
-  protected readonly messages = signal<ContactMessage[]>([]);
+  protected readonly messages = signal<ContactMessage[]>([]); // du plus récent au plus ancien (ordre de l'API)
   protected readonly loading = signal(true);
   protected readonly errorMessage = signal<string | null>(null);
-  protected readonly notice = signal<string | null>(null);
-  protected readonly actionError = signal<string | null>(null);
+  protected readonly notice = signal<string | null>(null); // message de succès en haut de la liste
+  protected readonly actionError = signal<string | null>(null); // erreur d'une action (la liste reste affichée)
   protected readonly search = signal('');
   protected readonly filter = signal<ReadFilter>('ALL');
-  protected readonly openId = signal<number | null>(null);
+  protected readonly openId = signal<number | null>(null); // message ouvert (un seul à la fois)
   protected readonly toDelete = signal<ContactMessage | null>(null);
   protected readonly deleting = signal(false);
 
@@ -38,6 +38,7 @@ export class AdminMessagesPage implements OnInit {
   );
 
   protected readonly tabs = computed(() => {
+    // onglets avec le nombre de messages
     const tabs: { value: ReadFilter; label: string; count: number }[] = [
       { value: 'ALL', label: 'All', count: this.messages().length },
       { value: 'UNREAD', label: 'Unread', count: this.unread() },
@@ -47,6 +48,7 @@ export class AdminMessagesPage implements OnInit {
   });
 
   protected readonly filtered = computed(() => {
+    // messages après recherche et onglet
     const term = this.search().trim().toLowerCase();
     return this.messages().filter(
       (message) =>
@@ -83,6 +85,7 @@ export class AdminMessagesPage implements OnInit {
   }
 
   protected toggle(message: ContactMessage): void {
+    // ouvre ou referme un message ; l'ouvrir le marque comme lu
     if (this.openId() === message.id) {
       this.openId.set(null);
       return;
@@ -94,6 +97,7 @@ export class AdminMessagesPage implements OnInit {
   }
 
   protected setRead(message: ContactMessage, isRead: boolean): void {
+    // PATCH /admin/messages/:id
     this.adminService
       .setMessageRead(message.id, isRead)
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -102,7 +106,7 @@ export class AdminMessagesPage implements OnInit {
           this.messages.update((list) =>
             list.map((item) => (item.id === message.id ? response.message : item)),
           );
-          this.adminService.unreadMessages.set(this.unread());
+          this.adminService.unreadMessages.set(this.unread()); // badge du menu admin
           this.actionError.set(null);
         },
         error: (err: unknown) => this.actionError.set(getErrorMessage(err)),
@@ -110,15 +114,18 @@ export class AdminMessagesPage implements OnInit {
   }
 
   protected markUnread(message: ContactMessage): void {
+    // « Mark as unread » : referme le message et le remet en non lu
     this.openId.set(null);
     this.setRead(message, false);
   }
 
   protected replyLink(message: ContactMessage): string {
+    // lien mailto : ouvre le logiciel de messagerie de l'admin
     return `mailto:${message.email}?subject=${encodeURIComponent('Re: ' + message.subject)}`;
   }
 
   protected confirmDelete(): void {
+    // DELETE /admin/messages/:id
     const message = this.toDelete();
     if (!message) {
       return;

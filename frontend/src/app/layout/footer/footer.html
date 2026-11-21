@@ -1,7 +1,10 @@
 <footer class="border-t border-steel bg-graphite/80">
+  <!-- pied de page Graphite semi-transparent (laisse voir le fond animé) -->
   <div class="mx-auto max-w-6xl px-4 py-12">
     <div class="grid gap-10 sm:grid-cols-2 md:grid-cols-4">
+      <!-- 1 colonne sur mobile, 2 puis 4 -->
       <div>
+        <!-- présentation de l'entreprise -->
         <p class="font-display text-product-label font-semibold text-porcelain">TeraMind</p>
         <p class="mt-2 max-w-xs text-body text-ash">GPU rental and recommendations for AI teams.</p>
       </div>
@@ -9,6 +12,7 @@
       @for (column of columns; track column.title) {
         <div>
           <p class="text-utility-nav font-semibold text-porcelain">{{ column.title }}</p>
+          <!-- titre de colonne -->
           <ul class="mt-3 flex flex-col gap-2">
             @for (link of column.links; track link.path) {
               <li>

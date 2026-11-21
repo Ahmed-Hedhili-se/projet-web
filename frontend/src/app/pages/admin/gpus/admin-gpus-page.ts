@@ -12,14 +12,14 @@ import { Reveal } from '../../../shared/directives/reveal';
 import { downloadCsv } from '../../../shared/utils/csv';
 
 type StatusFilter = 'ALL' | 'ACTIVE' | 'INACTIVE';
-type GpuField = keyof GpuInput;
+type GpuField = keyof GpuInput; // noms des champs du formulaire
 
 @Component({
   selector: 'app-admin-gpus-page',
   imports: [ReactiveFormsModule, CurrencyPipe, Alert, ConfirmDialog, SplitText, Reveal],
   templateUrl: './admin-gpus-page.html',
   host: {
-    '(document:keydown.escape)': 'closeDrawer()',
+    '(document:keydown.escape)': 'closeDrawer()', // Échap ferme le panneau d'édition
   },
 })
 export class AdminGpusPage implements OnInit {
@@ -40,6 +40,7 @@ export class AdminGpusPage implements OnInit {
   ];
 
   protected readonly filtered = computed(() => {
+    // GPU après recherche et filtre de statut
     const term = this.search().trim().toLowerCase();
     return this.gpus().filter(
       (gpu) =>
@@ -53,13 +54,13 @@ export class AdminGpusPage implements OnInit {
     [...new Set(this.gpus().map((gpu) => gpu.manufacturer))].sort(),
   );
 
-  protected readonly editing = signal<AdminGpu | 'new' | null>(null);
+  protected readonly editing = signal<AdminGpu | 'new' | null>(null); // panneau ouvert : GPU modifié, nouveau GPU, ou fermé
   protected readonly saving = signal(false);
   protected readonly formError = signal<string | null>(null);
   protected readonly serverErrors = signal<Partial<Record<GpuField, string>>>({});
   protected readonly toDeactivate = signal<AdminGpu | null>(null);
   protected readonly deactivating = signal(false);
-  protected readonly notice = signal<string | null>(null);
+  protected readonly notice = signal<string | null>(null); // message de succès en haut de la liste
 
   protected readonly form = new FormGroup({
     name: new FormControl('', {
@@ -121,7 +122,7 @@ export class AdminGpusPage implements OnInit {
   }
 
   protected openCreate(): void {
-    this.form.reset();
+    this.form.reset(); // formulaire vide (isActive = true par défaut)
     this.resetFormMessages();
     this.editing.set('new');
   }
@@ -149,6 +150,7 @@ export class AdminGpusPage implements OnInit {
   }
 
   protected fieldError(field: GpuField): string | null {
+    // message sous un champ du formulaire
     const control = this.form.controls[field];
     if (control.touched && control.invalid) {
       const messages: Record<GpuField, string> = {
@@ -196,10 +198,11 @@ export class AdminGpusPage implements OnInit {
       next: (response) => {
         const rentalCount = editing && editing !== 'new' ? editing.rentalCount : 0;
         const saved: AdminGpu = { ...response.gpu, rentalCount };
-        this.gpus.update((list) =>
-          editing && editing !== 'new'
-            ? list.map((gpu) => (gpu.id === saved.id ? saved : gpu))
-            : [...list, saved].sort((a, b) => a.name.localeCompare(b.name)),
+        this.gpus.update(
+          (list) =>
+            editing && editing !== 'new'
+              ? list.map((gpu) => (gpu.id === saved.id ? saved : gpu)) // remplace le GPU modifié
+              : [...list, saved].sort((a, b) => a.name.localeCompare(b.name)), // ajoute le nouveau, liste triée par nom
         );
         this.notice.set(
           editing === 'new'
@@ -225,6 +228,7 @@ export class AdminGpusPage implements OnInit {
   }
 
   protected confirmDeactivate(): void {
+    // DELETE /admin/gpus/:id
     const gpu = this.toDeactivate();
     if (!gpu) {
       return;
@@ -251,7 +255,8 @@ export class AdminGpusPage implements OnInit {
   }
 
   protected reactivate(gpu: AdminGpu): void {
-    const { id, rentalCount, availableUnits, createdAt, updatedAt, ...fields } = gpu;
+    // PUT /admin/gpus/:id avec isActive = true
+    const { id, rentalCount, availableUnits, createdAt, updatedAt, ...fields } = gpu; // le body ne contient que les champs modifiables
     this.adminService
       .updateGpu(id, { ...fields, isActive: true })
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -265,6 +270,7 @@ export class AdminGpusPage implements OnInit {
   }
 
   protected exportCsv(): void {
+    // les GPU affichés, dans un fichier Excel
     downloadCsv('teramind-gpus.csv', [
       [
         'ID',

@@ -6,7 +6,7 @@ const angular = require('angular-eslint');
 
 module.exports = defineConfig([
   {
-    files: ['**/*.ts'],
+    files: ['**/*.ts'], // règles pour le code TypeScript
     extends: [
       eslint.configs.recommended,
       tseslint.configs.recommended,
@@ -15,7 +15,7 @@ module.exports = defineConfig([
     ],
     processor: angular.processInlineTemplates,
     rules: {
-      '@typescript-eslint/no-unused-vars': ['error', { ignoreRestSiblings: true }],
+      '@typescript-eslint/no-unused-vars': ['error', { ignoreRestSiblings: true }], // accepte { a, ...reste } pour mettre une propriété de côté
       '@angular-eslint/directive-selector': [
         'error',
         {
@@ -35,7 +35,7 @@ module.exports = defineConfig([
     },
   },
   {
-    files: ['**/*.html'],
+    files: ['**/*.html'], // règles pour les templates, dont l'accessibilité
     extends: [angular.configs.templateRecommended, angular.configs.templateAccessibility],
     rules: {},
   },

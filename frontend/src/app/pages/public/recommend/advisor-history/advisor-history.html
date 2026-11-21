@@ -22,15 +22,18 @@
   </div>
 
   <div class="mt-3 lg:block" [class.hidden]="!open()">
+    <!-- toujours visible sur grand écran -->
     <p class="px-3 pb-2 text-utility-nav font-semibold text-ash">History</p>
     @if (loading()) {
       <div class="flex flex-col gap-2">
+        <!-- squelettes pendant le chargement -->
         @for (item of [1, 2, 3]; track item) {
           <div class="h-12 animate-pulse rounded-[14px] bg-obsidian"></div>
         }
       </div>
     } @else {
       <ul class="flex max-h-[50vh] flex-col gap-1 overflow-y-auto" data-lenis-prevent>
+        <!-- longue liste : défile dans le panneau -->
         @for (conversation of conversations(); track conversation.id) {
           <li
             class="flex items-center rounded-[14px] transition-colors duration-300"

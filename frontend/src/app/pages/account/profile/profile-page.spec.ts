@@ -19,7 +19,7 @@ describe('ProfilePage', () => {
     }).compileComponents();
     httpTesting = TestBed.inject(HttpTestingController);
 
-    TestBed.inject(AuthService).login({ email: jane.email, password: 'Password123' }).subscribe();
+    TestBed.inject(AuthService).login({ email: jane.email, password: 'Password123' }).subscribe(); // connecte Jane
     httpTesting
       .expectOne(`${environment.apiUrl}/auth/login`)
       .flush({ token: 'mock-token-3', user: jane });
@@ -32,7 +32,7 @@ describe('ProfilePage', () => {
     await fixture.whenStable();
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.textContent).toContain('Jane');
-    expect(compiled.textContent).toContain('JD');
+    expect(compiled.textContent).toContain('JD'); // avatar
 
     const page = fixture.componentInstance as unknown as {
       passwordForm: ProfilePage['passwordForm'];
@@ -48,7 +48,7 @@ describe('ProfilePage', () => {
     (updateButton as HTMLButtonElement | undefined)?.click();
 
     const req = httpTesting.expectOne(`${environment.apiUrl}/users/me/password`);
-    expect(req.request.body).toEqual({ currentPassword: 'wrong', newPassword: 'NewPassword1' });
+    expect(req.request.body).toEqual({ currentPassword: 'wrong', newPassword: 'NewPassword1' }); // pas de confirmPassword
     req.flush(
       { error: { code: 'WRONG_PASSWORD', message: 'Your current password is incorrect.' } },
       { status: 400, statusText: 'Bad Request' },

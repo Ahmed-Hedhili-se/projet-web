@@ -1,13 +1,15 @@
 import { User } from '../models/user';
 
 export interface MockAccount {
+  // compte fictif : le vrai backend stocke un mot de passe haché (bcrypt)
   password: string;
   user: User;
 }
 
-const ACCOUNTS_KEY = 'teramind_mock_accounts_v3';
+const ACCOUNTS_KEY = 'teramind_mock_accounts_v3'; // tous les comptes fictifs, gardés dans le navigateur (mock seulement)
 
 export const MOCK_ACCOUNTS: MockAccount[] = [
+  // comptes de démonstration (valeurs de départ)
   {
     password: 'Password123',
     user: {
@@ -45,6 +47,7 @@ export const MOCK_ACCOUNTS: MockAccount[] = [
     },
   },
   {
+    // clients fictifs : remplissent l'historique du dashboard admin
     password: 'Password123',
     user: {
       id: 4,
@@ -94,27 +97,32 @@ export const MOCK_ACCOUNTS: MockAccount[] = [
   },
 ];
 
-let memoryAccounts: MockAccount[] | null = null;
+let memoryAccounts: MockAccount[] | null = null; // secours si le localStorage est indisponible
 
 export function allMockAccounts(): MockAccount[] {
+  // comptes de démonstration + comptes créés ou modifiés
   try {
     const json = localStorage.getItem(ACCOUNTS_KEY);
-    return json ? (JSON.parse(json) as MockAccount[]) : structuredClone(MOCK_ACCOUNTS);
+    return json ? (JSON.parse(json) as MockAccount[]) : structuredClone(MOCK_ACCOUNTS); // vide = premier lancement : comptes de démonstration
   } catch {
+    // stockage indisponible ou illisible
     return memoryAccounts ?? structuredClone(MOCK_ACCOUNTS);
   }
 }
 
 export function saveMockAccounts(accounts: MockAccount[]): void {
+  // enregistre la liste (survit au rafraîchissement)
   memoryAccounts = accounts;
   try {
     localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(accounts));
   } catch {
+    // stockage indisponible : la liste reste en mémoire
     return;
   }
 }
 
 export function addMockAccount(account: MockAccount): void {
+  // nouveau compte (Register)
   saveMockAccounts([...allMockAccounts(), account]);
 }
 
@@ -136,9 +144,11 @@ export function updateMockAccount(
 }
 
 export function nextMockUserId(): number {
+  // identifiant libre pour un nouveau compte
   return Math.max(...allMockAccounts().map((account) => account.user.id)) + 1;
 }
 
 export function mockTokenFor(user: User): string {
+  // faux JWT : suffisant pour reconnaître l'utilisateur dans le mock
   return `mock-token-${user.id}`;
 }

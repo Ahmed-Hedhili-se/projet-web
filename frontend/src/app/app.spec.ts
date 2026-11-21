@@ -8,7 +8,7 @@ describe('App', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [App],
-      providers: [provideRouter([]), provideHttpClient(), provideHttpClientTesting()],
+      providers: [provideRouter([]), provideHttpClient(), provideHttpClientTesting()], // Router (routerLink) + HttpClient (AuthService dans la Navbar)
     }).compileComponents();
   });
 
@@ -21,7 +21,7 @@ describe('App', () => {
     const fixture = TestBed.createComponent(App);
     await fixture.whenStable();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('header')?.textContent).toContain('TeraMind');
-    expect(compiled.querySelector('footer')?.textContent).toContain('All rights reserved');
+    expect(compiled.querySelector('header')?.textContent).toContain('TeraMind'); // logo dans la Navbar
+    expect(compiled.querySelector('footer')?.textContent).toContain('All rights reserved'); // copyright dans le Footer
   });
 });

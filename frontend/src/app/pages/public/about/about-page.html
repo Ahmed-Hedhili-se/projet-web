@@ -1,9 +1,11 @@
 <section class="overflow-hidden px-4 pt-20 text-center md:pt-28">
+  <!-- Hero -->
   <p class="animate-fade-up font-display text-product-label font-semibold text-aurora">
     About TeraMind
   </p>
   <h1 class="mx-auto mt-2 max-w-4xl font-display text-display-sm font-semibold md:text-display">
     <app-split-text text="We make AI compute simple." highlight="simple." [delay]="100" />
+    <!-- mots qui sortent du flou -->
   </h1>
   <p
     class="animate-fade-up mx-auto mt-5 max-w-2xl text-section-nav text-ash"
@@ -14,6 +16,7 @@
   </p>
   <div class="animate-fade-up mx-auto mt-12 max-w-5xl" style="animation-delay: 600ms">
     <div class="scroll-zoom overflow-hidden rounded-card border border-steel bg-obsidian">
+      <!-- grandit en défilant, sans ombre -->
       <img
         src="images/datacenter.svg"
         alt="Row of TeraMind server racks in a data center"
@@ -27,6 +30,7 @@
 </section>
 
 <section class="px-4 py-20 md:py-28">
+  <!-- Mission -->
   <div class="mx-auto max-w-6xl">
     <div appReveal>
       <p class="font-display text-product-label font-semibold text-aurora">Our mission</p>
@@ -45,7 +49,9 @@
 </section>
 
 <section class="px-4 pb-20 md:pb-28">
+  <!-- Chiffres clés -->
   <div class="glass-card mx-auto grid max-w-6xl grid-cols-2 gap-4 p-4 md:grid-cols-4">
+    <!-- panneau en verre, tuiles sombres -->
     @for (stat of stats; track stat.label) {
       <div appReveal [revealDelay]="$index * 90">
         <div
@@ -58,6 +64,7 @@
             [countSuffix]="stat.suffix ?? ''"
             [countGrouping]="stat.grouping ?? true"
           ></p>
+          <!-- chiffre qui défile jusqu'à sa valeur -->
           <p class="text-body text-ash">{{ stat.label }}</p>
         </div>
       </div>
@@ -66,6 +73,7 @@
 </section>
 
 <section class="aurora-glow px-4 py-20 md:py-28">
+  <!-- Valeurs : lueur Aurore douce derrière le titre -->
   <div class="mx-auto max-w-6xl">
     <div appReveal class="text-center">
       <p class="font-display text-product-label font-semibold text-aurora">Our values</p>
@@ -78,6 +86,7 @@
       @for (value of values; track value.title) {
         <div appReveal [revealDelay]="$index * 100">
           <div appTilt class="glass-card group h-full p-8 hover:-translate-y-1">
+            <!-- carte en verre, s'incline vers la souris -->
             <div
               class="flex size-12 items-center justify-center rounded-full bg-aurora-glow/15 text-aurora transition duration-500 group-hover:scale-110 group-hover:bg-aurora-glow/25"
             >
@@ -144,6 +153,7 @@
 </section>
 
 <section class="px-4 py-20 md:py-28">
+  <!-- Histoire (frise) -->
   <div class="mx-auto max-w-3xl">
     <div appReveal class="text-center">
       <p class="font-display text-product-label font-semibold text-aurora">Our story</p>
@@ -154,13 +164,16 @@
 
     <ol class="relative mt-14">
       <span class="absolute top-0 bottom-0 left-0 w-px bg-steel" aria-hidden="true"></span>
+      <!-- ligne grise de fond -->
       <span
         class="scroll-draw-y absolute top-0 bottom-0 left-0 w-px bg-aurora-glow"
         aria-hidden="true"
       ></span>
       @for (milestone of milestones; track milestone.year) {
         <li class="scroll-highlight relative pb-16 pl-8 last:pb-0">
+          <!-- s'illumine au centre de l'écran -->
           <span class="absolute top-1.5 -left-1 size-[9px] rounded-full bg-aurora-glow"></span>
+          <!-- point sur la ligne -->
           <p class="text-utility-nav font-semibold text-ash">{{ milestone.year }}</p>
           <h3 class="mt-1 font-display text-product-label font-semibold">{{ milestone.title }}</h3>
           <p class="mt-2 text-body text-ash">{{ milestone.text }}</p>
@@ -171,6 +184,7 @@
 </section>
 
 <section class="aurora-glow px-4 py-20 md:py-28">
+  <!-- Équipe -->
   <div class="mx-auto max-w-6xl">
     <div appReveal class="text-center">
       <p class="font-display text-product-label font-semibold text-aurora">Our team</p>
@@ -180,6 +194,7 @@
     </div>
 
     <div class="mx-auto mt-12 grid max-w-2xl gap-4 sm:grid-cols-2">
+      <!-- deux cartes, centrées -->
       @for (member of team; track member.name) {
         <div appReveal [revealDelay]="$index * 100">
           <div
@@ -201,7 +216,9 @@
 </section>
 
 <section class="px-4 py-20 md:py-28">
+  <!-- Appel à l'action -->
   <div class="scroll-zoom glass-card mx-auto max-w-4xl px-6 py-14 text-center md:px-12 md:py-20">
+    <!-- grandit en entrant à l'écran -->
     <h2 class="font-display text-hero-product-name font-semibold md:text-section-title">
       Let's build something together.
     </h2>

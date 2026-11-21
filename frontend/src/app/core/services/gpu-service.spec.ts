@@ -6,7 +6,7 @@ import { GpuService } from './gpu-service';
 
 describe('GpuService', () => {
   let service: GpuService;
-  let httpTesting: HttpTestingController;
+  let httpTesting: HttpTestingController; // remplace le vrai réseau pendant les tests
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -16,7 +16,7 @@ describe('GpuService', () => {
     httpTesting = TestBed.inject(HttpTestingController);
   });
 
-  afterEach(() => httpTesting.verify());
+  afterEach(() => httpTesting.verify()); // vérifie qu'aucune requête n'est restée sans réponse
 
   it('should send only the filled filters as query params', () => {
     service
@@ -33,8 +33,8 @@ describe('GpuService', () => {
     expect(req.request.method).toBe('GET');
     expect(req.request.params.get('manufacturer')).toBe('NVIDIA');
     expect(req.request.params.get('minVram')).toBe('40');
-    expect(req.request.params.has('search')).toBe(false);
-    expect(req.request.params.has('available')).toBe(false);
+    expect(req.request.params.has('search')).toBe(false); // undefined : pas envoyé
+    expect(req.request.params.has('available')).toBe(false); // false : pas envoyé
     req.flush({ gpus: [], total: 0, manufacturers: [] });
   });
 

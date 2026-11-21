@@ -1,4 +1,5 @@
 <section class="px-4 py-10 md:py-16">
+  <!-- Connexion -->
   <div class="mx-auto grid max-w-6xl items-stretch gap-8 lg:grid-cols-2">
     <div
       class="animate-fade-up relative hidden overflow-hidden rounded-card border border-steel bg-obsidian lg:flex lg:flex-col"
@@ -13,6 +14,7 @@
       <div class="mt-auto p-10">
         <h2 class="font-display text-section-title font-semibold">
           <app-split-text text="Welcome back." highlight="back." [delay]="200" />
+          <!-- mots qui sortent du flou -->
         </h2>
         <p
           class="animate-fade-up mt-3 max-w-sm text-section-nav text-ash"
@@ -45,11 +47,13 @@
     </div>
 
     <div class="animate-fade-up flex items-center" style="animation-delay: 120ms">
+      <!-- colonne du formulaire -->
       <div
         class="mx-auto w-full max-w-md rounded-card border border-steel bg-carbon p-6 md:p-10"
         [class.animate-shake]="shaking()"
         (animationend)="shaking.set(false)"
       >
+        <!-- tremble si les identifiants sont faux -->
         <h1 class="font-display text-hero-product-name font-semibold">Sign in</h1>
         <p class="mt-2 text-body text-ash">
           New to TeraMind? <a routerLink="/register" class="text-link">Create an account</a>
@@ -77,6 +81,7 @@
           <div>
             <label for="login-password" class="form-label">Password</label>
             <div class="relative">
+              <!-- bouton « Show » dans le champ -->
               <input
                 id="login-password"
                 [type]="showPassword() ? 'text' : 'password'"
@@ -106,6 +111,7 @@
 
           @if (errorMessage(); as message) {
             <div animate.enter="result-enter">
+              <!-- message d'erreur de l'API -->
               <app-alert [message]="message" />
             </div>
           }
@@ -117,6 +123,7 @@
           >
             @if (submitting()) {
               <svg class="size-4 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <!-- roue de chargement -->
                 <circle
                   cx="12"
                   cy="12"
@@ -141,6 +148,7 @@
 
         @if (demoAccounts.length > 0) {
           <div class="mt-8 rounded-nav border border-dashed border-steel p-4">
+            <!-- comptes de démonstration (données fictives) -->
             <p class="text-utility-nav font-semibold text-ash">Demo accounts · click to fill in</p>
             <div class="mt-3 flex flex-wrap gap-2">
               @for (account of demoAccounts; track account.email) {

@@ -9,6 +9,7 @@ export class ContactService {
   private readonly http = inject(HttpClient);
 
   send(request: ContactRequest): Observable<ContactResponse> {
+    // POST /contact
     return this.http.post<ContactResponse>(`${environment.apiUrl}/contact`, request);
   }
 }

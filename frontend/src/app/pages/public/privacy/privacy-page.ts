@@ -5,6 +5,7 @@ import {
 } from '../../../shared/components/legal-document/legal-document';
 
 @Component({
+  // page « Privacy policy » (/privacy) : uniquement le texte, la mise en page vient de LegalDocument
   selector: 'app-privacy-page',
   imports: [LegalDocument],
   template: `
@@ -19,6 +20,7 @@ import {
 })
 export class PrivacyPage {
   protected readonly sections: LegalSection[] = [
+    // une entrée = une section de la page (et une ligne du sommaire)
     {
       id: 'controller',
       title: 'Who is responsible for your data',
@@ -93,7 +95,7 @@ export class PrivacyPage {
       ],
     },
     {
-      id: 'rights',
+      id: 'rights', // droits de l'utilisateur (loi tunisienne n° 2004-63)
       title: 'Your rights',
       paragraphs: [
         'You can see and correct your name, email and password at any time from your profile. You can delete your AI advisor conversations from the history.',

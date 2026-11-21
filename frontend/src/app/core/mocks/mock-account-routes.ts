@@ -29,6 +29,7 @@ export function handleAccountRoutes(
 ): Observable<HttpResponse<unknown>> | null {
   if (req.method === 'GET' && path === '/rentals/me') {
     return withAccount(req, (account) => {
+      // GET /rentals/me : les plus récentes d'abord
       const status = req.params.get('status');
       const rentals = allMockRentals()
         .filter((rental) => rental.userId === account.user.id)
@@ -48,6 +49,7 @@ export function handleAccountRoutes(
   const cancelMatch = path.match(/^\/rentals\/(\d+)\/cancel$/);
   if (req.method === 'PATCH' && cancelMatch) {
     return withAccount(req, (account) => {
+      // PATCH /rentals/:id/cancel
       const rentals = allMockRentals();
       const record = rentals.find(
         (rental) => rental.id === Number(cancelMatch[1]) && rental.userId === account.user.id,
@@ -73,7 +75,7 @@ export function handleAccountRoutes(
   }
 
   if (req.method === 'GET' && path === '/users/me') {
-    return withAccount(req, (account) => respond({ user: { ...account.user } }));
+    return withAccount(req, (account) => respond({ user: { ...account.user } })); // GET /users/me
   }
 
   if (req.method === 'PUT' && path === '/users/me') {
@@ -84,6 +86,7 @@ export function handleAccountRoutes(
 
   if (req.method === 'PUT' && path === '/users/me/password') {
     return withAccount(req, (account) => {
+      // PUT /users/me/password
       const body = (req as HttpRequest<ChangePasswordRequest>).body;
       const newPassword = body?.newPassword ?? '';
       if (newPassword.length < 8 || newPassword.length > 72) {
@@ -118,6 +121,7 @@ function createRental(
     details.push({ field: 'quantity', message: 'Quantity must be at least 1.' });
   }
   if (Number.isNaN(start.getTime()) || start.getTime() < Date.now() - 60_000) {
+    // une minute de tolérance
     details.push({ field: 'startDate', message: 'The start date must be in the future.' });
   }
   if (
@@ -156,7 +160,7 @@ function createRental(
     });
   }
   const record = createRecord(userId, gpu, body.quantity, start, body.durationHours);
-  return respond({ rental: toApiRental(record) }, 800, 201);
+  return respond({ rental: toApiRental(record) }, 800, 201); // 201 = location créée
 }
 
 function updateProfile(

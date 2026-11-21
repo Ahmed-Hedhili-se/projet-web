@@ -7,6 +7,7 @@ import {
 } from '../models/recommendation';
 
 const TYPE_FACTOR: Record<ModelType, number> = {
+  // coefficient par type de modèle (docs/PLAN.md, section 8)
   LLM: 1.0,
   VISION: 1.1,
   DIFFUSION: 1.3,
@@ -15,6 +16,7 @@ const TYPE_FACTOR: Record<ModelType, number> = {
 };
 
 const TYPE_LABEL: Record<ModelType, string> = {
+  // nom utilisé dans l'explication
   LLM: 'LLM',
   VISION: 'vision model',
   DIFFUSION: 'diffusion model',
@@ -22,13 +24,13 @@ const TYPE_LABEL: Record<ModelType, string> = {
   OTHER: 'model',
 };
 
-const MAX_GPUS = 8;
+const MAX_GPUS = 8; // au-delà de 8 GPU, la configuration est écartée
 
 export function mockRecommend(
   request: RecommendationRequest,
   catalog: Gpu[],
 ): RecommendationResponse {
-  const bytesPerParam = request.mode === 'INFERENCE' ? 2 : 16;
+  const bytesPerParam = request.mode === 'INFERENCE' ? 2 : 16; // FP16 en inférence ; poids + gradients + Adam en entraînement
   const requiredVramGb = round(
     request.parametersBillions * bytesPerParam * 1.2 * TYPE_FACTOR[request.modelType],
     1,
@@ -37,7 +39,7 @@ export function mockRecommend(
   const configurations: GpuConfiguration[] = catalog
     .filter((gpu) => gpu.isActive)
     .map((gpu) => {
-      const gpuCount = Math.max(1, Math.ceil(requiredVramGb / gpu.vramGb));
+      const gpuCount = Math.max(1, Math.ceil(requiredVramGb / gpu.vramGb)); // nombre d'unités pour avoir assez de mémoire
       const totalPricePerHour = round(gpu.pricePerHour * gpuCount, 2);
       return {
         gpu: {
@@ -51,7 +53,7 @@ export function mockRecommend(
         totalVramGb: gpu.vramGb * gpuCount,
         totalPricePerHour,
         withinBudget: totalPricePerHour <= request.budgetPerHour,
-        tflops: gpu.fp16Tflops * gpuCount,
+        tflops: gpu.fp16Tflops * gpuCount, // utilisé seulement pour départager
       };
     })
     .filter((config) => config.gpuCount <= MAX_GPUS)
@@ -59,7 +61,7 @@ export function mockRecommend(
       (a, b) =>
         a.totalPricePerHour - b.totalPricePerHour || a.gpuCount - b.gpuCount || b.tflops - a.tflops,
     )
-    .map(({ tflops, ...config }) => config);
+    .map(({ tflops, ...config }) => config); // retire le champ interne « tflops »
 
   const recommendation =
     configurations.find((config) => config.withinBudget) ?? configurations[0] ?? null;
@@ -91,6 +93,7 @@ function explain(
 }
 
 function round(value: number, decimals: number): number {
+  // arrondi, ex. round(16.8000001, 1) → 16.8
   const factor = 10 ** decimals;
   return Math.round(value * factor) / factor;
 }

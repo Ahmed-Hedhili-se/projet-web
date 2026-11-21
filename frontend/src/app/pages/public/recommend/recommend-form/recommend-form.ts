@@ -17,7 +17,7 @@ import { Reveal } from '../../../../shared/directives/reveal';
 import { Tilt } from '../../../../shared/directives/tilt';
 
 @Component({
-  selector: 'app-recommend-form',
+  selector: 'app-recommend-form', // formulaire de secours de la page Recommendation (POST /recommendations)
   imports: [ReactiveFormsModule, RouterLink, CurrencyPipe, Alert, CountUp, Reveal, Tilt],
   templateUrl: './recommend-form.html',
 })
@@ -26,6 +26,7 @@ export class RecommendForm {
   private readonly destroyRef = inject(DestroyRef);
 
   protected readonly modelTypes: { value: ModelType; label: string; hint: string }[] = [
+    // choix « Model type »
     { value: 'LLM', label: 'LLM', hint: 'Chat, text, code' },
     { value: 'VISION', label: 'Vision', hint: 'Detection, segmentation' },
     { value: 'DIFFUSION', label: 'Diffusion', hint: 'Image generation' },
@@ -33,11 +34,13 @@ export class RecommendForm {
     { value: 'OTHER', label: 'Other', hint: 'Any other model' },
   ];
   protected readonly modes: { value: WorkloadMode; label: string; hint: string }[] = [
+    // choix « Mode »
     { value: 'INFERENCE', label: 'Inference', hint: 'Serve a trained model' },
     { value: 'TRAINING', label: 'Training', hint: 'Train or fine-tune' },
   ];
-  protected readonly parameterPresets = [1, 7, 13, 70, 405];
+  protected readonly parameterPresets = [1, 7, 13, 70, 405]; // tailles courantes, en milliards de paramètres
   protected readonly estimateSteps = [
+    // section « How we estimate » (docs/PLAN.md, section 8)
     {
       value: '2 / 16 bytes',
       title: 'Per parameter',
@@ -73,21 +76,22 @@ export class RecommendForm {
   protected readonly errorMessage = signal<string | null>(null);
   protected readonly result = signal<RecommendationResponse | null>(null);
   protected readonly resultList = computed(() => {
+    // liste de 0 ou 1 élément : un nouvel objet recrée le bloc et rejoue les animations
     const result = this.result();
     return result ? [result] : [];
   });
 
   protected setParameters(value: number): void {
-    this.form.controls.parametersBillions.setValue(value);
+    this.form.controls.parametersBillions.setValue(value); // clic sur un bouton « 7B », « 70B »…
   }
 
   protected gaugePercent(required: number, config: GpuConfiguration): number {
-    return Math.min(100, Math.round((required / config.totalVramGb) * 100));
+    return Math.min(100, Math.round((required / config.totalVramGb) * 100)); // part de la mémoire utilisée
   }
 
   protected submit(): void {
     if (this.form.invalid) {
-      this.form.markAllAsTouched();
+      this.form.markAllAsTouched(); // affiche les messages d'erreur
       return;
     }
     const value = this.form.getRawValue();
@@ -116,6 +120,7 @@ export class RecommendForm {
   }
 
   private scrollToResultOnMobile(): void {
+    // sur petit écran, le résultat est sous le formulaire : on y descend
     if (window.innerWidth < 1024) {
       setTimeout(() =>
         document

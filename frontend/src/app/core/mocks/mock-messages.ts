@@ -1,4 +1,5 @@
 export interface MockContactMessage {
+  // objet « ContactMessage » de docs/API.md (table contact_messages)
   id: number;
   name: string;
   email: string;
@@ -8,14 +9,14 @@ export interface MockContactMessage {
   createdAt: string;
 }
 
-const MESSAGES_KEY = 'teramind_mock_messages';
+const MESSAGES_KEY = 'teramind_mock_messages'; // messages fictifs, gardés dans le navigateur
 const HOUR_MS = 60 * 60 * 1000;
-let memoryMessages: MockContactMessage[] | null = null;
+let memoryMessages: MockContactMessage[] | null = null; // secours si le localStorage est indisponible
 
 export function allMockMessages(): MockContactMessage[] {
   try {
     const json = localStorage.getItem(MESSAGES_KEY);
-    return json ? (JSON.parse(json) as MockContactMessage[]) : seedMessages();
+    return json ? (JSON.parse(json) as MockContactMessage[]) : seedMessages(); // vide = messages d'exemple
   } catch {
     return memoryMessages ?? seedMessages();
   }
@@ -26,6 +27,7 @@ export function saveMockMessages(messages: MockContactMessage[]): void {
   try {
     localStorage.setItem(MESSAGES_KEY, JSON.stringify(messages));
   } catch {
+    // stockage indisponible : la liste reste en mémoire
     return;
   }
 }
@@ -36,7 +38,7 @@ export function addMockMessage(
   const messages = allMockMessages();
   const saved: MockContactMessage = {
     ...message,
-    id: Math.max(12, ...messages.map((item) => item.id)) + 1,
+    id: Math.max(12, ...messages.map((item) => item.id)) + 1, // continue après l'exemple n° 12 de docs/API.md
     isRead: false,
     createdAt: new Date().toISOString(),
   };
@@ -45,6 +47,7 @@ export function addMockMessage(
 }
 
 function seedMessages(): MockContactMessage[] {
+  // quelques messages d'exemple, des plus anciens aux plus récents
   const ago = (hours: number) => new Date(Date.now() - hours * HOUR_MS).toISOString();
   return [
     {

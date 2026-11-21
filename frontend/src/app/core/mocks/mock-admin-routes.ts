@@ -18,7 +18,7 @@ import { MockAccount, allMockAccounts, updateMockAccount } from './mock-users';
 const HOUR_MS = 60 * 60 * 1000;
 const DAY_MS = 24 * HOUR_MS;
 
-function withAdmin(
+function withAdmin( // routes « ADMIN » : 401 / 403 si pas connecté, 403 FORBIDDEN si pas admin
   req: HttpRequest<unknown>,
   handler: (account: MockAccount) => Observable<HttpResponse<unknown>>,
 ): Observable<HttpResponse<unknown>> {
@@ -43,14 +43,15 @@ export function handleAdminRoutes(
   }
   if (req.method === 'GET' && path === '/admin/gpus') {
     return withAdmin(req, () => {
+      // tous les GPU, triés par nom, avec le nombre de locations
       const rentals = allMockRentals();
       const now = new Date();
       const gpus = allMockGpus()
         .sort((a, b) => a.name.localeCompare(b.name))
         .map((gpu) => ({
           ...gpu,
-          availableUnits: availableUnits(gpu, now, new Date(now.getTime() + HOUR_MS)),
-          rentalCount: rentals.filter((rental) => rental.gpuId === gpu.id).length,
+          availableUnits: availableUnits(gpu, now, new Date(now.getTime() + HOUR_MS)), // libres maintenant
+          rentalCount: rentals.filter((rental) => rental.gpuId === gpu.id).length, // annulées comprises
         }));
       return respond({ gpus, total: gpus.length });
     });
@@ -64,6 +65,7 @@ export function handleAdminRoutes(
   }
   if (gpuMatch && req.method === 'DELETE') {
     return withAdmin(req, () => {
+      // « suppression » = désactivation (l'historique est gardé)
       const gpus = allMockGpus();
       const gpu = gpus.find((item) => item.id === Number(gpuMatch[1]));
       if (!gpu) {
@@ -77,6 +79,7 @@ export function handleAdminRoutes(
   }
   if (req.method === 'GET' && path === '/admin/users') {
     return withAdmin(req, () => {
+      // utilisateurs, les plus récents d'abord, avec leur nombre de locations
       const search = req.params.get('search')?.toLowerCase() ?? '';
       const role = req.params.get('role');
       const blocked = req.params.get('blocked');
@@ -106,6 +109,7 @@ export function handleAdminRoutes(
   }
   if (req.method === 'GET' && path === '/admin/rentals') {
     return withAdmin(req, () => {
+      // toutes les locations, les plus récentes d'abord
       const status = req.params.get('status');
       const userId = req.params.get('userId');
       const gpuId = req.params.get('gpuId');
@@ -124,6 +128,7 @@ export function handleAdminRoutes(
   const cancelMatch = path.match(/^\/admin\/rentals\/(\d+)\/cancel$/);
   if (cancelMatch && req.method === 'PATCH') {
     return withAdmin(req, () => {
+      // un admin peut annuler une location à venir ou en cours
       const rentals = allMockRentals();
       const record = rentals.find((rental) => rental.id === Number(cancelMatch[1]));
       if (!record) {
@@ -148,6 +153,7 @@ export function handleAdminRoutes(
   }
   if (req.method === 'GET' && path === '/admin/messages') {
     return withAdmin(req, () => {
+      // messages de contact, les plus récents d'abord
       const isRead = req.params.get('isRead');
       const all = allMockMessages();
       const messages = all
@@ -171,6 +177,7 @@ export function handleAdminRoutes(
         });
       }
       if (req.method === 'DELETE') {
+        // suppression définitive : 204, pas de contenu
         saveMockMessages(messages.filter((item) => item.id !== message.id));
         return respond(null, 400, 204);
       }
@@ -180,12 +187,12 @@ export function handleAdminRoutes(
           { field: 'isRead', message: 'isRead must be true or false.' },
         ]);
       }
-      message.isRead = isRead;
+      message.isRead = isRead; // marquer comme lu / non lu
       saveMockMessages(messages);
       return respond({ message: { ...message } }, 200);
     });
   }
-  return null;
+  return null; // pas une route admin connue
 }
 
 function updateUser(
@@ -194,7 +201,7 @@ function updateUser(
   admin: MockAccount,
 ): Observable<HttpResponse<unknown>> {
   const body = req.body ?? {};
-  const details: FieldError[] = [];
+  const details: FieldError[] = []; // mêmes règles que docs/API.md
   if (body.role !== undefined && body.role !== 'USER' && body.role !== 'ADMIN')
     details.push({ field: 'role', message: 'Role must be USER or ADMIN.' });
   if (body.isBlocked !== undefined && typeof body.isBlocked !== 'boolean')
@@ -205,6 +212,7 @@ function updateUser(
     return validationError(req, details);
   }
   if (id === admin.user.id) {
+    // un admin ne peut pas se bloquer ni se retirer son rôle
     return fail(req, 400, {
       error: {
         code: 'CANNOT_MODIFY_SELF',
@@ -212,7 +220,7 @@ function updateUser(
       },
     });
   }
-  const changes: UserChanges = {};
+  const changes: UserChanges = {}; // seulement les champs envoyés
   if (body.role !== undefined) changes.role = body.role;
   if (body.isBlocked !== undefined) changes.isBlocked = body.isBlocked;
   const updated = updateMockAccount(id, { user: changes });
@@ -223,6 +231,7 @@ function updateUser(
 }
 
 function toAdminRental(record: MockRentalRecord): AdminRental {
+  // location + utilisateur (objet « AdminRental » de docs/API.md)
   const user = allMockAccounts().find((account) => account.user.id === record.userId)?.user;
   return {
     ...toApiRental(record),
@@ -236,9 +245,10 @@ function toAdminRental(record: MockRentalRecord): AdminRental {
 }
 
 function saveGpu(req: HttpRequest<GpuInput>, id: number | null): Observable<HttpResponse<unknown>> {
+  // POST (id = null) ou PUT
   const body = req.body;
   const text = (value: unknown) => (typeof value === 'string' ? value.trim() : '');
-  const details: FieldError[] = [];
+  const details: FieldError[] = []; // mêmes règles que docs/API.md
   if (text(body?.name).length < 1 || text(body?.name).length > 100)
     details.push({ field: 'name', message: 'Enter a name (100 characters max).' });
   if (text(body?.manufacturer).length < 1 || text(body?.manufacturer).length > 50)
@@ -291,7 +301,7 @@ function saveGpu(req: HttpRequest<GpuInput>, id: number | null): Observable<Http
   };
   let gpu: Gpu;
   if (existing) {
-    const booked = existing.totalUnits - existing.availableUnits;
+    const booked = existing.totalUnits - existing.availableUnits; // unités déjà prises par les autres clients fictifs
     Object.assign(existing, values, {
       availableUnits: Math.max(0, values.totalUnits - booked),
       updatedAt: now,
@@ -322,16 +332,17 @@ function saveGpu(req: HttpRequest<GpuInput>, id: number | null): Observable<Http
 }
 
 function computeStats(): AdminStats {
+  // statistiques calculées à partir des données fictives
   const accounts = allMockAccounts();
   const gpus = allMockGpus();
   const rentals = allMockRentals();
   const messages = allMockMessages();
-  const paid = rentals.filter((rental) => !rental.cancelled);
+  const paid = rentals.filter((rental) => !rental.cancelled); // revenus : locations non annulées
   const round = (value: number) => Math.round(value * 100) / 100;
   const byStatus = (status: string) =>
     rentals.filter((rental) => rentalStatus(rental) === status).length;
 
-  const top = new Map<number, { rentalCount: number; revenue: number }>();
+  const top = new Map<number, { rentalCount: number; revenue: number }>(); // regroupement par GPU
   for (const rental of paid) {
     const entry = top.get(rental.gpuId) ?? { rentalCount: 0, revenue: 0 };
     entry.rentalCount++;
@@ -339,7 +350,7 @@ function computeStats(): AdminStats {
     top.set(rental.gpuId, entry);
   }
 
-  const months: AdminStats['rentalsPerMonth'] = [];
+  const months: AdminStats['rentalsPerMonth'] = []; // les 6 derniers mois, mois en cours inclus
   const today = new Date();
   for (let offset = 5; offset >= 0; offset--) {
     const date = new Date(today.getFullYear(), today.getMonth() - offset, 1);

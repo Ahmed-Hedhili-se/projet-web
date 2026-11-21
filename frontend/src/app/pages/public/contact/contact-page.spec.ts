@@ -6,7 +6,7 @@ import { environment } from '../../../../environments/environment';
 import { ContactPage } from './contact-page';
 
 describe('ContactPage', () => {
-  let httpTesting: HttpTestingController;
+  let httpTesting: HttpTestingController; // remplace le vrai réseau
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -23,16 +23,16 @@ describe('ContactPage', () => {
     await fixture.whenStable();
     const compiled = fixture.nativeElement as HTMLElement;
 
-    compiled.querySelector<HTMLButtonElement>('button[type="submit"]')?.click();
+    compiled.querySelector<HTMLButtonElement>('button[type="submit"]')?.click(); // envoi du formulaire vide
     await fixture.whenStable();
 
     expect(compiled.textContent).toContain('Enter a valid email address.');
-    httpTesting.expectNone(`${environment.apiUrl}/contact`);
+    httpTesting.expectNone(`${environment.apiUrl}/contact`); // aucune requête envoyée
   });
 
   it('should send the message and show the confirmation', async () => {
     const fixture = TestBed.createComponent(ContactPage);
-    const page = fixture.componentInstance as unknown as { form: ContactPage['form'] };
+    const page = fixture.componentInstance as unknown as { form: ContactPage['form'] }; // accès au formulaire (protected)
     page.form.setValue({
       name: 'Jane',
       email: 'jane@example.com',

@@ -1,1 +1,1 @@
-@for (item of words(); track $index) {<span class="animate-blur-in inline-block" [class.text-aurora]="item.highlighted" [style.animation-delay.ms]="delay() + $index * stagger()">{{ item.word }}</span>{{ $last ? '' : ' ' }}}
+@for (item of words(); track $index) {<span class="animate-blur-in inline-block" [class.text-aurora]="item.highlighted" [style.animation-delay.ms]="delay() + $index * stagger()">{{ item.word }}</span>{{ $last ? '' : ' ' }}} <!-- inline-block : nécessaire pour le déplacement ; mot fort à la couleur Aurore ; sur une ligne pour éviter les espaces en trop -->

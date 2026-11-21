@@ -1,4 +1,5 @@
 <section class="px-4 pt-16 pb-10 md:pt-20">
+  <!-- En-tête -->
   <div class="mx-auto flex max-w-6xl flex-wrap items-end justify-between gap-6">
     <div>
       <p class="animate-fade-up font-display text-product-label font-semibold text-aurora">
@@ -6,6 +7,7 @@
       </p>
       <h1 class="mt-2 font-display text-display-sm font-semibold md:text-display">
         <app-split-text text="My rentals." [delay]="100" />
+        <!-- mots qui sortent du flou -->
       </h1>
     </div>
     <a
@@ -18,9 +20,11 @@
 </section>
 
 <section class="px-4 pb-20 md:pb-28">
+  <!-- Statistiques, onglets et liste -->
   <div class="mx-auto max-w-6xl">
     @if (loading()) {
       <div class="grid gap-4 sm:grid-cols-3">
+        <!-- squelettes pendant le chargement -->
         @for (item of [1, 2, 3]; track item) {
           <div class="h-28 animate-pulse rounded-card bg-carbon"></div>
         }
@@ -36,7 +40,9 @@
       </app-alert>
     } @else {
       <div class="animate-fade-up grid gap-4 rounded-card bg-carbon p-4 sm:grid-cols-3">
+        <!-- tuiles : panneau Carbon, tuiles noires -->
         @for (stat of stats(); track stat.label + stat.value) {
+          <!-- recréée si la valeur change -->
           <div class="rounded-card bg-obsidian px-6 py-6">
             <p
               class="font-display text-feature-stat font-semibold tabular-nums"
@@ -85,6 +91,7 @@
       <ul class="mt-6 flex flex-col gap-4">
         @for (rental of filtered(); track rental.id) {
           <li appReveal [revealDelay]="($index % 4) * 80" animate.leave="card-leave">
+            <!-- apparaît en cascade, s'efface quand il est filtré -->
             <article
               class="rounded-card border border-steel bg-carbon p-6 transition duration-500 hover:border-slate"
             >
@@ -106,6 +113,7 @@
               </div>
 
               <dl class="mt-5 grid grid-cols-2 gap-4 text-body md:grid-cols-4">
+                <!-- détails -->
                 <div>
                   <dt class="text-utility-nav text-ash">Start</dt>
                   <dd>{{ rental.startDate | date: 'MMM d, y · HH:mm' }}</dd>
@@ -132,6 +140,7 @@
 
               @if (rental.status === 'ACTIVE') {
                 <div class="mt-5">
+                  <!-- barre d'avancement -->
                   <div class="flex justify-between text-utility-nav text-ash">
                     <span>In progress</span
                     ><span class="tabular-nums">{{ progress(rental) }}%</span>
@@ -207,4 +216,5 @@
     (confirmed)="confirmCancel()"
     (cancelled)="toCancel.set(null)"
   />
+  <!-- fenêtre de confirmation -->
 }

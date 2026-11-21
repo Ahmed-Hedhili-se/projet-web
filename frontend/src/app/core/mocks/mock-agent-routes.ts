@@ -20,6 +20,7 @@ export function handleAgentRoutes(
   }
   if (req.method === 'GET' && path === '/agent/status') {
     return withAccount(req, (account) => {
+      // disponibilité et quota du jour
       const status: AgentStatus = {
         available: true,
         model: MOCK_AGENT_MODEL,
@@ -36,6 +37,7 @@ export function handleAgentRoutes(
   }
   if (req.method === 'GET' && path === '/agent/conversations') {
     return withAccount(req, (account) => {
+      // mes conversations, la plus récente d'abord
       const conversations = allMockConversations()
         .filter((record) => record.userId === account.user.id)
         .map((record) => record.conversation)
@@ -51,16 +53,17 @@ export function handleAgentRoutes(
         (item) => item.conversation.id === Number(match[1]) && item.userId === account.user.id,
       );
       if (!record) {
+        // inexistante, ou à un autre utilisateur
         return fail(req, 404, {
           error: { code: 'CONVERSATION_NOT_FOUND', message: 'Conversation not found.' },
         });
       }
       if (req.method === 'DELETE') {
         saveMockConversations(records.filter((item) => item !== record));
-        return respond(null, 300, 204);
+        return respond(null, 300, 204); // 204 : pas de contenu
       }
       return respond({ conversation: record.conversation, messages: record.messages });
     });
   }
-  return null;
+  return null; // l'envoi d'un message ne passe pas ici : flux lu par AgentService
 }

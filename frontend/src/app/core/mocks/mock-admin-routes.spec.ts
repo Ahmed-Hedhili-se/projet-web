@@ -23,8 +23,8 @@ import { mockApiInterceptor } from './mock-api-interceptor';
 
 describe('mock admin routes (/admin/*)', () => {
   let http: HttpClient;
-  const admin = { headers: { Authorization: 'Bearer mock-token-1' } };
-  const user = { headers: { Authorization: 'Bearer mock-token-3' } };
+  const admin = { headers: { Authorization: 'Bearer mock-token-1' } }; // Amira (ADMIN)
+  const user = { headers: { Authorization: 'Bearer mock-token-3' } }; // Jane (USER)
   const newGpu: GpuInput = {
     name: 'NVIDIA L40S 48GB',
     manufacturer: 'NVIDIA',
@@ -38,7 +38,7 @@ describe('mock admin routes (/admin/*)', () => {
   };
 
   beforeEach(() => {
-    localStorage.clear();
+    localStorage.clear(); // repart des données de démonstration
     TestBed.configureTestingModule({
       providers: [provideHttpClient(withInterceptors([mockApiInterceptor]))],
     });
@@ -62,7 +62,7 @@ describe('mock admin routes (/admin/*)', () => {
     );
     expect(stats.rentalsPerMonth.length).toBe(6);
     expect(stats.users.admins).toBe(1);
-    expect(stats.messages.unread).toBe(3);
+    expect(stats.messages.unread).toBe(3); // 3 messages d'exemple non lus
     expect(stats.topGpus.length).toBeLessThanOrEqual(5);
     expect(stats.rentals.total).toBe(
       stats.rentals.upcoming +
@@ -76,7 +76,7 @@ describe('mock admin routes (/admin/*)', () => {
     const response = await firstValueFrom(
       http.get<AdminGpuListResponse>(`${environment.apiUrl}/admin/gpus`, admin),
     );
-    expect(response.gpus.some((gpu) => !gpu.isActive)).toBe(true);
+    expect(response.gpus.some((gpu) => !gpu.isActive)).toBe(true); // le V100 désactivé est visible pour l'admin
     expect(response.gpus.map((gpu) => gpu.name)).toEqual(
       [...response.gpus.map((gpu) => gpu.name)].sort((a, b) => a.localeCompare(b)),
     );
@@ -86,7 +86,7 @@ describe('mock admin routes (/admin/*)', () => {
     const created = await firstValueFrom(
       http.post<GpuResponse>(`${environment.apiUrl}/admin/gpus`, newGpu, admin),
     );
-    expect(created.gpu.id).toBe(8);
+    expect(created.gpu.id).toBe(8); // comme l'exemple de docs/API.md
     expect(created.gpu.availableUnits).toBe(10);
 
     const error = await expectError(
@@ -102,7 +102,7 @@ describe('mock admin routes (/admin/*)', () => {
     );
     expect(response.gpu.isActive).toBe(false);
     const error = await expectError(firstValueFrom(http.get(`${environment.apiUrl}/gpus/1`)));
-    expect(error.status).toBe(404);
+    expect(error.status).toBe(404); // plus visible dans le catalogue public
   });
 
   it('should list the users with their rental count and filter them', async () => {
@@ -110,7 +110,7 @@ describe('mock admin routes (/admin/*)', () => {
       http.get<AdminUserListResponse>(`${environment.apiUrl}/admin/users`, admin),
     );
     expect(all.total).toBe(7);
-    expect(all.users[0].email).toBe('jane.doe@example.com');
+    expect(all.users[0].email).toBe('jane.doe@example.com'); // la plus récente d'abord
     expect(all.users[0].rentalCount).toBe(4);
 
     const blocked = await firstValueFrom(
@@ -127,7 +127,7 @@ describe('mock admin routes (/admin/*)', () => {
       http.patch<{ user: User }>(`${environment.apiUrl}/admin/users/3`, { isBlocked: true }, admin),
     );
     expect(response.user.isBlocked).toBe(true);
-    expect(response.user.role).toBe('USER');
+    expect(response.user.role).toBe('USER'); // le rôle n'a pas changé
 
     const error = await expectError(
       firstValueFrom(http.get(`${environment.apiUrl}/rentals/me`, user)),
@@ -158,7 +158,7 @@ describe('mock admin routes (/admin/*)', () => {
     const all = await firstValueFrom(
       http.get<AdminRentalListResponse>(`${environment.apiUrl}/admin/rentals`, admin),
     );
-    expect(all.total).toBe(50);
+    expect(all.total).toBe(50); // 10 locations d'exemple + 40 d'historique
     expect(all.rentals.map((rental) => rental.startDate)).toEqual(
       [...all.rentals.map((rental) => rental.startDate)].sort().reverse(),
     );
@@ -181,13 +181,13 @@ describe('mock admin routes (/admin/*)', () => {
         admin,
       ),
     );
-    expect(response.rental.status).toBe('CANCELLED');
+    expect(response.rental.status).toBe('CANCELLED'); // un admin peut annuler une location en cours
     expect(response.rental.cancelledAt).not.toBeNull();
 
     const error = await expectError(
       firstValueFrom(http.patch(`${environment.apiUrl}/admin/rentals/12/cancel`, {}, admin)),
     );
-    expect(error.status).toBe(409);
+    expect(error.status).toBe(409); // la location 12 est terminée
     expect(error.error.error.code).toBe('RENTAL_NOT_CANCELLABLE');
   });
 
@@ -196,7 +196,7 @@ describe('mock admin routes (/admin/*)', () => {
     const unreadOnly = await firstValueFrom(
       http.get<AdminMessageListResponse>(url, { ...admin, params: { isRead: 'false' } }),
     );
-    expect(unreadOnly.messages.map((message) => message.id)).toEqual([12, 11, 10]);
+    expect(unreadOnly.messages.map((message) => message.id)).toEqual([12, 11, 10]); // les plus récents d'abord
     expect(unreadOnly.unread).toBe(3);
 
     const read = await firstValueFrom(
@@ -207,11 +207,11 @@ describe('mock admin routes (/admin/*)', () => {
     const deleted = await firstValueFrom(
       http.delete(`${url}/12`, { ...admin, observe: 'response' }),
     );
-    expect(deleted.status).toBe(204);
+    expect(deleted.status).toBe(204); // pas de contenu
 
     const all = await firstValueFrom(http.get<AdminMessageListResponse>(url, admin));
     expect(all.total).toBe(5);
-    expect(all.unread).toBe(2);
+    expect(all.unread).toBe(2); // indépendant du filtre
 
     const missing = await expectError(firstValueFrom(http.delete(`${url}/12`, admin)));
     expect(missing.error.error.code).toBe('MESSAGE_NOT_FOUND');

@@ -8,7 +8,7 @@ describe('RecommendForm', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [RecommendForm],
-      providers: [provideRouter([]), provideHttpClient(), provideHttpClientTesting()],
+      providers: [provideRouter([]), provideHttpClient(), provideHttpClientTesting()], // pas de vrai réseau
     }).compileComponents();
   });
 

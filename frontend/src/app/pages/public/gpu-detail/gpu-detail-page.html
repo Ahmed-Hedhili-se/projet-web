@@ -1,5 +1,6 @@
 <div class="mx-auto max-w-6xl px-4 pt-10 pb-20 md:pb-28">
   <nav aria-label="Breadcrumb" class="text-utility-nav text-ash">
+    <!-- fil d'Ariane -->
     <a routerLink="/gpus" class="hover:text-porcelain">GPU catalog</a>
     <span class="mx-2" aria-hidden="true">›</span>
     <span class="text-porcelain">{{ gpu()?.name ?? 'GPU' }}</span>
@@ -7,6 +8,7 @@
 
   @if (loading()) {
     <div class="mt-8 grid gap-10 md:grid-cols-2">
+      <!-- squelette pendant le chargement -->
       <div class="aspect-video animate-pulse rounded-card bg-carbon"></div>
       <div class="flex flex-col gap-4">
         <div class="h-4 w-32 animate-pulse rounded-pill bg-carbon"></div>
@@ -16,6 +18,7 @@
     </div>
   } @else if (notFound()) {
     <section class="flex flex-col items-center py-24 text-center">
+      <!-- GPU introuvable -->
       <h1 class="font-display text-display-sm font-semibold">GPU not found.</h1>
       <p class="mt-4 max-w-md text-section-nav text-ash">
         This GPU does not exist or is no longer available.
@@ -30,6 +33,7 @@
     </div>
   } @else if (gpu(); as gpu) {
     <section class="mt-8 grid items-center gap-10 md:grid-cols-2">
+      <!-- image + informations principales -->
       <div class="animate-fade-up">
         <div
           appTilt
@@ -52,6 +56,7 @@
         </p>
         <h1 class="mt-2 font-display text-hero-product-name font-semibold md:text-section-title">
           <app-split-text [text]="gpu.name" [delay]="120" />
+          <!-- mots qui sortent du flou -->
         </h1>
         <p class="animate-fade-up mt-4 text-section-nav text-ash" style="animation-delay: 360ms">
           {{ gpu.description }}
@@ -90,6 +95,7 @@
     </section>
 
     <section class="scroll-zoom glass-card mt-16 p-4">
+      <!-- caractéristiques : panneau en verre qui grandit en défilant -->
       <h2 class="sr-only">Specifications</h2>
       <div class="grid grid-cols-2 gap-4 md:grid-cols-4">
         <div class="rounded-card bg-obsidian/55 px-4 py-8 text-center">
@@ -123,6 +129,7 @@
     </section>
 
     <section class="mt-16">
+      <!-- exemples de coût -->
       <h2 class="font-display text-hero-product-name font-semibold">Estimated cost.</h2>
       <p class="mt-2 text-body text-ash">
         For one unit. The exact price is calculated when you book.
@@ -131,6 +138,7 @@
         @for (example of costExamples(); track example.hours) {
           <div appReveal [revealDelay]="$index * 100">
             <div appTilt class="glass-card p-6">
+              <!-- carte en verre, s'incline vers la souris -->
               <p class="text-utility-nav text-ash">{{ example.label }}</p>
               <p
                 class="mt-2 font-display text-feature-stat font-semibold tabular-nums text-aurora"

@@ -1,4 +1,5 @@
 <header class="flex flex-wrap items-end justify-between gap-4">
+  <!-- En-tête -->
   <div>
     <p class="animate-fade-up font-display text-product-label font-semibold text-aurora">Admin</p>
     <h1 class="mt-1 font-display text-hero-product-name font-semibold md:text-section-title">
@@ -19,6 +20,7 @@
 </header>
 
 <div class="animate-fade-up mt-8 flex flex-wrap items-center gap-3" style="animation-delay: 200ms">
+  <!-- recherche + filtre de statut -->
   <input
     type="search"
     [value]="search()"
@@ -61,6 +63,7 @@
 
 @if (loading()) {
   <div class="mt-6 flex flex-col gap-3">
+    <!-- squelettes pendant le chargement -->
     @for (item of [1, 2, 3, 4, 5]; track item) {
       <div class="h-16 animate-pulse rounded-nav bg-carbon"></div>
     }
@@ -73,7 +76,9 @@
   </div>
 } @else {
   <div class="mt-6 overflow-hidden rounded-card border border-steel bg-carbon">
+    <!-- tableau des GPU -->
     <table class="hidden w-full text-left text-body md:table">
+      <!-- grand écran : tableau -->
       <thead class="border-b border-steel text-utility-nav text-ash">
         <tr>
           <th class="px-5 py-3 font-semibold">GPU</th>
@@ -145,6 +150,7 @@
     </table>
 
     <ul class="divide-y divide-steel md:hidden">
+      <!-- mobile : une carte par GPU -->
       @for (gpu of filtered(); track gpu.id) {
         <li appReveal class="p-5" [class.opacity-60]="!gpu.isActive">
           <div class="flex items-start justify-between gap-3">
@@ -198,6 +204,7 @@
     aria-labelledby="gpu-form-title"
     data-lenis-prevent
   >
+    <!-- panneau qui glisse depuis la droite -->
     <div class="flex items-center justify-between border-b border-steel px-6 py-4">
       <h2 id="gpu-form-title" class="font-display text-product-label font-semibold">
         {{ current === 'new' ? 'Add a GPU' : 'Edit ' + current.name }}
@@ -251,6 +258,7 @@
             class="form-field"
           />
           <datalist id="gpu-manufacturers">
+            <!-- suggestions : fabricants existants -->
             @for (manufacturer of manufacturers(); track manufacturer) {
               <option [value]="manufacturer"></option>
             }

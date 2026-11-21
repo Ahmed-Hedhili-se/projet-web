@@ -1,8 +1,9 @@
 import { Gpu } from '../models/gpu';
 
-const created = '2026-10-01T08:00:00.000Z';
+const created = '2026-10-01T08:00:00.000Z'; // même date de création pour tous les exemples
 
 export const MOCK_GPUS: Gpu[] = [
+  // données fictives au format de docs/API.md (ids cohérents avec ses exemples)
   {
     id: 1,
     name: 'NVIDIA H100 80GB',
@@ -110,23 +111,26 @@ export const MOCK_GPUS: Gpu[] = [
   },
 ];
 
-const GPUS_KEY = 'teramind_mock_gpus';
-let memoryGpus: Gpu[] | null = null;
+const GPUS_KEY = 'teramind_mock_gpus'; // catalogue modifiable par l'admin, gardé dans le navigateur (mock seulement)
+let memoryGpus: Gpu[] | null = null; // secours si le localStorage est indisponible
 
 export function allMockGpus(): Gpu[] {
+  // catalogue actuel (actifs et désactivés)
   try {
     const json = localStorage.getItem(GPUS_KEY);
-    return json ? (JSON.parse(json) as Gpu[]) : structuredClone(MOCK_GPUS);
+    return json ? (JSON.parse(json) as Gpu[]) : structuredClone(MOCK_GPUS); // vide = catalogue de départ
   } catch {
     return memoryGpus ?? structuredClone(MOCK_GPUS);
   }
 }
 
 export function saveMockGpus(gpus: Gpu[]): void {
+  // enregistre le catalogue (survit au rafraîchissement)
   memoryGpus = gpus;
   try {
     localStorage.setItem(GPUS_KEY, JSON.stringify(gpus));
   } catch {
+    // stockage indisponible : le catalogue reste en mémoire
     return;
   }
 }

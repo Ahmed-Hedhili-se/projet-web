@@ -1,4 +1,5 @@
 export interface Stop {
+  // image clé : à la progression p, la valeur vaut v
   p: number;
   v: number;
 }
@@ -8,10 +9,12 @@ export function clamp(value: number, min: number, max: number): number {
 }
 
 export function easeOutCubic(t: number): number {
+  // rapide au début, lent à la fin (t de 0 à 1)
   return 1 - Math.pow(1 - clamp(t, 0, 1), 3);
 }
 
 export function sampleStops(stops: Stop[], p: number): number {
+  // valeur à la progression p, avec une transition douce entre deux images clés
   if (p <= stops[0].p) {
     return stops[0].v;
   }
@@ -19,8 +22,8 @@ export function sampleStops(stops: Stop[], p: number): number {
     if (p <= stops[i].p) {
       const from = stops[i - 1];
       const to = stops[i];
-      const t = (p - from.p) / (to.p - from.p);
-      const smooth = t * t * (3 - 2 * t);
+      const t = (p - from.p) / (to.p - from.p); // 0 → 1 entre les deux images clés
+      const smooth = t * t * (3 - 2 * t); // « smoothstep » : départ et arrivée en douceur
       return from.v + (to.v - from.v) * smooth;
     }
   }
@@ -28,6 +31,7 @@ export function sampleStops(stops: Stop[], p: number): number {
 }
 
 export function latLonToUv(lat: number, lon: number): { u: number; v: number } {
+  // latitude / longitude (degrés) → position sur la texture
   return { u: (lon + 180) / 360, v: (lat + 90) / 180 };
 }
 
@@ -36,7 +40,7 @@ export function uvToSphere(
   v: number,
   radius: number,
 ): { x: number; y: number; z: number } {
-  const phi = u * Math.PI * 2;
+  const phi = u * Math.PI * 2; // même convention que THREE.SphereGeometry
   const theta = (1 - v) * Math.PI;
   return {
     x: -radius * Math.cos(phi) * Math.sin(theta),

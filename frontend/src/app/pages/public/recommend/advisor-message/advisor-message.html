@@ -1,5 +1,6 @@
 @if (message().role === 'USER') {
   <div class="result-enter flex justify-end">
+    <!-- message de l'utilisateur : bulle à droite -->
     <p
       class="max-w-[85%] rounded-[20px] rounded-br-[6px] border border-steel bg-carbon px-4 py-3 text-body break-words whitespace-pre-line"
     >
@@ -8,6 +9,7 @@
   </div>
 } @else {
   <article class="result-enter flex gap-3">
+    <!-- réponse de l'IA -->
     <span
       class="mt-1 flex size-8 shrink-0 items-center justify-center rounded-full border border-steel bg-obsidian text-aurora"
       aria-hidden="true"
@@ -24,6 +26,7 @@
     <div class="flex min-w-0 flex-1 flex-col gap-4">
       @if (working()) {
         <p class="flex items-center gap-2 text-body text-ash" role="status">
+          <!-- en cours : roue + dernière étape -->
           <svg
             class="size-4 shrink-0 animate-spin text-aurora"
             viewBox="0 0 24 24"
@@ -98,6 +101,7 @@
           </ul>
           @if (evidence().length > 0) {
             <p class="mt-3 text-utility-nav text-ash">
+              <!-- preuves : fichiers du dépôt -->
               Found in
               @for (item of evidence(); track item.file) {
                 @if (item.url) {
@@ -125,10 +129,12 @@
 
       @if (message().content) {
         <div class="markdown text-body text-porcelain" [innerHTML]="html()"></div>
+        <!-- texte de l'IA (Markdown → HTML sûr) -->
       }
 
       @if (configs().length > 0) {
         <section aria-label="Recommended configurations">
+          <!-- carte « configs » -->
           <ul class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             @for (config of configs(); track config.item.rank) {
               <li
@@ -225,6 +231,7 @@
 
       @if (repliesCard(); as card) {
         <ul class="flex flex-wrap gap-2" aria-label="Suggested replies">
+          <!-- carte « replies » : un clic envoie le texte -->
           @for (option of card.options; track option) {
             <li>
               <button

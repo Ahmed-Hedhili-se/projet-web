@@ -26,13 +26,13 @@ describe('AdminGpusPage', () => {
     await fixture.whenStable();
     const compiled = fixture.nativeElement as HTMLElement;
 
-    expect(compiled.textContent).toContain('Add a GPU');
+    expect(compiled.textContent).toContain('Add a GPU'); // le panneau d'ajout est ouvert
     expect(compiled.textContent).toContain('7 of 7 GPUs');
 
     [...compiled.querySelectorAll('button')]
       .find((button) => button.textContent?.trim() === 'Inactive')
       ?.click();
     await fixture.whenStable();
-    expect(compiled.textContent).toContain('1 of 7 GPUs');
+    expect(compiled.textContent).toContain('1 of 7 GPUs'); // seulement le V100 désactivé
   });
 });

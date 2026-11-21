@@ -1,9 +1,11 @@
 <section class="px-4 pt-16 pb-8 text-center md:pt-24">
+  <!-- En-tête -->
   <p class="animate-fade-up font-display text-product-label font-semibold text-aurora">
     GPU Recommendation
   </p>
   <h1 class="mx-auto mt-2 max-w-4xl font-display text-display-sm font-semibold md:text-display">
     <app-split-text text="The right GPU for your model." highlight="model." [delay]="100" />
+    <!-- mots qui sortent du flou -->
   </h1>
   <p
     class="animate-fade-up mx-auto mt-4 max-w-2xl text-section-nav text-porcelain/70"
@@ -36,8 +38,10 @@
 </section>
 
 <section class="px-4 pb-20 md:pb-28" [class.hidden]="mode() !== 'advisor'">
+  <!-- Conseiller IA : caché (pas détruit) en mode formulaire, la conversation est gardée -->
   @if (!authService.isLoggedIn()) {
     <div class="animate-fade-up glass-card mx-auto max-w-xl px-6 py-10 text-center md:px-10">
+      <!-- visiteur : il faut un compte -->
       <h2 class="font-display text-hero-product-name font-semibold">
         Sign in to use the AI advisor
       </h2>
@@ -62,6 +66,7 @@
     </div>
   } @else if (loadingStatus()) {
     <div class="mx-auto h-72 max-w-6xl animate-pulse rounded-card bg-carbon"></div>
+    <!-- squelette pendant le chargement -->
   } @else if (unavailable()) {
     <div class="mx-auto max-w-xl">
       <app-alert message="The AI advisor is not available right now.">
@@ -84,4 +89,5 @@
     </div>
   }
   <app-recommend-form />
+  <!-- formulaire de secours (POST /recommendations) -->
 }

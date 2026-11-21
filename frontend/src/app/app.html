@@ -1,8 +1,13 @@
 <app-site-background />
+<!-- fond fixe : grille + réseau neuronal animé -->
 <div class="flex min-h-screen flex-col">
+  <!-- colonne sur toute la hauteur de l'écran -->
   <app-navbar />
+  <!-- barre de navigation -->
   <main class="min-h-svh flex-1">
     <router-outlet />
+    <!-- la page de la route actuelle s'affiche ici -->
   </main>
   <app-footer />
+  <!-- pied de page -->
 </div>

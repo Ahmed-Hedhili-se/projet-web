@@ -3,7 +3,7 @@ import { Observable, delay, mergeMap, of, throwError, timer } from 'rxjs';
 import { ApiError } from '../models/api-error';
 import { MockAccount, allMockAccounts, mockTokenFor } from './mock-users';
 
-export const NETWORK_DELAY_MS = 400;
+export const NETWORK_DELAY_MS = 400; // simule le temps de réponse d'un vrai serveur
 
 export interface FieldError {
   field: string;
@@ -19,6 +19,7 @@ export function respond<T>(
 }
 
 export function fail(req: HttpRequest<unknown>, status: number, body: ApiError): Observable<never> {
+  // erreur HTTP après un petit délai
   return timer(NETWORK_DELAY_MS).pipe(
     mergeMap(() => throwError(() => new HttpErrorResponse({ status, error: body, url: req.url }))),
   );
@@ -33,11 +34,11 @@ export function validationError(
   });
 }
 
-export function withAccount(
+export function withAccount( // routes « USER » : retrouve le compte du token, sinon 401 / 403
   req: HttpRequest<unknown>,
   handler: (account: MockAccount) => Observable<HttpResponse<unknown>>,
 ): Observable<HttpResponse<unknown>> {
-  const token = req.headers.get('Authorization')?.replace('Bearer ', '');
+  const token = req.headers.get('Authorization')?.replace('Bearer ', ''); // header ajouté par authInterceptor
   const account = allMockAccounts().find((item) => mockTokenFor(item.user) === token);
   if (!account) {
     return fail(req, 401, { error: { code: 'UNAUTHORIZED', message: 'Please sign in again.' } });
@@ -53,4 +54,4 @@ export function withAccount(
   return handler(account);
 }
 
-export const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+export const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // vérification simple d'un email

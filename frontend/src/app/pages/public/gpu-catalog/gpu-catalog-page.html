@@ -1,9 +1,11 @@
 <section class="px-4 pt-16 pb-10 text-center md:pt-24">
+  <!-- En-tête -->
   <p class="animate-fade-up font-display text-product-label font-semibold text-aurora">
     GPU catalog
   </p>
   <h1 class="mt-2 font-display text-display-sm font-semibold md:text-display">
     <app-split-text text="Find your GPU." highlight="GPU." [delay]="100" />
+    <!-- mots qui sortent du flou -->
   </h1>
   <p
     class="animate-fade-up mx-auto mt-4 max-w-xl text-section-nav text-ash"
@@ -14,7 +16,9 @@
 </section>
 
 <section class="animate-fade-up px-4 pb-20 md:pb-28" style="animation-delay: 460ms">
+  <!-- Filtres + résultats -->
   <div class="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[280px_1fr]">
+    <!-- barre latérale de 280px sur grand écran -->
     <aside>
       <button
         type="button"
@@ -31,6 +35,7 @@
         class="mt-4 rounded-card border border-steel bg-carbon p-5 lg:sticky lg:top-16 lg:mt-0 lg:block"
         [class.hidden]="!filtersOpen()"
       >
+        <!-- toujours visible sur grand écran -->
         <app-gpu-filters
           [manufacturers]="manufacturers()"
           (filtersChange)="onFiltersChange($event)"
@@ -40,6 +45,7 @@
 
     <div>
       <p class="mb-4 flex items-center gap-2 text-body text-ash" aria-live="polite">
+        <!-- annonce le nombre de résultats -->
         @if (loading() && gpus().length > 0) {
           <span class="size-2 animate-ping rounded-full bg-aurora-glow" aria-hidden="true"></span>
           Updating results…
@@ -57,13 +63,16 @@
           </button>
         </app-alert>
       } @else if (loading() && gpus().length === 0) {
+        <!-- squelettes seulement au premier chargement -->
         <div class="grid gap-4 sm:grid-cols-2">
+          <!-- squelettes pendant le chargement -->
           @for (item of skeletons; track item) {
             <div class="h-[420px] animate-pulse rounded-card border border-steel bg-carbon"></div>
           }
         </div>
       } @else if (gpus().length === 0) {
         <div class="result-enter rounded-card border border-steel bg-carbon px-6 py-16 text-center">
+          <!-- aucun résultat -->
           <p class="font-display text-product-label font-semibold">No GPU matches your filters.</p>
           <p class="mt-2 text-body text-ash">Try a lower memory or a higher price limit.</p>
         </div>
@@ -75,6 +84,7 @@
         >
           @for (gpu of gpus(); track gpu.id) {
             <div appReveal [revealDelay]="($index % 2) * 100" animate.leave="card-leave">
+              <!-- apparaît en cascade, s'efface quand il est retiré -->
               <app-gpu-card [gpu]="gpu" />
             </div>
           }

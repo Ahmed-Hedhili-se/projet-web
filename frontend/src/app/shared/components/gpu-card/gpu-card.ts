@@ -10,5 +10,6 @@ import { Tilt } from '../../directives/tilt';
   templateUrl: './gpu-card.html',
 })
 export class GpuCard {
+  // carte d'un GPU dans le catalogue
   readonly gpu = input.required<Gpu>();
 }

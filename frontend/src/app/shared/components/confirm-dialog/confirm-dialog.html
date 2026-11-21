@@ -13,6 +13,7 @@
     aria-describedby="confirm-dialog-message"
     class="relative w-full max-w-sm rounded-card border border-steel bg-carbon p-6 md:p-8"
   >
+    <!-- la fenêtre : un clic dedans ne ferme pas -->
     <h2 id="confirm-dialog-title" class="font-display text-product-label font-semibold">
       {{ title() }}
     </h2>
@@ -37,6 +38,7 @@
       >
         @if (busy()) {
           <svg class="size-3.5 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <!-- roue de chargement -->
             <circle
               cx="12"
               cy="12"

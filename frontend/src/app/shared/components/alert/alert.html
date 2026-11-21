@@ -2,6 +2,7 @@
   class="flex items-start gap-3 rounded-nav border border-steel bg-carbon p-4 text-body"
   [attr.role]="type() === 'error' ? 'alert' : 'status'"
 >
+  <!-- annoncé par les lecteurs d'écran -->
   @if (type() === 'error') {
     <svg
       class="mt-px size-5 shrink-0 text-optical-yellow"
@@ -30,5 +31,6 @@
   <div class="flex-1">
     <p class="text-porcelain">{{ message() }}</p>
     <ng-content />
+    <!-- ex. bouton « Try again » -->
   </div>
 </div>

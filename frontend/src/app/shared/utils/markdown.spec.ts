@@ -14,7 +14,7 @@ describe('renderMarkdown', () => {
     const html = renderMarkdown(
       'Hello <img src=x onerror="alert(1)"> and <script>alert(2)</script>\n\n![logo](https://example.com/a.png)',
     );
-    expect(html).not.toContain('<img');
+    expect(html).not.toContain('<img'); // affiché comme du texte, pas comme une balise
     expect(html).not.toContain('<script');
     expect(html).toContain('&lt;img');
   });

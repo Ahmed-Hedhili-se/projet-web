@@ -1,3 +1,4 @@
+// bruit « simplex » 3D (motif naturel et animé) utilisé pour les vagues de l'océan
 const SIMPLEX_NOISE = `
 vec4 permute(vec4 x){ return mod(((x*34.0)+1.0)*x, 289.0); }
 vec4 taylorInvSqrt(vec4 r){ return 1.79284291400159 - 0.85373472095314 * r; }
@@ -24,8 +25,9 @@ float snoise(vec3 v){
 }
 `;
 
-const SUN = 'normalize(vec3(-0.9, 0.18, 0.4))';
+const SUN = 'normalize(vec3(-0.9, 0.18, 0.4))'; // direction du soleil, fixe par rapport à l'écran (le jour reste à gauche)
 
+// sommets de la Terre et des nuages : transmet position, normale et coordonnées de texture
 export const SURFACE_VERTEX = `
 varying vec2 vUv;
 varying vec3 vNormal;
@@ -39,6 +41,7 @@ void main(){
 }
 `;
 
+// couleur de la Terre : jour / nuit, lumières des villes, océans, relief, reflet du soleil, bord lumineux
 export const EARTH_FRAGMENT = `
 uniform sampler2D dayMap;
 uniform sampler2D nightMap;
@@ -102,6 +105,7 @@ void main(){
 }
 `;
 
+// couche de nuages : transparence lue dans la texture, plus sombre côté nuit
 export const CLOUD_FRAGMENT = `
 uniform sampler2D cloudMap;
 uniform float opacity;
@@ -122,6 +126,7 @@ void main(){
 }
 `;
 
+// halo d'atmosphère autour de la planète
 export const HALO_VERTEX = `
 varying vec2 vUv;
 void main(){
@@ -130,6 +135,7 @@ void main(){
 }
 `;
 
+// couleur du halo, plus intense sur le bord, teintée par la couleur Aurore
 export const HALO_FRAGMENT = `
 uniform vec3 glowColor;
 uniform float intensity;
@@ -142,6 +148,7 @@ void main(){
 }
 `;
 
+// étoiles du fond : taille et scintillement
 export const STARS_VERTEX = `
 attribute float seed;
 attribute float bright;
@@ -157,6 +164,7 @@ void main(){
 }
 `;
 
+// forme ronde et douce de chaque étoile
 export const STARS_FRAGMENT = `
 uniform vec3 starColor;
 varying float vTwinkle;
@@ -168,6 +176,7 @@ void main(){
 }
 `;
 
+// points des data centers sur la planète, avec leur pulsation
 export const MARKERS_VERTEX = `
 attribute float seed;
 attribute float major;
@@ -188,6 +197,7 @@ void main(){
 }
 `;
 
+// dessin d'un point de data center et de son onde
 export const MARKERS_FRAGMENT = `
 uniform vec3 coreColor;
 uniform vec3 ringColor;

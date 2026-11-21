@@ -8,21 +8,24 @@ import { Reveal } from '../../../shared/directives/reveal';
 import { Tilt } from '../../../shared/directives/tilt';
 
 interface Stat {
+  // chiffre clé animé (directive CountUp)
   value: number;
-  decimals?: number;
-  prefix?: string;
-  suffix?: string;
+  decimals?: number; // décimales affichées (0 par défaut)
+  prefix?: string; // ex. "$"
+  suffix?: string; // ex. "%"
   label: string;
 }
 
 interface Feature {
-  icon: 'target' | 'clock' | 'chip';
+  // point fort de l'offre
+  icon: 'target' | 'clock' | 'chip'; // nom de l'icône SVG affichée
   title: string;
   text: string;
 }
 
 interface FeaturedGpu {
-  id: number;
+  // GPU mis en avant (texte de présentation, ids du catalogue)
+  id: number; // lien vers /gpus/:id
   name: string;
   architecture: string;
   vramGb: number;
@@ -32,6 +35,7 @@ interface FeaturedGpu {
 }
 
 interface Step {
+  // étape du fonctionnement
   number: string;
   title: string;
   text: string;
@@ -51,6 +55,7 @@ export class HomePage {
   ];
 
   protected readonly marqueeGpus = [
+    // noms affichés dans le bandeau défilant
     'NVIDIA H100 80GB',
     'AMD Instinct MI300X',
     'NVIDIA A100 80GB',
@@ -59,7 +64,7 @@ export class HomePage {
     'NVIDIA L4',
   ];
 
-  protected readonly statement =
+  protected readonly statement = // grande phrase qui s'éclaire en défilant
     'Every AI model has a perfect GPU. Our AI advisor finds it, you book it in one click, and you pay only for the hours you actually use.';
 
   protected readonly features: Feature[] = [

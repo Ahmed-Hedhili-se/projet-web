@@ -51,7 +51,7 @@ describe('MyRentalsPage', () => {
     const cancelButton = [...compiled.querySelectorAll('button')].find((button) =>
       button.textContent?.includes('Cancel rental'),
     );
-    cancelButton?.click();
+    cancelButton?.click(); // ouvre la fenêtre de confirmation
     await fixture.whenStable();
     expect(compiled.textContent).toContain('Cancel this rental?');
 

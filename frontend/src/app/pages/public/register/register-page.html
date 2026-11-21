@@ -1,4 +1,5 @@
 <section class="px-4 py-10 md:py-16">
+  <!-- Inscription -->
   <div class="mx-auto grid max-w-6xl items-stretch gap-8 lg:grid-cols-2">
     <div
       class="animate-fade-up relative hidden overflow-hidden rounded-card border border-steel bg-obsidian lg:flex lg:flex-col"
@@ -13,6 +14,7 @@
       <div class="mt-auto p-10">
         <h2 class="font-display text-section-title font-semibold">
           <app-split-text text="Start building." highlight="building." [delay]="200" />
+          <!-- mots qui sortent du flou -->
         </h2>
         <p
           class="animate-fade-up mt-3 max-w-sm text-section-nav text-ash"
@@ -37,11 +39,13 @@
     </div>
 
     <div class="animate-fade-up flex items-center" style="animation-delay: 120ms">
+      <!-- colonne du formulaire -->
       <div
         class="mx-auto w-full max-w-md rounded-card border border-steel bg-carbon p-6 md:p-10"
         [class.animate-shake]="shaking()"
         (animationend)="shaking.set(false)"
       >
+        <!-- tremble si l'email est déjà pris -->
         <h1 class="font-display text-hero-product-name font-semibold">Create an account</h1>
         <p class="mt-2 text-body text-ash">
           Already have an account? <a routerLink="/login" class="text-link">Sign in</a>
@@ -49,6 +53,7 @@
 
         <form [formGroup]="form" (ngSubmit)="submit()" class="mt-8 flex flex-col gap-5" novalidate>
           <div class="grid gap-5 sm:grid-cols-2">
+            <!-- prénom et nom côte à côte -->
             <div>
               <label for="register-first-name" class="form-label">First name</label>
               <input
@@ -106,6 +111,7 @@
           <div>
             <label for="register-password" class="form-label">Password</label>
             <div class="relative">
+              <!-- bouton « Show » dans le champ -->
               <input
                 id="register-password"
                 [type]="showPassword() ? 'text' : 'password'"
@@ -172,6 +178,7 @@
 
           @if (errorMessage(); as message) {
             <div animate.enter="result-enter">
+              <!-- message d'erreur de l'API -->
               <app-alert [message]="message" />
             </div>
           }
@@ -183,6 +190,7 @@
           >
             @if (submitting()) {
               <svg class="size-4 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <!-- roue de chargement -->
                 <circle
                   cx="12"
                   cy="12"

@@ -21,7 +21,7 @@ export const routes: Routes = [
       import('./pages/public/gpu-catalog/gpu-catalog-page').then((m) => m.GpuCatalogPage),
   },
   {
-    path: 'gpus/:id',
+    path: 'gpus/:id', // :id est transmis à l'input « id » de la page
     title: 'GPU details | TeraMind',
     loadComponent: () =>
       import('./pages/public/gpu-detail/gpu-detail-page').then((m) => m.GpuDetailPage),
@@ -50,20 +50,20 @@ export const routes: Routes = [
   {
     path: 'login',
     title: 'Sign in | TeraMind',
-    canActivate: [guestGuard],
+    canActivate: [guestGuard], // déjà connecté → accueil
     loadComponent: () => import('./pages/public/login/login-page').then((m) => m.LoginPage),
   },
   {
     path: 'register',
     title: 'Create an account | TeraMind',
-    canActivate: [guestGuard],
+    canActivate: [guestGuard], // déjà connecté → accueil
     loadComponent: () =>
       import('./pages/public/register/register-page').then((m) => m.RegisterPage),
   },
   {
-    path: 'account/rentals/new',
+    path: 'account/rentals/new', // ?gpuId=… transmis à l'input « gpuId » de la page
     title: 'New rental | TeraMind',
-    canActivate: [authGuard],
+    canActivate: [authGuard], // il faut être connecté
     loadComponent: () =>
       import('./pages/account/new-rental/new-rental-page').then((m) => m.NewRentalPage),
   },
@@ -81,8 +81,8 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/account/profile/profile-page').then((m) => m.ProfilePage),
   },
   {
-    path: 'admin',
-    canActivate: [adminGuard],
+    path: 'admin', // espace admin : un cadre commun (menu) + une page par sous-route
+    canActivate: [adminGuard], // rôle ADMIN obligatoire
     loadComponent: () =>
       import('./pages/admin/admin-layout/admin-layout').then((m) => m.AdminLayout),
     children: [
@@ -93,7 +93,7 @@ export const routes: Routes = [
           import('./pages/admin/dashboard/admin-dashboard-page').then((m) => m.AdminDashboardPage),
       },
       {
-        path: 'gpus',
+        path: 'gpus', // ?new=1 ouvre directement le formulaire d'ajout
         title: 'GPU management | TeraMind',
         loadComponent: () =>
           import('./pages/admin/gpus/admin-gpus-page').then((m) => m.AdminGpusPage),
@@ -105,7 +105,7 @@ export const routes: Routes = [
           import('./pages/admin/users/admin-users-page').then((m) => m.AdminUsersPage),
       },
       {
-        path: 'rentals',
+        path: 'rentals', // ?userId=3 ou ?gpuId=1 : filtre déjà choisi
         title: 'Rental management | TeraMind',
         loadComponent: () =>
           import('./pages/admin/rentals/admin-rentals-page').then((m) => m.AdminRentalsPage),
@@ -119,7 +119,7 @@ export const routes: Routes = [
     ],
   },
   {
-    path: '**',
+    path: '**', // toute autre URL → page 404 (doit rester en dernier)
     title: 'Page not found | TeraMind',
     loadComponent: () =>
       import('./pages/public/not-found/not-found-page').then((m) => m.NotFoundPage),

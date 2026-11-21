@@ -2,12 +2,14 @@
   class="mx-auto grid max-w-7xl gap-6 px-4 pt-8 pb-20 lg:grid-cols-[220px_1fr] lg:gap-10 lg:pt-12"
 >
   <aside class="animate-fade-up min-w-0">
+    <!-- min-w-0 : sur mobile, le menu défile dans sa barre au lieu d'élargir la page -->
     <nav
       aria-label="Admin navigation"
       class="rounded-card border border-steel bg-carbon p-2 lg:sticky lg:top-16 lg:p-3"
     >
       <p class="hidden px-3 pt-2 pb-3 text-utility-nav font-semibold text-ash lg:block">Admin</p>
       <ul class="flex gap-1 overflow-x-auto lg:flex-col">
+        <!-- barre défilante sur mobile, colonne sur grand écran -->
         @for (link of links; track link.path) {
           <li class="shrink-0">
             <a
@@ -17,6 +19,7 @@
               ariaCurrentWhenActive="page"
               class="group flex items-center gap-3 rounded-[14px] px-3 py-2.5 text-body text-ash transition-colors duration-300 hover:bg-obsidian/60 hover:text-porcelain aria-[current=page]:bg-obsidian aria-[current=page]:text-porcelain"
             >
+              <!-- lien actif : fond noir, texte clair -->
               <span
                 class="flex size-5 items-center justify-center transition-transform duration-300 group-hover:scale-110"
               >
@@ -117,6 +120,7 @@
   </aside>
 
   <div class="min-w-0">
+    <!-- page admin de la route actuelle -->
     <router-outlet />
   </div>
 </div>

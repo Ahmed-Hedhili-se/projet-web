@@ -20,6 +20,7 @@ describe('RegisterPage', () => {
   afterEach(() => httpTesting.verify());
 
   function fillForm(page: { form: RegisterPage['form'] }, confirmPassword: string): void {
+    // remplit tous les champs
     page.form.setValue({
       firstName: 'Jane',
       lastName: 'Doe',
