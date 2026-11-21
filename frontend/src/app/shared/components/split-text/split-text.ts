@@ -11,7 +11,11 @@ export class SplitText {
   readonly stagger = input(70);
 
   protected readonly words = computed(() => {
-    const highlighted = this.highlight().split(' ').filter((word) => word !== '');
-    return this.text().split(' ').map((word) => ({ word, highlighted: highlighted.includes(word) }));
+    const highlighted = this.highlight()
+      .split(' ')
+      .filter((word) => word !== '');
+    return this.text()
+      .split(' ')
+      .map((word) => ({ word, highlighted: highlighted.includes(word) }));
   });
 }

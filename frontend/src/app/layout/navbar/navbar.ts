@@ -65,7 +65,10 @@ export class Navbar {
   }
 
   protected onDocumentClick(event: MouseEvent): void {
-    if (this.userMenuOpen() && !this.element.nativeElement.querySelector('#user-menu-area')?.contains(event.target as Node)) {
+    if (
+      this.userMenuOpen() &&
+      !this.element.nativeElement.querySelector('#user-menu-area')?.contains(event.target as Node)
+    ) {
       this.closeUserMenu();
     }
   }

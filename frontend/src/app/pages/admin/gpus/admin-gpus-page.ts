@@ -23,7 +23,7 @@ type GpuField = keyof GpuInput;
   },
 })
 export class AdminGpusPage implements OnInit {
-  readonly openNew = input<string>(undefined, { alias: 'new' });
+  readonly create = input<string>();
 
   private readonly adminService = inject(AdminService);
   private readonly destroyRef = inject(DestroyRef);
@@ -44,11 +44,14 @@ export class AdminGpusPage implements OnInit {
     return this.gpus().filter(
       (gpu) =>
         (this.statusFilter() === 'ALL' || gpu.isActive === (this.statusFilter() === 'ACTIVE')) &&
-        (!term || `${gpu.name} ${gpu.manufacturer} ${gpu.architecture}`.toLowerCase().includes(term)),
+        (!term ||
+          `${gpu.name} ${gpu.manufacturer} ${gpu.architecture}`.toLowerCase().includes(term)),
     );
   });
 
-  protected readonly manufacturers = computed(() => [...new Set(this.gpus().map((gpu) => gpu.manufacturer))].sort());
+  protected readonly manufacturers = computed(() =>
+    [...new Set(this.gpus().map((gpu) => gpu.manufacturer))].sort(),
+  );
 
   protected readonly editing = signal<AdminGpu | 'new' | null>(null);
   protected readonly saving = signal(false);
@@ -59,20 +62,42 @@ export class AdminGpusPage implements OnInit {
   protected readonly notice = signal<string | null>(null);
 
   protected readonly form = new FormGroup({
-    name: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.maxLength(100)] }),
-    manufacturer: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.maxLength(50)] }),
-    architecture: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.maxLength(50)] }),
-    vramGb: new FormControl<number | null>(null, [Validators.required, Validators.min(1), Validators.max(1024), Validators.pattern(/^\d+$/)]),
+    name: new FormControl('', {
+      nonNullable: true,
+      validators: [Validators.required, Validators.maxLength(100)],
+    }),
+    manufacturer: new FormControl('', {
+      nonNullable: true,
+      validators: [Validators.required, Validators.maxLength(50)],
+    }),
+    architecture: new FormControl('', {
+      nonNullable: true,
+      validators: [Validators.required, Validators.maxLength(50)],
+    }),
+    vramGb: new FormControl<number | null>(null, [
+      Validators.required,
+      Validators.min(1),
+      Validators.max(1024),
+      Validators.pattern(/^\d+$/),
+    ]),
     fp16Tflops: new FormControl<number | null>(null, [Validators.required, Validators.min(0.01)]),
     pricePerHour: new FormControl<number | null>(null, [Validators.required, Validators.min(0.01)]),
-    totalUnits: new FormControl<number | null>(null, [Validators.required, Validators.min(0), Validators.max(1000), Validators.pattern(/^\d+$/)]),
-    description: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.maxLength(1000)] }),
+    totalUnits: new FormControl<number | null>(null, [
+      Validators.required,
+      Validators.min(0),
+      Validators.max(1000),
+      Validators.pattern(/^\d+$/),
+    ]),
+    description: new FormControl('', {
+      nonNullable: true,
+      validators: [Validators.required, Validators.maxLength(1000)],
+    }),
     isActive: new FormControl(true, { nonNullable: true }),
   });
 
   ngOnInit(): void {
     this.load();
-    if (this.openNew() === '1') {
+    if (this.create() === '1') {
       this.openCreate();
     }
   }
@@ -103,9 +128,15 @@ export class AdminGpusPage implements OnInit {
 
   protected openEdit(gpu: AdminGpu): void {
     this.form.setValue({
-      name: gpu.name, manufacturer: gpu.manufacturer, architecture: gpu.architecture, vramGb: gpu.vramGb,
-      fp16Tflops: gpu.fp16Tflops, pricePerHour: gpu.pricePerHour, totalUnits: gpu.totalUnits,
-      description: gpu.description, isActive: gpu.isActive,
+      name: gpu.name,
+      manufacturer: gpu.manufacturer,
+      architecture: gpu.architecture,
+      vramGb: gpu.vramGb,
+      fp16Tflops: gpu.fp16Tflops,
+      pricePerHour: gpu.pricePerHour,
+      totalUnits: gpu.totalUnits,
+      description: gpu.description,
+      isActive: gpu.isActive,
     });
     this.resetFormMessages();
     this.editing.set(gpu);
@@ -154,7 +185,10 @@ export class AdminGpusPage implements OnInit {
       totalUnits: Number(value.totalUnits),
     };
     const editing = this.editing();
-    const request = editing && editing !== 'new' ? this.adminService.updateGpu(editing.id, input) : this.adminService.createGpu(input);
+    const request =
+      editing && editing !== 'new'
+        ? this.adminService.updateGpu(editing.id, input)
+        : this.adminService.createGpu(input);
     this.saving.set(true);
     this.resetFormMessages();
 
@@ -167,7 +201,11 @@ export class AdminGpusPage implements OnInit {
             ? list.map((gpu) => (gpu.id === saved.id ? saved : gpu))
             : [...list, saved].sort((a, b) => a.name.localeCompare(b.name)),
         );
-        this.notice.set(editing === 'new' ? `${saved.name} was added to the catalog.` : `${saved.name} was updated.`);
+        this.notice.set(
+          editing === 'new'
+            ? `${saved.name} was added to the catalog.`
+            : `${saved.name} was updated.`,
+        );
         this.saving.set(false);
         this.editing.set(null);
       },
@@ -198,7 +236,9 @@ export class AdminGpusPage implements OnInit {
       .subscribe({
         next: (response) => {
           this.replace({ ...response.gpu, rentalCount: gpu.rentalCount });
-          this.notice.set(`${gpu.name} was deactivated. It no longer appears in the public catalog.`);
+          this.notice.set(
+            `${gpu.name} was deactivated. It no longer appears in the public catalog.`,
+          );
           this.deactivating.set(false);
           this.toDeactivate.set(null);
         },
@@ -226,10 +266,31 @@ export class AdminGpusPage implements OnInit {
 
   protected exportCsv(): void {
     downloadCsv('teramind-gpus.csv', [
-      ['ID', 'Name', 'Manufacturer', 'Architecture', 'VRAM (GB)', 'FP16 TFLOPS', 'Price per hour (USD)', 'Total units', 'Available now', 'Rentals', 'Status'],
+      [
+        'ID',
+        'Name',
+        'Manufacturer',
+        'Architecture',
+        'VRAM (GB)',
+        'FP16 TFLOPS',
+        'Price per hour (USD)',
+        'Total units',
+        'Available now',
+        'Rentals',
+        'Status',
+      ],
       ...this.filtered().map((gpu) => [
-        gpu.id, gpu.name, gpu.manufacturer, gpu.architecture, gpu.vramGb, gpu.fp16Tflops, gpu.pricePerHour,
-        gpu.totalUnits, gpu.availableUnits, gpu.rentalCount, gpu.isActive ? 'Active' : 'Inactive',
+        gpu.id,
+        gpu.name,
+        gpu.manufacturer,
+        gpu.architecture,
+        gpu.vramGb,
+        gpu.fp16Tflops,
+        gpu.pricePerHour,
+        gpu.totalUnits,
+        gpu.availableUnits,
+        gpu.rentalCount,
+        gpu.isActive ? 'Active' : 'Inactive',
       ]),
     ]);
   }

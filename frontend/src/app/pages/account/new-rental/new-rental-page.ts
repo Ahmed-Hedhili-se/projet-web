@@ -3,7 +3,16 @@ import { Component, DestroyRef, OnInit, computed, inject, input, signal } from '
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { catchError, debounceTime, distinctUntilChanged, map, of, startWith, switchMap, tap } from 'rxjs';
+import {
+  catchError,
+  debounceTime,
+  distinctUntilChanged,
+  map,
+  of,
+  startWith,
+  switchMap,
+  tap,
+} from 'rxjs';
 import { getErrorCode, getErrorMessage } from '../../../core/models/api-error';
 import { Gpu } from '../../../core/models/gpu';
 import { Rental } from '../../../core/models/rental';
@@ -34,13 +43,26 @@ export class NewRentalPage implements OnInit {
 
   protected readonly form = new FormGroup({
     gpuId: new FormControl<number | null>(null, [Validators.required]),
-    quantity: new FormControl(1, { nonNullable: true, validators: [Validators.required, Validators.min(1)] }),
-    startDate: new FormControl(toDateTimeLocal(nextFullHour(1)), { nonNullable: true, validators: [Validators.required] }),
-    durationHours: new FormControl<number | null>(24, [Validators.required, Validators.min(1), Validators.max(720)]),
+    quantity: new FormControl(1, {
+      nonNullable: true,
+      validators: [Validators.required, Validators.min(1)],
+    }),
+    startDate: new FormControl(toDateTimeLocal(nextFullHour(1)), {
+      nonNullable: true,
+      validators: [Validators.required],
+    }),
+    durationHours: new FormControl<number | null>(24, [
+      Validators.required,
+      Validators.min(1),
+      Validators.max(720),
+    ]),
   });
 
   private readonly formValue = toSignal(
-    this.form.valueChanges.pipe(map(() => this.form.getRawValue()), startWith(this.form.getRawValue())),
+    this.form.valueChanges.pipe(
+      map(() => this.form.getRawValue()),
+      startWith(this.form.getRawValue()),
+    ),
     { requireSync: true },
   );
 
@@ -53,21 +75,35 @@ export class NewRentalPage implements OnInit {
   protected readonly shaking = signal(false);
   protected readonly booked = signal<Rental | null>(null);
 
-  protected readonly selectedGpu = computed(() => this.gpus().find((gpu) => gpu.id === this.formValue().gpuId) ?? null);
+  protected readonly selectedGpu = computed(
+    () => this.gpus().find((gpu) => gpu.id === this.formValue().gpuId) ?? null,
+  );
 
   protected readonly period = computed(() => {
     const { startDate, durationHours } = this.formValue();
     const start = new Date(startDate);
-    if (!startDate || Number.isNaN(start.getTime()) || !durationHours || durationHours < 1 || durationHours > 720) {
+    if (
+      !startDate ||
+      Number.isNaN(start.getTime()) ||
+      !durationHours ||
+      durationHours < 1 ||
+      durationHours > 720
+    ) {
       return null;
     }
-    return { start, end: new Date(start.getTime() + durationHours * HOUR_MS), hours: durationHours };
+    return {
+      start,
+      end: new Date(start.getTime() + durationHours * HOUR_MS),
+      hours: durationHours,
+    };
   });
 
   protected readonly estimatedTotal = computed(() => {
     const gpu = this.selectedGpu();
     const period = this.period();
-    return gpu && period ? Math.round(gpu.pricePerHour * this.formValue().quantity * period.hours * 100) / 100 : 0;
+    return gpu && period
+      ? Math.round(gpu.pricePerHour * this.formValue().quantity * period.hours * 100) / 100
+      : 0;
   });
 
   protected readonly tooManyUnits = computed(() => {
@@ -79,7 +115,11 @@ export class NewRentalPage implements OnInit {
     this.form.valueChanges
       .pipe(
         map(() => this.form.getRawValue()),
-        map((value) => ({ gpuId: value.gpuId, startDate: value.startDate, durationHours: value.durationHours })),
+        map((value) => ({
+          gpuId: value.gpuId,
+          startDate: value.startDate,
+          durationHours: value.durationHours,
+        })),
         distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b)),
         debounceTime(300),
         tap(() => this.checking.set(true)),
@@ -91,7 +131,10 @@ export class NewRentalPage implements OnInit {
           }
           return this.gpuService
             .getById(gpuId, { startDate: period.start.toISOString(), durationHours: period.hours })
-            .pipe(map((response) => response.gpu.availableUnits), catchError(() => of(null)));
+            .pipe(
+              map((response) => response.gpu.availableUnits),
+              catchError(() => of(null)),
+            );
         }),
         takeUntilDestroyed(),
       )
@@ -150,7 +193,12 @@ export class NewRentalPage implements OnInit {
     this.errorMessage.set(null);
 
     this.rentalService
-      .create({ gpuId, quantity: this.form.controls.quantity.value, startDate: period.start.toISOString(), durationHours: period.hours })
+      .create({
+        gpuId,
+        quantity: this.form.controls.quantity.value,
+        startDate: period.start.toISOString(),
+        durationHours: period.hours,
+      })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (response) => {
@@ -162,7 +210,10 @@ export class NewRentalPage implements OnInit {
           this.errorMessage.set(getErrorMessage(err));
           if (getErrorCode(err) === 'NOT_ENOUGH_UNITS') {
             this.gpuService
-              .getById(gpuId, { startDate: period.start.toISOString(), durationHours: period.hours })
+              .getById(gpuId, {
+                startDate: period.start.toISOString(),
+                durationHours: period.hours,
+              })
               .pipe(takeUntilDestroyed(this.destroyRef))
               .subscribe({ next: (response) => this.available.set(response.gpu.availableUnits) });
           }

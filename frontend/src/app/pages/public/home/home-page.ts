@@ -51,7 +51,12 @@ export class HomePage {
   ];
 
   protected readonly marqueeGpus = [
-    'NVIDIA H100 80GB', 'AMD Instinct MI300X', 'NVIDIA A100 80GB', 'NVIDIA A100 40GB', 'NVIDIA RTX 4090', 'NVIDIA L4',
+    'NVIDIA H100 80GB',
+    'AMD Instinct MI300X',
+    'NVIDIA A100 80GB',
+    'NVIDIA A100 40GB',
+    'NVIDIA RTX 4090',
+    'NVIDIA L4',
   ];
 
   protected readonly statement =
@@ -76,14 +81,50 @@ export class HomePage {
   ];
 
   protected readonly featuredGpus: FeaturedGpu[] = [
-    { id: 1, name: 'NVIDIA H100 80GB', architecture: 'Hopper', vramGb: 80, fp16Tflops: 989.5, pricePerHour: 3.2, useCase: 'Large-scale training' },
-    { id: 2, name: 'NVIDIA A100 80GB', architecture: 'Ampere', vramGb: 80, fp16Tflops: 312, pricePerHour: 1.89, useCase: 'Fine-tuning' },
-    { id: 5, name: 'NVIDIA RTX 4090', architecture: 'Ada Lovelace', vramGb: 24, fp16Tflops: 165, pricePerHour: 0.69, useCase: 'Fast inference' },
+    {
+      id: 1,
+      name: 'NVIDIA H100 80GB',
+      architecture: 'Hopper',
+      vramGb: 80,
+      fp16Tflops: 989.5,
+      pricePerHour: 3.2,
+      useCase: 'Large-scale training',
+    },
+    {
+      id: 2,
+      name: 'NVIDIA A100 80GB',
+      architecture: 'Ampere',
+      vramGb: 80,
+      fp16Tflops: 312,
+      pricePerHour: 1.89,
+      useCase: 'Fine-tuning',
+    },
+    {
+      id: 5,
+      name: 'NVIDIA RTX 4090',
+      architecture: 'Ada Lovelace',
+      vramGb: 24,
+      fp16Tflops: 165,
+      pricePerHour: 0.69,
+      useCase: 'Fast inference',
+    },
   ];
 
   protected readonly steps: Step[] = [
-    { number: '01', title: 'Ask the AI advisor', text: 'Paste your GitHub repository or describe your workload to get the best GPU configuration.' },
-    { number: '02', title: 'Book your GPU', text: 'Pick a start date and a duration in hours. The price is shown instantly.' },
-    { number: '03', title: 'Start computing', text: 'Your GPU is ready at the scheduled time. Cancel for free before it starts.' },
+    {
+      number: '01',
+      title: 'Ask the AI advisor',
+      text: 'Paste your GitHub repository or describe your workload to get the best GPU configuration.',
+    },
+    {
+      number: '02',
+      title: 'Book your GPU',
+      text: 'Pick a start date and a duration in hours. The price is shown instantly.',
+    },
+    {
+      number: '03',
+      title: 'Start computing',
+      text: 'Your GPU is ready at the scheduled time. Cancel for free before it starts.',
+    },
   ];
 }

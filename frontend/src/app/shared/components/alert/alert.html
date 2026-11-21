@@ -3,12 +3,28 @@
   [attr.role]="type() === 'error' ? 'alert' : 'status'"
 >
   @if (type() === 'error') {
-    <svg class="mt-px size-5 shrink-0 text-optical-yellow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-      <path stroke-linejoin="round" d="M12 3.5 2.5 20h19L12 3.5Z" /><path stroke-linecap="round" d="M12 10v4.5M12 17.2v.3" />
+    <svg
+      class="mt-px size-5 shrink-0 text-optical-yellow"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.5"
+      aria-hidden="true"
+    >
+      <path stroke-linejoin="round" d="M12 3.5 2.5 20h19L12 3.5Z" />
+      <path stroke-linecap="round" d="M12 10v4.5M12 17.2v.3" />
     </svg>
   } @else {
-    <svg class="mt-px size-5 shrink-0 text-porcelain" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-      <circle cx="12" cy="12" r="9" /><path stroke-linecap="round" stroke-linejoin="round" d="m8 12.5 2.5 2.5L16 9.5" />
+    <svg
+      class="mt-px size-5 shrink-0 text-porcelain"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.5"
+      aria-hidden="true"
+    >
+      <circle cx="12" cy="12" r="9" />
+      <path stroke-linecap="round" stroke-linejoin="round" d="m8 12.5 2.5 2.5L16 9.5" />
     </svg>
   }
   <div class="flex-1">

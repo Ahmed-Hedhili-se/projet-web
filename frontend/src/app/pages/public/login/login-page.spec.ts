@@ -38,12 +38,19 @@ describe('LoginPage', () => {
     page.form.setValue({ email: 'jane.doe@example.com', password: 'wrong' });
     await fixture.whenStable();
 
-    (fixture.nativeElement as HTMLElement).querySelector<HTMLButtonElement>('button[type="submit"]')?.click();
+    (fixture.nativeElement as HTMLElement)
+      .querySelector<HTMLButtonElement>('button[type="submit"]')
+      ?.click();
     httpTesting
       .expectOne(`${environment.apiUrl}/auth/login`)
-      .flush({ error: { code: 'INVALID_CREDENTIALS', message: 'Invalid email or password.' } }, { status: 401, statusText: 'Unauthorized' });
+      .flush(
+        { error: { code: 'INVALID_CREDENTIALS', message: 'Invalid email or password.' } },
+        { status: 401, statusText: 'Unauthorized' },
+      );
     await fixture.whenStable();
 
-    expect((fixture.nativeElement as HTMLElement).textContent).toContain('Invalid email or password.');
+    expect((fixture.nativeElement as HTMLElement).textContent).toContain(
+      'Invalid email or password.',
+    );
   });
 });

@@ -1,4 +1,9 @@
-import { HttpClient, HttpErrorResponse, provideHttpClient, withInterceptors } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpErrorResponse,
+  provideHttpClient,
+  withInterceptors,
+} from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
@@ -25,7 +30,9 @@ describe('mockApiInterceptor', () => {
 
   it('should apply the filters', async () => {
     const response = await firstValueFrom(
-      http.get<GpuListResponse>(`${environment.apiUrl}/gpus`, { params: { minVram: 80, maxPrice: 3, available: true } }),
+      http.get<GpuListResponse>(`${environment.apiUrl}/gpus`, {
+        params: { minVram: 80, maxPrice: 3, available: true },
+      }),
     );
     expect(response.gpus.map((gpu) => gpu.name)).toEqual(['NVIDIA A100 80GB']);
     expect(response.total).toBe(1);
@@ -34,7 +41,10 @@ describe('mockApiInterceptor', () => {
   it('should save a valid contact message and return its id', async () => {
     const response = await firstValueFrom(
       http.post<{ success: boolean; id: number }>(`${environment.apiUrl}/contact`, {
-        name: 'John Smith', email: 'john.smith@example.com', subject: 'Volume pricing', message: 'Hello, do you offer discounts?',
+        name: 'John Smith',
+        email: 'john.smith@example.com',
+        subject: 'Volume pricing',
+        message: 'Hello, do you offer discounts?',
       }),
     );
     expect(response.success).toBe(true);
@@ -43,16 +53,28 @@ describe('mockApiInterceptor', () => {
 
   it('should reject an invalid contact message with VALIDATION_ERROR', async () => {
     const error = (await firstValueFrom(
-      http.post(`${environment.apiUrl}/contact`, { name: '', email: 'not-an-email', subject: 'Hi', message: 'Too short' }),
+      http.post(`${environment.apiUrl}/contact`, {
+        name: '',
+        email: 'not-an-email',
+        subject: 'Hi',
+        message: 'Too short',
+      }),
     ).catch((err: unknown) => err)) as HttpErrorResponse;
     expect(error.status).toBe(400);
     expect(error.error.error.code).toBe('VALIDATION_ERROR');
-    expect(error.error.error.details.map((detail: { field: string }) => detail.field)).toEqual(['name', 'email', 'message']);
+    expect(error.error.error.details.map((detail: { field: string }) => detail.field)).toEqual([
+      'name',
+      'email',
+      'message',
+    ]);
   });
 
   it('should log in a demo user and return a token', async () => {
     const response = await firstValueFrom(
-      http.post<AuthResponse>(`${environment.apiUrl}/auth/login`, { email: 'jane.doe@example.com', password: 'Password123' }),
+      http.post<AuthResponse>(`${environment.apiUrl}/auth/login`, {
+        email: 'jane.doe@example.com',
+        password: 'Password123',
+      }),
     );
     expect(response.token).toBe('mock-token-3');
     expect(response.user.role).toBe('USER');
@@ -61,7 +83,10 @@ describe('mockApiInterceptor', () => {
 
   it('should refuse a blocked account with ACCOUNT_BLOCKED', async () => {
     const error = (await firstValueFrom(
-      http.post(`${environment.apiUrl}/auth/login`, { email: 'blocked@example.com', password: 'Password123' }),
+      http.post(`${environment.apiUrl}/auth/login`, {
+        email: 'blocked@example.com',
+        password: 'Password123',
+      }),
     ).catch((err: unknown) => err)) as HttpErrorResponse;
     expect(error.status).toBe(403);
     expect(error.error.error.code).toBe('ACCOUNT_BLOCKED');
@@ -70,7 +95,10 @@ describe('mockApiInterceptor', () => {
   it('should return 401 five times, then 429 TOO_MANY_ATTEMPTS', async () => {
     const tryWrongPassword = async () =>
       (await firstValueFrom(
-        http.post(`${environment.apiUrl}/auth/login`, { email: 'admin@teramind.example', password: 'wrong' }),
+        http.post(`${environment.apiUrl}/auth/login`, {
+          email: 'admin@teramind.example',
+          password: 'wrong',
+        }),
       ).catch((err: unknown) => err)) as HttpErrorResponse;
 
     for (let attempt = 1; attempt <= 5; attempt++) {
@@ -83,18 +111,30 @@ describe('mockApiInterceptor', () => {
 
   it('should create an account, then refuse the same email with EMAIL_TAKEN', async () => {
     localStorage.clear();
-    const account = { email: 'new.user@example.com', password: 'Password123', firstName: 'New', lastName: 'User' };
+    const account = {
+      email: 'new.user@example.com',
+      password: 'Password123',
+      firstName: 'New',
+      lastName: 'User',
+    };
 
-    const created = await firstValueFrom(http.post<AuthResponse>(`${environment.apiUrl}/auth/register`, account));
+    const created = await firstValueFrom(
+      http.post<AuthResponse>(`${environment.apiUrl}/auth/register`, account),
+    );
     expect(created.user.role).toBe('USER');
     expect(created.user.email).toBe('new.user@example.com');
 
     const login = await firstValueFrom(
-      http.post<AuthResponse>(`${environment.apiUrl}/auth/login`, { email: account.email, password: account.password }),
+      http.post<AuthResponse>(`${environment.apiUrl}/auth/login`, {
+        email: account.email,
+        password: account.password,
+      }),
     );
     expect(login.user.id).toBe(created.user.id);
 
-    const error = (await firstValueFrom(http.post(`${environment.apiUrl}/auth/register`, account)).catch((err: unknown) => err)) as HttpErrorResponse;
+    const error = (await firstValueFrom(
+      http.post(`${environment.apiUrl}/auth/register`, account),
+    ).catch((err: unknown) => err)) as HttpErrorResponse;
     expect(error.status).toBe(409);
     expect(error.error.error.code).toBe('EMAIL_TAKEN');
     localStorage.clear();
@@ -102,13 +142,17 @@ describe('mockApiInterceptor', () => {
 
   it('should return the user of the token on GET /auth/me', async () => {
     const response = await firstValueFrom(
-      http.get<{ user: { email: string } }>(`${environment.apiUrl}/auth/me`, { headers: { Authorization: 'Bearer mock-token-3' } }),
+      http.get<{ user: { email: string } }>(`${environment.apiUrl}/auth/me`, {
+        headers: { Authorization: 'Bearer mock-token-3' },
+      }),
     );
     expect(response.user.email).toBe('jane.doe@example.com');
   });
 
   it('should return GPU_NOT_FOUND for an unknown id', async () => {
-    const error = await firstValueFrom(http.get(`${environment.apiUrl}/gpus/999`)).catch((err: unknown) => err);
+    const error = await firstValueFrom(http.get(`${environment.apiUrl}/gpus/999`)).catch(
+      (err: unknown) => err,
+    );
     expect(error).toBeInstanceOf(HttpErrorResponse);
     expect((error as HttpErrorResponse).status).toBe(404);
     expect((error as HttpErrorResponse).error.error.code).toBe('GPU_NOT_FOUND');

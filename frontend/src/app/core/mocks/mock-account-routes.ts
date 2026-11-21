@@ -3,13 +3,30 @@ import { Observable } from 'rxjs';
 import { CreateRentalRequest } from '../models/rental';
 import { ChangePasswordRequest, UpdateProfileRequest } from '../models/user';
 import { allMockGpus } from './mock-gpus';
-import { EMAIL_PATTERN, FieldError, fail, respond, validationError, withAccount } from './mock-http';
-import { allMockRentals, availableUnits, createRecord, rentalStatus, saveMockRentals, toApiRental } from './mock-rentals';
+import {
+  EMAIL_PATTERN,
+  FieldError,
+  fail,
+  respond,
+  validationError,
+  withAccount,
+} from './mock-http';
+import {
+  allMockRentals,
+  availableUnits,
+  createRecord,
+  rentalStatus,
+  saveMockRentals,
+  toApiRental,
+} from './mock-rentals';
 import { allMockAccounts, updateMockAccount } from './mock-users';
 
 const HOUR_MS = 60 * 60 * 1000;
 
-export function handleAccountRoutes(req: HttpRequest<unknown>, path: string): Observable<HttpResponse<unknown>> | null {
+export function handleAccountRoutes(
+  req: HttpRequest<unknown>,
+  path: string,
+): Observable<HttpResponse<unknown>> | null {
   if (req.method === 'GET' && path === '/rentals/me') {
     return withAccount(req, (account) => {
       const status = req.params.get('status');
@@ -23,19 +40,30 @@ export function handleAccountRoutes(req: HttpRequest<unknown>, path: string): Ob
   }
 
   if (req.method === 'POST' && path === '/rentals') {
-    return withAccount(req, (account) => createRental(req as HttpRequest<CreateRentalRequest>, account.user.id));
+    return withAccount(req, (account) =>
+      createRental(req as HttpRequest<CreateRentalRequest>, account.user.id),
+    );
   }
 
   const cancelMatch = path.match(/^\/rentals\/(\d+)\/cancel$/);
   if (req.method === 'PATCH' && cancelMatch) {
     return withAccount(req, (account) => {
       const rentals = allMockRentals();
-      const record = rentals.find((rental) => rental.id === Number(cancelMatch[1]) && rental.userId === account.user.id);
+      const record = rentals.find(
+        (rental) => rental.id === Number(cancelMatch[1]) && rental.userId === account.user.id,
+      );
       if (!record) {
-        return fail(req, 404, { error: { code: 'RENTAL_NOT_FOUND', message: 'Rental not found.' } });
+        return fail(req, 404, {
+          error: { code: 'RENTAL_NOT_FOUND', message: 'Rental not found.' },
+        });
       }
       if (rentalStatus(record) !== 'UPCOMING') {
-        return fail(req, 409, { error: { code: 'RENTAL_NOT_CANCELLABLE', message: 'Only upcoming rentals can be cancelled.' } });
+        return fail(req, 409, {
+          error: {
+            code: 'RENTAL_NOT_CANCELLABLE',
+            message: 'Only upcoming rentals can be cancelled.',
+          },
+        });
       }
       record.cancelled = true;
       record.cancelledAt = new Date().toISOString();
@@ -49,7 +77,9 @@ export function handleAccountRoutes(req: HttpRequest<unknown>, path: string): Ob
   }
 
   if (req.method === 'PUT' && path === '/users/me') {
-    return withAccount(req, (account) => updateProfile(req as HttpRequest<UpdateProfileRequest>, account.user.id));
+    return withAccount(req, (account) =>
+      updateProfile(req as HttpRequest<UpdateProfileRequest>, account.user.id),
+    );
   }
 
   if (req.method === 'PUT' && path === '/users/me/password') {
@@ -57,10 +87,14 @@ export function handleAccountRoutes(req: HttpRequest<unknown>, path: string): Ob
       const body = (req as HttpRequest<ChangePasswordRequest>).body;
       const newPassword = body?.newPassword ?? '';
       if (newPassword.length < 8 || newPassword.length > 72) {
-        return validationError(req, [{ field: 'newPassword', message: 'Password must be between 8 and 72 characters.' }]);
+        return validationError(req, [
+          { field: 'newPassword', message: 'Password must be between 8 and 72 characters.' },
+        ]);
       }
       if (body?.currentPassword !== account.password) {
-        return fail(req, 400, { error: { code: 'WRONG_PASSWORD', message: 'Your current password is incorrect.' } });
+        return fail(req, 400, {
+          error: { code: 'WRONG_PASSWORD', message: 'Your current password is incorrect.' },
+        });
       }
       updateMockAccount(account.user.id, { password: newPassword });
       return respond({ success: true }, 600);
@@ -70,7 +104,10 @@ export function handleAccountRoutes(req: HttpRequest<unknown>, path: string): Ob
   return null;
 }
 
-function createRental(req: HttpRequest<CreateRentalRequest>, userId: number): Observable<HttpResponse<unknown>> {
+function createRental(
+  req: HttpRequest<CreateRentalRequest>,
+  userId: number,
+): Observable<HttpResponse<unknown>> {
   const body = req.body;
   const start = new Date(body?.startDate ?? '');
   const details: FieldError[] = [];
@@ -83,7 +120,11 @@ function createRental(req: HttpRequest<CreateRentalRequest>, userId: number): Ob
   if (Number.isNaN(start.getTime()) || start.getTime() < Date.now() - 60_000) {
     details.push({ field: 'startDate', message: 'The start date must be in the future.' });
   }
-  if (!Number.isInteger(body?.durationHours) || (body?.durationHours ?? 0) < 1 || (body?.durationHours ?? 0) > 720) {
+  if (
+    !Number.isInteger(body?.durationHours) ||
+    (body?.durationHours ?? 0) < 1 ||
+    (body?.durationHours ?? 0) > 720
+  ) {
     details.push({ field: 'durationHours', message: 'Duration must be between 1 and 720 hours.' });
   }
   if (!body || details.length > 0) {
@@ -95,23 +136,33 @@ function createRental(req: HttpRequest<CreateRentalRequest>, userId: number): Ob
     return fail(req, 404, { error: { code: 'GPU_NOT_FOUND', message: 'GPU not found.' } });
   }
   if (!gpu.isActive) {
-    return fail(req, 409, { error: { code: 'GPU_INACTIVE', message: 'This GPU is no longer available for rent.' } });
+    return fail(req, 409, {
+      error: { code: 'GPU_INACTIVE', message: 'This GPU is no longer available for rent.' },
+    });
   }
   if (body.quantity > gpu.totalUnits) {
-    return validationError(req, [{ field: 'quantity', message: `This GPU has only ${gpu.totalUnits} units.` }]);
+    return validationError(req, [
+      { field: 'quantity', message: `This GPU has only ${gpu.totalUnits} units.` },
+    ]);
   }
   const end = new Date(start.getTime() + body.durationHours * HOUR_MS);
   const free = availableUnits(gpu, start, end);
   if (body.quantity > free) {
     return fail(req, 409, {
-      error: { code: 'NOT_ENOUGH_UNITS', message: `Only ${free} unit${free === 1 ? '' : 's'} available for this period.` },
+      error: {
+        code: 'NOT_ENOUGH_UNITS',
+        message: `Only ${free} unit${free === 1 ? '' : 's'} available for this period.`,
+      },
     });
   }
   const record = createRecord(userId, gpu, body.quantity, start, body.durationHours);
   return respond({ rental: toApiRental(record) }, 800, 201);
 }
 
-function updateProfile(req: HttpRequest<UpdateProfileRequest>, userId: number): Observable<HttpResponse<unknown>> {
+function updateProfile(
+  req: HttpRequest<UpdateProfileRequest>,
+  userId: number,
+): Observable<HttpResponse<unknown>> {
   const email = (req.body?.email ?? '').trim().toLowerCase();
   const firstName = (req.body?.firstName ?? '').trim();
   const lastName = (req.body?.lastName ?? '').trim();
@@ -128,8 +179,12 @@ function updateProfile(req: HttpRequest<UpdateProfileRequest>, userId: number): 
   if (details.length > 0) {
     return validationError(req, details);
   }
-  if (allMockAccounts().some((account) => account.user.email === email && account.user.id !== userId)) {
-    return fail(req, 409, { error: { code: 'EMAIL_TAKEN', message: 'An account with this email already exists.' } });
+  if (
+    allMockAccounts().some((account) => account.user.email === email && account.user.id !== userId)
+  ) {
+    return fail(req, 409, {
+      error: { code: 'EMAIL_TAKEN', message: 'An account with this email already exists.' },
+    });
   }
   const account = updateMockAccount(userId, { user: { email, firstName, lastName } });
   return respond({ user: { ...account!.user } }, 600);

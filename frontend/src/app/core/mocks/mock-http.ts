@@ -5,9 +5,16 @@ import { MockAccount, allMockAccounts, mockTokenFor } from './mock-users';
 
 export const NETWORK_DELAY_MS = 400;
 
-export type FieldError = { field: string; message: string };
+export interface FieldError {
+  field: string;
+  message: string;
+}
 
-export function respond<T>(body: T, delayMs = NETWORK_DELAY_MS, status = 200): Observable<HttpResponse<T>> {
+export function respond<T>(
+  body: T,
+  delayMs = NETWORK_DELAY_MS,
+  status = 200,
+): Observable<HttpResponse<T>> {
   return of(new HttpResponse({ status, body })).pipe(delay(delayMs));
 }
 
@@ -17,8 +24,13 @@ export function fail(req: HttpRequest<unknown>, status: number, body: ApiError):
   );
 }
 
-export function validationError(req: HttpRequest<unknown>, details: FieldError[]): Observable<never> {
-  return fail(req, 400, { error: { code: 'VALIDATION_ERROR', message: 'Invalid request data.', details } });
+export function validationError(
+  req: HttpRequest<unknown>,
+  details: FieldError[],
+): Observable<never> {
+  return fail(req, 400, {
+    error: { code: 'VALIDATION_ERROR', message: 'Invalid request data.', details },
+  });
 }
 
 export function withAccount(
@@ -31,7 +43,12 @@ export function withAccount(
     return fail(req, 401, { error: { code: 'UNAUTHORIZED', message: 'Please sign in again.' } });
   }
   if (account.user.isBlocked) {
-    return fail(req, 403, { error: { code: 'ACCOUNT_BLOCKED', message: 'Your account has been blocked. Please contact our support team.' } });
+    return fail(req, 403, {
+      error: {
+        code: 'ACCOUNT_BLOCKED',
+        message: 'Your account has been blocked. Please contact our support team.',
+      },
+    });
   }
   return handler(account);
 }

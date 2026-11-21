@@ -1,29 +1,58 @@
-<section class="relative flex min-h-[calc(100svh-44px)] flex-col items-center justify-center px-4 text-center">
+<section
+  class="relative flex min-h-[calc(100svh-44px)] flex-col items-center justify-center px-4 text-center"
+>
   <div class="hero-scrim" aria-hidden="true"></div>
   <div class="relative -translate-y-[13vh]">
-    <p class="animate-fade-up text-utility-nav font-semibold text-aurora">New · H100 clusters available</p>
-    <p class="animate-fade-up mt-1 font-display text-hero-product-name font-semibold" style="animation-delay: 80ms">TeraMind Cloud</p>
+    <p class="animate-fade-up text-utility-nav font-semibold text-aurora">
+      New · H100 clusters available
+    </p>
+    <p
+      class="animate-fade-up mt-1 font-display text-hero-product-name font-semibold"
+      style="animation-delay: 80ms"
+    >
+      TeraMind Cloud
+    </p>
     <h1 class="mx-auto mt-2 max-w-4xl font-display text-display-sm font-semibold md:text-display">
       <app-split-text text="Compute for every model." highlight="model." [delay]="160" />
     </h1>
-    <p class="animate-fade-up mx-auto mt-5 max-w-xl text-section-nav text-porcelain/90" style="animation-delay: 520ms">
-      Rent data-center GPUs by the hour. Our AI advisor reads your model's code and finds the right one.
+    <p
+      class="animate-fade-up mx-auto mt-5 max-w-xl text-section-nav text-porcelain/90"
+      style="animation-delay: 520ms"
+    >
+      Rent data-center GPUs by the hour. Our AI advisor reads your model's code and finds the right
+      one.
     </p>
-    <div class="animate-fade-up mt-8 flex flex-wrap items-center justify-center gap-3" style="animation-delay: 620ms">
+    <div
+      class="animate-fade-up mt-8 flex flex-wrap items-center justify-center gap-3"
+      style="animation-delay: 620ms"
+    >
       <span class="capsule">From $0.69 / hour</span>
       <a routerLink="/gpus" class="btn-primary">Explore GPUs</a>
-      <a routerLink="/recommend" class="btn-outline bg-obsidian/45 backdrop-blur-md">Ask the AI advisor</a>
+      <a routerLink="/recommend" class="btn-outline bg-obsidian/45 backdrop-blur-md"
+        >Ask the AI advisor</a
+      >
     </div>
   </div>
-  <p class="animate-fade-up absolute bottom-6 text-utility-nav text-porcelain/70" style="animation-delay: 1200ms" aria-hidden="true">Scroll to explore ↓</p>
+  <p
+    class="animate-fade-up absolute bottom-6 text-utility-nav text-porcelain/70"
+    style="animation-delay: 1200ms"
+    aria-hidden="true"
+  >
+    Scroll to explore ↓
+  </p>
 </section>
 
-<section class="marquee border-y border-porcelain/15 bg-obsidian/45 py-6 backdrop-blur-md" aria-label="GPUs available on TeraMind">
+<section
+  class="marquee border-y border-porcelain/15 bg-obsidian/45 py-6 backdrop-blur-md"
+  aria-label="GPUs available on TeraMind"
+>
   <div class="animate-marquee flex w-max gap-12">
     @for (copy of [1, 2]; track copy) {
       <ul class="flex shrink-0 gap-12" [attr.aria-hidden]="copy === 2">
         @for (name of marqueeGpus; track name) {
-          <li class="flex items-center gap-12 whitespace-nowrap font-display text-hero-product-name font-semibold text-porcelain/85">
+          <li
+            class="flex items-center gap-12 whitespace-nowrap font-display text-hero-product-name font-semibold text-porcelain/85"
+          >
             {{ name }} <span class="size-1.5 rounded-full bg-aurora-glow" aria-hidden="true"></span>
           </li>
         }
@@ -36,7 +65,9 @@
   <div class="glass-card mx-auto grid max-w-6xl grid-cols-2 gap-4 p-4 md:grid-cols-4">
     @for (stat of stats; track stat.label) {
       <div appReveal [revealDelay]="$index * 90">
-        <div class="flex h-full flex-col items-center justify-center gap-2 rounded-card bg-obsidian/55 px-4 py-8 text-center">
+        <div
+          class="flex h-full flex-col items-center justify-center gap-2 rounded-card bg-obsidian/55 px-4 py-8 text-center"
+        >
           <p
             class="font-display text-feature-stat font-semibold tabular-nums text-aurora"
             [appCountUp]="stat.value"
@@ -63,29 +94,61 @@
   <div class="mx-auto max-w-6xl">
     <div appReveal class="mx-auto max-w-2xl text-center">
       <p class="font-display text-product-label font-semibold text-aurora">Why TeraMind</p>
-      <h2 class="mt-2 font-display text-hero-product-name font-semibold md:text-section-title">Built for AI workloads.</h2>
+      <h2 class="mt-2 font-display text-hero-product-name font-semibold md:text-section-title">
+        Built for AI workloads.
+      </h2>
     </div>
 
     <div class="mt-12 grid gap-4 md:grid-cols-3">
       @for (feature of features; track feature.title) {
         <div appReveal [revealDelay]="$index * 120">
           <div appTilt class="glass-card group h-full p-8 hover:-translate-y-1">
-            <div class="flex size-12 items-center justify-center rounded-full bg-aurora-glow/15 text-aurora transition duration-500 group-hover:scale-110 group-hover:bg-aurora-glow/25">
+            <div
+              class="flex size-12 items-center justify-center rounded-full bg-aurora-glow/15 text-aurora transition duration-500 group-hover:scale-110 group-hover:bg-aurora-glow/25"
+            >
               @switch (feature.icon) {
                 @case ('target') {
-                  <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-                    <circle cx="12" cy="12" r="9" /><circle cx="12" cy="12" r="5" /><circle cx="12" cy="12" r="1" fill="currentColor" />
+                  <svg
+                    class="size-6"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    aria-hidden="true"
+                  >
+                    <circle cx="12" cy="12" r="9" />
+                    <circle cx="12" cy="12" r="5" />
+                    <circle cx="12" cy="12" r="1" fill="currentColor" />
                   </svg>
                 }
                 @case ('clock') {
-                  <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-                    <circle cx="12" cy="12" r="9" /><path stroke-linecap="round" d="M12 7v5l3 2" />
+                  <svg
+                    class="size-6"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    aria-hidden="true"
+                  >
+                    <circle cx="12" cy="12" r="9" />
+                    <path stroke-linecap="round" d="M12 7v5l3 2" />
                   </svg>
                 }
                 @case ('chip') {
-                  <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-                    <rect x="6" y="6" width="12" height="12" rx="2" /><rect x="9.5" y="9.5" width="5" height="5" rx="1" />
-                    <path stroke-linecap="round" d="M9 3v3M15 3v3M9 18v3M15 18v3M3 9h3M3 15h3M18 9h3M18 15h3" />
+                  <svg
+                    class="size-6"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    aria-hidden="true"
+                  >
+                    <rect x="6" y="6" width="12" height="12" rx="2" />
+                    <rect x="9.5" y="9.5" width="5" height="5" rx="1" />
+                    <path
+                      stroke-linecap="round"
+                      d="M9 3v3M15 3v3M9 18v3M15 18v3M3 9h3M3 15h3M18 9h3M18 15h3"
+                    />
                   </svg>
                 }
               }
@@ -103,39 +166,53 @@
   <div class="mx-auto grid max-w-6xl items-center gap-12 md:grid-cols-2">
     <div class="scroll-zoom">
       <div class="glass-card overflow-hidden">
-        <img src="images/ai-chip.svg" alt="AI processor with data flowing through its circuits" width="600" height="600" loading="lazy" class="h-auto w-full" />
+        <img
+          src="images/ai-chip.svg"
+          alt="AI processor with data flowing through its circuits"
+          width="600"
+          height="600"
+          loading="lazy"
+          class="h-auto w-full"
+        />
       </div>
     </div>
 
     <div appReveal [revealDelay]="150">
-    <div class="glass-card p-6 md:p-8">
-      <p class="font-display text-product-label font-semibold text-aurora">AI GPU advisor</p>
-      <h2 class="mt-2 font-display text-hero-product-name font-semibold md:text-section-title">Not sure which GPU you need?</h2>
-      <p class="mt-4 text-section-nav text-porcelain/70">
-        Paste the link of your model's GitHub repository or describe your workload. Our AI advisor reads the code, simulates
-        every configuration of our catalog and explains which GPU architecture fits best.
-      </p>
+      <div class="glass-card p-6 md:p-8">
+        <p class="font-display text-product-label font-semibold text-aurora">AI GPU advisor</p>
+        <h2 class="mt-2 font-display text-hero-product-name font-semibold md:text-section-title">
+          Not sure which GPU you need?
+        </h2>
+        <p class="mt-4 text-section-nav text-porcelain/70">
+          Paste the link of your model's GitHub repository or describe your workload. Our AI advisor
+          reads the code, simulates every configuration of our catalog and explains which GPU
+          architecture fits best.
+        </p>
 
-      <div class="mt-8 rounded-card bg-obsidian/55 p-6">
-        <p class="text-utility-nav text-porcelain/70">You</p>
-        <p class="mt-1 text-body">github.com/acme/legal-llama, about 300M tokens</p>
-        <p class="mt-4 text-utility-nav text-porcelain/70">What the AI understood</p>
-        <ul class="mt-2 flex flex-wrap gap-2">
-          @for (badge of ['QLoRA', '8B parameters', 'BF16']; track badge) {
-            <li class="rounded-pill border border-aurora-glow/50 bg-aurora-glow/10 px-3 py-1 text-utility-nav font-semibold">{{ badge }}</li>
-          }
-        </ul>
-        <div class="mt-5 border-t border-steel pt-5">
-          <p class="text-utility-nav text-porcelain/70">Best choice · Hopper architecture</p>
-          <div class="mt-2 flex flex-wrap items-baseline justify-between gap-x-4">
-            <p class="font-display text-product-label font-semibold">4 × NVIDIA H100 80GB</p>
-            <p class="text-body text-aurora">~3 h · ~$38</p>
+        <div class="mt-8 rounded-card bg-obsidian/55 p-6">
+          <p class="text-utility-nav text-porcelain/70">You</p>
+          <p class="mt-1 text-body">github.com/acme/legal-llama, about 300M tokens</p>
+          <p class="mt-4 text-utility-nav text-porcelain/70">What the AI understood</p>
+          <ul class="mt-2 flex flex-wrap gap-2">
+            @for (badge of ['QLoRA', '8B parameters', 'BF16']; track badge) {
+              <li
+                class="rounded-pill border border-aurora-glow/50 bg-aurora-glow/10 px-3 py-1 text-utility-nav font-semibold"
+              >
+                {{ badge }}
+              </li>
+            }
+          </ul>
+          <div class="mt-5 border-t border-steel pt-5">
+            <p class="text-utility-nav text-porcelain/70">Best choice · Hopper architecture</p>
+            <div class="mt-2 flex flex-wrap items-baseline justify-between gap-x-4">
+              <p class="font-display text-product-label font-semibold">4 × NVIDIA H100 80GB</p>
+              <p class="text-body text-aurora">~3 h · ~$38</p>
+            </div>
           </div>
         </div>
-      </div>
 
-      <a routerLink="/recommend" class="btn-primary mt-8">Ask the AI advisor</a>
-    </div>
+        <a routerLink="/recommend" class="btn-primary mt-8">Ask the AI advisor</a>
+      </div>
     </div>
   </div>
 </section>
@@ -145,9 +222,13 @@
     <div appReveal class="flex flex-wrap items-end justify-between gap-4">
       <div>
         <p class="font-display text-product-label font-semibold text-aurora">Catalog</p>
-        <h2 class="mt-2 font-display text-hero-product-name font-semibold md:text-section-title">Featured GPUs.</h2>
+        <h2 class="mt-2 font-display text-hero-product-name font-semibold md:text-section-title">
+          Featured GPUs.
+        </h2>
       </div>
-      <a routerLink="/gpus" class="btn-outline bg-obsidian/45 backdrop-blur-md">View the full catalog ›</a>
+      <a routerLink="/gpus" class="btn-outline bg-obsidian/45 backdrop-blur-md"
+        >View the full catalog ›</a
+      >
     </div>
 
     <div class="mt-10 grid gap-4 md:grid-cols-3">
@@ -160,17 +241,28 @@
 
             <div class="mt-6 grid grid-cols-2 gap-3">
               <div class="rounded-nav bg-obsidian/55 p-4">
-                <p class="font-display text-feature-stat font-semibold tabular-nums" [appCountUp]="gpu.vramGb" countSuffix=" GB"></p>
+                <p
+                  class="font-display text-feature-stat font-semibold tabular-nums"
+                  [appCountUp]="gpu.vramGb"
+                  countSuffix=" GB"
+                ></p>
                 <p class="mt-1 text-utility-nav text-porcelain/70">VRAM</p>
               </div>
               <div class="rounded-nav bg-obsidian/55 p-4">
-                <p class="font-display text-feature-stat font-semibold tabular-nums" [appCountUp]="gpu.fp16Tflops" [countDecimals]="gpu.fp16Tflops % 1 === 0 ? 0 : 1"></p>
+                <p
+                  class="font-display text-feature-stat font-semibold tabular-nums"
+                  [appCountUp]="gpu.fp16Tflops"
+                  [countDecimals]="gpu.fp16Tflops % 1 === 0 ? 0 : 1"
+                ></p>
                 <p class="mt-1 text-utility-nav text-porcelain/70">FP16 TFLOPS</p>
               </div>
             </div>
 
             <div class="mt-auto flex items-center justify-between pt-6">
-              <p class="text-section-nav">{{ gpu.pricePerHour | currency: 'USD' }}<span class="text-body text-porcelain/70"> / hour</span></p>
+              <p class="text-section-nav">
+                {{ gpu.pricePerHour | currency: 'USD'
+                }}<span class="text-body text-porcelain/70"> / hour</span>
+              </p>
               <a [routerLink]="['/gpus', gpu.id]" class="btn-outline">Details</a>
             </div>
           </article>
@@ -184,8 +276,12 @@
   <div class="mx-auto grid max-w-6xl gap-10 md:grid-cols-2 md:gap-16">
     <div class="glass-card p-6 md:sticky md:top-32 md:self-start md:p-8">
       <p class="font-display text-product-label font-semibold text-aurora">How it works</p>
-      <h2 class="mt-2 font-display text-hero-product-name font-semibold md:text-section-title">From idea to GPU in three steps.</h2>
-      <p class="mt-4 max-w-sm text-section-nav text-porcelain/70">No contract, no setup fees. Describe, book, compute.</p>
+      <h2 class="mt-2 font-display text-hero-product-name font-semibold md:text-section-title">
+        From idea to GPU in three steps.
+      </h2>
+      <p class="mt-4 max-w-sm text-section-nav text-porcelain/70">
+        No contract, no setup fees. Describe, book, compute.
+      </p>
     </div>
 
     <ol class="flex flex-col gap-6 md:gap-24 md:py-16">
@@ -202,8 +298,12 @@
 
 <section class="aurora-glow px-4 py-20 md:py-28">
   <div class="scroll-zoom glass-card mx-auto max-w-4xl px-6 py-14 text-center md:px-12 md:py-20">
-    <h2 class="font-display text-hero-product-name font-semibold md:text-section-title">Ready to train your next model?</h2>
-    <p class="mx-auto mt-4 max-w-lg text-section-nav text-porcelain/70">Create a free account and book your first GPU in under a minute.</p>
+    <h2 class="font-display text-hero-product-name font-semibold md:text-section-title">
+      Ready to train your next model?
+    </h2>
+    <p class="mx-auto mt-4 max-w-lg text-section-nav text-porcelain/70">
+      Create a free account and book your first GPU in under a minute.
+    </p>
     <div class="mt-8 flex flex-wrap justify-center gap-3">
       <a routerLink="/register" class="btn-primary">Create an account</a>
       <a routerLink="/contact" class="btn-outline">Talk to our team</a>

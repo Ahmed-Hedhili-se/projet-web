@@ -1,14 +1,27 @@
 <section class="overflow-hidden px-4 pt-20 text-center md:pt-28">
-  <p class="animate-fade-up font-display text-product-label font-semibold text-aurora">About TeraMind</p>
+  <p class="animate-fade-up font-display text-product-label font-semibold text-aurora">
+    About TeraMind
+  </p>
   <h1 class="mx-auto mt-2 max-w-4xl font-display text-display-sm font-semibold md:text-display">
     <app-split-text text="We make AI compute simple." highlight="simple." [delay]="100" />
   </h1>
-  <p class="animate-fade-up mx-auto mt-5 max-w-2xl text-section-nav text-ash" style="animation-delay: 480ms">
-    TeraMind gives AI teams of every size access to powerful GPUs, with honest hourly pricing and expert advice on the right hardware.
+  <p
+    class="animate-fade-up mx-auto mt-5 max-w-2xl text-section-nav text-ash"
+    style="animation-delay: 480ms"
+  >
+    TeraMind gives AI teams of every size access to powerful GPUs, with honest hourly pricing and
+    expert advice on the right hardware.
   </p>
   <div class="animate-fade-up mx-auto mt-12 max-w-5xl" style="animation-delay: 600ms">
     <div class="scroll-zoom overflow-hidden rounded-card border border-steel bg-obsidian">
-      <img src="images/datacenter.svg" alt="Row of TeraMind server racks in a data center" width="960" height="540" fetchpriority="high" class="h-auto w-full" />
+      <img
+        src="images/datacenter.svg"
+        alt="Row of TeraMind server racks in a data center"
+        width="960"
+        height="540"
+        fetchpriority="high"
+        class="h-auto w-full"
+      />
     </div>
   </div>
 </section>
@@ -17,9 +30,15 @@
   <div class="mx-auto max-w-6xl">
     <div appReveal>
       <p class="font-display text-product-label font-semibold text-aurora">Our mission</p>
-      <h2 class="mt-2 max-w-2xl font-display text-hero-product-name font-semibold md:text-section-title">Every model deserves the right hardware.</h2>
+      <h2
+        class="mt-2 max-w-2xl font-display text-hero-product-name font-semibold md:text-section-title"
+      >
+        Every model deserves the right hardware.
+      </h2>
     </div>
-    <p class="mt-10 max-w-4xl font-display text-product-label font-semibold md:text-hero-product-name">
+    <p
+      class="mt-10 max-w-4xl font-display text-product-label font-semibold md:text-hero-product-name"
+    >
       <app-scroll-text [text]="mission" />
     </p>
   </div>
@@ -29,7 +48,9 @@
   <div class="glass-card mx-auto grid max-w-6xl grid-cols-2 gap-4 p-4 md:grid-cols-4">
     @for (stat of stats; track stat.label) {
       <div appReveal [revealDelay]="$index * 90">
-        <div class="flex h-full flex-col items-center justify-center gap-2 rounded-card bg-obsidian/55 px-4 py-8 text-center">
+        <div
+          class="flex h-full flex-col items-center justify-center gap-2 rounded-card bg-obsidian/55 px-4 py-8 text-center"
+        >
           <p
             class="font-display text-feature-stat font-semibold tabular-nums text-aurora"
             [appCountUp]="stat.value"
@@ -48,32 +69,66 @@
   <div class="mx-auto max-w-6xl">
     <div appReveal class="text-center">
       <p class="font-display text-product-label font-semibold text-aurora">Our values</p>
-      <h2 class="mt-2 font-display text-hero-product-name font-semibold md:text-section-title">What drives us.</h2>
+      <h2 class="mt-2 font-display text-hero-product-name font-semibold md:text-section-title">
+        What drives us.
+      </h2>
     </div>
 
     <div class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
       @for (value of values; track value.title) {
         <div appReveal [revealDelay]="$index * 100">
           <div appTilt class="glass-card group h-full p-8 hover:-translate-y-1">
-            <div class="flex size-12 items-center justify-center rounded-full bg-aurora-glow/15 text-aurora transition duration-500 group-hover:scale-110 group-hover:bg-aurora-glow/25">
+            <div
+              class="flex size-12 items-center justify-center rounded-full bg-aurora-glow/15 text-aurora transition duration-500 group-hover:scale-110 group-hover:bg-aurora-glow/25"
+            >
               @switch (value.icon) {
                 @case ('eye') {
-                  <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-                    <path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z" /><circle cx="12" cy="12" r="3" />
+                  <svg
+                    class="size-6"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    aria-hidden="true"
+                  >
+                    <path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z" />
+                    <circle cx="12" cy="12" r="3" />
                   </svg>
                 }
                 @case ('bolt') {
-                  <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                  <svg
+                    class="size-6"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    aria-hidden="true"
+                  >
                     <path stroke-linejoin="round" d="M13 2.5 4.5 13.5H12l-1 8 8.5-11H12l1-8Z" />
                   </svg>
                 }
                 @case ('leaf') {
-                  <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-                    <path d="M5 19c0-8 5-14 15-14 0 10-6 15-14 15" /><path stroke-linecap="round" d="M5 19 12 12" />
+                  <svg
+                    class="size-6"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    aria-hidden="true"
+                  >
+                    <path d="M5 19c0-8 5-14 15-14 0 10-6 15-14 15" />
+                    <path stroke-linecap="round" d="M5 19 12 12" />
                   </svg>
                 }
                 @case ('chat') {
-                  <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                  <svg
+                    class="size-6"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    aria-hidden="true"
+                  >
                     <path stroke-linejoin="round" d="M4 5.5h16v10H9l-5 4v-14Z" />
                   </svg>
                 }
@@ -92,12 +147,17 @@
   <div class="mx-auto max-w-3xl">
     <div appReveal class="text-center">
       <p class="font-display text-product-label font-semibold text-aurora">Our story</p>
-      <h2 class="mt-2 font-display text-hero-product-name font-semibold md:text-section-title">How we got here.</h2>
+      <h2 class="mt-2 font-display text-hero-product-name font-semibold md:text-section-title">
+        How we got here.
+      </h2>
     </div>
 
     <ol class="relative mt-14">
       <span class="absolute top-0 bottom-0 left-0 w-px bg-steel" aria-hidden="true"></span>
-      <span class="scroll-draw-y absolute top-0 bottom-0 left-0 w-px bg-aurora-glow" aria-hidden="true"></span>
+      <span
+        class="scroll-draw-y absolute top-0 bottom-0 left-0 w-px bg-aurora-glow"
+        aria-hidden="true"
+      ></span>
       @for (milestone of milestones; track milestone.year) {
         <li class="scroll-highlight relative pb-16 pl-8 last:pb-0">
           <span class="absolute top-1.5 -left-1 size-[9px] rounded-full bg-aurora-glow"></span>
@@ -114,14 +174,21 @@
   <div class="mx-auto max-w-6xl">
     <div appReveal class="text-center">
       <p class="font-display text-product-label font-semibold text-aurora">Our team</p>
-      <h2 class="mt-2 font-display text-hero-product-name font-semibold md:text-section-title">The people behind the grid.</h2>
+      <h2 class="mt-2 font-display text-hero-product-name font-semibold md:text-section-title">
+        The people behind the grid.
+      </h2>
     </div>
 
     <div class="mx-auto mt-12 grid max-w-2xl gap-4 sm:grid-cols-2">
       @for (member of team; track member.name) {
         <div appReveal [revealDelay]="$index * 100">
-          <div appTilt class="glass-card group flex h-full flex-col items-center p-6 text-center hover:-translate-y-1">
-            <div class="flex size-20 items-center justify-center rounded-full border border-steel bg-carbon font-display text-hero-product-name font-semibold text-porcelain transition duration-500 group-hover:scale-110 group-hover:border-aurora-glow">
+          <div
+            appTilt
+            class="glass-card group flex h-full flex-col items-center p-6 text-center hover:-translate-y-1"
+          >
+            <div
+              class="flex size-20 items-center justify-center rounded-full border border-steel bg-carbon font-display text-hero-product-name font-semibold text-porcelain transition duration-500 group-hover:scale-110 group-hover:border-aurora-glow"
+            >
               {{ initials(member.name) }}
             </div>
             <h3 class="mt-5 font-display text-product-label font-semibold">{{ member.name }}</h3>
@@ -135,8 +202,13 @@
 
 <section class="px-4 py-20 md:py-28">
   <div class="scroll-zoom glass-card mx-auto max-w-4xl px-6 py-14 text-center md:px-12 md:py-20">
-    <h2 class="font-display text-hero-product-name font-semibold md:text-section-title">Let's build something together.</h2>
-    <p class="mx-auto mt-4 max-w-lg text-section-nav text-ash">Questions about pricing, capacity or the right GPU for your project? Our team replies within one business day.</p>
+    <h2 class="font-display text-hero-product-name font-semibold md:text-section-title">
+      Let's build something together.
+    </h2>
+    <p class="mx-auto mt-4 max-w-lg text-section-nav text-ash">
+      Questions about pricing, capacity or the right GPU for your project? Our team replies within
+      one business day.
+    </p>
     <div class="mt-8 flex flex-wrap justify-center gap-3">
       <a routerLink="/contact" class="btn-primary">Contact us</a>
       <a routerLink="/gpus" class="btn-outline">Browse GPUs</a>

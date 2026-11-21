@@ -1,22 +1,36 @@
 <section class="px-4 pt-16 pb-8 text-center md:pt-24">
-  <p class="animate-fade-up font-display text-product-label font-semibold text-aurora">GPU Recommendation</p>
+  <p class="animate-fade-up font-display text-product-label font-semibold text-aurora">
+    GPU Recommendation
+  </p>
   <h1 class="mx-auto mt-2 max-w-4xl font-display text-display-sm font-semibold md:text-display">
     <app-split-text text="The right GPU for your model." highlight="model." [delay]="100" />
   </h1>
-  <p class="animate-fade-up mx-auto mt-4 max-w-2xl text-section-nav text-porcelain/70" style="animation-delay: 480ms">
-    Share your model's GitHub repository or describe your workload. Our AI advisor reads the code, simulates every
-    configuration and recommends the best GPU architecture.
+  <p
+    class="animate-fade-up mx-auto mt-4 max-w-2xl text-section-nav text-porcelain/70"
+    style="animation-delay: 480ms"
+  >
+    Share your model's GitHub repository or describe your workload. Our AI advisor reads the code,
+    simulates every configuration and recommends the best GPU architecture.
   </p>
 
-  <div class="animate-fade-up mt-8 inline-flex gap-1 rounded-pill bg-carbon p-1" style="animation-delay: 560ms" role="group" aria-label="Choose how to get a recommendation">
+  <div
+    class="animate-fade-up mt-8 inline-flex gap-1 rounded-pill bg-carbon p-1"
+    style="animation-delay: 560ms"
+    role="group"
+    aria-label="Choose how to get a recommendation"
+  >
     @for (option of modes; track option.value) {
       <button
         type="button"
         (click)="mode.set(option.value)"
         [attr.aria-pressed]="mode() === option.value"
         class="rounded-pill px-4 py-1.5 text-utility-nav font-semibold transition-colors duration-300"
-        [class]="mode() === option.value ? 'bg-porcelain text-obsidian' : 'text-ash hover:text-porcelain'"
-      >{{ option.label }}</button>
+        [class]="
+          mode() === option.value ? 'bg-porcelain text-obsidian' : 'text-ash hover:text-porcelain'
+        "
+      >
+        {{ option.label }}
+      </button>
     }
   </div>
 </section>
@@ -24,15 +38,26 @@
 <section class="px-4 pb-20 md:pb-28" [class.hidden]="mode() !== 'advisor'">
   @if (!authService.isLoggedIn()) {
     <div class="animate-fade-up glass-card mx-auto max-w-xl px-6 py-10 text-center md:px-10">
-      <h2 class="font-display text-hero-product-name font-semibold">Sign in to use the AI advisor</h2>
-      <p class="mt-2 text-body text-porcelain/70">The advisor keeps your conversations and has a daily message limit, so it needs an account. It is free.</p>
+      <h2 class="font-display text-hero-product-name font-semibold">
+        Sign in to use the AI advisor
+      </h2>
+      <p class="mt-2 text-body text-porcelain/70">
+        The advisor keeps your conversations and has a daily message limit, so it needs an account.
+        It is free.
+      </p>
       <div class="mt-6 flex flex-wrap justify-center gap-3">
-        <a routerLink="/login" [queryParams]="{ returnUrl: '/recommend' }" class="btn-primary">Sign in</a>
-        <a routerLink="/register" [queryParams]="{ returnUrl: '/recommend' }" class="btn-outline">Create an account</a>
+        <a routerLink="/login" [queryParams]="{ returnUrl: '/recommend' }" class="btn-primary"
+          >Sign in</a
+        >
+        <a routerLink="/register" [queryParams]="{ returnUrl: '/recommend' }" class="btn-outline"
+          >Create an account</a
+        >
       </div>
       <p class="mt-6 text-utility-nav text-ash">
         No account?
-        <button type="button" (click)="mode.set('form')" class="text-link">Use the quick form</button>
+        <button type="button" (click)="mode.set('form')" class="text-link">
+          Use the quick form
+        </button>
       </p>
     </div>
   } @else if (loadingStatus()) {
@@ -40,7 +65,9 @@
   } @else if (unavailable()) {
     <div class="mx-auto max-w-xl">
       <app-alert message="The AI advisor is not available right now.">
-        <button type="button" (click)="mode.set('form')" class="text-link mt-1 text-utility-nav">Use the quick form instead</button>
+        <button type="button" (click)="mode.set('form')" class="text-link mt-1 text-utility-nav">
+          Use the quick form instead
+        </button>
       </app-alert>
     </div>
   } @else if (status(); as current) {
@@ -51,7 +78,9 @@
 @if (mode() === 'form') {
   @if (unavailable()) {
     <div class="mx-auto max-w-6xl px-4 pb-6">
-      <app-alert message="The AI advisor is not available right now. The quick form below gives you a recommendation from four figures." />
+      <app-alert
+        message="The AI advisor is not available right now. The quick form below gives you a recommendation from four figures."
+      />
     </div>
   }
   <app-recommend-form />

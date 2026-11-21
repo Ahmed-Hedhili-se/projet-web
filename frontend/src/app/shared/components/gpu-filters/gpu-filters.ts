@@ -47,7 +47,8 @@ export class GpuFilters {
 
   private toQuery(): GpuQuery {
     const value = this.form.getRawValue();
-    const hasPeriod = value.startDate !== '' && value.durationHours !== null && value.durationHours > 0;
+    const hasPeriod =
+      value.startDate !== '' && value.durationHours !== null && value.durationHours > 0;
 
     return {
       search: value.search.trim() || undefined,

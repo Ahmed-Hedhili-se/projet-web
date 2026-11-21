@@ -21,7 +21,9 @@ describe('NewRentalPage', () => {
     fixture.componentRef.setInput('gpuId', '1');
     await fixture.whenStable();
 
-    httpTesting.expectOne((req) => req.url.endsWith('/gpus')).flush({ gpus: MOCK_GPUS.filter((gpu) => gpu.isActive), total: 6, manufacturers: [] });
+    httpTesting
+      .expectOne((req) => req.url.endsWith('/gpus'))
+      .flush({ gpus: MOCK_GPUS.filter((gpu) => gpu.isActive), total: 6, manufacturers: [] });
     const page = fixture.componentInstance as unknown as { form: NewRentalPage['form'] };
     page.form.patchValue({ quantity: 2, durationHours: 10 });
     await fixture.whenStable();

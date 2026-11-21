@@ -1,7 +1,13 @@
 <form [formGroup]="form" class="flex flex-col gap-5" (submit)="$event.preventDefault()">
   <div>
     <label for="filter-search" class="form-label">Search</label>
-    <input id="filter-search" type="search" formControlName="search" placeholder="Name or architecture" class="form-field" />
+    <input
+      id="filter-search"
+      type="search"
+      formControlName="search"
+      placeholder="Name or architecture"
+      class="form-field"
+    />
   </div>
 
   <div>
@@ -53,13 +59,29 @@
     <div class="mt-4 flex flex-col gap-3">
       <div>
         <label for="filter-start" class="form-label">Start date</label>
-        <input id="filter-start" type="datetime-local" formControlName="startDate" [min]="minStartDate" class="form-field" />
+        <input
+          id="filter-start"
+          type="datetime-local"
+          formControlName="startDate"
+          [min]="minStartDate"
+          class="form-field"
+        />
       </div>
       <div>
         <label for="filter-duration" class="form-label">Duration (hours)</label>
-        <input id="filter-duration" type="number" formControlName="durationHours" min="1" max="720" placeholder="e.g. 24" class="form-field" />
+        <input
+          id="filter-duration"
+          type="number"
+          formControlName="durationHours"
+          min="1"
+          max="720"
+          placeholder="e.g. 24"
+          class="form-field"
+        />
       </div>
-      <p class="text-utility-nav text-ash">Fill in both to check availability for a specific period.</p>
+      <p class="text-utility-nav text-ash">
+        Fill in both to check availability for a specific period.
+      </p>
     </div>
   </fieldset>
 

@@ -1,7 +1,14 @@
 import { DatePipe } from '@angular/common';
 import { Component, DestroyRef, OnInit, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  ValidationErrors,
+  Validators,
+} from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { getErrorCode, getErrorDetails, getErrorMessage } from '../../../core/models/api-error';
 import { AuthService } from '../../../core/services/auth-service';
@@ -35,9 +42,18 @@ export class ProfilePage implements OnInit {
   });
 
   protected readonly profileForm = new FormGroup({
-    firstName: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.maxLength(50)] }),
-    lastName: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.maxLength(50)] }),
-    email: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.email] }),
+    firstName: new FormControl('', {
+      nonNullable: true,
+      validators: [Validators.required, Validators.maxLength(50)],
+    }),
+    lastName: new FormControl('', {
+      nonNullable: true,
+      validators: [Validators.required, Validators.maxLength(50)],
+    }),
+    email: new FormControl('', {
+      nonNullable: true,
+      validators: [Validators.required, Validators.email],
+    }),
   });
   protected readonly savingProfile = signal(false);
   protected readonly profileSaved = signal(false);
@@ -46,9 +62,18 @@ export class ProfilePage implements OnInit {
 
   protected readonly passwordForm = new FormGroup(
     {
-      currentPassword: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
-      newPassword: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.minLength(8), Validators.maxLength(72)] }),
-      confirmPassword: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
+      currentPassword: new FormControl('', {
+        nonNullable: true,
+        validators: [Validators.required],
+      }),
+      newPassword: new FormControl('', {
+        nonNullable: true,
+        validators: [Validators.required, Validators.minLength(8), Validators.maxLength(72)],
+      }),
+      confirmPassword: new FormControl('', {
+        nonNullable: true,
+        validators: [Validators.required],
+      }),
     },
     { validators: newPasswordsMatch },
   );
@@ -73,7 +98,9 @@ export class ProfilePage implements OnInit {
   protected profileFieldError(field: ProfileField): string | null {
     const control = this.profileForm.controls[field];
     if (control.touched && control.invalid) {
-      return field === 'email' ? 'Enter a valid email address.' : `Enter your ${field === 'firstName' ? 'first' : 'last'} name.`;
+      return field === 'email'
+        ? 'Enter a valid email address.'
+        : `Enter your ${field === 'firstName' ? 'first' : 'last'} name.`;
     }
     return this.profileServerErrors()[field] ?? null;
   }
@@ -90,7 +117,11 @@ export class ProfilePage implements OnInit {
     this.profileServerErrors.set({});
 
     this.userService
-      .updateProfile({ firstName: value.firstName.trim(), lastName: value.lastName.trim(), email: value.email.trim() })
+      .updateProfile({
+        firstName: value.firstName.trim(),
+        lastName: value.lastName.trim(),
+        email: value.email.trim(),
+      })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
@@ -113,16 +144,24 @@ export class ProfilePage implements OnInit {
       });
   }
 
-  protected passwordFieldError(field: 'currentPassword' | 'newPassword' | 'confirmPassword'): string | null {
+  protected passwordFieldError(
+    field: 'currentPassword' | 'newPassword' | 'confirmPassword',
+  ): string | null {
     const control = this.passwordForm.controls[field];
     if (field === 'currentPassword' && this.wrongPassword()) {
       return 'Your current password is incorrect.';
     }
-    if (field === 'confirmPassword' && control.touched && this.passwordForm.hasError('passwordsMismatch')) {
+    if (
+      field === 'confirmPassword' &&
+      control.touched &&
+      this.passwordForm.hasError('passwordsMismatch')
+    ) {
       return 'Passwords do not match.';
     }
     if (control.touched && control.invalid) {
-      return field === 'newPassword' ? 'Use between 8 and 72 characters.' : 'This field is required.';
+      return field === 'newPassword'
+        ? 'Use between 8 and 72 characters.'
+        : 'This field is required.';
     }
     return null;
   }
@@ -165,7 +204,11 @@ export class ProfilePage implements OnInit {
   private fillProfileForm(): void {
     const user = this.authService.currentUser();
     if (user) {
-      this.profileForm.setValue({ firstName: user.firstName, lastName: user.lastName, email: user.email });
+      this.profileForm.setValue({
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+      });
     }
   }
 }

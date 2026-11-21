@@ -5,7 +5,14 @@ import { Gpu } from '../models/gpu';
 import { allMockGpus, saveMockGpus } from './mock-gpus';
 import { FieldError, fail, respond, validationError, withAccount } from './mock-http';
 import { allMockMessages, saveMockMessages } from './mock-messages';
-import { MockRentalRecord, allMockRentals, availableUnits, rentalStatus, saveMockRentals, toApiRental } from './mock-rentals';
+import {
+  MockRentalRecord,
+  allMockRentals,
+  availableUnits,
+  rentalStatus,
+  saveMockRentals,
+  toApiRental,
+} from './mock-rentals';
 import { MockAccount, allMockAccounts, updateMockAccount } from './mock-users';
 
 const HOUR_MS = 60 * 60 * 1000;
@@ -18,11 +25,16 @@ function withAdmin(
   return withAccount(req, (account) =>
     account.user.role === 'ADMIN'
       ? handler(account)
-      : fail(req, 403, { error: { code: 'FORBIDDEN', message: 'You do not have access to this page.' } }),
+      : fail(req, 403, {
+          error: { code: 'FORBIDDEN', message: 'You do not have access to this page.' },
+        }),
   );
 }
 
-export function handleAdminRoutes(req: HttpRequest<unknown>, path: string): Observable<HttpResponse<unknown>> | null {
+export function handleAdminRoutes(
+  req: HttpRequest<unknown>,
+  path: string,
+): Observable<HttpResponse<unknown>> | null {
   if (!path.startsWith('/admin/')) {
     return null;
   }
@@ -73,18 +85,24 @@ export function handleAdminRoutes(req: HttpRequest<unknown>, path: string): Obse
         .map((account) => account.user)
         .filter(
           (user) =>
-            (!search || `${user.email} ${user.firstName} ${user.lastName}`.toLowerCase().includes(search)) &&
+            (!search ||
+              `${user.email} ${user.firstName} ${user.lastName}`.toLowerCase().includes(search)) &&
             (!role || user.role === role) &&
             (!blocked || user.isBlocked === (blocked === 'true')),
         )
         .sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt))
-        .map((user) => ({ ...user, rentalCount: rentals.filter((rental) => rental.userId === user.id).length }));
+        .map((user) => ({
+          ...user,
+          rentalCount: rentals.filter((rental) => rental.userId === user.id).length,
+        }));
       return respond({ users, total: users.length });
     });
   }
   const userMatch = path.match(/^\/admin\/users\/(\d+)$/);
   if (userMatch && req.method === 'PATCH') {
-    return withAdmin(req, (admin) => updateUser(req as HttpRequest<UserChanges>, Number(userMatch[1]), admin));
+    return withAdmin(req, (admin) =>
+      updateUser(req as HttpRequest<UserChanges>, Number(userMatch[1]), admin),
+    );
   }
   if (req.method === 'GET' && path === '/admin/rentals') {
     return withAdmin(req, () => {
@@ -109,11 +127,18 @@ export function handleAdminRoutes(req: HttpRequest<unknown>, path: string): Obse
       const rentals = allMockRentals();
       const record = rentals.find((rental) => rental.id === Number(cancelMatch[1]));
       if (!record) {
-        return fail(req, 404, { error: { code: 'RENTAL_NOT_FOUND', message: 'Rental not found.' } });
+        return fail(req, 404, {
+          error: { code: 'RENTAL_NOT_FOUND', message: 'Rental not found.' },
+        });
       }
       const status = rentalStatus(record);
       if (status !== 'UPCOMING' && status !== 'ACTIVE') {
-        return fail(req, 409, { error: { code: 'RENTAL_NOT_CANCELLABLE', message: 'Only upcoming or active rentals can be cancelled.' } });
+        return fail(req, 409, {
+          error: {
+            code: 'RENTAL_NOT_CANCELLABLE',
+            message: 'Only upcoming or active rentals can be cancelled.',
+          },
+        });
       }
       record.cancelled = true;
       record.cancelledAt = new Date().toISOString();
@@ -128,7 +153,11 @@ export function handleAdminRoutes(req: HttpRequest<unknown>, path: string): Obse
       const messages = all
         .filter((message) => !isRead || message.isRead === (isRead === 'true'))
         .sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt));
-      return respond({ messages, total: messages.length, unread: all.filter((message) => !message.isRead).length });
+      return respond({
+        messages,
+        total: messages.length,
+        unread: all.filter((message) => !message.isRead).length,
+      });
     });
   }
   const messageMatch = path.match(/^\/admin\/messages\/(\d+)$/);
@@ -137,7 +166,9 @@ export function handleAdminRoutes(req: HttpRequest<unknown>, path: string): Obse
       const messages = allMockMessages();
       const message = messages.find((item) => item.id === Number(messageMatch[1]));
       if (!message) {
-        return fail(req, 404, { error: { code: 'MESSAGE_NOT_FOUND', message: 'Message not found.' } });
+        return fail(req, 404, {
+          error: { code: 'MESSAGE_NOT_FOUND', message: 'Message not found.' },
+        });
       }
       if (req.method === 'DELETE') {
         saveMockMessages(messages.filter((item) => item.id !== message.id));
@@ -145,7 +176,9 @@ export function handleAdminRoutes(req: HttpRequest<unknown>, path: string): Obse
       }
       const isRead = (req.body as { isRead?: unknown } | null)?.isRead;
       if (typeof isRead !== 'boolean') {
-        return validationError(req, [{ field: 'isRead', message: 'isRead must be true or false.' }]);
+        return validationError(req, [
+          { field: 'isRead', message: 'isRead must be true or false.' },
+        ]);
       }
       message.isRead = isRead;
       saveMockMessages(messages);
@@ -155,17 +188,29 @@ export function handleAdminRoutes(req: HttpRequest<unknown>, path: string): Obse
   return null;
 }
 
-function updateUser(req: HttpRequest<UserChanges>, id: number, admin: MockAccount): Observable<HttpResponse<unknown>> {
+function updateUser(
+  req: HttpRequest<UserChanges>,
+  id: number,
+  admin: MockAccount,
+): Observable<HttpResponse<unknown>> {
   const body = req.body ?? {};
   const details: FieldError[] = [];
-  if (body.role !== undefined && body.role !== 'USER' && body.role !== 'ADMIN') details.push({ field: 'role', message: 'Role must be USER or ADMIN.' });
-  if (body.isBlocked !== undefined && typeof body.isBlocked !== 'boolean') details.push({ field: 'isBlocked', message: 'isBlocked must be true or false.' });
-  if (body.role === undefined && body.isBlocked === undefined) details.push({ field: 'role', message: 'Provide a role or a blocked status.' });
+  if (body.role !== undefined && body.role !== 'USER' && body.role !== 'ADMIN')
+    details.push({ field: 'role', message: 'Role must be USER or ADMIN.' });
+  if (body.isBlocked !== undefined && typeof body.isBlocked !== 'boolean')
+    details.push({ field: 'isBlocked', message: 'isBlocked must be true or false.' });
+  if (body.role === undefined && body.isBlocked === undefined)
+    details.push({ field: 'role', message: 'Provide a role or a blocked status.' });
   if (details.length > 0) {
     return validationError(req, details);
   }
   if (id === admin.user.id) {
-    return fail(req, 400, { error: { code: 'CANNOT_MODIFY_SELF', message: 'You cannot change your own role or block yourself.' } });
+    return fail(req, 400, {
+      error: {
+        code: 'CANNOT_MODIFY_SELF',
+        message: 'You cannot change your own role or block yourself.',
+      },
+    });
   }
   const changes: UserChanges = {};
   if (body.role !== undefined) changes.role = body.role;
@@ -181,7 +226,12 @@ function toAdminRental(record: MockRentalRecord): AdminRental {
   const user = allMockAccounts().find((account) => account.user.id === record.userId)?.user;
   return {
     ...toApiRental(record),
-    user: { id: record.userId, email: user?.email ?? 'unknown@example.com', firstName: user?.firstName ?? 'Unknown', lastName: user?.lastName ?? 'user' },
+    user: {
+      id: record.userId,
+      email: user?.email ?? 'unknown@example.com',
+      firstName: user?.firstName ?? 'Unknown',
+      lastName: user?.lastName ?? 'user',
+    },
   };
 }
 
@@ -189,15 +239,27 @@ function saveGpu(req: HttpRequest<GpuInput>, id: number | null): Observable<Http
   const body = req.body;
   const text = (value: unknown) => (typeof value === 'string' ? value.trim() : '');
   const details: FieldError[] = [];
-  if (text(body?.name).length < 1 || text(body?.name).length > 100) details.push({ field: 'name', message: 'Enter a name (100 characters max).' });
-  if (text(body?.manufacturer).length < 1 || text(body?.manufacturer).length > 50) details.push({ field: 'manufacturer', message: 'Enter a manufacturer (50 characters max).' });
-  if (text(body?.architecture).length < 1 || text(body?.architecture).length > 50) details.push({ field: 'architecture', message: 'Enter an architecture (50 characters max).' });
-  if (!Number.isInteger(body?.vramGb) || body!.vramGb < 1 || body!.vramGb > 1024) details.push({ field: 'vramGb', message: 'Memory must be a whole number between 1 and 1024.' });
-  if (!(Number(body?.fp16Tflops) > 0)) details.push({ field: 'fp16Tflops', message: 'TFLOPS must be greater than 0.' });
-  if (!(Number(body?.pricePerHour) > 0)) details.push({ field: 'pricePerHour', message: 'Price must be greater than 0.' });
-  if (!Number.isInteger(body?.totalUnits) || body!.totalUnits < 0 || body!.totalUnits > 1000) details.push({ field: 'totalUnits', message: 'Units must be a whole number between 0 and 1000.' });
-  if (text(body?.description).length < 1 || text(body?.description).length > 1000) details.push({ field: 'description', message: 'Enter a description (1000 characters max).' });
-  if (id !== null && typeof body?.isActive !== 'boolean') details.push({ field: 'isActive', message: 'Choose a status.' });
+  if (text(body?.name).length < 1 || text(body?.name).length > 100)
+    details.push({ field: 'name', message: 'Enter a name (100 characters max).' });
+  if (text(body?.manufacturer).length < 1 || text(body?.manufacturer).length > 50)
+    details.push({ field: 'manufacturer', message: 'Enter a manufacturer (50 characters max).' });
+  if (text(body?.architecture).length < 1 || text(body?.architecture).length > 50)
+    details.push({ field: 'architecture', message: 'Enter an architecture (50 characters max).' });
+  if (!Number.isInteger(body?.vramGb) || body!.vramGb < 1 || body!.vramGb > 1024)
+    details.push({ field: 'vramGb', message: 'Memory must be a whole number between 1 and 1024.' });
+  if (!(Number(body?.fp16Tflops) > 0))
+    details.push({ field: 'fp16Tflops', message: 'TFLOPS must be greater than 0.' });
+  if (!(Number(body?.pricePerHour) > 0))
+    details.push({ field: 'pricePerHour', message: 'Price must be greater than 0.' });
+  if (!Number.isInteger(body?.totalUnits) || body!.totalUnits < 0 || body!.totalUnits > 1000)
+    details.push({
+      field: 'totalUnits',
+      message: 'Units must be a whole number between 0 and 1000.',
+    });
+  if (text(body?.description).length < 1 || text(body?.description).length > 1000)
+    details.push({ field: 'description', message: 'Enter a description (1000 characters max).' });
+  if (id !== null && typeof body?.isActive !== 'boolean')
+    details.push({ field: 'isActive', message: 'Choose a status.' });
   if (!body || details.length > 0) {
     return validationError(req, details);
   }
@@ -207,28 +269,56 @@ function saveGpu(req: HttpRequest<GpuInput>, id: number | null): Observable<Http
   if (id !== null && !existing) {
     return fail(req, 404, { error: { code: 'GPU_NOT_FOUND', message: 'GPU not found.' } });
   }
-  if (gpus.some((gpu) => gpu.name.toLowerCase() === text(body.name).toLowerCase() && gpu.id !== id)) {
-    return fail(req, 409, { error: { code: 'GPU_NAME_TAKEN', message: 'A GPU with this name already exists.' } });
+  if (
+    gpus.some((gpu) => gpu.name.toLowerCase() === text(body.name).toLowerCase() && gpu.id !== id)
+  ) {
+    return fail(req, 409, {
+      error: { code: 'GPU_NAME_TAKEN', message: 'A GPU with this name already exists.' },
+    });
   }
 
   const now = new Date().toISOString();
   const values = {
-    name: text(body.name), manufacturer: text(body.manufacturer), architecture: text(body.architecture),
-    vramGb: body.vramGb, fp16Tflops: Number(body.fp16Tflops), pricePerHour: Math.round(Number(body.pricePerHour) * 100) / 100,
-    totalUnits: body.totalUnits, description: text(body.description), isActive: body.isActive ?? true,
+    name: text(body.name),
+    manufacturer: text(body.manufacturer),
+    architecture: text(body.architecture),
+    vramGb: body.vramGb,
+    fp16Tflops: Number(body.fp16Tflops),
+    pricePerHour: Math.round(Number(body.pricePerHour) * 100) / 100,
+    totalUnits: body.totalUnits,
+    description: text(body.description),
+    isActive: body.isActive ?? true,
   };
   let gpu: Gpu;
   if (existing) {
     const booked = existing.totalUnits - existing.availableUnits;
-    Object.assign(existing, values, { availableUnits: Math.max(0, values.totalUnits - booked), updatedAt: now });
+    Object.assign(existing, values, {
+      availableUnits: Math.max(0, values.totalUnits - booked),
+      updatedAt: now,
+    });
     gpu = existing;
   } else {
-    gpu = { ...values, id: Math.max(0, ...gpus.map((item) => item.id)) + 1, availableUnits: values.totalUnits, createdAt: now, updatedAt: now };
+    gpu = {
+      ...values,
+      id: Math.max(0, ...gpus.map((item) => item.id)) + 1,
+      availableUnits: values.totalUnits,
+      createdAt: now,
+      updatedAt: now,
+    };
     gpus.push(gpu);
   }
   saveMockGpus(gpus);
   const start = new Date();
-  return respond({ gpu: { ...gpu, availableUnits: availableUnits(gpu, start, new Date(start.getTime() + HOUR_MS)) } }, 600, existing ? 200 : 201);
+  return respond(
+    {
+      gpu: {
+        ...gpu,
+        availableUnits: availableUnits(gpu, start, new Date(start.getTime() + HOUR_MS)),
+      },
+    },
+    600,
+    existing ? 200 : 201,
+  );
 }
 
 function computeStats(): AdminStats {
@@ -238,7 +328,8 @@ function computeStats(): AdminStats {
   const messages = allMockMessages();
   const paid = rentals.filter((rental) => !rental.cancelled);
   const round = (value: number) => Math.round(value * 100) / 100;
-  const byStatus = (status: string) => rentals.filter((rental) => rentalStatus(rental) === status).length;
+  const byStatus = (status: string) =>
+    rentals.filter((rental) => rentalStatus(rental) === status).length;
 
   const top = new Map<number, { rentalCount: number; revenue: number }>();
   for (const rental of paid) {
@@ -254,7 +345,11 @@ function computeStats(): AdminStats {
     const date = new Date(today.getFullYear(), today.getMonth() - offset, 1);
     const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
     const inMonth = paid.filter((rental) => rental.startDate.slice(0, 7) === key);
-    months.push({ month: key, count: inMonth.length, revenue: round(inMonth.reduce((sum, rental) => sum + rental.totalPrice, 0)) });
+    months.push({
+      month: key,
+      count: inMonth.length,
+      revenue: round(inMonth.reduce((sum, rental) => sum + rental.totalPrice, 0)),
+    });
   }
 
   return {
@@ -263,15 +358,37 @@ function computeStats(): AdminStats {
       admins: accounts.filter((account) => account.user.role === 'ADMIN').length,
       blocked: accounts.filter((account) => account.user.isBlocked).length,
     },
-    gpus: { total: gpus.length, active: gpus.filter((gpu) => gpu.isActive).length, totalUnits: gpus.reduce((sum, gpu) => sum + gpu.totalUnits, 0) },
-    rentals: { total: rentals.length, upcoming: byStatus('UPCOMING'), active: byStatus('ACTIVE'), completed: byStatus('COMPLETED'), cancelled: byStatus('CANCELLED') },
+    gpus: {
+      total: gpus.length,
+      active: gpus.filter((gpu) => gpu.isActive).length,
+      totalUnits: gpus.reduce((sum, gpu) => sum + gpu.totalUnits, 0),
+    },
+    rentals: {
+      total: rentals.length,
+      upcoming: byStatus('UPCOMING'),
+      active: byStatus('ACTIVE'),
+      completed: byStatus('COMPLETED'),
+      cancelled: byStatus('CANCELLED'),
+    },
     revenue: {
       total: round(paid.reduce((sum, rental) => sum + rental.totalPrice, 0)),
-      last30Days: round(paid.filter((rental) => Date.parse(rental.startDate) > Date.now() - 30 * DAY_MS).reduce((sum, rental) => sum + rental.totalPrice, 0)),
+      last30Days: round(
+        paid
+          .filter((rental) => Date.parse(rental.startDate) > Date.now() - 30 * DAY_MS)
+          .reduce((sum, rental) => sum + rental.totalPrice, 0),
+      ),
     },
-    messages: { total: messages.length, unread: messages.filter((message) => !message.isRead).length },
+    messages: {
+      total: messages.length,
+      unread: messages.filter((message) => !message.isRead).length,
+    },
     topGpus: [...top.entries()]
-      .map(([gpuId, entry]) => ({ gpuId, name: gpus.find((gpu) => gpu.id === gpuId)?.name ?? 'Unknown GPU', rentalCount: entry.rentalCount, revenue: round(entry.revenue) }))
+      .map(([gpuId, entry]) => ({
+        gpuId,
+        name: gpus.find((gpu) => gpu.id === gpuId)?.name ?? 'Unknown GPU',
+        rentalCount: entry.rentalCount,
+        revenue: round(entry.revenue),
+      }))
       .sort((a, b) => b.rentalCount - a.rentalCount || b.revenue - a.revenue)
       .slice(0, 5),
     rentalsPerMonth: months,

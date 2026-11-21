@@ -46,5 +46,11 @@ export interface GpuSummary {
 }
 
 export function toGpuSummary(gpu: Gpu): GpuSummary {
-  return { id: gpu.id, name: gpu.name, manufacturer: gpu.manufacturer, vramGb: gpu.vramGb, pricePerHour: gpu.pricePerHour };
+  return {
+    id: gpu.id,
+    name: gpu.name,
+    manufacturer: gpu.manufacturer,
+    vramGb: gpu.vramGb,
+    pricePerHour: gpu.pricePerHour,
+  };
 }

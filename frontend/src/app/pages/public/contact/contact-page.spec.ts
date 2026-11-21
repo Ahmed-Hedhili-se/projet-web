@@ -33,10 +33,17 @@ describe('ContactPage', () => {
   it('should send the message and show the confirmation', async () => {
     const fixture = TestBed.createComponent(ContactPage);
     const page = fixture.componentInstance as unknown as { form: ContactPage['form'] };
-    page.form.setValue({ name: 'Jane', email: 'jane@example.com', subject: 'Sales & pricing', message: 'I need 8 GPUs for a month.' });
+    page.form.setValue({
+      name: 'Jane',
+      email: 'jane@example.com',
+      subject: 'Sales & pricing',
+      message: 'I need 8 GPUs for a month.',
+    });
     await fixture.whenStable();
 
-    (fixture.nativeElement as HTMLElement).querySelector<HTMLButtonElement>('button[type="submit"]')?.click();
+    (fixture.nativeElement as HTMLElement)
+      .querySelector<HTMLButtonElement>('button[type="submit"]')
+      ?.click();
     const req = httpTesting.expectOne(`${environment.apiUrl}/contact`);
     expect(req.request.method).toBe('POST');
     expect(req.request.body.name).toBe('Jane');

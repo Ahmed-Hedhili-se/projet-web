@@ -10,7 +10,14 @@ import { handleAdminRoutes } from './mock-admin-routes';
 import { handleAgentRoutes } from './mock-agent-routes';
 import { allMockGpus } from './mock-gpus';
 import { addMockMessage } from './mock-messages';
-import { EMAIL_PATTERN, FieldError, fail, respond, validationError, withAccount } from './mock-http';
+import {
+  EMAIL_PATTERN,
+  FieldError,
+  fail,
+  respond,
+  validationError,
+  withAccount,
+} from './mock-http';
 import { mockRecommend } from './mock-recommendation';
 import { availableUnits } from './mock-rentals';
 import { addMockAccount, allMockAccounts, mockTokenFor, nextMockUserId } from './mock-users';
@@ -89,7 +96,9 @@ function listGpus(params: HttpParams): GpuListResponse {
     .map((gpu) => withAvailability(gpu, params))
     .filter(
       (gpu) =>
-        (!search || gpu.name.toLowerCase().includes(search) || gpu.architecture.toLowerCase().includes(search)) &&
+        (!search ||
+          gpu.name.toLowerCase().includes(search) ||
+          gpu.architecture.toLowerCase().includes(search)) &&
         (!manufacturer || gpu.manufacturer === manufacturer) &&
         (minVram === null || gpu.vramGb >= minVram) &&
         (maxPrice === null || gpu.pricePerHour <= maxPrice) &&
@@ -98,10 +107,14 @@ function listGpus(params: HttpParams): GpuListResponse {
 
   gpus.sort((a, b) => {
     switch (sort) {
-      case 'price_desc': return b.pricePerHour - a.pricePerHour;
-      case 'vram_desc': return b.vramGb - a.vramGb;
-      case 'name_asc': return a.name.localeCompare(b.name);
-      default: return a.pricePerHour - b.pricePerHour;
+      case 'price_desc':
+        return b.pricePerHour - a.pricePerHour;
+      case 'vram_desc':
+        return b.vramGb - a.vramGb;
+      case 'name_asc':
+        return a.name.localeCompare(b.name);
+      default:
+        return a.pricePerHour - b.pricePerHour;
     }
   });
 
@@ -151,16 +164,28 @@ function login(req: HttpRequest<LoginRequest>): Observable<HttpResponse<unknown>
   }
 
   if ((loginFailures.get(email) ?? 0) >= MAX_LOGIN_FAILURES) {
-    return fail(req, 429, { error: { code: 'TOO_MANY_ATTEMPTS', message: 'Too many failed attempts. Please try again in 15 minutes.' } });
+    return fail(req, 429, {
+      error: {
+        code: 'TOO_MANY_ATTEMPTS',
+        message: 'Too many failed attempts. Please try again in 15 minutes.',
+      },
+    });
   }
 
   const account = allMockAccounts().find((item) => item.user.email === email);
   if (!account || account.password !== password) {
     loginFailures.set(email, (loginFailures.get(email) ?? 0) + 1);
-    return fail(req, 401, { error: { code: 'INVALID_CREDENTIALS', message: 'Invalid email or password.' } });
+    return fail(req, 401, {
+      error: { code: 'INVALID_CREDENTIALS', message: 'Invalid email or password.' },
+    });
   }
   if (account.user.isBlocked) {
-    return fail(req, 403, { error: { code: 'ACCOUNT_BLOCKED', message: 'Your account has been blocked. Please contact our support team.' } });
+    return fail(req, 403, {
+      error: {
+        code: 'ACCOUNT_BLOCKED',
+        message: 'Your account has been blocked. Please contact our support team.',
+      },
+    });
   }
 
   loginFailures.delete(email);
@@ -190,10 +215,20 @@ function register(req: HttpRequest<RegisterRequest>): Observable<HttpResponse<un
     return validationError(req, details);
   }
   if (allMockAccounts().some((account) => account.user.email === email)) {
-    return fail(req, 409, { error: { code: 'EMAIL_TAKEN', message: 'An account with this email already exists.' } });
+    return fail(req, 409, {
+      error: { code: 'EMAIL_TAKEN', message: 'An account with this email already exists.' },
+    });
   }
 
-  const user: User = { id: nextMockUserId(), email, firstName, lastName, role: 'USER', isBlocked: false, createdAt: new Date().toISOString() };
+  const user: User = {
+    id: nextMockUserId(),
+    email,
+    firstName,
+    lastName,
+    role: 'USER',
+    isBlocked: false,
+    createdAt: new Date().toISOString(),
+  };
   addMockAccount({ password, user });
   return respond({ token: mockTokenFor(user), user }, 800, 201);
 }
@@ -212,7 +247,10 @@ function contact(req: HttpRequest<ContactRequest>): Observable<HttpResponse<unkn
     details.push({ field: 'subject', message: 'Enter a subject (150 characters max).' });
   }
   if (length(body?.message) < 10 || length(body?.message) > 2000) {
-    details.push({ field: 'message', message: 'Your message must be between 10 and 2000 characters.' });
+    details.push({
+      field: 'message',
+      message: 'Your message must be between 10 and 2000 characters.',
+    });
   }
   if (details.length > 0) {
     return validationError(req, details);

@@ -10,17 +10,46 @@ describe('AdminRentalsPage', () => {
   let httpTesting: HttpTestingController;
   const HOUR_MS = 60 * 60 * 1000;
   const jane = { id: 3, email: 'jane.doe@example.com', firstName: 'Jane', lastName: 'Doe' };
-  const lucas = { id: 4, email: 'lucas.martin@example.com', firstName: 'Lucas', lastName: 'Martin' };
-  const h100 = { id: 1, name: 'NVIDIA H100 80GB', manufacturer: 'NVIDIA', vramGb: 80, pricePerHour: 3.2 };
+  const lucas = {
+    id: 4,
+    email: 'lucas.martin@example.com',
+    firstName: 'Lucas',
+    lastName: 'Martin',
+  };
+  const h100 = {
+    id: 1,
+    name: 'NVIDIA H100 80GB',
+    manufacturer: 'NVIDIA',
+    vramGb: 80,
+    pricePerHour: 3.2,
+  };
 
-  const rental = (id: number, user: AdminRental['user'], status: RentalStatus, startOffsetHours: number): AdminRental => {
+  const rental = (
+    id: number,
+    user: AdminRental['user'],
+    status: RentalStatus,
+    startOffsetHours: number,
+  ): AdminRental => {
     const start = Date.now() + startOffsetHours * HOUR_MS;
     return {
-      id, quantity: 2, durationHours: 24, totalPrice: 153.6, status, cancelledAt: null, gpu: h100, user,
-      startDate: new Date(start).toISOString(), endDate: new Date(start + 24 * HOUR_MS).toISOString(), createdAt: new Date(start - 72 * HOUR_MS).toISOString(),
+      id,
+      quantity: 2,
+      durationHours: 24,
+      totalPrice: 153.6,
+      status,
+      cancelledAt: null,
+      gpu: h100,
+      user,
+      startDate: new Date(start).toISOString(),
+      endDate: new Date(start + 24 * HOUR_MS).toISOString(),
+      createdAt: new Date(start - 72 * HOUR_MS).toISOString(),
     };
   };
-  const rentals = [rental(15, jane, 'UPCOMING', 48), rental(14, jane, 'ACTIVE', -6), rental(17, lucas, 'ACTIVE', -3)];
+  const rentals = [
+    rental(15, jane, 'UPCOMING', 48),
+    rental(14, jane, 'ACTIVE', -6),
+    rental(17, lucas, 'ACTIVE', -3),
+  ];
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -31,7 +60,9 @@ describe('AdminRentalsPage', () => {
   });
 
   const clickButton = (root: HTMLElement, label: string) =>
-    [...root.querySelectorAll('button')].find((button) => button.textContent?.trim() === label)?.click();
+    [...root.querySelectorAll('button')]
+      .find((button) => button.textContent?.trim() === label)
+      ?.click();
 
   it('should apply the ?userId filter, cancel a rental and draw the planning', async () => {
     const fixture = TestBed.createComponent(AdminRentalsPage);
@@ -49,7 +80,9 @@ describe('AdminRentalsPage', () => {
     clickButton(compiled, 'Cancel rental');
     const request = httpTesting.expectOne(`${environment.apiUrl}/admin/rentals/15/cancel`);
     expect(request.request.method).toBe('PATCH');
-    request.flush({ rental: { ...rentals[0], status: 'CANCELLED', cancelledAt: new Date().toISOString() } });
+    request.flush({
+      rental: { ...rentals[0], status: 'CANCELLED', cancelledAt: new Date().toISOString() },
+    });
     await fixture.whenStable();
     expect(compiled.textContent).toContain('Rental #15 of Jane Doe was cancelled.');
 

@@ -1,101 +1,195 @@
 @if (booked(); as rental) {
-  <section animate.enter="result-enter" class="flex flex-col items-center px-4 py-20 text-center md:py-28" role="status">
+  <section
+    animate.enter="result-enter"
+    class="flex flex-col items-center px-4 py-20 text-center md:py-28"
+    role="status"
+  >
     <svg class="animate-pop-in size-24" viewBox="0 0 80 80" fill="none" aria-hidden="true">
       <circle cx="40" cy="40" r="38" fill="#0e0e0e" stroke="#f5f5f7" stroke-width="2" />
-      <path class="animate-draw" pathLength="1" d="m26 41 9 9 19-20" stroke="#f5f5f7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <path
+        class="animate-draw"
+        pathLength="1"
+        d="m26 41 9 9 19-20"
+        stroke="#f5f5f7"
+        stroke-width="3"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
     </svg>
     <h1 class="mt-6 font-display text-display-sm font-semibold">
       <app-split-text text="You're all set." [delay]="300" />
     </h1>
-    <p class="animate-fade-up mt-3 max-w-md text-section-nav text-ash" style="animation-delay: 500ms">
-      Your {{ rental.quantity }} × {{ rental.gpu.name }} will be ready on {{ rental.startDate | date: 'EEEE, MMM d · HH:mm' }}.
+    <p
+      class="animate-fade-up mt-3 max-w-md text-section-nav text-ash"
+      style="animation-delay: 500ms"
+    >
+      Your {{ rental.quantity }} × {{ rental.gpu.name }} will be ready on
+      {{ rental.startDate | date: 'EEEE, MMM d · HH:mm' }}.
     </p>
-    <div class="animate-fade-up mt-8 grid w-full max-w-lg grid-cols-3 gap-3 rounded-card bg-carbon p-3" style="animation-delay: 600ms">
+    <div
+      class="animate-fade-up mt-8 grid w-full max-w-lg grid-cols-3 gap-3 rounded-card bg-carbon p-3"
+      style="animation-delay: 600ms"
+    >
       <div class="rounded-nav bg-obsidian p-4">
-        <p class="font-display text-product-label font-semibold">{{ formatDuration(rental.durationHours) }}</p>
+        <p class="font-display text-product-label font-semibold">
+          {{ formatDuration(rental.durationHours) }}
+        </p>
         <p class="mt-1 text-utility-nav text-ash">Duration</p>
       </div>
       <div class="rounded-nav bg-obsidian p-4">
-        <p class="font-display text-product-label font-semibold">{{ rental.endDate | date: 'MMM d, HH:mm' }}</p>
+        <p class="font-display text-product-label font-semibold">
+          {{ rental.endDate | date: 'MMM d, HH:mm' }}
+        </p>
         <p class="mt-1 text-utility-nav text-ash">Ends</p>
       </div>
       <div class="rounded-nav bg-obsidian p-4">
-        <p class="font-display text-product-label font-semibold">{{ rental.totalPrice | currency: 'USD' }}</p>
+        <p class="font-display text-product-label font-semibold">
+          {{ rental.totalPrice | currency: 'USD' }}
+        </p>
         <p class="mt-1 text-utility-nav text-ash">Total</p>
       </div>
     </div>
-    <div class="animate-fade-up mt-8 flex flex-wrap justify-center gap-3" style="animation-delay: 700ms">
+    <div
+      class="animate-fade-up mt-8 flex flex-wrap justify-center gap-3"
+      style="animation-delay: 700ms"
+    >
       <a routerLink="/account/rentals" class="btn-primary">View my rentals</a>
       <button type="button" (click)="bookAnother()" class="btn-outline">Book another GPU</button>
     </div>
   </section>
 } @else {
   <section class="px-4 pt-16 pb-10 text-center md:pt-20">
-    <p class="animate-fade-up font-display text-product-label font-semibold text-aurora">New rental</p>
+    <p class="animate-fade-up font-display text-product-label font-semibold text-aurora">
+      New rental
+    </p>
     <h1 class="mt-2 font-display text-display-sm font-semibold md:text-display">
       <app-split-text text="Book a GPU." [delay]="100" />
     </h1>
-    <p class="animate-fade-up mx-auto mt-4 max-w-xl text-section-nav text-ash" style="animation-delay: 300ms">
+    <p
+      class="animate-fade-up mx-auto mt-4 max-w-xl text-section-nav text-ash"
+      style="animation-delay: 300ms"
+    >
       Choose a GPU, a start date and a duration. Availability and price update as you type.
     </p>
   </section>
 
   <section class="px-4 pb-20 md:pb-28">
     <div class="mx-auto grid max-w-6xl items-start gap-8 lg:grid-cols-[1.3fr_1fr]">
-
-      <form [formGroup]="form" (ngSubmit)="submit()" class="animate-fade-up flex flex-col gap-8 rounded-card border border-steel bg-carbon p-6 md:p-8" style="animation-delay: 400ms" novalidate>
+      <form
+        [formGroup]="form"
+        (ngSubmit)="submit()"
+        class="animate-fade-up flex flex-col gap-8 rounded-card border border-steel bg-carbon p-6 md:p-8"
+        style="animation-delay: 400ms"
+        novalidate
+      >
         <div>
-          <label for="rental-gpu" class="form-label"><span class="text-porcelain">1.</span> GPU</label>
+          <label for="rental-gpu" class="form-label"
+            ><span class="text-porcelain">1.</span> GPU</label
+          >
           @if (loadingGpus()) {
             <div class="h-10 animate-pulse rounded-pill bg-obsidian"></div>
           } @else {
             <select id="rental-gpu" formControlName="gpuId" class="form-field">
               @for (gpu of gpus(); track gpu.id) {
-                <option [ngValue]="gpu.id">{{ gpu.name }} · {{ gpu.vramGb }} GB · {{ gpu.pricePerHour | currency: 'USD' }}/h</option>
+                <option [ngValue]="gpu.id">
+                  {{ gpu.name }} · {{ gpu.vramGb }} GB · {{ gpu.pricePerHour | currency: 'USD' }}/h
+                </option>
               }
             </select>
           }
         </div>
 
         <div>
-          <label for="rental-start" class="form-label"><span class="text-porcelain">2.</span> Start date and time</label>
-          <input id="rental-start" type="datetime-local" formControlName="startDate" [min]="minStartDate" class="form-field" />
+          <label for="rental-start" class="form-label"
+            ><span class="text-porcelain">2.</span> Start date and time</label
+          >
+          <input
+            id="rental-start"
+            type="datetime-local"
+            formControlName="startDate"
+            [min]="minStartDate"
+            class="form-field"
+          />
         </div>
 
         <div>
-          <label for="rental-duration" class="form-label"><span class="text-porcelain">3.</span> Duration (hours)</label>
-          <input id="rental-duration" type="number" formControlName="durationHours" min="1" max="720" step="1" class="form-field" />
+          <label for="rental-duration" class="form-label"
+            ><span class="text-porcelain">3.</span> Duration (hours)</label
+          >
+          <input
+            id="rental-duration"
+            type="number"
+            formControlName="durationHours"
+            min="1"
+            max="720"
+            step="1"
+            class="form-field"
+          />
           <div class="mt-3 flex flex-wrap gap-2">
             @for (hours of durationPresets; track hours) {
               <button
                 type="button"
                 (click)="setDuration(hours)"
                 class="rounded-pill border px-3 py-1 text-utility-nav transition duration-300"
-                [class]="form.controls.durationHours.value === hours ? 'border-porcelain bg-porcelain text-obsidian' : 'border-steel text-ash hover:border-slate hover:text-porcelain'"
-              >{{ formatDuration(hours) }}</button>
+                [class]="
+                  form.controls.durationHours.value === hours
+                    ? 'border-porcelain bg-porcelain text-obsidian'
+                    : 'border-steel text-ash hover:border-slate hover:text-porcelain'
+                "
+              >
+                {{ formatDuration(hours) }}
+              </button>
             }
           </div>
           @if (form.controls.durationHours.invalid && form.controls.durationHours.touched) {
-            <p class="mt-2 text-utility-nav text-optical-yellow">Enter a whole number of hours between 1 and 720.</p>
+            <p class="mt-2 text-utility-nav text-optical-yellow">
+              Enter a whole number of hours between 1 and 720.
+            </p>
           }
         </div>
 
         <div>
           <span class="form-label"><span class="text-porcelain">4.</span> Number of units</span>
           <div class="flex items-center gap-3">
-            <button type="button" (click)="changeQuantity(-1)" class="btn-outline size-10 p-0 text-section-nav" aria-label="Remove one unit">−</button>
-            <input type="number" formControlName="quantity" min="1" class="form-field w-24 text-center tabular-nums" aria-label="Number of units" />
-            <button type="button" (click)="changeQuantity(1)" class="btn-outline size-10 p-0 text-section-nav" aria-label="Add one unit">+</button>
+            <button
+              type="button"
+              (click)="changeQuantity(-1)"
+              class="btn-outline size-10 p-0 text-section-nav"
+              aria-label="Remove one unit"
+            >
+              −
+            </button>
+            <input
+              type="number"
+              formControlName="quantity"
+              min="1"
+              class="form-field w-24 text-center tabular-nums"
+              aria-label="Number of units"
+            />
+            <button
+              type="button"
+              (click)="changeQuantity(1)"
+              class="btn-outline size-10 p-0 text-section-nav"
+              aria-label="Add one unit"
+            >
+              +
+            </button>
             <p class="text-body text-ash" aria-live="polite">
               @if (checking()) {
-                <span class="inline-flex items-center gap-2"><span class="size-2 animate-ping rounded-full bg-porcelain"></span> Checking availability…</span>
+                <span class="inline-flex items-center gap-2"
+                  ><span class="size-2 animate-ping rounded-full bg-porcelain"></span> Checking
+                  availability…</span
+                >
               } @else if (available() !== null) {
                 {{ available() }} of {{ selectedGpu()?.totalUnits }} available for this period
               }
             </p>
           </div>
           @if (tooManyUnits()) {
-            <p class="mt-2 text-utility-nav text-optical-yellow">Only {{ available() }} unit(s) available for this period. Reduce the quantity or change the dates.</p>
+            <p class="mt-2 text-utility-nav text-optical-yellow">
+              Only {{ available() }} unit(s) available for this period. Reduce the quantity or
+              change the dates.
+            </p>
           }
         </div>
       </form>
@@ -107,13 +201,23 @@
           (animationend)="shaking.set(false)"
         >
           <div class="overflow-hidden rounded-card bg-obsidian">
-            <img src="images/hero-gpu.svg" alt="" width="960" height="540" class="animate-float h-auto w-full" />
+            <img
+              src="images/hero-gpu.svg"
+              alt=""
+              width="960"
+              height="540"
+              class="animate-float h-auto w-full"
+            />
             @if (selectedGpu(); as gpu) {
               @for (item of [gpu]; track item.id) {
                 <div class="result-enter px-6 pb-6">
-                  <p class="text-utility-nav text-ash">{{ item.manufacturer }} · {{ item.architecture }}</p>
+                  <p class="text-utility-nav text-ash">
+                    {{ item.manufacturer }} · {{ item.architecture }}
+                  </p>
                   <p class="font-display text-hero-product-name font-semibold">{{ item.name }}</p>
-                  <p class="mt-1 text-body text-ash">{{ item.vramGb }} GB VRAM · {{ item.fp16Tflops }} FP16 TFLOPS</p>
+                  <p class="mt-1 text-body text-ash">
+                    {{ item.vramGb }} GB VRAM · {{ item.fp16Tflops }} FP16 TFLOPS
+                  </p>
                 </div>
               }
             }
@@ -121,20 +225,40 @@
 
           <div class="rounded-card bg-obsidian p-6">
             <dl class="flex flex-col gap-3 text-body">
-              <div class="flex justify-between"><dt class="text-ash">Price per unit</dt><dd class="tabular-nums">{{ (selectedGpu()?.pricePerHour ?? 0) | currency: 'USD' }} / h</dd></div>
-              <div class="flex justify-between"><dt class="text-ash">Units</dt><dd class="tabular-nums">× {{ form.controls.quantity.value }}</dd></div>
-              <div class="flex justify-between"><dt class="text-ash">Duration</dt><dd class="tabular-nums">× {{ period()?.hours ?? 0 }} h</dd></div>
+              <div class="flex justify-between">
+                <dt class="text-ash">Price per unit</dt>
+                <dd class="tabular-nums">
+                  {{ selectedGpu()?.pricePerHour ?? 0 | currency: 'USD' }} / h
+                </dd>
+              </div>
+              <div class="flex justify-between">
+                <dt class="text-ash">Units</dt>
+                <dd class="tabular-nums">× {{ form.controls.quantity.value }}</dd>
+              </div>
+              <div class="flex justify-between">
+                <dt class="text-ash">Duration</dt>
+                <dd class="tabular-nums">× {{ period()?.hours ?? 0 }} h</dd>
+              </div>
               @if (period(); as p) {
-                <div class="flex justify-between"><dt class="text-ash">Period</dt><dd class="text-right">{{ p.start | date: 'MMM d, HH:mm' }} → {{ p.end | date: 'MMM d, HH:mm' }}</dd></div>
+                <div class="flex justify-between">
+                  <dt class="text-ash">Period</dt>
+                  <dd class="text-right">
+                    {{ p.start | date: 'MMM d, HH:mm' }} → {{ p.end | date: 'MMM d, HH:mm' }}
+                  </dd>
+                </div>
               }
             </dl>
             <div class="mt-5 flex items-baseline justify-between border-t border-steel pt-5">
               <p class="text-body text-ash">Estimated total</p>
-              @for (total of [estimatedTotal()]; track total) {
-                <p class="result-enter font-display text-section-title font-semibold tabular-nums">{{ total | currency: 'USD' }}</p>
+              @for (total of [estimatedTotal()]; track total.toFixed(2)) {
+                <p class="result-enter font-display text-section-title font-semibold tabular-nums">
+                  {{ total | currency: 'USD' }}
+                </p>
               }
             </div>
-            <p class="mt-2 text-utility-nav text-ash">The final price is calculated by TeraMind when you confirm.</p>
+            <p class="mt-2 text-utility-nav text-ash">
+              The final price is calculated by TeraMind when you confirm.
+            </p>
           </div>
 
           @if (errorMessage(); as message) {
@@ -143,18 +267,37 @@
             </div>
           }
 
-          <button type="button" (click)="submit()" class="btn-primary w-full gap-2 py-3 text-body disabled:opacity-60" [disabled]="submitting() || tooManyUnits() || !period() || !selectedGpu()">
+          <button
+            type="button"
+            (click)="submit()"
+            class="btn-primary w-full gap-2 py-3 text-body disabled:opacity-60"
+            [disabled]="submitting() || tooManyUnits() || !period() || !selectedGpu()"
+          >
             @if (submitting()) {
               <svg class="size-4 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-opacity="0.3" stroke-width="2.5" />
-                <path d="M21 12a9 9 0 0 0-9-9" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+                <circle
+                  cx="12"
+                  cy="12"
+                  r="9"
+                  stroke="currentColor"
+                  stroke-opacity="0.3"
+                  stroke-width="2.5"
+                />
+                <path
+                  d="M21 12a9 9 0 0 0-9-9"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                />
               </svg>
               Booking…
             } @else {
               Confirm booking
             }
           </button>
-          <p class="text-center text-utility-nav text-ash">Free cancellation until the rental starts.</p>
+          <p class="text-center text-utility-nav text-ash">
+            Free cancellation until the rental starts.
+          </p>
         </div>
       </aside>
     </div>

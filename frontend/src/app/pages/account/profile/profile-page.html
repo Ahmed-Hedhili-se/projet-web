@@ -1,15 +1,24 @@
 @if (authService.currentUser(); as user) {
   <section class="px-4 pt-16 pb-10 md:pt-20">
-    <div class="mx-auto flex max-w-6xl flex-col items-center gap-6 text-center md:flex-row md:text-left">
-      <div class="animate-pop-in flex size-28 shrink-0 items-center justify-center rounded-full border border-steel bg-carbon font-display text-section-title font-semibold">
+    <div
+      class="mx-auto flex max-w-6xl flex-col items-center gap-6 text-center md:flex-row md:text-left"
+    >
+      <div
+        class="animate-pop-in flex size-28 shrink-0 items-center justify-center rounded-full border border-steel bg-carbon font-display text-section-title font-semibold"
+      >
         {{ initials() }}
       </div>
       <div>
-        <p class="animate-fade-up font-display text-product-label font-semibold text-aurora">My account</p>
+        <p class="animate-fade-up font-display text-product-label font-semibold text-aurora">
+          My account
+        </p>
         <h1 class="mt-1 font-display text-display-sm font-semibold">
           <app-split-text [text]="user.firstName + ' ' + user.lastName" [delay]="150" />
         </h1>
-        <div class="animate-fade-up mt-3 flex flex-wrap items-center justify-center gap-3 md:justify-start" style="animation-delay: 350ms">
+        <div
+          class="animate-fade-up mt-3 flex flex-wrap items-center justify-center gap-3 md:justify-start"
+          style="animation-delay: 350ms"
+        >
           <span class="capsule">{{ user.role === 'ADMIN' ? 'Administrator' : 'Customer' }}</span>
           <span class="text-body text-ash">Member since {{ user.createdAt | date: 'MMMM y' }}</span>
         </div>
@@ -19,8 +28,13 @@
 
   <section class="px-4 pb-20 md:pb-28">
     <div class="mx-auto grid max-w-6xl items-start gap-6 lg:grid-cols-2">
-
-      <form [formGroup]="profileForm" (ngSubmit)="saveProfile()" class="animate-fade-up flex flex-col gap-5 rounded-card border border-steel bg-carbon p-6 md:p-8" style="animation-delay: 450ms" novalidate>
+      <form
+        [formGroup]="profileForm"
+        (ngSubmit)="saveProfile()"
+        class="animate-fade-up flex flex-col gap-5 rounded-card border border-steel bg-carbon p-6 md:p-8"
+        style="animation-delay: 450ms"
+        novalidate
+      >
         <div>
           <h2 class="font-display text-product-label font-semibold">Personal information</h2>
           <p class="mt-1 text-body text-ash">This is how we contact you about your rentals.</p>
@@ -28,14 +42,28 @@
         <div class="grid gap-5 sm:grid-cols-2">
           <div>
             <label for="profile-first-name" class="form-label">First name</label>
-            <input id="profile-first-name" type="text" formControlName="firstName" autocomplete="given-name" class="form-field" [attr.aria-invalid]="profileFieldError('firstName') !== null" />
+            <input
+              id="profile-first-name"
+              type="text"
+              formControlName="firstName"
+              autocomplete="given-name"
+              class="form-field"
+              [attr.aria-invalid]="profileFieldError('firstName') !== null"
+            />
             @if (profileFieldError('firstName'); as error) {
               <p class="mt-2 text-utility-nav text-optical-yellow">{{ error }}</p>
             }
           </div>
           <div>
             <label for="profile-last-name" class="form-label">Last name</label>
-            <input id="profile-last-name" type="text" formControlName="lastName" autocomplete="family-name" class="form-field" [attr.aria-invalid]="profileFieldError('lastName') !== null" />
+            <input
+              id="profile-last-name"
+              type="text"
+              formControlName="lastName"
+              autocomplete="family-name"
+              class="form-field"
+              [attr.aria-invalid]="profileFieldError('lastName') !== null"
+            />
             @if (profileFieldError('lastName'); as error) {
               <p class="mt-2 text-utility-nav text-optical-yellow">{{ error }}</p>
             }
@@ -43,24 +71,49 @@
         </div>
         <div>
           <label for="profile-email" class="form-label">Email</label>
-          <input id="profile-email" type="email" formControlName="email" autocomplete="email" class="form-field" [attr.aria-invalid]="profileFieldError('email') !== null" />
+          <input
+            id="profile-email"
+            type="email"
+            formControlName="email"
+            autocomplete="email"
+            class="form-field"
+            [attr.aria-invalid]="profileFieldError('email') !== null"
+          />
           @if (profileFieldError('email'); as error) {
             <p class="mt-2 text-utility-nav text-optical-yellow">{{ error }}</p>
           }
         </div>
 
         @if (profileSaved()) {
-          <div animate.enter="result-enter"><app-alert type="success" message="Profile updated." /></div>
+          <div animate.enter="result-enter">
+            <app-alert type="success" message="Profile updated." />
+          </div>
         }
         @if (profileError(); as message) {
           <div animate.enter="result-enter"><app-alert [message]="message" /></div>
         }
 
-        <button type="submit" class="btn-primary self-start gap-2 px-5 py-2.5 text-body disabled:opacity-60" [disabled]="savingProfile() || profileForm.pristine">
+        <button
+          type="submit"
+          class="btn-primary self-start gap-2 px-5 py-2.5 text-body disabled:opacity-60"
+          [disabled]="savingProfile() || profileForm.pristine"
+        >
           @if (savingProfile()) {
             <svg class="size-4 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-opacity="0.3" stroke-width="2.5" />
-              <path d="M21 12a9 9 0 0 0-9-9" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+              <circle
+                cx="12"
+                cy="12"
+                r="9"
+                stroke="currentColor"
+                stroke-opacity="0.3"
+                stroke-width="2.5"
+              />
+              <path
+                d="M21 12a9 9 0 0 0-9-9"
+                stroke="currentColor"
+                stroke-width="2.5"
+                stroke-linecap="round"
+              />
             </svg>
             Saving…
           } @else {
@@ -69,21 +122,43 @@
         </button>
       </form>
 
-      <form [formGroup]="passwordForm" (ngSubmit)="savePassword()" class="animate-fade-up flex flex-col gap-5 rounded-card border border-steel bg-carbon p-6 md:p-8" style="animation-delay: 550ms" novalidate>
+      <form
+        [formGroup]="passwordForm"
+        (ngSubmit)="savePassword()"
+        class="animate-fade-up flex flex-col gap-5 rounded-card border border-steel bg-carbon p-6 md:p-8"
+        style="animation-delay: 550ms"
+        novalidate
+      >
         <div>
           <h2 class="font-display text-product-label font-semibold">Change password</h2>
-          <p class="mt-1 text-body text-ash">Use a strong password that you do not use anywhere else.</p>
+          <p class="mt-1 text-body text-ash">
+            Use a strong password that you do not use anywhere else.
+          </p>
         </div>
         <div>
           <label for="profile-current-password" class="form-label">Current password</label>
-          <input id="profile-current-password" type="password" formControlName="currentPassword" autocomplete="current-password" class="form-field" [attr.aria-invalid]="passwordFieldError('currentPassword') !== null" />
+          <input
+            id="profile-current-password"
+            type="password"
+            formControlName="currentPassword"
+            autocomplete="current-password"
+            class="form-field"
+            [attr.aria-invalid]="passwordFieldError('currentPassword') !== null"
+          />
           @if (passwordFieldError('currentPassword'); as error) {
             <p class="mt-2 text-utility-nav text-optical-yellow">{{ error }}</p>
           }
         </div>
         <div>
           <label for="profile-new-password" class="form-label">New password</label>
-          <input id="profile-new-password" type="password" formControlName="newPassword" autocomplete="new-password" class="form-field" [attr.aria-invalid]="passwordFieldError('newPassword') !== null" />
+          <input
+            id="profile-new-password"
+            type="password"
+            formControlName="newPassword"
+            autocomplete="new-password"
+            class="form-field"
+            [attr.aria-invalid]="passwordFieldError('newPassword') !== null"
+          />
           <app-password-strength [password]="passwordForm.controls.newPassword.value" />
           @if (passwordFieldError('newPassword'); as error) {
             <p class="mt-1 text-utility-nav text-optical-yellow">{{ error }}</p>
@@ -91,24 +166,52 @@
         </div>
         <div>
           <label for="profile-confirm-password" class="form-label">Confirm new password</label>
-          <input id="profile-confirm-password" type="password" formControlName="confirmPassword" autocomplete="new-password" class="form-field" [attr.aria-invalid]="passwordFieldError('confirmPassword') !== null" />
+          <input
+            id="profile-confirm-password"
+            type="password"
+            formControlName="confirmPassword"
+            autocomplete="new-password"
+            class="form-field"
+            [attr.aria-invalid]="passwordFieldError('confirmPassword') !== null"
+          />
           @if (passwordFieldError('confirmPassword'); as error) {
             <p class="mt-2 text-utility-nav text-optical-yellow">{{ error }}</p>
           }
         </div>
 
         @if (passwordSaved()) {
-          <div animate.enter="result-enter"><app-alert type="success" message="Password changed. Use it the next time you sign in." /></div>
+          <div animate.enter="result-enter">
+            <app-alert
+              type="success"
+              message="Password changed. Use it the next time you sign in."
+            />
+          </div>
         }
         @if (passwordError(); as message) {
           <div animate.enter="result-enter"><app-alert [message]="message" /></div>
         }
 
-        <button type="submit" class="btn-primary self-start gap-2 px-5 py-2.5 text-body disabled:opacity-60" [disabled]="savingPassword()">
+        <button
+          type="submit"
+          class="btn-primary self-start gap-2 px-5 py-2.5 text-body disabled:opacity-60"
+          [disabled]="savingPassword()"
+        >
           @if (savingPassword()) {
             <svg class="size-4 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-opacity="0.3" stroke-width="2.5" />
-              <path d="M21 12a9 9 0 0 0-9-9" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+              <circle
+                cx="12"
+                cy="12"
+                r="9"
+                stroke="currentColor"
+                stroke-opacity="0.3"
+                stroke-width="2.5"
+              />
+              <path
+                d="M21 12a9 9 0 0 0-9-9"
+                stroke="currentColor"
+                stroke-width="2.5"
+                stroke-linecap="round"
+              />
             </svg>
             Updating…
           } @else {
@@ -117,20 +220,42 @@
         </button>
       </form>
 
-      <div class="animate-fade-up grid gap-4 sm:grid-cols-2 lg:col-span-2" style="animation-delay: 650ms">
-        <a appTilt [tiltMax]="3" routerLink="/account/rentals" class="group flex items-center justify-between rounded-card border border-steel bg-carbon p-6 transition duration-500 ease-out hover:border-slate">
+      <div
+        class="animate-fade-up grid gap-4 sm:grid-cols-2 lg:col-span-2"
+        style="animation-delay: 650ms"
+      >
+        <a
+          appTilt
+          [tiltMax]="3"
+          routerLink="/account/rentals"
+          class="group flex items-center justify-between rounded-card border border-steel bg-carbon p-6 transition duration-500 ease-out hover:border-slate"
+        >
           <div>
             <p class="font-display text-product-label font-semibold">My rentals</p>
             <p class="mt-1 text-body text-ash">Follow and cancel your bookings.</p>
           </div>
-          <span class="text-section-nav text-ash transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true">›</span>
+          <span
+            class="text-section-nav text-ash transition-transform duration-300 group-hover:translate-x-1"
+            aria-hidden="true"
+            >›</span
+          >
         </a>
-        <button appTilt [tiltMax]="3" type="button" (click)="signOut()" class="group flex items-center justify-between rounded-card border border-steel bg-carbon p-6 text-left transition duration-500 ease-out hover:border-slate">
+        <button
+          appTilt
+          [tiltMax]="3"
+          type="button"
+          (click)="signOut()"
+          class="group flex items-center justify-between rounded-card border border-steel bg-carbon p-6 text-left transition duration-500 ease-out hover:border-slate"
+        >
           <div>
             <p class="font-display text-product-label font-semibold">Sign out</p>
             <p class="mt-1 text-body text-ash">End your session on this device.</p>
           </div>
-          <span class="text-section-nav text-ash transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true">›</span>
+          <span
+            class="text-section-nav text-ash transition-transform duration-300 group-hover:translate-x-1"
+            aria-hidden="true"
+            >›</span
+          >
         </button>
       </div>
     </div>

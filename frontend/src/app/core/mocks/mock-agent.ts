@@ -1,6 +1,16 @@
 import {
-  AgentCard, AgentConversation, AgentError, AgentEvent, AgentMessage, AgentPrecision, AgentStep, AgentWorkloadMode,
-  ConfigItem, ProfileFact, Verdict, WorkloadProfile,
+  AgentCard,
+  AgentConversation,
+  AgentError,
+  AgentEvent,
+  AgentMessage,
+  AgentPrecision,
+  AgentStep,
+  AgentWorkloadMode,
+  ConfigItem,
+  ProfileFact,
+  Verdict,
+  WorkloadProfile,
 } from '../models/agent';
 import { Gpu } from '../models/gpu';
 import { allMockGpus } from './mock-gpus';
@@ -48,9 +58,16 @@ export function createMockConversation(userId: number): AgentConversation {
   const now = new Date().toISOString();
   const conversation: AgentConversation = {
     id: Math.max(0, ...records.map((record) => record.conversation.id)) + 1,
-    title: 'New conversation', repoUrl: null, messageCount: 0, createdAt: now, updatedAt: now,
+    title: 'New conversation',
+    repoUrl: null,
+    messageCount: 0,
+    createdAt: now,
+    updatedAt: now,
   };
-  saveMockConversations([...records, { userId, conversation, messages: [], profile: {}, facts: [] }]);
+  saveMockConversations([
+    ...records,
+    { userId, conversation, messages: [], profile: {}, facts: [] },
+  ]);
   return conversation;
 }
 
@@ -59,7 +76,9 @@ export function mockMessagesUsedToday(userId: number): number {
   return allMockConversations()
     .filter((record) => record.userId === userId)
     .flatMap((record) => record.messages)
-    .filter((message) => message.role === 'USER' && new Date(message.createdAt).toDateString() === today).length;
+    .filter(
+      (message) => message.role === 'USER' && new Date(message.createdAt).toDateString() === today,
+    ).length;
 }
 
 const REPO_PATTERN = /(?:https?:\/\/)?(?:www\.)?github\.com\/([\w.-]+)\/([\w.-]+)/i;
@@ -121,8 +140,18 @@ function analyzeMockRepo(record: MockConversationRecord, owner: string, repo: st
   record.facts = facts;
 }
 
-const BYTES_PER_PARAM: Record<AgentPrecision, number> = { FP32: 4, BF16: 2, FP16: 2, FP8: 1, INT8: 1, INT4: 0.5 };
-const GPU_EXTRAS: Record<number, { bandwidthGbs: number; fastInterconnect: boolean; ecc: boolean }> = {
+const BYTES_PER_PARAM: Record<AgentPrecision, number> = {
+  FP32: 4,
+  BF16: 2,
+  FP16: 2,
+  FP8: 1,
+  INT8: 1,
+  INT4: 0.5,
+};
+const GPU_EXTRAS: Record<
+  number,
+  { bandwidthGbs: number; fastInterconnect: boolean; ecc: boolean }
+> = {
   1: { bandwidthGbs: 3350, fastInterconnect: true, ecc: true },
   2: { bandwidthGbs: 2039, fastInterconnect: true, ecc: true },
   3: { bandwidthGbs: 1555, fastInterconnect: false, ecc: true },
@@ -143,15 +172,23 @@ function memoryNeededGb(profile: WorkloadProfile): number {
   const params = profile.paramsBillions!;
   const bytes = BYTES_PER_PARAM[profile.precision!];
   switch (profile.mode) {
-    case 'INFERENCE': return params * bytes * 1.2;
-    case 'QLORA': return params * 0.8;
-    case 'LORA': return params * bytes * 1.3;
-    default: return params * bytes * 8 * 1.2;
+    case 'INFERENCE':
+      return params * bytes * 1.2;
+    case 'QLORA':
+      return params * 0.8;
+    case 'LORA':
+      return params * bytes * 1.3;
+    default:
+      return params * bytes * 8 * 1.2;
   }
 }
 
 function simulate(profile: WorkloadProfile, gpu: Gpu, gpuCount: number): MockSimulation {
-  const extras = GPU_EXTRAS[gpu.id] ?? { bandwidthGbs: gpu.vramGb * 25, fastInterconnect: false, ecc: true };
+  const extras = GPU_EXTRAS[gpu.id] ?? {
+    bandwidthGbs: gpu.vramGb * 25,
+    fastInterconnect: false,
+    ecc: true,
+  };
   const training = TRAINING_MODES.includes(profile.mode!);
   const adapters = profile.mode === 'LORA' || profile.mode === 'QLORA';
   const memoryRequiredGb = round(memoryNeededGb(profile));
@@ -164,7 +201,10 @@ function simulate(profile: WorkloadProfile, gpu: Gpu, gpuCount: number): MockSim
   } else if (memoryPerGpuGb > gpu.vramGb * 0.95) {
     excluded = `not enough memory (${memoryPerGpuGb} GB needed per GPU, ${gpu.vramGb} GB available)`;
   } else if (gpuCount > gpu.availableUnits) {
-    excluded = gpu.availableUnits === 0 ? 'no unit free right now' : `only ${gpu.availableUnits} unit(s) free right now`;
+    excluded =
+      gpu.availableUnits === 0
+        ? 'no unit free right now'
+        : `only ${gpu.availableUnits} unit(s) free right now`;
   }
 
   let hours: number | null = null;
@@ -173,34 +213,66 @@ function simulate(profile: WorkloadProfile, gpu: Gpu, gpuCount: number): MockSim
     const flopsPerParamToken = adapters ? 4 : 6;
     const efficiency = profile.mode === 'QLORA' ? 0.25 : 0.4;
     const scaling = gpuCount === 1 ? 1 : extras.fastInterconnect ? 0.9 : 0.7;
-    const totalFlops = profile.trainingTokens! * (profile.epochs ?? 1) * profile.paramsBillions! * 1e9 * flopsPerParamToken;
+    const totalFlops =
+      profile.trainingTokens! *
+      (profile.epochs ?? 1) *
+      profile.paramsBillions! *
+      1e9 *
+      flopsPerParamToken;
     hours = round(totalFlops / (gpu.fp16Tflops * 1e12 * efficiency * gpuCount * scaling) / 3600, 2);
   } else {
     const weightsGb = profile.paramsBillions! * BYTES_PER_PARAM[profile.precision!];
     tokensPerSecond = Math.max(1, Math.round((extras.bandwidthGbs * 0.6) / weightsGb));
   }
 
-  const reasons = [`Fits in memory: ${memoryPerGpuGb} GB needed per GPU, ${gpu.vramGb} GB available.`];
-  if (gpuCount > 1 && extras.fastInterconnect) reasons.push('GPUs are linked by a fast interconnect (NVLink / Infinity Fabric).');
-  if (profile.precision === 'FP8' && ['Hopper', 'Ada Lovelace', 'CDNA 3'].includes(gpu.architecture)) reasons.push('Native FP8 support on this architecture.');
+  const reasons = [
+    `Fits in memory: ${memoryPerGpuGb} GB needed per GPU, ${gpu.vramGb} GB available.`,
+  ];
+  if (gpuCount > 1 && extras.fastInterconnect)
+    reasons.push('GPUs are linked by a fast interconnect (NVLink / Infinity Fabric).');
+  if (
+    profile.precision === 'FP8' &&
+    ['Hopper', 'Ada Lovelace', 'CDNA 3'].includes(gpu.architecture)
+  )
+    reasons.push('Native FP8 support on this architecture.');
   const warnings: string[] = [];
-  if (memoryPerGpuGb > gpu.vramGb * 0.85) warnings.push('Memory is tight: little room for a larger batch or context.');
-  if (gpuCount > 1 && !extras.fastInterconnect) warnings.push('GPUs communicate over PCIe: multi-GPU scaling is lower.');
+  if (memoryPerGpuGb > gpu.vramGb * 0.85)
+    warnings.push('Memory is tight: little room for a larger batch or context.');
+  if (gpuCount > 1 && !extras.fastInterconnect)
+    warnings.push('GPUs communicate over PCIe: multi-GPU scaling is lower.');
   if (!extras.ecc) warnings.push('Consumer GPU without ECC memory.');
 
   return {
-    gpu, gpuCount, excluded,
+    gpu,
+    gpuCount,
+    excluded,
     item: {
-      rank: 0, verdict: 'ALTERNATIVE',
-      gpu: { id: gpu.id, name: gpu.name, manufacturer: gpu.manufacturer, architecture: gpu.architecture, vramGb: gpu.vramGb, pricePerHour: gpu.pricePerHour },
-      gpuCount, pricePerHour, availableUnits: gpu.availableUnits,
+      rank: 0,
+      verdict: 'ALTERNATIVE',
+      gpu: {
+        id: gpu.id,
+        name: gpu.name,
+        manufacturer: gpu.manufacturer,
+        architecture: gpu.architecture,
+        vramGb: gpu.vramGb,
+        pricePerHour: gpu.pricePerHour,
+      },
+      gpuCount,
+      pricePerHour,
+      availableUnits: gpu.availableUnits,
       estimate: {
-        memoryRequiredGb, memoryPerGpuGb, hours,
+        memoryRequiredGb,
+        memoryPerGpuGb,
+        hours,
         totalCost: hours === null ? null : round(hours * pricePerHour, 2),
         tokensPerSecond,
-        costPerMillionTokens: tokensPerSecond === null ? null : round((pricePerHour / (tokensPerSecond * 3600)) * 1e6, 2),
+        costPerMillionTokens:
+          tokensPerSecond === null
+            ? null
+            : round((pricePerHour / (tokensPerSecond * 3600)) * 1e6, 2),
       },
-      reasons, warnings,
+      reasons,
+      warnings,
       rentPath: `/account/rentals/new?gpuId=${gpu.id}&quantity=${gpuCount}`,
     },
   };
@@ -209,20 +281,31 @@ function simulate(profile: WorkloadProfile, gpu: Gpu, gpuCount: number): MockSim
 function rankConfigs(profile: WorkloadProfile, objective: 'balance' | 'cost' | 'speed') {
   const sims = allMockGpus()
     .filter((gpu) => gpu.isActive)
-    .flatMap((gpu) => [1, 2, 4, 8].filter((count) => count <= gpu.totalUnits).map((count) => simulate(profile, gpu, count)));
+    .flatMap((gpu) =>
+      [1, 2, 4, 8]
+        .filter((count) => count <= gpu.totalUnits)
+        .map((count) => simulate(profile, gpu, count)),
+    );
   const valid = sims.filter((sim) => sim.excluded === null);
-  const cost = (sim: MockSimulation) => sim.item.estimate.totalCost ?? sim.item.estimate.costPerMillionTokens!;
-  const slowness = (sim: MockSimulation) => sim.item.estimate.hours ?? 1 / sim.item.estimate.tokensPerSecond!;
+  const cost = (sim: MockSimulation) =>
+    sim.item.estimate.totalCost ?? sim.item.estimate.costPerMillionTokens!;
+  const slowness = (sim: MockSimulation) =>
+    sim.item.estimate.hours ?? 1 / sim.item.estimate.tokensPerSecond!;
   const minCost = Math.min(...valid.map(cost));
   const minSlowness = Math.min(...valid.map(slowness));
   const balance = (sim: MockSimulation) => cost(sim) / minCost + slowness(sim) / minSlowness;
-  const by = (score: (sim: MockSimulation) => number) => [...valid].sort((a, b) => score(a) - score(b) || a.gpuCount - b.gpuCount);
+  const by = (score: (sim: MockSimulation) => number) =>
+    [...valid].sort((a, b) => score(a) - score(b) || a.gpuCount - b.gpuCount);
 
   const picked: [Verdict, MockSimulation][] = [];
   const add = (verdict: Verdict, sim: MockSimulation | undefined) => {
-    if (sim && picked.length < 3 && !picked.some(([, other]) => other === sim)) picked.push([verdict, sim]);
+    if (sim && picked.length < 3 && !picked.some(([, other]) => other === sim))
+      picked.push([verdict, sim]);
   };
-  add('BEST_CHOICE', by(objective === 'cost' ? cost : objective === 'speed' ? slowness : balance)[0]);
+  add(
+    'BEST_CHOICE',
+    by(objective === 'cost' ? cost : objective === 'speed' ? slowness : balance)[0],
+  );
   add('CHEAPEST', by(cost)[0]);
   add('FASTEST', by(slowness)[0]);
   for (const sim of by(balance)) {
@@ -231,13 +314,21 @@ function rankConfigs(profile: WorkloadProfile, objective: 'balance' | 'cost' | '
   const items = picked.map(([verdict, sim], index) => ({ ...sim.item, rank: index + 1, verdict }));
 
   const excluded = allMockGpus()
-    .filter((gpu) => gpu.isActive && sims.filter((sim) => sim.gpu.id === gpu.id).every((sim) => sim.excluded !== null))
+    .filter(
+      (gpu) =>
+        gpu.isActive &&
+        sims.filter((sim) => sim.gpu.id === gpu.id).every((sim) => sim.excluded !== null),
+    )
     .map((gpu) => `${gpu.name}: ${sims.filter((sim) => sim.gpu.id === gpu.id).at(-1)!.excluded}`);
   return { simulated: sims.length, items, excluded };
 }
 
 const MODE_LABELS: Record<AgentWorkloadMode, string> = {
-  PRETRAINING: 'pre-training', FULL_FINETUNE: 'full fine-tuning', LORA: 'LoRA fine-tuning', QLORA: 'QLoRA fine-tuning', INFERENCE: 'inference',
+  PRETRAINING: 'pre-training',
+  FULL_FINETUNE: 'full fine-tuning',
+  LORA: 'LoRA fine-tuning',
+  QLORA: 'QLoRA fine-tuning',
+  INFERENCE: 'inference',
 };
 
 function formatHours(hours: number): string {
@@ -270,11 +361,27 @@ export function buildMockReply(record: MockConversationRecord, content: string):
   const size = detectSize(text);
   const tokens = detectTokens(text);
   const precision = detectPrecision(text);
-  if (mode) { profile.mode = mode; told.push('mode'); }
-  if (size) { profile.paramsBillions = size; told.push('paramsBillions'); }
-  if (tokens) { profile.trainingTokens = tokens; told.push('trainingTokens'); }
-  if (precision) { profile.precision = precision; told.push('precision'); }
-  if (told.length > 0) steps.push({ tool: 'update_workload_profile', label: `Updated the workload profile (${told.join(', ')})` });
+  if (mode) {
+    profile.mode = mode;
+    told.push('mode');
+  }
+  if (size) {
+    profile.paramsBillions = size;
+    told.push('paramsBillions');
+  }
+  if (tokens) {
+    profile.trainingTokens = tokens;
+    told.push('trainingTokens');
+  }
+  if (precision) {
+    profile.precision = precision;
+    told.push('precision');
+  }
+  if (told.length > 0)
+    steps.push({
+      tool: 'update_workload_profile',
+      label: `Updated the workload profile (${told.join(', ')})`,
+    });
 
   const assumptions: string[] = [];
   if (profile.mode && !profile.precision) {
@@ -282,43 +389,99 @@ export function buildMockReply(record: MockConversationRecord, content: string):
     assumptions.push(`I assumed ${profile.precision} precision.`);
   }
 
-  const missing = (['mode', 'paramsBillions', 'precision'] as const).filter((field) => profile[field] === undefined) as string[];
-  if (profile.mode && TRAINING_MODES.includes(profile.mode) && profile.trainingTokens === undefined) missing.push('trainingTokens');
+  const missing = (['mode', 'paramsBillions', 'precision'] as const).filter(
+    (field) => profile[field] === undefined,
+  ) as string[];
+  if (profile.mode && TRAINING_MODES.includes(profile.mode) && profile.trainingTokens === undefined)
+    missing.push('trainingTokens');
   const cards: AgentCard[] = [];
   if (Object.keys(profile).length > 0) {
-    cards.push({ type: 'profile', repoUrl: record.conversation.repoUrl, profile: { ...profile }, facts: [...record.facts], missing: [...missing] });
+    cards.push({
+      type: 'profile',
+      repoUrl: record.conversation.repoUrl,
+      profile: { ...profile },
+      facts: [...record.facts],
+      missing: [...missing],
+    });
   }
 
   if (missing.includes('mode')) {
-    cards.push({ type: 'replies', options: ['Fine-tune with QLoRA', 'Full fine-tuning', 'Serve it (inference)'] });
-    return { steps, cards, text: 'I can recommend a GPU configuration for your model.\n\n**What do you want to do with it?** You can also paste the link of its GitHub repository and I will read it.' };
+    cards.push({
+      type: 'replies',
+      options: ['Fine-tune with QLoRA', 'Full fine-tuning', 'Serve it (inference)'],
+    });
+    return {
+      steps,
+      cards,
+      text: 'I can recommend a GPU configuration for your model.\n\n**What do you want to do with it?** You can also paste the link of its GitHub repository and I will read it.',
+    };
   }
   if (missing.includes('paramsBillions')) {
     cards.push({ type: 'replies', options: ['7B model', '13B model', '70B model'] });
-    return { steps, cards, text: `Got it: **${MODE_LABELS[profile.mode!]}**.\n\n**How big is the model?** Give its number of parameters, for example "8B".` };
+    return {
+      steps,
+      cards,
+      text: `Got it: **${MODE_LABELS[profile.mode!]}**.\n\n**How big is the model?** Give its number of parameters, for example "8B".`,
+    };
   }
   if (missing.includes('trainingTokens')) {
     cards.push({ type: 'replies', options: ['50M tokens', '300M tokens', '1B tokens'] });
-    const source = record.conversation.repoUrl ? 'The repository does not say how much data you train on.' : 'One thing is missing to estimate the training time.';
-    return { steps, cards, text: `${source}\n\n**How many tokens does your dataset contain?** One token is about three quarters of a word.` };
+    const source = record.conversation.repoUrl
+      ? 'The repository does not say how much data you train on.'
+      : 'One thing is missing to estimate the training time.';
+    return {
+      steps,
+      cards,
+      text: `${source}\n\n**How many tokens does your dataset contain?** One token is about three quarters of a word.`,
+    };
   }
 
-  const objective = /cheap|lowest|budget/i.test(text) ? 'cost' : /fast|quick|speed/i.test(text) ? 'speed' : 'balance';
+  const objective = /cheap|lowest|budget/i.test(text)
+    ? 'cost'
+    : /fast|quick|speed/i.test(text)
+      ? 'speed'
+      : 'balance';
   const ranking = rankConfigs(profile, objective);
   steps.push({ tool: 'rank_configs', label: `Simulated ${ranking.simulated} GPU configurations` });
   const summary = `a **${profile.paramsBillions}B** model, **${MODE_LABELS[profile.mode!]}**, in **${profile.precision}**`;
-  const subject = record.conversation.repoUrl ? `Your repository **${record.conversation.repoUrl.replace('https://github.com/', '')}** runs ${summary}.` : `Your workload: ${summary}.`;
+  const subject = record.conversation.repoUrl
+    ? `Your repository **${record.conversation.repoUrl.replace('https://github.com/', '')}** runs ${summary}.`
+    : `Your workload: ${summary}.`;
 
   if (ranking.items.length === 0) {
-    cards.push({ type: 'replies', options: ['What if I use QLoRA?', 'What if I use INT4?', 'Serve it (inference)'] });
-    return { steps, cards, text: `${subject}\n\n**No configuration in our catalog fits this workload**, even with 8 GPUs. It needs about ${round(memoryNeededGb(profile))} GB of memory. A lighter method or a lower precision would fit.` };
+    cards.push({
+      type: 'replies',
+      options: ['What if I use QLoRA?', 'What if I use INT4?', 'Serve it (inference)'],
+    });
+    return {
+      steps,
+      cards,
+      text: `${subject}\n\n**No configuration in our catalog fits this workload**, even with 8 GPUs. It needs about ${round(memoryNeededGb(profile))} GB of memory. A lighter method or a lower precision would fit.`,
+    };
   }
 
   cards.push({ type: 'configs', items: ranking.items });
-  cards.push({ type: 'replies', options: ['Cheapest option', 'Fastest option', profile.precision === 'FP8' ? 'What if I use BF16?' : 'What if I use FP8?'] });
+  cards.push({
+    type: 'replies',
+    options: [
+      'Cheapest option',
+      'Fastest option',
+      profile.precision === 'FP8' ? 'What if I use BF16?' : 'What if I use FP8?',
+    ],
+  });
   const best = ranking.items[0];
-  const verdictLabels: Record<Verdict, string> = { BEST_CHOICE: 'Best choice', CHEAPEST: 'Cheapest', FASTEST: 'Fastest', ALTERNATIVE: 'Alternative' };
-  const others = ranking.items.slice(1).map((item) => `- **${verdictLabels[item.verdict]}**: ${item.gpuCount} × ${item.gpu.name}, ${describe(item)}.`);
+  const verdictLabels: Record<Verdict, string> = {
+    BEST_CHOICE: 'Best choice',
+    CHEAPEST: 'Cheapest',
+    FASTEST: 'Fastest',
+    ALTERNATIVE: 'Alternative',
+  };
+  const others = ranking.items
+    .slice(1)
+    .map(
+      (item) =>
+        `- **${verdictLabels[item.verdict]}**: ${item.gpuCount} × ${item.gpu.name}, ${describe(item)}.`,
+    );
   const paragraphs = [
     subject,
     `Best architecture: **${best.gpu.architecture}**. **${best.gpuCount} × ${best.gpu.name}** would take ${describe(best)}.`,
@@ -341,20 +504,39 @@ export async function replayMockAgent(
   signal?: AbortSignal,
 ): Promise<void> {
   const records = allMockConversations();
-  const record = records.find((item) => item.conversation.id === conversationId && item.userId === userId);
+  const record = records.find(
+    (item) => item.conversation.id === conversationId && item.userId === userId,
+  );
   const text = content.trim();
   if (!record) {
-    throw { code: 'CONVERSATION_NOT_FOUND', message: 'Conversation not found.' } satisfies AgentError;
+    throw {
+      code: 'CONVERSATION_NOT_FOUND',
+      message: 'Conversation not found.',
+    } satisfies AgentError;
   }
   if (text.length < 1 || text.length > 4000) {
-    throw { code: 'VALIDATION_ERROR', message: 'Your message must be between 1 and 4000 characters.' } satisfies AgentError;
+    throw {
+      code: 'VALIDATION_ERROR',
+      message: 'Your message must be between 1 and 4000 characters.',
+    } satisfies AgentError;
   }
   if (mockMessagesUsedToday(userId) >= MOCK_AGENT_DAILY_LIMIT) {
-    throw { code: 'AGENT_DAILY_LIMIT', message: `You have reached the limit of ${MOCK_AGENT_DAILY_LIMIT} messages per day. Try again tomorrow.` } satisfies AgentError;
+    throw {
+      code: 'AGENT_DAILY_LIMIT',
+      message: `You have reached the limit of ${MOCK_AGENT_DAILY_LIMIT} messages per day. Try again tomorrow.`,
+    } satisfies AgentError;
   }
 
-  const nextId = () => Math.max(0, ...records.flatMap((item) => item.messages.map((message) => message.id))) + 1;
-  const userMessage: AgentMessage = { id: nextId(), role: 'USER', content: text, steps: [], cards: [], createdAt: new Date().toISOString() };
+  const nextId = () =>
+    Math.max(0, ...records.flatMap((item) => item.messages.map((message) => message.id))) + 1;
+  const userMessage: AgentMessage = {
+    id: nextId(),
+    role: 'USER',
+    content: text,
+    steps: [],
+    cards: [],
+    createdAt: new Date().toISOString(),
+  };
   record.messages.push(userMessage);
   if (record.conversation.title === 'New conversation') {
     record.conversation.title = text.length > 60 ? `${text.slice(0, 57)}...` : text;
@@ -377,7 +559,14 @@ export async function replayMockAgent(
   }
   onEvent({ event: 'text', data: { delta: reply.text } });
 
-  const message: AgentMessage = { id: nextId(), role: 'ASSISTANT', content: reply.text, steps: reply.steps, cards: reply.cards, createdAt: new Date().toISOString() };
+  const message: AgentMessage = {
+    id: nextId(),
+    role: 'ASSISTANT',
+    content: reply.text,
+    steps: reply.steps,
+    cards: reply.cards,
+    createdAt: new Date().toISOString(),
+  };
   record.messages.push(message);
   record.conversation.messageCount = record.messages.length;
   record.conversation.updatedAt = message.createdAt;

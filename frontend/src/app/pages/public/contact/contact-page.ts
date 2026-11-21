@@ -30,19 +30,44 @@ export class ContactPage {
   ];
 
   protected readonly faq = [
-    { question: 'How quickly can I start using a GPU?', answer: 'Your GPU is ready at the start time you choose when booking, usually within a minute.' },
-    { question: 'Can I cancel a rental?', answer: 'Yes. You can cancel for free from your account at any time before the rental starts.' },
-    { question: 'Do you offer volume discounts?', answer: 'For rentals of 8 GPUs or more, or longer than 30 days, contact our sales team for a custom offer.' },
+    {
+      question: 'How quickly can I start using a GPU?',
+      answer:
+        'Your GPU is ready at the start time you choose when booking, usually within a minute.',
+    },
+    {
+      question: 'Can I cancel a rental?',
+      answer:
+        'Yes. You can cancel for free from your account at any time before the rental starts.',
+    },
+    {
+      question: 'Do you offer volume discounts?',
+      answer:
+        'For rentals of 8 GPUs or more, or longer than 30 days, contact our sales team for a custom offer.',
+    },
   ];
   protected readonly openFaq = signal<number | null>(0);
 
   protected readonly form = new FormGroup({
-    name: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.maxLength(100)] }),
-    email: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.email] }),
-    subject: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.maxLength(150)] }),
+    name: new FormControl('', {
+      nonNullable: true,
+      validators: [Validators.required, Validators.maxLength(100)],
+    }),
+    email: new FormControl('', {
+      nonNullable: true,
+      validators: [Validators.required, Validators.email],
+    }),
+    subject: new FormControl('', {
+      nonNullable: true,
+      validators: [Validators.required, Validators.maxLength(150)],
+    }),
     message: new FormControl('', {
       nonNullable: true,
-      validators: [Validators.required, Validators.minLength(10), Validators.maxLength(this.maxMessageLength)],
+      validators: [
+        Validators.required,
+        Validators.minLength(10),
+        Validators.maxLength(this.maxMessageLength),
+      ],
     }),
   });
 
@@ -64,10 +89,14 @@ export class ContactPage {
     const control = this.form.controls[field];
     if (control.touched && control.invalid) {
       switch (field) {
-        case 'name': return 'Enter your name (100 characters max).';
-        case 'email': return 'Enter a valid email address.';
-        case 'subject': return 'Enter a subject (150 characters max).';
-        case 'message': return 'Your message must be between 10 and 2000 characters.';
+        case 'name':
+          return 'Enter your name (100 characters max).';
+        case 'email':
+          return 'Enter a valid email address.';
+        case 'subject':
+          return 'Enter a subject (150 characters max).';
+        case 'message':
+          return 'Your message must be between 10 and 2000 characters.';
       }
     }
     return this.serverErrors()[field] ?? null;
@@ -84,7 +113,12 @@ export class ContactPage {
     this.serverErrors.set({});
 
     this.contactService
-      .send({ name: value.name.trim(), email: value.email.trim(), subject: value.subject.trim(), message: value.message.trim() })
+      .send({
+        name: value.name.trim(),
+        email: value.email.trim(),
+        subject: value.subject.trim(),
+        message: value.message.trim(),
+      })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (response) => {

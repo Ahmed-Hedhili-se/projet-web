@@ -31,7 +31,11 @@ export function latLonToUv(lat: number, lon: number): { u: number; v: number } {
   return { u: (lon + 180) / 360, v: (lat + 90) / 180 };
 }
 
-export function uvToSphere(u: number, v: number, radius: number): { x: number; y: number; z: number } {
+export function uvToSphere(
+  u: number,
+  v: number,
+  radius: number,
+): { x: number; y: number; z: number } {
   const phi = u * Math.PI * 2;
   const theta = (1 - v) * Math.PI;
   return {

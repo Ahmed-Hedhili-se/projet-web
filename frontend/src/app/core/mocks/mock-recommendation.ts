@@ -1,19 +1,38 @@
 import { Gpu } from '../models/gpu';
-import { GpuConfiguration, ModelType, RecommendationRequest, RecommendationResponse } from '../models/recommendation';
+import {
+  GpuConfiguration,
+  ModelType,
+  RecommendationRequest,
+  RecommendationResponse,
+} from '../models/recommendation';
 
 const TYPE_FACTOR: Record<ModelType, number> = {
-  LLM: 1.0, VISION: 1.1, DIFFUSION: 1.3, AUDIO: 1.0, OTHER: 1.0,
+  LLM: 1.0,
+  VISION: 1.1,
+  DIFFUSION: 1.3,
+  AUDIO: 1.0,
+  OTHER: 1.0,
 };
 
 const TYPE_LABEL: Record<ModelType, string> = {
-  LLM: 'LLM', VISION: 'vision model', DIFFUSION: 'diffusion model', AUDIO: 'audio model', OTHER: 'model',
+  LLM: 'LLM',
+  VISION: 'vision model',
+  DIFFUSION: 'diffusion model',
+  AUDIO: 'audio model',
+  OTHER: 'model',
 };
 
 const MAX_GPUS = 8;
 
-export function mockRecommend(request: RecommendationRequest, catalog: Gpu[]): RecommendationResponse {
+export function mockRecommend(
+  request: RecommendationRequest,
+  catalog: Gpu[],
+): RecommendationResponse {
   const bytesPerParam = request.mode === 'INFERENCE' ? 2 : 16;
-  const requiredVramGb = round(request.parametersBillions * bytesPerParam * 1.2 * TYPE_FACTOR[request.modelType], 1);
+  const requiredVramGb = round(
+    request.parametersBillions * bytesPerParam * 1.2 * TYPE_FACTOR[request.modelType],
+    1,
+  );
 
   const configurations: GpuConfiguration[] = catalog
     .filter((gpu) => gpu.isActive)
@@ -21,7 +40,13 @@ export function mockRecommend(request: RecommendationRequest, catalog: Gpu[]): R
       const gpuCount = Math.max(1, Math.ceil(requiredVramGb / gpu.vramGb));
       const totalPricePerHour = round(gpu.pricePerHour * gpuCount, 2);
       return {
-        gpu: { id: gpu.id, name: gpu.name, manufacturer: gpu.manufacturer, vramGb: gpu.vramGb, pricePerHour: gpu.pricePerHour },
+        gpu: {
+          id: gpu.id,
+          name: gpu.name,
+          manufacturer: gpu.manufacturer,
+          vramGb: gpu.vramGb,
+          pricePerHour: gpu.pricePerHour,
+        },
         gpuCount,
         totalVramGb: gpu.vramGb * gpuCount,
         totalPricePerHour,
@@ -30,10 +55,14 @@ export function mockRecommend(request: RecommendationRequest, catalog: Gpu[]): R
       };
     })
     .filter((config) => config.gpuCount <= MAX_GPUS)
-    .sort((a, b) => a.totalPricePerHour - b.totalPricePerHour || a.gpuCount - b.gpuCount || b.tflops - a.tflops)
+    .sort(
+      (a, b) =>
+        a.totalPricePerHour - b.totalPricePerHour || a.gpuCount - b.gpuCount || b.tflops - a.tflops,
+    )
     .map(({ tflops, ...config }) => config);
 
-  const recommendation = configurations.find((config) => config.withinBudget) ?? configurations[0] ?? null;
+  const recommendation =
+    configurations.find((config) => config.withinBudget) ?? configurations[0] ?? null;
   const alternatives = configurations.filter((config) => config !== recommendation).slice(0, 2);
 
   return {
@@ -45,7 +74,11 @@ export function mockRecommend(request: RecommendationRequest, catalog: Gpu[]): R
   };
 }
 
-function explain(request: RecommendationRequest, requiredVramGb: number, config: GpuConfiguration | null): string {
+function explain(
+  request: RecommendationRequest,
+  requiredVramGb: number,
+  config: GpuConfiguration | null,
+): string {
   const intro = `A ${request.parametersBillions}B ${TYPE_LABEL[request.modelType]} in ${request.mode.toLowerCase()} needs about ${requiredVramGb} GB of VRAM.`;
   if (!config) {
     return `${intro} No configuration of up to ${MAX_GPUS} GPUs in our catalog can hold it. Contact our team for a custom cluster.`;

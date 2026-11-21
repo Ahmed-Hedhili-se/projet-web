@@ -6,7 +6,13 @@ import { Role, User } from './user';
 export interface AdminStats {
   users: { total: number; admins: number; blocked: number };
   gpus: { total: number; active: number; totalUnits: number };
-  rentals: { total: number; upcoming: number; active: number; completed: number; cancelled: number };
+  rentals: {
+    total: number;
+    upcoming: number;
+    active: number;
+    completed: number;
+    cancelled: number;
+  };
   revenue: { total: number; last30Days: number };
   messages: { total: number; unread: number };
   topGpus: { gpuId: number; name: string; rentalCount: number; revenue: number }[];

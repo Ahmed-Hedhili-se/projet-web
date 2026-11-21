@@ -1,24 +1,56 @@
-<div animate.enter="dialog-backdrop-enter" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm" (click)="cancel()">
+<div class="fixed inset-0 z-[100] flex items-center justify-center p-4">
+  <div
+    animate.enter="dialog-backdrop-enter"
+    class="absolute inset-0 bg-black/70 backdrop-blur-sm"
+    (click)="cancel()"
+    aria-hidden="true"
+  ></div>
   <div
     animate.enter="menu-enter"
     role="alertdialog"
     aria-modal="true"
     aria-labelledby="confirm-dialog-title"
     aria-describedby="confirm-dialog-message"
-    class="w-full max-w-sm rounded-card border border-steel bg-carbon p-6 md:p-8"
-    (click)="$event.stopPropagation()"
+    class="relative w-full max-w-sm rounded-card border border-steel bg-carbon p-6 md:p-8"
   >
-    <h2 id="confirm-dialog-title" class="font-display text-product-label font-semibold">{{ title() }}</h2>
+    <h2 id="confirm-dialog-title" class="font-display text-product-label font-semibold">
+      {{ title() }}
+    </h2>
     @if (message()) {
       <p id="confirm-dialog-message" class="mt-2 text-body text-ash">{{ message() }}</p>
     }
     <div class="mt-6 flex flex-wrap justify-end gap-3">
-      <button #cancelButton type="button" (click)="cancel()" [disabled]="busy()" class="btn-outline">{{ cancelLabel() }}</button>
-      <button type="button" (click)="confirmed.emit()" [disabled]="busy()" class="btn-primary gap-2 disabled:opacity-60">
+      <button
+        #cancelButton
+        type="button"
+        (click)="cancel()"
+        [disabled]="busy()"
+        class="btn-outline"
+      >
+        {{ cancelLabel() }}
+      </button>
+      <button
+        type="button"
+        (click)="confirmed.emit()"
+        [disabled]="busy()"
+        class="btn-primary gap-2 disabled:opacity-60"
+      >
         @if (busy()) {
           <svg class="size-3.5 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-opacity="0.3" stroke-width="2.5" />
-            <path d="M21 12a9 9 0 0 0-9-9" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+            <circle
+              cx="12"
+              cy="12"
+              r="9"
+              stroke="currentColor"
+              stroke-opacity="0.3"
+              stroke-width="2.5"
+            />
+            <path
+              d="M21 12a9 9 0 0 0-9-9"
+              stroke="currentColor"
+              stroke-width="2.5"
+              stroke-linecap="round"
+            />
           </svg>
         }
         {{ confirmLabel() }}

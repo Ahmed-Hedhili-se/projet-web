@@ -6,21 +6,43 @@
     </h1>
   </div>
   <div class="animate-fade-up" style="animation-delay: 300ms">
-    <button type="button" (click)="exportCsv()" class="btn-outline" [disabled]="filtered().length === 0">Export CSV</button>
+    <button
+      type="button"
+      (click)="exportCsv()"
+      class="btn-outline"
+      [disabled]="filtered().length === 0"
+    >
+      Export CSV
+    </button>
   </div>
 </header>
 
-<div class="animate-fade-up mt-8 grid grid-cols-3 gap-3 rounded-card bg-carbon p-3" style="animation-delay: 150ms" aria-label="User figures">
+<div
+  class="animate-fade-up mt-8 grid grid-cols-3 gap-3 rounded-card bg-carbon p-3"
+  style="animation-delay: 150ms"
+  aria-label="User figures"
+>
   @for (item of summary(); track item.label) {
     <div class="rounded-card bg-obsidian px-4 py-4 md:px-6">
-      <p class="font-display text-product-label font-semibold text-aurora tabular-nums md:text-hero-product-name">{{ item.value }}</p>
+      <p
+        class="font-display text-product-label font-semibold text-aurora tabular-nums md:text-hero-product-name"
+      >
+        {{ item.value }}
+      </p>
       <p class="mt-1 text-utility-nav text-ash">{{ item.label }}</p>
     </div>
   }
 </div>
 
 <div class="animate-fade-up mt-6 flex flex-wrap items-center gap-3" style="animation-delay: 200ms">
-  <input type="search" [value]="search()" (input)="search.set($any($event.target).value)" placeholder="Search by name or email" class="form-field max-w-xs" aria-label="Search users" />
+  <input
+    type="search"
+    [value]="search()"
+    (input)="search.set($any($event.target).value)"
+    placeholder="Search by name or email"
+    class="form-field max-w-xs"
+    aria-label="Search users"
+  />
   <div class="flex gap-1 rounded-pill bg-carbon p-1" role="group" aria-label="Filter by role">
     @for (option of roleOptions; track option.value) {
       <button
@@ -28,35 +50,57 @@
         (click)="roleFilter.set(option.value)"
         [attr.aria-pressed]="roleFilter() === option.value"
         class="rounded-pill px-3 py-1 text-utility-nav font-semibold transition-colors duration-300"
-        [class]="roleFilter() === option.value ? 'bg-porcelain text-obsidian' : 'text-ash hover:text-porcelain'"
-      >{{ option.label }}</button>
+        [class]="
+          roleFilter() === option.value
+            ? 'bg-porcelain text-obsidian'
+            : 'text-ash hover:text-porcelain'
+        "
+      >
+        {{ option.label }}
+      </button>
     }
   </div>
-  <div class="flex gap-1 rounded-pill bg-carbon p-1" role="group" aria-label="Filter by account status">
+  <div
+    class="flex gap-1 rounded-pill bg-carbon p-1"
+    role="group"
+    aria-label="Filter by account status"
+  >
     @for (option of accessOptions; track option.value) {
       <button
         type="button"
         (click)="accessFilter.set(option.value)"
         [attr.aria-pressed]="accessFilter() === option.value"
         class="rounded-pill px-3 py-1 text-utility-nav font-semibold transition-colors duration-300"
-        [class]="accessFilter() === option.value ? 'bg-porcelain text-obsidian' : 'text-ash hover:text-porcelain'"
-      >{{ option.label }}</button>
+        [class]="
+          accessFilter() === option.value
+            ? 'bg-porcelain text-obsidian'
+            : 'text-ash hover:text-porcelain'
+        "
+      >
+        {{ option.label }}
+      </button>
     }
   </div>
-  <p class="ml-auto text-body text-ash" aria-live="polite">{{ filtered().length }} of {{ users().length }} users</p>
+  <p class="ml-auto text-body text-ash" aria-live="polite">
+    {{ filtered().length }} of {{ users().length }} users
+  </p>
 </div>
 
 @if (notice(); as message) {
   <div animate.enter="result-enter" class="mt-4">
     <app-alert type="success" [message]="message">
-      <button type="button" (click)="notice.set(null)" class="text-link mt-1 text-utility-nav">Dismiss</button>
+      <button type="button" (click)="notice.set(null)" class="text-link mt-1 text-utility-nav">
+        Dismiss
+      </button>
     </app-alert>
   </div>
 }
 @if (actionError(); as message) {
   <div animate.enter="result-enter" class="mt-4">
     <app-alert [message]="message">
-      <button type="button" (click)="actionError.set(null)" class="text-link mt-1 text-utility-nav">Dismiss</button>
+      <button type="button" (click)="actionError.set(null)" class="text-link mt-1 text-utility-nav">
+        Dismiss
+      </button>
     </app-alert>
   </div>
 }
@@ -88,33 +132,72 @@
       </thead>
       <tbody class="divide-y divide-steel">
         @for (user of filtered(); track user.id) {
-          <tr class="result-enter transition-colors duration-300 hover:bg-obsidian/60" [style.animation-delay.ms]="$index * 40">
+          <tr
+            class="result-enter transition-colors duration-300 hover:bg-obsidian/60"
+            [style.animation-delay.ms]="$index * 40"
+          >
             <td class="px-5 py-4">
               <div class="flex items-center gap-3" [class.opacity-60]="user.isBlocked">
-                <span class="flex size-9 shrink-0 items-center justify-center rounded-full bg-obsidian text-utility-nav font-semibold text-aurora" aria-hidden="true">{{ initials(user) }}</span>
+                <span
+                  class="flex size-9 shrink-0 items-center justify-center rounded-full bg-obsidian text-utility-nav font-semibold text-aurora"
+                  aria-hidden="true"
+                  >{{ initials(user) }}</span
+                >
                 <div class="min-w-0">
                   <p class="font-semibold">
                     {{ user.firstName }} {{ user.lastName }}
-                    @if (user.id === currentUserId()) { <span class="ml-1 rounded-pill border border-steel px-2 py-0.5 text-utility-nav font-semibold text-ash">You</span> }
+                    @if (user.id === currentUserId()) {
+                      <span
+                        class="ml-1 rounded-pill border border-steel px-2 py-0.5 text-utility-nav font-semibold text-ash"
+                        >You</span
+                      >
+                    }
                   </p>
                   <p class="truncate text-utility-nav text-ash">{{ user.email }}</p>
                 </div>
               </div>
             </td>
             <td class="px-3 py-4">
-              <span class="rounded-pill border px-3 py-1 text-utility-nav font-semibold" [class]="user.role === 'ADMIN' ? 'border-porcelain text-porcelain' : 'border-steel text-ash'">{{ user.role === 'ADMIN' ? 'Admin' : 'User' }}</span>
+              <span
+                class="rounded-pill border px-3 py-1 text-utility-nav font-semibold"
+                [class]="
+                  user.role === 'ADMIN'
+                    ? 'border-porcelain text-porcelain'
+                    : 'border-steel text-ash'
+                "
+                >{{ user.role === 'ADMIN' ? 'Admin' : 'User' }}</span
+              >
             </td>
             <td class="px-3 py-4 text-right tabular-nums">
               @if (user.rentalCount > 0) {
-                <a routerLink="/admin/rentals" [queryParams]="{ userId: user.id }" class="text-link" [attr.aria-label]="'View the ' + user.rentalCount + ' rentals of ' + user.firstName + ' ' + user.lastName">{{ user.rentalCount }}</a>
+                <a
+                  routerLink="/admin/rentals"
+                  [queryParams]="{ userId: user.id }"
+                  class="text-link"
+                  [attr.aria-label]="
+                    'View the ' +
+                    user.rentalCount +
+                    ' rentals of ' +
+                    user.firstName +
+                    ' ' +
+                    user.lastName
+                  "
+                  >{{ user.rentalCount }}</a
+                >
               } @else {
                 <span class="text-ash">0</span>
               }
             </td>
             <td class="px-3 py-4 text-ash tabular-nums">{{ user.createdAt | date: 'MMM d, y' }}</td>
             <td class="px-3 py-4">
-              <span class="inline-flex items-center gap-2 text-utility-nav font-semibold" [class.text-optical-yellow]="user.isBlocked">
-                <span class="size-2 rounded-full" [class]="user.isBlocked ? 'bg-optical-yellow' : 'bg-porcelain'"></span>
+              <span
+                class="inline-flex items-center gap-2 text-utility-nav font-semibold"
+                [class.text-optical-yellow]="user.isBlocked"
+              >
+                <span
+                  class="size-2 rounded-full"
+                  [class]="user.isBlocked ? 'bg-optical-yellow' : 'bg-porcelain'"
+                ></span>
                 {{ user.isBlocked ? 'Blocked' : 'Active' }}
               </span>
             </td>
@@ -123,14 +206,22 @@
                 <p class="text-right text-utility-nav text-ash">Your own account</p>
               } @else {
                 <div class="flex justify-end gap-2">
-                  <button type="button" (click)="askRole(user)" class="btn-outline">{{ user.role === 'ADMIN' ? 'Remove admin' : 'Make admin' }}</button>
-                  <button type="button" (click)="askBlock(user)" class="btn-outline">{{ user.isBlocked ? 'Unblock' : 'Block' }}</button>
+                  <button type="button" (click)="askRole(user)" class="btn-outline">
+                    {{ user.role === 'ADMIN' ? 'Remove admin' : 'Make admin' }}
+                  </button>
+                  <button type="button" (click)="askBlock(user)" class="btn-outline">
+                    {{ user.isBlocked ? 'Unblock' : 'Block' }}
+                  </button>
                 </div>
               }
             </td>
           </tr>
         } @empty {
-          <tr><td colspan="6" class="px-5 py-10 text-center text-ash">No user matches your search.</td></tr>
+          <tr>
+            <td colspan="6" class="px-5 py-10 text-center text-ash">
+              No user matches your search.
+            </td>
+          </tr>
         }
       </tbody>
     </table>
@@ -140,23 +231,45 @@
         <li appReveal class="p-5">
           <div class="flex items-start justify-between gap-3">
             <div class="flex min-w-0 items-center gap-3" [class.opacity-60]="user.isBlocked">
-              <span class="flex size-9 shrink-0 items-center justify-center rounded-full bg-obsidian text-utility-nav font-semibold text-aurora" aria-hidden="true">{{ initials(user) }}</span>
+              <span
+                class="flex size-9 shrink-0 items-center justify-center rounded-full bg-obsidian text-utility-nav font-semibold text-aurora"
+                aria-hidden="true"
+                >{{ initials(user) }}</span
+              >
               <div class="min-w-0">
                 <p class="font-semibold">{{ user.firstName }} {{ user.lastName }}</p>
                 <p class="truncate text-utility-nav text-ash">{{ user.email }}</p>
               </div>
             </div>
-            <span class="shrink-0 text-utility-nav font-semibold" [class]="user.isBlocked ? 'text-optical-yellow' : 'text-porcelain'">{{ user.isBlocked ? 'Blocked' : 'Active' }}</span>
+            <span
+              class="shrink-0 text-utility-nav font-semibold"
+              [class]="user.isBlocked ? 'text-optical-yellow' : 'text-porcelain'"
+              >{{ user.isBlocked ? 'Blocked' : 'Active' }}</span
+            >
           </div>
-          <p class="mt-2 text-body text-ash">{{ user.role === 'ADMIN' ? 'Admin' : 'User' }} · {{ user.rentalCount }} rental{{ user.rentalCount === 1 ? '' : 's' }} · joined {{ user.createdAt | date: 'MMM d, y' }}</p>
+          <p class="mt-2 text-body text-ash">
+            {{ user.role === 'ADMIN' ? 'Admin' : 'User' }} · {{ user.rentalCount }} rental{{
+              user.rentalCount === 1 ? '' : 's'
+            }}
+            · joined {{ user.createdAt | date: 'MMM d, y' }}
+          </p>
           @if (user.id === currentUserId()) {
             <p class="mt-3 text-utility-nav text-ash">Your own account</p>
           } @else {
             <div class="mt-3 flex flex-wrap gap-2">
-              <button type="button" (click)="askRole(user)" class="btn-outline">{{ user.role === 'ADMIN' ? 'Remove admin' : 'Make admin' }}</button>
-              <button type="button" (click)="askBlock(user)" class="btn-outline">{{ user.isBlocked ? 'Unblock' : 'Block' }}</button>
+              <button type="button" (click)="askRole(user)" class="btn-outline">
+                {{ user.role === 'ADMIN' ? 'Remove admin' : 'Make admin' }}
+              </button>
+              <button type="button" (click)="askBlock(user)" class="btn-outline">
+                {{ user.isBlocked ? 'Unblock' : 'Block' }}
+              </button>
               @if (user.rentalCount > 0) {
-                <a routerLink="/admin/rentals" [queryParams]="{ userId: user.id }" class="btn-outline">Rentals</a>
+                <a
+                  routerLink="/admin/rentals"
+                  [queryParams]="{ userId: user.id }"
+                  class="btn-outline"
+                  >Rentals</a
+                >
               }
             </div>
           }

@@ -18,7 +18,9 @@ describe('Legal pages', () => {
     expect(compiled.querySelector('h1')?.textContent).toContain('Legal notice.');
     expect(compiled.textContent).toContain('Adem YOUSSFI');
     expect(compiled.querySelector('#terms')).not.toBeNull();
-    expect(compiled.querySelectorAll('nav a').length).toBe(compiled.querySelectorAll('article > section').length);
+    expect(compiled.querySelectorAll('nav a').length).toBe(
+      compiled.querySelectorAll('article > section').length,
+    );
   });
 
   it('should list the data collected in the privacy policy', async () => {

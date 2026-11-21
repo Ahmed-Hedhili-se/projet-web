@@ -1,15 +1,43 @@
-import { HttpClient, HttpErrorResponse, provideHttpClient, withInterceptors } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpErrorResponse,
+  provideHttpClient,
+  withInterceptors,
+} from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { AgentConversation, AgentEvent, AgentStatus, ConfigsCard, ProfileCard, RepliesCard } from '../models/agent';
-import { MockConversationRecord, allMockConversations, buildMockReply, createMockConversation, replayMockAgent } from './mock-agent';
+import {
+  AgentConversation,
+  AgentEvent,
+  AgentStatus,
+  ConfigsCard,
+  ProfileCard,
+  RepliesCard,
+} from '../models/agent';
+import {
+  MockConversationRecord,
+  allMockConversations,
+  buildMockReply,
+  createMockConversation,
+  replayMockAgent,
+} from './mock-agent';
 import { mockApiInterceptor } from './mock-api-interceptor';
 
 describe('mock AI advisor', () => {
   const newRecord = (): MockConversationRecord => ({
-    userId: 3, messages: [], profile: {}, facts: [],
-    conversation: { id: 1, title: 'New conversation', repoUrl: null, messageCount: 0, createdAt: '', updatedAt: '' },
+    userId: 3,
+    messages: [],
+    profile: {},
+    facts: [],
+    conversation: {
+      id: 1,
+      title: 'New conversation',
+      repoUrl: null,
+      messageCount: 0,
+      createdAt: '',
+      updatedAt: '',
+    },
   });
 
   beforeEach(() => localStorage.clear());
@@ -33,14 +61,22 @@ describe('mock AI advisor', () => {
 
   it('should read a repository, then ask for the dataset size before simulating', () => {
     const record = newRecord();
-    const first = buildMockReply(record, 'Repository: https://github.com/artidoro/qlora\n\nWhich GPU should I rent?');
+    const first = buildMockReply(
+      record,
+      'Repository: https://github.com/artidoro/qlora\n\nWhich GPU should I rent?',
+    );
     const profile = first.cards.find((card): card is ProfileCard => card.type === 'profile')!;
 
-    expect(first.steps[0]).toEqual({ tool: 'analyze_repo', label: 'Analyzing github.com/artidoro/qlora' });
+    expect(first.steps[0]).toEqual({
+      tool: 'analyze_repo',
+      label: 'Analyzing github.com/artidoro/qlora',
+    });
     expect(profile.profile.mode).toBe('QLORA');
     expect(profile.facts.some((fact) => fact.evidence === 'config.json')).toBe(true);
     expect(profile.missing).toEqual(['trainingTokens']);
-    expect(first.cards.find((card): card is RepliesCard => card.type === 'replies')!.options).toContain('300M tokens');
+    expect(
+      first.cards.find((card): card is RepliesCard => card.type === 'replies')!.options,
+    ).toContain('300M tokens');
     expect(first.cards.some((card) => card.type === 'configs')).toBe(false);
 
     const second = buildMockReply(record, '300M tokens');
@@ -57,7 +93,9 @@ describe('mock AI advisor', () => {
   it('should replay the answer as a stream of events and save the conversation', async () => {
     const conversation = createMockConversation(3);
     const events: AgentEvent[] = [];
-    await replayMockAgent(3, conversation.id, 'Serve Mistral 7B for 50 concurrent users', (event) => events.push(event));
+    await replayMockAgent(3, conversation.id, 'Serve Mistral 7B for 50 concurrent users', (event) =>
+      events.push(event),
+    );
 
     expect(events[0].event).toBe('user_message');
     expect(events.at(-1)?.event).toBe('done');
@@ -66,30 +104,52 @@ describe('mock AI advisor', () => {
     expect(record.messages.map((message) => message.role)).toEqual(['USER', 'ASSISTANT']);
     expect(record.conversation.title).toBe('Serve Mistral 7B for 50 concurrent users');
 
-    const error = await replayMockAgent(4, conversation.id, 'Hello', () => undefined).catch((err: unknown) => err);
+    const error = await replayMockAgent(4, conversation.id, 'Hello', () => undefined).catch(
+      (err: unknown) => err,
+    );
     expect(error).toEqual({ code: 'CONVERSATION_NOT_FOUND', message: 'Conversation not found.' });
   });
 
   it('should serve the /agent routes of docs/API.md', async () => {
-    TestBed.configureTestingModule({ providers: [provideHttpClient(withInterceptors([mockApiInterceptor]))] });
+    TestBed.configureTestingModule({
+      providers: [provideHttpClient(withInterceptors([mockApiInterceptor]))],
+    });
     const http = TestBed.inject(HttpClient);
     const jane = { headers: { Authorization: 'Bearer mock-token-3' } };
     const url = `${environment.apiUrl}/agent`;
 
     const status = await firstValueFrom(http.get<AgentStatus>(`${url}/status`, jane));
-    expect(status).toEqual({ available: true, model: 'demo (simulated answers)', dailyMessageLimit: 30, messagesUsedToday: 0 });
+    expect(status).toEqual({
+      available: true,
+      model: 'demo (simulated answers)',
+      dailyMessageLimit: 30,
+      messagesUsedToday: 0,
+    });
 
-    const created = await firstValueFrom(http.post<{ conversation: AgentConversation }>(`${url}/conversations`, {}, jane));
+    const created = await firstValueFrom(
+      http.post<{ conversation: AgentConversation }>(`${url}/conversations`, {}, jane),
+    );
     expect(created.conversation.title).toBe('New conversation');
     const list = await firstValueFrom(http.get<{ total: number }>(`${url}/conversations`, jane));
     expect(list.total).toBe(1);
 
     const other = { headers: { Authorization: 'Bearer mock-token-1' } };
-    const error = (await firstValueFrom(http.get(`${url}/conversations/${created.conversation.id}`, other)).catch((err: unknown) => err)) as HttpErrorResponse;
+    const error = (await firstValueFrom(
+      http.get(`${url}/conversations/${created.conversation.id}`, other),
+    ).catch((err: unknown) => err)) as HttpErrorResponse;
     expect(error.error.error.code).toBe('CONVERSATION_NOT_FOUND');
 
-    const deleted = await firstValueFrom(http.delete(`${url}/conversations/${created.conversation.id}`, { ...jane, observe: 'response' }));
+    const deleted = await firstValueFrom(
+      http.delete(`${url}/conversations/${created.conversation.id}`, {
+        ...jane,
+        observe: 'response',
+      }),
+    );
     expect(deleted.status).toBe(204);
-    expect(await firstValueFrom(http.get(`${url}/status`).pipe()).catch((err: HttpErrorResponse) => err.status)).toBe(401);
+    expect(
+      await firstValueFrom(http.get(`${url}/status`).pipe()).catch(
+        (err: HttpErrorResponse) => err.status,
+      ),
+    ).toBe(401);
   });
 });

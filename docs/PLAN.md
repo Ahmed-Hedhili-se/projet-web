@@ -360,6 +360,8 @@ Une étape à la fois, testée puis validée avant de passer à la suivante.
 | F9 ✅ | Motion & 3D (`docs/DESIGN-MOTION.md`) : planète Three.js synchronisée avec le réseau neuronal (`SceneSync`), défilement Lenis, cartes en verre | Planète grande sur Home et petite ailleurs, réseau relié au curseur conservé, versions légères (mobile, animations réduites, sans WebGL) |
 | F10 ✅ | Conseiller IA sur `/recommend` (routes de API.md, section 10) : lien GitHub puis conversation, formulaire de F4 gardé en secours | L'utilisateur colle un lien et obtient un classement de configurations |
 | F11 | Brancher le frontend sur le vrai backend (`useMockApi: false`), au fur et à mesure que les routes B4–B7 arrivent | Le site fonctionne sans données fictives |
+| F12 ✅ | Pages légales : `/legal` (mentions légales, conditions d'utilisation, crédits) et `/privacy` (politique de confidentialité), liens dans le pied de page, l'inscription, le contact et le conseiller IA | Les deux pages sont accessibles et liées partout où l'utilisateur accepte ou envoie des données |
+| F13 ✅ | Qualité et optimisation : ESLint (règles Angular et accessibilité), Prettier, Lighthouse (textures WebP, pas de décalage de mise en page, contrastes, `robots.txt`) | `npm run lint` sans erreur, code formaté, Lighthouse ordinateur ≥ 90 en performance et 100 ailleurs |
 
 Tant qu'une route backend n'est pas prête, le frontend peut utiliser des données fictives
 qui respectent **exactement** le format de API.md.

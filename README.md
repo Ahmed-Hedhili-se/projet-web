@@ -99,6 +99,10 @@ All pages are responsive (phone, tablet, desktop).
 - **Accessibility**: semantic HTML, keyboard focus, ARIA labels, contrast checked in the design charter,
   `prefers-reduced-motion` respected.
 - **Tests**: 79 unit tests (Vitest) on services, pages and the simulated API.
+- **Code quality**: ESLint (Angular, TypeScript and accessibility rules) and Prettier run on the whole frontend with no remaining issue.
+- **Lighthouse** (production build, desktop): Accessibility 100, Best Practices 100 and SEO 100 on Home, GPU catalog,
+  Recommendation, About and Contact; Performance 96–98 on these pages, 86–95 on Home (the 3D scene starts there).
+  On a simulated mid-range phone, Performance is about 60–66 because of the 3D scene; the other three categories stay at 100.
 
 ### AI GPU advisor
 
@@ -209,6 +213,8 @@ Other frontend commands, from `frontend/`:
 
 ```bash
 npm test           # unit tests
+npm run lint       # ESLint (Angular, TypeScript and template accessibility rules)
+npm run format     # Prettier: formats every .ts, .html and .css file
 npm run build      # production build in frontend/dist/
 ```
 

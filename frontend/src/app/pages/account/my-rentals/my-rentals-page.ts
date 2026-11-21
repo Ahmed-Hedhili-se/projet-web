@@ -17,7 +17,17 @@ type Filter = 'ALL' | RentalStatus;
 
 @Component({
   selector: 'app-my-rentals-page',
-  imports: [RouterLink, CurrencyPipe, DatePipe, Alert, ConfirmDialog, SplitText, StatusBadge, CountUp, Reveal],
+  imports: [
+    RouterLink,
+    CurrencyPipe,
+    DatePipe,
+    Alert,
+    ConfirmDialog,
+    SplitText,
+    StatusBadge,
+    CountUp,
+    Reveal,
+  ],
   templateUrl: './my-rentals-page.html',
 })
 export class MyRentalsPage implements OnInit {
@@ -37,7 +47,8 @@ export class MyRentalsPage implements OnInit {
   protected readonly cancelError = signal<string | null>(null);
 
   protected readonly tabs = computed(() => {
-    const count = (status: RentalStatus) => this.rentals().filter((rental) => rental.status === status).length;
+    const count = (status: RentalStatus) =>
+      this.rentals().filter((rental) => rental.status === status).length;
     return [
       { value: 'ALL' as Filter, label: 'All', count: this.rentals().length },
       { value: 'UPCOMING' as Filter, label: 'Upcoming', count: count('UPCOMING') },
@@ -48,15 +59,29 @@ export class MyRentalsPage implements OnInit {
   });
 
   protected readonly filtered = computed(() =>
-    this.filter() === 'ALL' ? this.rentals() : this.rentals().filter((rental) => rental.status === this.filter()),
+    this.filter() === 'ALL'
+      ? this.rentals()
+      : this.rentals().filter((rental) => rental.status === this.filter()),
   );
 
   protected readonly stats = computed(() => [
-    { label: 'Active now', value: this.rentals().filter((rental) => rental.status === 'ACTIVE').length, decimals: 0, prefix: '' },
-    { label: 'Upcoming', value: this.rentals().filter((rental) => rental.status === 'UPCOMING').length, decimals: 0, prefix: '' },
+    {
+      label: 'Active now',
+      value: this.rentals().filter((rental) => rental.status === 'ACTIVE').length,
+      decimals: 0,
+      prefix: '',
+    },
+    {
+      label: 'Upcoming',
+      value: this.rentals().filter((rental) => rental.status === 'UPCOMING').length,
+      decimals: 0,
+      prefix: '',
+    },
     {
       label: 'Total spent',
-      value: this.rentals().filter((rental) => rental.status !== 'CANCELLED').reduce((sum, rental) => sum + rental.totalPrice, 0),
+      value: this.rentals()
+        .filter((rental) => rental.status !== 'CANCELLED')
+        .reduce((sum, rental) => sum + rental.totalPrice, 0),
       decimals: 2,
       prefix: '$',
     },
@@ -106,7 +131,9 @@ export class MyRentalsPage implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (response) => {
-          this.rentals.update((list) => list.map((item) => (item.id === rental.id ? response.rental : item)));
+          this.rentals.update((list) =>
+            list.map((item) => (item.id === rental.id ? response.rental : item)),
+          );
           this.cancelling.set(false);
           this.toCancel.set(null);
         },

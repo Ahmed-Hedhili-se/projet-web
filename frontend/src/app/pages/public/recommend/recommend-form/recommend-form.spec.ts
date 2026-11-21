@@ -16,7 +16,9 @@ describe('RecommendForm', () => {
     const fixture = TestBed.createComponent(RecommendForm);
     await fixture.whenStable();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelectorAll('input[type="radio"][formcontrolname="modelType"]').length).toBe(5);
+    expect(
+      compiled.querySelectorAll('input[type="radio"][formcontrolname="modelType"]').length,
+    ).toBe(5);
     expect(compiled.textContent).toContain('Your recommendation will appear here.');
   });
 });

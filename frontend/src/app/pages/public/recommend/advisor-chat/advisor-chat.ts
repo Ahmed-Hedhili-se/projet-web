@@ -1,8 +1,27 @@
-import { Component, DestroyRef, ElementRef, OnInit, computed, effect, inject, input, output, signal, viewChild } from '@angular/core';
+import {
+  Component,
+  DestroyRef,
+  ElementRef,
+  OnInit,
+  computed,
+  effect,
+  inject,
+  input,
+  output,
+  signal,
+  viewChild,
+} from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
-import { AgentCard, AgentConversation, AgentError, AgentEvent, AgentMessage, AgentStatus } from '../../../../core/models/agent';
+import {
+  AgentCard,
+  AgentConversation,
+  AgentError,
+  AgentEvent,
+  AgentMessage,
+  AgentStatus,
+} from '../../../../core/models/agent';
 import { getErrorMessage } from '../../../../core/models/api-error';
 import { AgentService } from '../../../../core/services/agent-service';
 import { SmoothScroll } from '../../../../core/services/smooth-scroll';
@@ -34,9 +53,17 @@ export class AdvisorChat implements OnInit {
 
   protected readonly demo = environment.useMockApi;
   protected readonly examples = [
-    { label: 'Fine-tune Llama 3.1 8B with QLoRA', message: 'Fine-tune Llama 3.1 8B with QLoRA on 300M tokens', repo: '' },
+    {
+      label: 'Fine-tune Llama 3.1 8B with QLoRA',
+      message: 'Fine-tune Llama 3.1 8B with QLoRA on 300M tokens',
+      repo: '',
+    },
     { label: 'Serve Mistral 7B', message: 'Serve Mistral 7B for 50 concurrent users', repo: '' },
-    { label: 'Analyze a GitHub repository', message: 'Which GPU should I rent to run this repository?', repo: 'https://github.com/artidoro/qlora' },
+    {
+      label: 'Analyze a GitHub repository',
+      message: 'Which GPU should I rent to run this repository?',
+      repo: 'https://github.com/artidoro/qlora',
+    },
   ];
 
   protected readonly conversation = signal<AgentConversation | null>(null);
@@ -55,8 +82,15 @@ export class AdvisorChat implements OnInit {
   protected readonly toDelete = signal<AgentConversation | null>(null);
   protected readonly deleting = signal(false);
 
-  protected readonly remaining = computed(() => Math.max(0, this.status().dailyMessageLimit - this.used()));
-  protected readonly canSend = computed(() => !this.sending() && this.remaining() > 0 && (this.draft().trim() !== '' || this.repo().trim() !== ''));
+  protected readonly remaining = computed(() =>
+    Math.max(0, this.status().dailyMessageLimit - this.used()),
+  );
+  protected readonly canSend = computed(
+    () =>
+      !this.sending() &&
+      this.remaining() > 0 &&
+      (this.draft().trim() !== '' || this.repo().trim() !== ''),
+  );
 
   constructor() {
     inject(DestroyRef).onDestroy(() => this.abort.abort());
@@ -150,19 +184,34 @@ export class AdvisorChat implements OnInit {
       return;
     }
     if (repo && !REPO_URL.test(repo)) {
-      this.repoError.set('Enter the link of a public GitHub repository, for example https://github.com/owner/repo.');
+      this.repoError.set(
+        'Enter the link of a public GitHub repository, for example https://github.com/owner/repo.',
+      );
       return;
     }
     const content = repo ? `Repository: ${repo}${message ? `\n\n${message}` : ''}` : message;
     this.sending.set(true);
     this.errorMessage.set(null);
     this.repoError.set(null);
-    this.pending.set({ id: -1, role: 'ASSISTANT', content: '', steps: [], cards: [], createdAt: new Date().toISOString() });
+    this.pending.set({
+      id: -1,
+      role: 'ASSISTANT',
+      content: '',
+      steps: [],
+      cards: [],
+      createdAt: new Date().toISOString(),
+    });
 
     try {
-      const conversation = this.conversation() ?? (await firstValueFrom(this.agentService.create())).conversation;
+      const conversation =
+        this.conversation() ?? (await firstValueFrom(this.agentService.create())).conversation;
       this.conversation.set(conversation);
-      await this.agentService.send(conversation.id, content, (event) => this.onEvent(event), this.abort.signal);
+      await this.agentService.send(
+        conversation.id,
+        content,
+        (event) => this.onEvent(event),
+        this.abort.signal,
+      );
     } catch (err) {
       if (!this.abort.signal.aborted) {
         this.errorMessage.set(isAgentError(err) ? err.message : getErrorMessage(err));
@@ -183,17 +232,26 @@ export class AdvisorChat implements OnInit {
         this.repo.set('');
         break;
       case 'step':
-        this.pending.update((current) => current && { ...current, steps: [...current.steps, event.data] });
+        this.pending.update(
+          (current) => current && { ...current, steps: [...current.steps, event.data] },
+        );
         break;
       case 'card':
-        this.pending.update((current) => current && {
-          ...current,
-          cards: [...current.cards.filter((card) => card.type !== event.data.card.type), event.data.card]
-            .sort((a, b) => CARD_ORDER.indexOf(a.type) - CARD_ORDER.indexOf(b.type)),
-        });
+        this.pending.update(
+          (current) =>
+            current && {
+              ...current,
+              cards: [
+                ...current.cards.filter((card) => card.type !== event.data.card.type),
+                event.data.card,
+              ].sort((a, b) => CARD_ORDER.indexOf(a.type) - CARD_ORDER.indexOf(b.type)),
+            },
+        );
         break;
       case 'text':
-        this.pending.update((current) => current && { ...current, content: current.content + event.data.delta });
+        this.pending.update(
+          (current) => current && { ...current, content: current.content + event.data.delta },
+        );
         break;
       case 'done':
         this.messages.update((list) => [...list, event.data.message]);

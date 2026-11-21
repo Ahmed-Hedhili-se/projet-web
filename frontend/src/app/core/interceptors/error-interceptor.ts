@@ -8,7 +8,12 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
   return next(req).pipe(
     catchError((err: unknown) => {
       const isAuthRequest = req.url.endsWith('/auth/login') || req.url.endsWith('/auth/me');
-      if (err instanceof HttpErrorResponse && err.status === 401 && !isAuthRequest && authService.isLoggedIn()) {
+      if (
+        err instanceof HttpErrorResponse &&
+        err.status === 401 &&
+        !isAuthRequest &&
+        authService.isLoggedIn()
+      ) {
         authService.logout('/login');
       }
       return throwError(() => err);

@@ -17,7 +17,9 @@
   } @else if (notFound()) {
     <section class="flex flex-col items-center py-24 text-center">
       <h1 class="font-display text-display-sm font-semibold">GPU not found.</h1>
-      <p class="mt-4 max-w-md text-section-nav text-ash">This GPU does not exist or is no longer available.</p>
+      <p class="mt-4 max-w-md text-section-nav text-ash">
+        This GPU does not exist or is no longer available.
+      </p>
       <a routerLink="/gpus" class="btn-primary mt-8">Back to the catalog</a>
     </section>
   } @else if (errorMessage(); as message) {
@@ -29,23 +31,49 @@
   } @else if (gpu(); as gpu) {
     <section class="mt-8 grid items-center gap-10 md:grid-cols-2">
       <div class="animate-fade-up">
-        <div appTilt [tiltMax]="3" class="overflow-hidden rounded-card border border-steel bg-obsidian transition duration-500 ease-out">
-          <img src="images/hero-gpu.svg" [alt]="gpu.name + ' illustration'" width="960" height="540" class="animate-float h-auto w-full" />
+        <div
+          appTilt
+          [tiltMax]="3"
+          class="overflow-hidden rounded-card border border-steel bg-obsidian transition duration-500 ease-out"
+        >
+          <img
+            src="images/hero-gpu.svg"
+            [alt]="gpu.name + ' illustration'"
+            width="960"
+            height="540"
+            class="animate-float h-auto w-full"
+          />
         </div>
       </div>
 
       <div>
-        <p class="animate-fade-up font-display text-product-label font-semibold text-aurora">{{ gpu.manufacturer }} · {{ gpu.architecture }}</p>
+        <p class="animate-fade-up font-display text-product-label font-semibold text-aurora">
+          {{ gpu.manufacturer }} · {{ gpu.architecture }}
+        </p>
         <h1 class="mt-2 font-display text-hero-product-name font-semibold md:text-section-title">
           <app-split-text [text]="gpu.name" [delay]="120" />
         </h1>
-        <p class="animate-fade-up mt-4 text-section-nav text-ash" style="animation-delay: 360ms">{{ gpu.description }}</p>
-
-        <p class="animate-fade-up mt-6 font-display text-feature-stat font-semibold" style="animation-delay: 440ms">
-          <span class="tabular-nums text-aurora" [appCountUp]="gpu.pricePerHour" [countDecimals]="2" countPrefix="$"></span><span class="text-section-nav font-normal text-ash"> / hour per unit</span>
+        <p class="animate-fade-up mt-4 text-section-nav text-ash" style="animation-delay: 360ms">
+          {{ gpu.description }}
         </p>
 
-        <div class="animate-fade-up mt-6 flex flex-wrap items-center gap-3" style="animation-delay: 520ms">
+        <p
+          class="animate-fade-up mt-6 font-display text-feature-stat font-semibold"
+          style="animation-delay: 440ms"
+        >
+          <span
+            class="tabular-nums text-aurora"
+            [appCountUp]="gpu.pricePerHour"
+            [countDecimals]="2"
+            countPrefix="$"
+          ></span
+          ><span class="text-section-nav font-normal text-ash"> / hour per unit</span>
+        </p>
+
+        <div
+          class="animate-fade-up mt-6 flex flex-wrap items-center gap-3"
+          style="animation-delay: 520ms"
+        >
           <span class="capsule">
             @if (gpu.availableUnits > 0) {
               {{ gpu.availableUnits }} of {{ gpu.totalUnits }} units available now
@@ -53,7 +81,9 @@
               Fully booked right now
             }
           </span>
-          <a routerLink="/account/rentals/new" [queryParams]="{ gpuId: gpu.id }" class="btn-primary">Rent this GPU</a>
+          <a routerLink="/account/rentals/new" [queryParams]="{ gpuId: gpu.id }" class="btn-primary"
+            >Rent this GPU</a
+          >
           <a routerLink="/recommend" class="btn-outline">Get a recommendation</a>
         </div>
       </div>
@@ -63,11 +93,19 @@
       <h2 class="sr-only">Specifications</h2>
       <div class="grid grid-cols-2 gap-4 md:grid-cols-4">
         <div class="rounded-card bg-obsidian/55 px-4 py-8 text-center">
-          <p class="font-display text-feature-stat font-semibold tabular-nums" [appCountUp]="gpu.vramGb" countSuffix=" GB"></p>
+          <p
+            class="font-display text-feature-stat font-semibold tabular-nums"
+            [appCountUp]="gpu.vramGb"
+            countSuffix=" GB"
+          ></p>
           <p class="mt-2 text-body text-ash">Memory (VRAM)</p>
         </div>
         <div class="rounded-card bg-obsidian/55 px-4 py-8 text-center">
-          <p class="font-display text-feature-stat font-semibold tabular-nums" [appCountUp]="gpu.fp16Tflops" [countDecimals]="gpu.fp16Tflops % 1 === 0 ? 0 : 1"></p>
+          <p
+            class="font-display text-feature-stat font-semibold tabular-nums"
+            [appCountUp]="gpu.fp16Tflops"
+            [countDecimals]="gpu.fp16Tflops % 1 === 0 ? 0 : 1"
+          ></p>
           <p class="mt-2 text-body text-ash">FP16 TFLOPS</p>
         </div>
         <div class="rounded-card bg-obsidian/55 px-4 py-8 text-center">
@@ -75,7 +113,10 @@
           <p class="mt-2 text-body text-ash">Architecture</p>
         </div>
         <div class="rounded-card bg-obsidian/55 px-4 py-8 text-center">
-          <p class="font-display text-feature-stat font-semibold tabular-nums" [appCountUp]="gpu.totalUnits"></p>
+          <p
+            class="font-display text-feature-stat font-semibold tabular-nums"
+            [appCountUp]="gpu.totalUnits"
+          ></p>
           <p class="mt-2 text-body text-ash">Units in our fleet</p>
         </div>
       </div>
@@ -83,13 +124,20 @@
 
     <section class="mt-16">
       <h2 class="font-display text-hero-product-name font-semibold">Estimated cost.</h2>
-      <p class="mt-2 text-body text-ash">For one unit. The exact price is calculated when you book.</p>
+      <p class="mt-2 text-body text-ash">
+        For one unit. The exact price is calculated when you book.
+      </p>
       <div class="mt-6 grid gap-4 sm:grid-cols-3">
         @for (example of costExamples(); track example.hours) {
           <div appReveal [revealDelay]="$index * 100">
             <div appTilt class="glass-card p-6">
               <p class="text-utility-nav text-ash">{{ example.label }}</p>
-              <p class="mt-2 font-display text-feature-stat font-semibold tabular-nums text-aurora" [appCountUp]="example.cost" [countDecimals]="2" countPrefix="$"></p>
+              <p
+                class="mt-2 font-display text-feature-stat font-semibold tabular-nums text-aurora"
+                [appCountUp]="example.cost"
+                [countDecimals]="2"
+                countPrefix="$"
+              ></p>
             </div>
           </div>
         }

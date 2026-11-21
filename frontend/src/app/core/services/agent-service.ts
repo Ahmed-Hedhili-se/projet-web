@@ -3,7 +3,13 @@ import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { replayMockAgent } from '../mocks/mock-agent';
-import { AgentConversation, AgentError, AgentEvent, AgentMessage, AgentStatus } from '../models/agent';
+import {
+  AgentConversation,
+  AgentError,
+  AgentEvent,
+  AgentMessage,
+  AgentStatus,
+} from '../models/agent';
 import { AuthService } from './auth-service';
 
 export function parseSseBlock(block: string): AgentEvent | null {
@@ -34,18 +40,27 @@ export class AgentService {
   }
 
   list(): Observable<{ conversations: AgentConversation[]; total: number }> {
-    return this.http.get<{ conversations: AgentConversation[]; total: number }>(`${this.baseUrl}/conversations`);
+    return this.http.get<{ conversations: AgentConversation[]; total: number }>(
+      `${this.baseUrl}/conversations`,
+    );
   }
 
   get(id: number): Observable<{ conversation: AgentConversation; messages: AgentMessage[] }> {
-    return this.http.get<{ conversation: AgentConversation; messages: AgentMessage[] }>(`${this.baseUrl}/conversations/${id}`);
+    return this.http.get<{ conversation: AgentConversation; messages: AgentMessage[] }>(
+      `${this.baseUrl}/conversations/${id}`,
+    );
   }
 
   remove(id: number): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/conversations/${id}`);
   }
 
-  async send(id: number, content: string, onEvent: (event: AgentEvent) => void, signal?: AbortSignal): Promise<void> {
+  async send(
+    id: number,
+    content: string,
+    onEvent: (event: AgentEvent) => void,
+    signal?: AbortSignal,
+  ): Promise<void> {
     if (environment.useMockApi) {
       return replayMockAgent(this.auth.currentUser()?.id ?? 0, id, content, onEvent, signal);
     }
@@ -60,7 +75,10 @@ export class AgentService {
         this.auth.logout('/login');
       }
       const body = (await response.json().catch(() => null)) as { error?: AgentError } | null;
-      throw body?.error ?? ({ code: 'INTERNAL_ERROR', message: 'An unexpected error occurred.' } satisfies AgentError);
+      throw (
+        body?.error ??
+        ({ code: 'INTERNAL_ERROR', message: 'An unexpected error occurred.' } satisfies AgentError)
+      );
     }
 
     const reader = response.body.getReader();

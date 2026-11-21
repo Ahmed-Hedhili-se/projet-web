@@ -95,7 +95,9 @@ export class AdminDashboardPage implements OnInit {
     ].map((row) => ({ ...row, percent: (row.value / total) * 100 }));
   });
 
-  protected readonly topRevenueMax = computed(() => Math.max(1, ...(this.stats()?.topGpus ?? []).map((gpu) => gpu.revenue)));
+  protected readonly topRevenueMax = computed(() =>
+    Math.max(1, ...(this.stats()?.topGpus ?? []).map((gpu) => gpu.revenue)),
+  );
 
   ngOnInit(): void {
     this.load();

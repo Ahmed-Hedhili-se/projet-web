@@ -1,7 +1,11 @@
 import { clamp, easeOutCubic, latLonToUv, sampleStops, uvToSphere } from './planet-math';
 
 describe('planet-math', () => {
-  const stops = [{ p: 0, v: 0 }, { p: 0.5, v: 10 }, { p: 1, v: 4 }];
+  const stops = [
+    { p: 0, v: 0 },
+    { p: 0.5, v: 10 },
+    { p: 1, v: 4 },
+  ];
 
   it('should return the key values and move smoothly between them', () => {
     expect(sampleStops(stops, -1)).toBe(0);

@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
-import { LegalDocument, LegalSection } from '../../../shared/components/legal-document/legal-document';
+import {
+  LegalDocument,
+  LegalSection,
+} from '../../../shared/components/legal-document/legal-document';
 
 @Component({
   selector: 'app-legal-page',

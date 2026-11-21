@@ -6,8 +6,15 @@ import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPa
 import type { SceneSync, ScreenPoint } from '../../core/services/scene-sync';
 import { Stop, clamp, easeOutCubic, latLonToUv, sampleStops, uvToSphere } from './planet-math';
 import {
-  CLOUD_FRAGMENT, EARTH_FRAGMENT, HALO_FRAGMENT, HALO_VERTEX, MARKERS_FRAGMENT, MARKERS_VERTEX,
-  STARS_FRAGMENT, STARS_VERTEX, SURFACE_VERTEX,
+  CLOUD_FRAGMENT,
+  EARTH_FRAGMENT,
+  HALO_FRAGMENT,
+  HALO_VERTEX,
+  MARKERS_FRAGMENT,
+  MARKERS_VERTEX,
+  STARS_FRAGMENT,
+  STARS_VERTEX,
+  SURFACE_VERTEX,
 } from './planet-shaders';
 
 const RADIUS = 1.95;
@@ -21,9 +28,24 @@ const ENTRY_START_Y = -6.5;
 const POINTER_TILT = 0.08;
 const SLOW_FRAME = 1 / 45;
 
-const STOPS_X: Stop[] = [{ p: 0, v: 0 }, { p: 0.32, v: -3.1 }, { p: 0.64, v: 3.2 }, { p: 1, v: 0 }];
-const STOPS_Y: Stop[] = [{ p: 0, v: -4.75 }, { p: 0.32, v: 0.55 }, { p: 0.64, v: 0.45 }, { p: 1, v: 0.15 }];
-const STOPS_S: Stop[] = [{ p: 0, v: 2.15 }, { p: 0.32, v: 1.0 }, { p: 0.64, v: 0.92 }, { p: 1, v: 1.12 }];
+const STOPS_X: Stop[] = [
+  { p: 0, v: 0 },
+  { p: 0.32, v: -3.1 },
+  { p: 0.64, v: 3.2 },
+  { p: 1, v: 0 },
+];
+const STOPS_Y: Stop[] = [
+  { p: 0, v: -4.75 },
+  { p: 0.32, v: 0.55 },
+  { p: 0.64, v: 0.45 },
+  { p: 1, v: 0.15 },
+];
+const STOPS_S: Stop[] = [
+  { p: 0, v: 2.15 },
+  { p: 0.32, v: 1.0 },
+  { p: 0.64, v: 0.92 },
+  { p: 1, v: 1.12 },
+];
 
 const DATA_CENTERS = [
   { lat: 36.8, lon: 10.2 },
@@ -31,7 +53,13 @@ const DATA_CENTERS = [
   { lat: 38.9, lon: -77.4 },
 ];
 
-const TEXTURE_FILES = ['earth_atmos_2048.jpg', 'earth_lights_2048.png', 'earth_clouds_1024.png', 'earth_specular_2048.jpg', 'earth_normal_2048.jpg'];
+const TEXTURE_FILES = [
+  'earth_atmos_2048.webp',
+  'earth_lights_2048.webp',
+  'earth_clouds_1024.png',
+  'earth_specular_2048.webp',
+  'earth_normal_2048.webp',
+];
 
 interface CloudShell {
   mesh: THREE.Mesh;
@@ -75,12 +103,18 @@ export class PlanetScene {
   private scale = 1;
   private haloIntensity = 3;
 
-  static async create(canvas: HTMLCanvasElement, sync: SceneSync, lite: boolean): Promise<PlanetScene> {
+  static async create(
+    canvas: HTMLCanvasElement,
+    sync: SceneSync,
+    lite: boolean,
+  ): Promise<PlanetScene> {
     if (!document.createElement('canvas').getContext('webgl2')) {
       throw new Error('WebGL is not available');
     }
     const loader = new THREE.TextureLoader();
-    const textures = await Promise.all(TEXTURE_FILES.map((file) => loader.loadAsync(`textures/earth/${file}`)));
+    const textures = await Promise.all(
+      TEXTURE_FILES.map((file) => loader.loadAsync(`textures/earth/${file}`)),
+    );
     return new PlanetScene(canvas, sync, lite, textures);
   }
 
@@ -91,7 +125,12 @@ export class PlanetScene {
     textures: THREE.Texture[],
   ) {
     const [day, night, cloudMap, ocean, relief] = textures;
-    this.renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true, powerPreference: 'high-performance' });
+    this.renderer = new THREE.WebGLRenderer({
+      canvas,
+      alpha: true,
+      antialias: true,
+      powerPreference: 'high-performance',
+    });
     this.basePixelRatio = Math.min(window.devicePixelRatio || 1, lite ? 1.25 : 1.5);
     this.renderer.setPixelRatio(this.basePixelRatio);
     this.renderer.setClearColor(0x000000, 0);
@@ -112,8 +151,13 @@ export class PlanetScene {
         vertexShader: SURFACE_VERTEX,
         fragmentShader: EARTH_FRAGMENT,
         uniforms: {
-          dayMap: { value: day }, nightMap: { value: night }, oceanMap: { value: ocean }, reliefMap: { value: relief },
-          time: { value: 0 }, nightLights: { value: 2.6 }, rimColor: { value: new THREE.Color(0x9fc4ff) },
+          dayMap: { value: day },
+          nightMap: { value: night },
+          oceanMap: { value: ocean },
+          reliefMap: { value: relief },
+          time: { value: 0 },
+          nightLights: { value: 2.6 },
+          rimColor: { value: new THREE.Color(0x9fc4ff) },
         },
       }),
     );
@@ -145,7 +189,10 @@ export class PlanetScene {
       new THREE.ShaderMaterial({
         vertexShader: HALO_VERTEX,
         fragmentShader: HALO_FRAGMENT,
-        uniforms: { glowColor: { value: new THREE.Color(0x3a6cff) }, intensity: { value: this.haloIntensity } },
+        uniforms: {
+          glowColor: { value: new THREE.Color(0x3a6cff) },
+          intensity: { value: this.haloIntensity },
+        },
         transparent: true,
         depthWrite: false,
         blending: THREE.AdditiveBlending,
@@ -196,7 +243,9 @@ export class PlanetScene {
     const still = this.sync.reduceMotion;
     this.time += dt;
 
-    this.progress = still ? 0 : this.progress + (frame.scrollProgress - this.progress) * Math.min(1, dt * 4.5);
+    this.progress = still
+      ? 0
+      : this.progress + (frame.scrollProgress - this.progress) * Math.min(1, dt * 4.5);
     const target = this.target();
     const k = still ? 1 : Math.min(1, dt * 3.2);
     this.x += (target.x - this.x) * k;
@@ -240,7 +289,8 @@ export class PlanetScene {
     this.stars.material.uniforms['starColor'].value.set(0xf5f5f7).lerp(this.accent, 0.2);
     this.stars.rotation.y = this.progress * 0.12;
     this.markers.material.uniforms['time'].value = this.time;
-    this.markers.material.uniforms['pixelScale'].value = (bufferHeight / 900) * Math.pow(this.scale, 0.6);
+    this.markers.material.uniforms['pixelScale'].value =
+      (bufferHeight / 900) * Math.pow(this.scale, 0.6);
 
     this.updatePulses(dt);
     if (!still) {
@@ -313,7 +363,8 @@ export class PlanetScene {
       const lift = RADIUS * sampleStops(STOPS_S, p) * (1 - fit) * (1 - clamp(p / 0.32, 0, 1));
       return { x: sampleStops(STOPS_X, p) * side, y: sampleStops(STOPS_Y, p) + lift, scale };
     }
-    const unitsPerPixel = (2 * CAMERA_Z * Math.tan(THREE.MathUtils.degToRad(FOV / 2))) / this.height;
+    const unitsPerPixel =
+      (2 * CAMERA_Z * Math.tan(THREE.MathUtils.degToRad(FOV / 2))) / this.height;
     const radius = this.lite ? 72 : clamp(this.width * 0.08, 90, 130);
     const centerX = this.width - 18 - radius;
     const centerY = this.height - 18 - radius;
@@ -381,7 +432,11 @@ export class PlanetScene {
     const middle = (inner + outer) / 2;
     const dirX = lateral > 1e-6 ? center.x / lateral : 1;
     const dirY = lateral > 1e-6 ? center.y / lateral : 0;
-    frame.planet = { x: this.width / 2 + dirX * middle, y: this.height / 2 - dirY * middle, radius: (outer - inner) / 2 };
+    frame.planet = {
+      x: this.width / 2 + dirX * middle,
+      y: this.height / 2 - dirY * middle,
+      radius: (outer - inner) / 2,
+    };
 
     frame.markers.length = 0;
     this.earth.getWorldPosition(this.tmpCenter);
@@ -393,7 +448,8 @@ export class PlanetScene {
       const vx = this.camera.position.x - world.x;
       const vy = this.camera.position.y - world.y;
       const vz = this.camera.position.z - world.z;
-      const facing = (nx * vx + ny * vy + nz * vz) / (Math.hypot(nx, ny, nz) * Math.hypot(vx, vy, vz));
+      const facing =
+        (nx * vx + ny * vy + nz * vz) / (Math.hypot(nx, ny, nz) * Math.hypot(vx, vy, vz));
       if (facing < 0.3) {
         continue;
       }
@@ -425,7 +481,12 @@ export class PlanetScene {
     const material = new THREE.ShaderMaterial({
       vertexShader: STARS_VERTEX,
       fragmentShader: STARS_FRAGMENT,
-      uniforms: { time: { value: 0 }, size: { value: 1.6 }, pixelScale: { value: 1 }, starColor: { value: new THREE.Color(0xf5f5f7) } },
+      uniforms: {
+        time: { value: 0 },
+        size: { value: 1.6 },
+        pixelScale: { value: 1 },
+        starColor: { value: new THREE.Color(0xf5f5f7) },
+      },
       transparent: true,
       depthWrite: false,
       blending: THREE.AdditiveBlending,
@@ -435,7 +496,10 @@ export class PlanetScene {
     return stars;
   }
 
-  private createMarkers(oceanMask: HTMLImageElement, count: number): THREE.Points<THREE.BufferGeometry, THREE.ShaderMaterial> {
+  private createMarkers(
+    oceanMask: HTMLImageElement,
+    count: number,
+  ): THREE.Points<THREE.BufferGeometry, THREE.ShaderMaterial> {
     const maskWidth = 512;
     const maskHeight = 256;
     const canvas = document.createElement('canvas');
@@ -476,13 +540,19 @@ export class PlanetScene {
     geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
     geometry.setAttribute('seed', new THREE.BufferAttribute(seeds, 1));
     geometry.setAttribute('major', new THREE.BufferAttribute(majors, 1));
-    geometry.setAttribute('pulse', new THREE.BufferAttribute(this.markerPulses, 1).setUsage(THREE.DynamicDrawUsage));
+    geometry.setAttribute(
+      'pulse',
+      new THREE.BufferAttribute(this.markerPulses, 1).setUsage(THREE.DynamicDrawUsage),
+    );
     const material = new THREE.ShaderMaterial({
       vertexShader: MARKERS_VERTEX,
       fragmentShader: MARKERS_FRAGMENT,
       uniforms: {
-        time: { value: 0 }, size: { value: 16 }, pixelScale: { value: 1 },
-        coreColor: { value: new THREE.Color(0xfff1cf) }, ringColor: { value: new THREE.Color(0xffd500) },
+        time: { value: 0 },
+        size: { value: 16 },
+        pixelScale: { value: 1 },
+        coreColor: { value: new THREE.Color(0xfff1cf) },
+        ringColor: { value: new THREE.Color(0xffd500) },
       },
       transparent: true,
       depthWrite: false,

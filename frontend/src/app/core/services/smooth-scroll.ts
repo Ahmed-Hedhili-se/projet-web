@@ -15,7 +15,12 @@ export class SmoothScroll {
       return;
     }
     const { default: LenisClass } = await import('lenis');
-    this.lenis = new LenisClass({ duration: 1.15, smoothWheel: true, touchMultiplier: 1.5, autoRaf: true });
+    this.lenis = new LenisClass({
+      duration: 1.15,
+      smoothWheel: true,
+      touchMultiplier: 1.5,
+      autoRaf: true,
+    });
 
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))

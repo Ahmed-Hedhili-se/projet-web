@@ -1,5 +1,10 @@
 <article appTilt class="glass-card group flex h-full flex-col overflow-hidden hover:-translate-y-1">
-  <a [routerLink]="['/gpus', gpu().id]" class="block overflow-hidden bg-obsidian" tabindex="-1" aria-hidden="true">
+  <a
+    [routerLink]="['/gpus', gpu().id]"
+    class="block overflow-hidden bg-obsidian"
+    tabindex="-1"
+    aria-hidden="true"
+  >
     <img
       src="images/hero-gpu.svg"
       alt=""
@@ -28,7 +33,11 @@
     </div>
 
     <p class="mt-4 flex items-center gap-2 text-body" [class.text-ash]="gpu().availableUnits === 0">
-      <span class="size-2 rounded-full" [class.bg-porcelain]="gpu().availableUnits > 0" [class.bg-slate]="gpu().availableUnits === 0"></span>
+      <span
+        class="size-2 rounded-full"
+        [class.bg-porcelain]="gpu().availableUnits > 0"
+        [class.bg-slate]="gpu().availableUnits === 0"
+      ></span>
       @if (gpu().availableUnits > 0) {
         {{ gpu().availableUnits }} of {{ gpu().totalUnits }} units available
       } @else {
@@ -37,7 +46,9 @@
     </p>
 
     <div class="mt-auto flex items-center justify-between gap-4 pt-6">
-      <p class="text-section-nav">{{ gpu().pricePerHour | currency: 'USD' }}<span class="text-body text-ash"> / hour</span></p>
+      <p class="text-section-nav">
+        {{ gpu().pricePerHour | currency: 'USD' }}<span class="text-body text-ash"> / hour</span>
+      </p>
       <a [routerLink]="['/gpus', gpu().id]" class="btn-outline">Details</a>
     </div>
   </div>

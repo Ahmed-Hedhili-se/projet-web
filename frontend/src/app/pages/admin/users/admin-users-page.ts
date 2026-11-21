@@ -151,7 +151,11 @@ export class AdminUsersPage implements OnInit {
         },
         error: (err: unknown) => {
           this.notice.set(null);
-          this.actionError.set(getErrorCode(err) === 'CANNOT_MODIFY_SELF' ? 'You cannot change your own role or block yourself.' : getErrorMessage(err));
+          this.actionError.set(
+            getErrorCode(err) === 'CANNOT_MODIFY_SELF'
+              ? 'You cannot change your own role or block yourself.'
+              : getErrorMessage(err),
+          );
           this.saving.set(false);
           this.pending.set(null);
         },
@@ -162,7 +166,14 @@ export class AdminUsersPage implements OnInit {
     downloadCsv('teramind-users.csv', [
       ['ID', 'First name', 'Last name', 'Email', 'Role', 'Status', 'Rentals', 'Joined'],
       ...this.filtered().map((user) => [
-        user.id, user.firstName, user.lastName, user.email, user.role, user.isBlocked ? 'Blocked' : 'Active', user.rentalCount, user.createdAt.slice(0, 10),
+        user.id,
+        user.firstName,
+        user.lastName,
+        user.email,
+        user.role,
+        user.isBlocked ? 'Blocked' : 'Active',
+        user.rentalCount,
+        user.createdAt.slice(0, 10),
       ]),
     ]);
   }

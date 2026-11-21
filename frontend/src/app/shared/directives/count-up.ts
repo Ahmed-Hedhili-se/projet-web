@@ -25,12 +25,15 @@ export class CountUp implements OnInit, OnDestroy {
     }
 
     element.textContent = this.format(this.countFrom());
-    this.observer = new IntersectionObserver((entries) => {
-      if (entries.some((entry) => entry.isIntersecting)) {
-        this.animate();
-        this.observer?.disconnect();
-      }
-    }, { threshold: 0.4 });
+    this.observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          this.animate();
+          this.observer?.disconnect();
+        }
+      },
+      { threshold: 0.4 },
+    );
     this.observer.observe(element);
   }
 

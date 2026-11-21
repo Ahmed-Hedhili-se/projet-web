@@ -2,7 +2,16 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject, signal } from '@angular/core';
 import { Observable, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { AdminGpuListResponse, AdminMessageListResponse, AdminRental, AdminRentalListResponse, AdminStats, AdminUserListResponse, GpuInput, UserChanges } from '../models/admin';
+import {
+  AdminGpuListResponse,
+  AdminMessageListResponse,
+  AdminRental,
+  AdminRentalListResponse,
+  AdminStats,
+  AdminUserListResponse,
+  GpuInput,
+  UserChanges,
+} from '../models/admin';
 import { ContactMessage } from '../models/contact';
 import { GpuResponse } from '../models/gpu';
 import { User } from '../models/user';
@@ -59,7 +68,9 @@ export class AdminService {
   }
 
   setMessageRead(id: number, isRead: boolean): Observable<{ message: ContactMessage }> {
-    return this.http.patch<{ message: ContactMessage }>(`${this.baseUrl}/messages/${id}`, { isRead });
+    return this.http.patch<{ message: ContactMessage }>(`${this.baseUrl}/messages/${id}`, {
+      isRead,
+    });
   }
 
   deleteMessage(id: number): Observable<void> {

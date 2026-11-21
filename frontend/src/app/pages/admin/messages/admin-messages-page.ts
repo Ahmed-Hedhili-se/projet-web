@@ -33,7 +33,9 @@ export class AdminMessagesPage implements OnInit {
 
   protected readonly timeAgo = (date: string) => timeAgo(new Date(date));
 
-  protected readonly unread = computed(() => this.messages().filter((message) => !message.isRead).length);
+  protected readonly unread = computed(
+    () => this.messages().filter((message) => !message.isRead).length,
+  );
 
   protected readonly tabs = computed(() => {
     const tabs: { value: ReadFilter; label: string; count: number }[] = [
@@ -48,8 +50,13 @@ export class AdminMessagesPage implements OnInit {
     const term = this.search().trim().toLowerCase();
     return this.messages().filter(
       (message) =>
-        (this.filter() === 'ALL' || message.isRead === (this.filter() === 'READ') || message.id === this.openId()) &&
-        (!term || `${message.name} ${message.email} ${message.subject} ${message.message}`.toLowerCase().includes(term)),
+        (this.filter() === 'ALL' ||
+          message.isRead === (this.filter() === 'READ') ||
+          message.id === this.openId()) &&
+        (!term ||
+          `${message.name} ${message.email} ${message.subject} ${message.message}`
+            .toLowerCase()
+            .includes(term)),
     );
   });
 
@@ -92,7 +99,9 @@ export class AdminMessagesPage implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (response) => {
-          this.messages.update((list) => list.map((item) => (item.id === message.id ? response.message : item)));
+          this.messages.update((list) =>
+            list.map((item) => (item.id === message.id ? response.message : item)),
+          );
           this.adminService.unreadMessages.set(this.unread());
           this.actionError.set(null);
         },

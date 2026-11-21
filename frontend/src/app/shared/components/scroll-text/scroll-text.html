@@ -1,5 +1,8 @@
 <span class="scroll-text">
   @for (item of words(); track $index) {
-    <span class="scroll-word" [style.--word-start]="item.start" [style.--word-end]="item.end">{{ item.word }}</span>{{ ' ' }}
+    <span class="scroll-word" [style.--word-start]="item.start" [style.--word-end]="item.end">{{
+      item.word
+    }}</span
+    >{{ ' ' }}
   }
 </span>

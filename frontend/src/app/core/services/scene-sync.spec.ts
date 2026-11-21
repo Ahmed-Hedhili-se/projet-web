@@ -7,12 +7,24 @@ import { RGB, SceneSync, auroraForPage, auroraForProgress } from './scene-sync';
 class EmptyPage {}
 
 const hex = (c: RGB) =>
-  '#' + [c.r, c.g, c.b].map((v) => Math.round(v * 255).toString(16).padStart(2, '0')).join('');
+  '#' +
+  [c.r, c.g, c.b]
+    .map((v) =>
+      Math.round(v * 255)
+        .toString(16)
+        .padStart(2, '0'),
+    )
+    .join('');
 
 describe('SceneSync', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [provideRouter([{ path: '', component: EmptyPage }, { path: 'gpus', component: EmptyPage }])],
+      providers: [
+        provideRouter([
+          { path: '', component: EmptyPage },
+          { path: 'gpus', component: EmptyPage },
+        ]),
+      ],
     });
   });
 

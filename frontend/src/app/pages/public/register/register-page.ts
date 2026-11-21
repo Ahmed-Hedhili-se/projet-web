@@ -1,6 +1,13 @@
 import { Component, DestroyRef, inject, input, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  ValidationErrors,
+  Validators,
+} from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { getErrorCode, getErrorDetails, getErrorMessage } from '../../../core/models/api-error';
 import { AuthService } from '../../../core/services/auth-service';
@@ -36,12 +43,30 @@ export class RegisterPage {
 
   protected readonly form = new FormGroup(
     {
-      firstName: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.maxLength(50)] }),
-      lastName: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.maxLength(50)] }),
-      email: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.email] }),
-      password: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.minLength(8), Validators.maxLength(72)] }),
-      confirmPassword: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
-      acceptTerms: new FormControl(false, { nonNullable: true, validators: [Validators.requiredTrue] }),
+      firstName: new FormControl('', {
+        nonNullable: true,
+        validators: [Validators.required, Validators.maxLength(50)],
+      }),
+      lastName: new FormControl('', {
+        nonNullable: true,
+        validators: [Validators.required, Validators.maxLength(50)],
+      }),
+      email: new FormControl('', {
+        nonNullable: true,
+        validators: [Validators.required, Validators.email],
+      }),
+      password: new FormControl('', {
+        nonNullable: true,
+        validators: [Validators.required, Validators.minLength(8), Validators.maxLength(72)],
+      }),
+      confirmPassword: new FormControl('', {
+        nonNullable: true,
+        validators: [Validators.required],
+      }),
+      acceptTerms: new FormControl(false, {
+        nonNullable: true,
+        validators: [Validators.requiredTrue],
+      }),
     },
     { validators: passwordsMatch },
   );
@@ -59,15 +84,23 @@ export class RegisterPage {
     }
     if (control.touched && control.invalid) {
       switch (field) {
-        case 'firstName': return 'Enter your first name.';
-        case 'lastName': return 'Enter your last name.';
-        case 'email': return 'Enter a valid email address.';
-        case 'password': return 'Use between 8 and 72 characters.';
-        case 'confirmPassword': return 'Confirm your password.';
-        case 'acceptTerms': return 'Please accept the terms to continue.';
+        case 'firstName':
+          return 'Enter your first name.';
+        case 'lastName':
+          return 'Enter your last name.';
+        case 'email':
+          return 'Enter a valid email address.';
+        case 'password':
+          return 'Use between 8 and 72 characters.';
+        case 'confirmPassword':
+          return 'Confirm your password.';
+        case 'acceptTerms':
+          return 'Please accept the terms to continue.';
       }
     }
-    return field === 'confirmPassword' || field === 'acceptTerms' ? null : (this.serverErrors()[field] ?? null);
+    return field === 'confirmPassword' || field === 'acceptTerms'
+      ? null
+      : (this.serverErrors()[field] ?? null);
   }
 
   protected togglePassword(): void {

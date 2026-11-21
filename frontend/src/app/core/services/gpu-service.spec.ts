@@ -19,7 +19,15 @@ describe('GpuService', () => {
   afterEach(() => httpTesting.verify());
 
   it('should send only the filled filters as query params', () => {
-    service.list({ manufacturer: 'NVIDIA', minVram: 40, search: undefined, available: false, sort: 'price_asc' }).subscribe();
+    service
+      .list({
+        manufacturer: 'NVIDIA',
+        minVram: 40,
+        search: undefined,
+        available: false,
+        sort: 'price_asc',
+      })
+      .subscribe();
 
     const req = httpTesting.expectOne((request) => request.url === `${environment.apiUrl}/gpus`);
     expect(req.request.method).toBe('GET');

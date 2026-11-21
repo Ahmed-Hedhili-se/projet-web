@@ -73,13 +73,22 @@ export class AdminRentalsPage implements OnInit {
   protected readonly planningDays = PLANNING_DAYS;
 
   protected readonly userOptions = computed(() => {
-    const users = new Map(this.rentals().map((rental) => [rental.user.id, `${rental.user.firstName} ${rental.user.lastName}`]));
-    return [...users].map(([id, name]) => ({ id, name })).sort((a, b) => a.name.localeCompare(b.name));
+    const users = new Map(
+      this.rentals().map((rental) => [
+        rental.user.id,
+        `${rental.user.firstName} ${rental.user.lastName}`,
+      ]),
+    );
+    return [...users]
+      .map(([id, name]) => ({ id, name }))
+      .sort((a, b) => a.name.localeCompare(b.name));
   });
 
   protected readonly gpuOptions = computed(() => {
     const gpus = new Map(this.rentals().map((rental) => [rental.gpu.id, rental.gpu.name]));
-    return [...gpus].map(([id, name]) => ({ id, name })).sort((a, b) => a.name.localeCompare(b.name));
+    return [...gpus]
+      .map(([id, name]) => ({ id, name }))
+      .sort((a, b) => a.name.localeCompare(b.name));
   });
 
   protected readonly scoped = computed(() =>
@@ -91,11 +100,14 @@ export class AdminRentalsPage implements OnInit {
   );
 
   protected readonly filtered = computed(() =>
-    this.scoped().filter((rental) => this.statusFilter() === 'ALL' || rental.status === this.statusFilter()),
+    this.scoped().filter(
+      (rental) => this.statusFilter() === 'ALL' || rental.status === this.statusFilter(),
+    ),
   );
 
   protected readonly tabs = computed(() => {
-    const count = (status: RentalStatus) => this.scoped().filter((rental) => rental.status === status).length;
+    const count = (status: RentalStatus) =>
+      this.scoped().filter((rental) => rental.status === status).length;
     const tabs: { value: StatusFilter; label: string; count: number }[] = [
       { value: 'ALL', label: 'All', count: this.scoped().length },
       { value: 'UPCOMING', label: 'Upcoming', count: count('UPCOMING') },
@@ -107,7 +119,9 @@ export class AdminRentalsPage implements OnInit {
   });
 
   protected readonly revenue = computed(() =>
-    this.filtered().filter((rental) => rental.status !== 'CANCELLED').reduce((sum, rental) => sum + rental.totalPrice, 0),
+    this.filtered()
+      .filter((rental) => rental.status !== 'CANCELLED')
+      .reduce((sum, rental) => sum + rental.totalPrice, 0),
   );
 
   protected readonly windowEnd = computed(() => this.windowStart() + (PLANNING_DAYS - 1) * DAY_MS);
@@ -116,7 +130,11 @@ export class AdminRentalsPage implements OnInit {
     const today = new Date().toDateString();
     return Array.from({ length: PLANNING_DAYS }, (_, index) => {
       const date = new Date(this.windowStart() + index * DAY_MS);
-      return { weekday: date.toLocaleDateString('en-US', { weekday: 'short' }), day: date.getDate(), isToday: date.toDateString() === today };
+      return {
+        weekday: date.toLocaleDateString('en-US', { weekday: 'short' }),
+        day: date.getDate(),
+        isToday: date.toDateString() === today,
+      };
     });
   });
 
@@ -131,13 +149,22 @@ export class AdminRentalsPage implements OnInit {
     const rows = new Map<number, PlanningRow & { laneEnds: number[] }>();
     const visible = this.scoped()
       .filter((rental) => rental.status !== 'CANCELLED')
-      .filter((rental) => Date.parse(rental.endDate) > start && Date.parse(rental.startDate) < start + span)
+      .filter(
+        (rental) =>
+          Date.parse(rental.endDate) > start && Date.parse(rental.startDate) < start + span,
+      )
       .sort((a, b) => Date.parse(a.startDate) - Date.parse(b.startDate));
 
     for (const rental of visible) {
       const from = Date.parse(rental.startDate);
       const to = Date.parse(rental.endDate);
-      const row = rows.get(rental.gpu.id) ?? { gpuId: rental.gpu.id, name: rental.gpu.name, lanes: 0, bars: [], laneEnds: [] };
+      const row = rows.get(rental.gpu.id) ?? {
+        gpuId: rental.gpu.id,
+        name: rental.gpu.name,
+        lanes: 0,
+        bars: [],
+        laneEnds: [],
+      };
       let lane = row.laneEnds.findIndex((end) => end <= from);
       if (lane === -1) {
         lane = row.laneEnds.length;
@@ -146,13 +173,21 @@ export class AdminRentalsPage implements OnInit {
       row.lanes = row.laneEnds.length;
       const left = Math.max(0, ((from - start) / span) * 100);
       const right = Math.min(100, ((to - start) / span) * 100);
-      row.bars.push({ rental, left, width: right - left, lane, label: `${rental.user.firstName} ${rental.user.lastName.charAt(0)}. ×${rental.quantity}` });
+      row.bars.push({
+        rental,
+        left,
+        width: right - left,
+        lane,
+        label: `${rental.user.firstName} ${rental.user.lastName.charAt(0)}. ×${rental.quantity}`,
+      });
       rows.set(rental.gpu.id, row);
     }
     return [...rows.values()].sort((a, b) => a.name.localeCompare(b.name));
   });
 
-  protected readonly selected = computed(() => this.rentals().find((rental) => rental.id === this.selectedId()) ?? null);
+  protected readonly selected = computed(
+    () => this.rentals().find((rental) => rental.id === this.selectedId()) ?? null,
+  );
 
   ngOnInit(): void {
     if (this.userId()) {
@@ -220,8 +255,12 @@ export class AdminRentalsPage implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (response) => {
-          this.rentals.update((list) => list.map((item) => (item.id === rental.id ? response.rental : item)));
-          this.notice.set(`Rental #${rental.id} of ${rental.user.firstName} ${rental.user.lastName} was cancelled.`);
+          this.rentals.update((list) =>
+            list.map((item) => (item.id === rental.id ? response.rental : item)),
+          );
+          this.notice.set(
+            `Rental #${rental.id} of ${rental.user.firstName} ${rental.user.lastName} was cancelled.`,
+          );
           this.actionError.set(null);
           this.cancelling.set(false);
           this.toCancel.set(null);
@@ -237,10 +276,29 @@ export class AdminRentalsPage implements OnInit {
 
   protected exportCsv(): void {
     downloadCsv('teramind-rentals.csv', [
-      ['ID', 'Customer', 'Email', 'GPU', 'Units', 'Start', 'End', 'Duration (h)', 'Total (USD)', 'Status'],
+      [
+        'ID',
+        'Customer',
+        'Email',
+        'GPU',
+        'Units',
+        'Start',
+        'End',
+        'Duration (h)',
+        'Total (USD)',
+        'Status',
+      ],
       ...this.filtered().map((rental) => [
-        rental.id, `${rental.user.firstName} ${rental.user.lastName}`, rental.user.email, rental.gpu.name, rental.quantity,
-        rental.startDate, rental.endDate, rental.durationHours, rental.totalPrice, rental.status,
+        rental.id,
+        `${rental.user.firstName} ${rental.user.lastName}`,
+        rental.user.email,
+        rental.gpu.name,
+        rental.quantity,
+        rental.startDate,
+        rental.endDate,
+        rental.durationHours,
+        rental.totalPrice,
+        rental.status,
       ]),
     ]);
   }

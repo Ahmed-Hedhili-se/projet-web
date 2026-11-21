@@ -19,9 +19,14 @@ export class GpuService {
     return this.http.get<GpuListResponse>(this.baseUrl, { params });
   }
 
-  getById(id: number, period?: { startDate: string; durationHours: number }): Observable<GpuResponse> {
+  getById(
+    id: number,
+    period?: { startDate: string; durationHours: number },
+  ): Observable<GpuResponse> {
     const params = period
-      ? new HttpParams().set('startDate', period.startDate).set('durationHours', String(period.durationHours))
+      ? new HttpParams()
+          .set('startDate', period.startDate)
+          .set('durationHours', String(period.durationHours))
       : undefined;
     return this.http.get<GpuResponse>(`${this.baseUrl}/${id}`, { params });
   }

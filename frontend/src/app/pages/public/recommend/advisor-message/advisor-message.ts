@@ -1,14 +1,29 @@
 import { CurrencyPipe } from '@angular/common';
 import { Component, computed, inject, input, output, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { AgentMessage, AgentWorkloadMode, ConfigItem, ConfigsCard, ProfileCard, RepliesCard, Verdict } from '../../../../core/models/agent';
+import {
+  AgentMessage,
+  AgentWorkloadMode,
+  ConfigItem,
+  ConfigsCard,
+  ProfileCard,
+  RepliesCard,
+  Verdict,
+} from '../../../../core/models/agent';
 import { renderMarkdown } from '../../../../shared/utils/markdown';
 
 const MODE_LABELS: Record<AgentWorkloadMode, string> = {
-  PRETRAINING: 'Pre-training', FULL_FINETUNE: 'Full fine-tuning', LORA: 'LoRA', QLORA: 'QLoRA', INFERENCE: 'Inference',
+  PRETRAINING: 'Pre-training',
+  FULL_FINETUNE: 'Full fine-tuning',
+  LORA: 'LoRA',
+  QLORA: 'QLoRA',
+  INFERENCE: 'Inference',
 };
 const MISSING_LABELS: Record<string, string> = {
-  mode: 'workload type', paramsBillions: 'model size', precision: 'precision', trainingTokens: 'dataset size',
+  mode: 'workload type',
+  paramsBillions: 'model size',
+  precision: 'precision',
+  trainingTokens: 'dataset size',
 };
 
 function compact(value: number): string {
@@ -33,16 +48,26 @@ export class AdvisorMessage {
 
   protected readonly stepsOpen = signal(false);
   protected readonly verdictLabels: Record<Verdict, string> = {
-    BEST_CHOICE: 'Best choice', CHEAPEST: 'Cheapest', FASTEST: 'Fastest', ALTERNATIVE: 'Alternative',
+    BEST_CHOICE: 'Best choice',
+    CHEAPEST: 'Cheapest',
+    FASTEST: 'Fastest',
+    ALTERNATIVE: 'Alternative',
   };
 
   protected readonly html = computed(() => renderMarkdown(this.message().content));
 
-  protected readonly profileCard = computed(() => this.message().cards.find((card): card is ProfileCard => card.type === 'profile') ?? null);
-  protected readonly repliesCard = computed(() => this.message().cards.find((card): card is RepliesCard => card.type === 'replies') ?? null);
+  protected readonly profileCard = computed(
+    () => this.message().cards.find((card): card is ProfileCard => card.type === 'profile') ?? null,
+  );
+  protected readonly repliesCard = computed(
+    () => this.message().cards.find((card): card is RepliesCard => card.type === 'replies') ?? null,
+  );
   protected readonly configs = computed(() => {
     const card = this.message().cards.find((item): item is ConfigsCard => item.type === 'configs');
-    return (card?.items ?? []).map((item) => ({ item, rentUrl: this.router.parseUrl(item.rentPath) }));
+    return (card?.items ?? []).map((item) => ({
+      item,
+      rentUrl: this.router.parseUrl(item.rentPath),
+    }));
   });
 
   protected readonly badges = computed(() => {
@@ -55,7 +80,8 @@ export class AdvisorMessage {
     if (profile.paramsBillions) badges.push(`${profile.paramsBillions}B parameters`);
     if (profile.precision) badges.push(profile.precision);
     if (profile.trainingTokens) badges.push(`${compact(profile.trainingTokens)} tokens`);
-    if (profile.flashAttention && profile.flashAttention !== 'NONE') badges.push(profile.flashAttention === 'FA3' ? 'FlashAttention-3' : 'FlashAttention-2');
+    if (profile.flashAttention && profile.flashAttention !== 'NONE')
+      badges.push(profile.flashAttention === 'FA3' ? 'FlashAttention-3' : 'FlashAttention-2');
     if (profile.usesCudaKernels) badges.push('CUDA kernels');
     if (profile.sharded) badges.push('ZeRO-3 / FSDP');
     if (profile.gradientCheckpointing) badges.push('Gradient checkpointing');
@@ -68,15 +94,25 @@ export class AdvisorMessage {
   protected readonly evidence = computed(() => {
     const card = this.profileCard();
     const files = [...new Set((card?.facts ?? []).map((fact) => fact.evidence))];
-    return files.map((file) => ({ file, url: card?.repoUrl ? `${card.repoUrl}/blob/HEAD/${file}` : null }));
+    return files.map((file) => ({
+      file,
+      url: card?.repoUrl ? `${card.repoUrl}/blob/HEAD/${file}` : null,
+    }));
   });
 
-  protected readonly missing = computed(() => (this.profileCard()?.missing ?? []).map((field) => MISSING_LABELS[field] ?? field).join(', '));
+  protected readonly missing = computed(() =>
+    (this.profileCard()?.missing ?? []).map((field) => MISSING_LABELS[field] ?? field).join(', '),
+  );
 
   protected estimateText(item: ConfigItem): string {
     const { hours, totalCost, tokensPerSecond, costPerMillionTokens } = item.estimate;
     if (hours !== null && totalCost !== null) {
-      const duration = hours < 1 ? `${Math.max(1, Math.round(hours * 60))} min` : hours >= 72 ? `${Math.round(hours / 2.4) / 10} days` : `${Math.round(hours * 10) / 10} h`;
+      const duration =
+        hours < 1
+          ? `${Math.max(1, Math.round(hours * 60))} min`
+          : hours >= 72
+            ? `${Math.round(hours / 2.4) / 10} days`
+            : `${Math.round(hours * 10) / 10} h`;
       return `~${duration} · ~$${totalCost >= 100 ? Math.round(totalCost).toLocaleString('en-US') : totalCost.toFixed(2)}`;
     }
     if (tokensPerSecond !== null && costPerMillionTokens !== null) {

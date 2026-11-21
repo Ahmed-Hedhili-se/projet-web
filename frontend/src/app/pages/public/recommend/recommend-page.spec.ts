@@ -15,7 +15,10 @@ describe('RecommendPage', () => {
     }
     await TestBed.configureTestingModule({
       imports: [RecommendPage],
-      providers: [provideRouter([]), provideHttpClient(withInterceptors([authInterceptor, mockApiInterceptor]))],
+      providers: [
+        provideRouter([]),
+        provideHttpClient(withInterceptors([authInterceptor, mockApiInterceptor])),
+      ],
     }).compileComponents();
     const fixture = TestBed.createComponent(RecommendPage);
     fixture.detectChanges();
@@ -29,7 +32,9 @@ describe('RecommendPage', () => {
     }
   };
   const clickButton = (root: HTMLElement, label: string) =>
-    [...root.querySelectorAll('button')].find((button) => button.textContent?.trim() === label)?.click();
+    [...root.querySelectorAll('button')]
+      .find((button) => button.textContent?.trim() === label)
+      ?.click();
 
   it('should ask a visitor to sign in and still offer the quick form', async () => {
     const { fixture, compiled } = await setup(false);
@@ -38,7 +43,9 @@ describe('RecommendPage', () => {
 
     clickButton(compiled, 'Quick form');
     fixture.detectChanges();
-    expect(compiled.querySelectorAll('input[type="radio"][formcontrolname="modelType"]').length).toBe(5);
+    expect(
+      compiled.querySelectorAll('input[type="radio"][formcontrolname="modelType"]').length,
+    ).toBe(5);
   });
 
   it('should send a message to the AI advisor and show the recommended configurations', async () => {
@@ -48,14 +55,18 @@ describe('RecommendPage', () => {
 
     clickButton(compiled, 'Fine-tune Llama 3.1 8B with QLoRA');
     fixture.detectChanges();
-    expect((compiled.querySelector('textarea') as HTMLTextAreaElement).value).toContain('300M tokens');
+    expect((compiled.querySelector('textarea') as HTMLTextAreaElement).value).toContain(
+      '300M tokens',
+    );
 
     clickButton(compiled, 'Send');
     await until(fixture, () => compiled.textContent?.includes('Best architecture') ?? false);
 
     expect(compiled.textContent).toContain('What the AI understood');
     expect(compiled.textContent).toContain('1 / 30 messages today');
-    expect(compiled.querySelector('a[href="/account/rentals/new?gpuId=1&quantity=4"]')?.textContent).toContain('Rent this');
+    expect(
+      compiled.querySelector('a[href="/account/rentals/new?gpuId=1&quantity=4"]')?.textContent,
+    ).toContain('Rent this');
     expect(compiled.textContent).toContain('What if I use FP8?');
   });
 
@@ -66,7 +77,9 @@ describe('RecommendPage', () => {
     fixture.detectChanges();
     clickButton(compiled, 'Send');
     await until(fixture, () => compiled.querySelector('app-advisor-history li button') !== null);
-    expect(compiled.querySelector('app-advisor-history')?.textContent).toContain('Serve Mistral 7B for 50 concurrent users');
+    expect(compiled.querySelector('app-advisor-history')?.textContent).toContain(
+      'Serve Mistral 7B for 50 concurrent users',
+    );
 
     clickButton(compiled, 'New conversation');
     fixture.detectChanges();
@@ -76,7 +89,11 @@ describe('RecommendPage', () => {
     await until(fixture, () => compiled.querySelectorAll('app-advisor-message').length === 2);
     expect(compiled.textContent).toContain('Best architecture');
 
-    (compiled.querySelector('app-advisor-history button[aria-label^="Delete"]') as HTMLButtonElement).click();
+    (
+      compiled.querySelector(
+        'app-advisor-history button[aria-label^="Delete"]',
+      ) as HTMLButtonElement
+    ).click();
     fixture.detectChanges();
     expect(compiled.textContent).toContain('Delete this conversation?');
     clickButton(compiled, 'Delete');

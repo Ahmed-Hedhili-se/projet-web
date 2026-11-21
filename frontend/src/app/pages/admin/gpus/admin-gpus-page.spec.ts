@@ -16,18 +16,22 @@ describe('AdminGpusPage', () => {
     httpTesting = TestBed.inject(HttpTestingController);
   });
 
-  it('should list the GPUs, filter the inactive ones and open the form with ?new=1', async () => {
+  it('should list the GPUs, filter the inactive ones and open the form with ?create=1', async () => {
     const fixture = TestBed.createComponent(AdminGpusPage);
-    fixture.componentRef.setInput('new', '1');
+    fixture.componentRef.setInput('create', '1');
     await fixture.whenStable();
-    httpTesting.expectOne(`${environment.apiUrl}/admin/gpus`).flush({ gpus: MOCK_GPUS.map((gpu) => ({ ...gpu, rentalCount: 2 })), total: 7 });
+    httpTesting
+      .expectOne(`${environment.apiUrl}/admin/gpus`)
+      .flush({ gpus: MOCK_GPUS.map((gpu) => ({ ...gpu, rentalCount: 2 })), total: 7 });
     await fixture.whenStable();
     const compiled = fixture.nativeElement as HTMLElement;
 
     expect(compiled.textContent).toContain('Add a GPU');
     expect(compiled.textContent).toContain('7 of 7 GPUs');
 
-    [...compiled.querySelectorAll('button')].find((button) => button.textContent?.trim() === 'Inactive')?.click();
+    [...compiled.querySelectorAll('button')]
+      .find((button) => button.textContent?.trim() === 'Inactive')
+      ?.click();
     await fixture.whenStable();
     expect(compiled.textContent).toContain('1 of 7 GPUs');
   });

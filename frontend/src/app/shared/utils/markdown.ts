@@ -1,7 +1,11 @@
 import { Marked } from 'marked';
 
 function escapeHtml(text: string): string {
-  return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
 }
 
 const parser = new Marked({
@@ -9,7 +13,8 @@ const parser = new Marked({
   breaks: true,
   renderer: {
     html: ({ text }) => escapeHtml(text),
-    link: ({ href, text }) => `<a href="${escapeHtml(href)}" target="_blank" rel="noopener noreferrer">${escapeHtml(text)}</a>`,
+    link: ({ href, text }) =>
+      `<a href="${escapeHtml(href)}" target="_blank" rel="noopener noreferrer">${escapeHtml(text)}</a>`,
     image: ({ text }) => escapeHtml(text),
   },
 });

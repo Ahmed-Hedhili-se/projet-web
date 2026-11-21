@@ -56,7 +56,14 @@ export interface ProfileCard {
 export interface ConfigItem {
   rank: number;
   verdict: Verdict;
-  gpu: { id: number; name: string; manufacturer: string; architecture: string; vramGb: number; pricePerHour: number };
+  gpu: {
+    id: number;
+    name: string;
+    manufacturer: string;
+    architecture: string;
+    vramGb: number;
+    pricePerHour: number;
+  };
   gpuCount: number;
   pricePerHour: number;
   availableUnits: number;

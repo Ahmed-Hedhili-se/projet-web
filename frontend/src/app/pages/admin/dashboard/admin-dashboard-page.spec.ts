@@ -16,9 +16,12 @@ describe('AdminDashboardPage', () => {
     messages: { total: 23, unread: 4 },
     topGpus: [{ gpuId: 1, name: 'NVIDIA H100 80GB', rentalCount: 37, revenue: 21540 }],
     rentalsPerMonth: [
-      { month: '2026-06', count: 18, revenue: 6230 }, { month: '2026-07', count: 20, revenue: 7012.25 },
-      { month: '2026-08', count: 22, revenue: 8104 }, { month: '2026-09', count: 27, revenue: 10950.9 },
-      { month: '2026-10', count: 29, revenue: 11852.75 }, { month: '2026-11', count: 12, revenue: 4100.5 },
+      { month: '2026-06', count: 18, revenue: 6230 },
+      { month: '2026-07', count: 20, revenue: 7012.25 },
+      { month: '2026-08', count: 22, revenue: 8104 },
+      { month: '2026-09', count: 27, revenue: 10950.9 },
+      { month: '2026-10', count: 29, revenue: 11852.75 },
+      { month: '2026-11', count: 12, revenue: 4100.5 },
     ],
   };
 
@@ -42,7 +45,9 @@ describe('AdminDashboardPage', () => {
     expect(compiled.textContent).toContain('NVIDIA H100 80GB');
     expect(compiled.querySelectorAll('button[aria-label*="rentals"]').length).toBe(6);
 
-    [...compiled.querySelectorAll('button')].find((button) => button.textContent?.includes('View as table'))?.click();
+    [...compiled.querySelectorAll('button')]
+      .find((button) => button.textContent?.includes('View as table'))
+      ?.click();
     await fixture.whenStable();
     expect(compiled.querySelectorAll('tbody tr').length).toBe(6);
   });

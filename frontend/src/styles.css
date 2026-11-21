@@ -58,13 +58,24 @@
   --animate-float: float 7s ease-in-out infinite;
 
   @keyframes fade-up {
-    from { opacity: 0; transform: translateY(24px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+      opacity: 0;
+      transform: translateY(24px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   @keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
   }
 
   --animate-blur-in: blur-in 1.1s var(--ease-out-expo) both;
@@ -72,38 +83,74 @@
   --animate-marquee: marquee 40s linear infinite;
 
   @keyframes blur-in {
-    from { opacity: 0; filter: blur(12px); transform: translateY(20px); }
-    to { opacity: 1; filter: blur(0); transform: translateY(0); }
+    from {
+      opacity: 0;
+      filter: blur(12px);
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      filter: blur(0);
+      transform: translateY(0);
+    }
   }
 
   @keyframes grow-x {
-    from { transform: scaleX(0); }
+    from {
+      transform: scaleX(0);
+    }
   }
 
   @keyframes marquee {
-    to { transform: translateX(-50%); }
+    to {
+      transform: translateX(-50%);
+    }
   }
 
   --animate-draw: draw 0.8s var(--ease-out-expo) 0.35s both;
   --animate-pop-in: pop-in 0.6s var(--ease-out-expo) both;
 
   @keyframes draw {
-    from { stroke-dasharray: 1; stroke-dashoffset: 1; }
-    to { stroke-dasharray: 1; stroke-dashoffset: 0; }
+    from {
+      stroke-dasharray: 1;
+      stroke-dashoffset: 1;
+    }
+    to {
+      stroke-dasharray: 1;
+      stroke-dashoffset: 0;
+    }
   }
 
   --animate-shake: shake 0.5s ease both;
 
   @keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    20%, 60% { transform: translateX(-8px); }
-    40%, 80% { transform: translateX(8px); }
+    0%,
+    100% {
+      transform: translateX(0);
+    }
+    20%,
+    60% {
+      transform: translateX(-8px);
+    }
+    40%,
+    80% {
+      transform: translateX(8px);
+    }
   }
 
   @keyframes pop-in {
-    0% { opacity: 0; transform: scale(0.6); }
-    70% { opacity: 1; transform: scale(1.06); }
-    100% { opacity: 1; transform: scale(1); }
+    0% {
+      opacity: 0;
+      transform: scale(0.6);
+    }
+    70% {
+      opacity: 1;
+      transform: scale(1.06);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
   }
 }
 
@@ -198,11 +245,20 @@
     position: absolute;
     inset: 0;
     pointer-events: none;
-    background: radial-gradient(125% 62% at 50% -10%, rgb(0 0 0 / 0.82) 0%, rgb(0 0 0 / 0.28) 44%, transparent 68%);
+    background: radial-gradient(
+      125% 62% at 50% -10%,
+      rgb(0 0 0 / 0.82) 0%,
+      rgb(0 0 0 / 0.28) 44%,
+      transparent 68%
+    );
   }
 
   .aurora-glow {
-    background: radial-gradient(45% 300px at 50% 320px, rgb(var(--aurora-rgb) / 0.12), transparent 100%);
+    background: radial-gradient(
+      45% 300px at 50% 320px,
+      rgb(var(--aurora-rgb) / 0.12),
+      transparent 100%
+    );
   }
 
   .text-link {
@@ -212,6 +268,18 @@
 
   .text-link:hover {
     text-decoration: underline;
+  }
+
+  p .text-link,
+  label .text-link {
+    text-decoration: underline;
+    text-decoration-color: rgb(41 151 255 / 0.45);
+    text-underline-offset: 3px;
+  }
+
+  p .text-link:hover,
+  label .text-link:hover {
+    text-decoration-color: currentColor;
   }
 
   .form-label {
@@ -294,7 +362,10 @@
   }
 
   @keyframes card-out {
-    to { opacity: 0; transform: scale(0.96); }
+    to {
+      opacity: 0;
+      transform: scale(0.96);
+    }
   }
 
   .site-grid {
@@ -304,11 +375,18 @@
   }
 
   @keyframes grid-drift {
-    to { transform: translate(64px, 64px); }
+    to {
+      transform: translate(64px, 64px);
+    }
   }
 
   .site-vignette {
-    background: radial-gradient(ellipse at 50% 35%, transparent 0%, rgba(0, 0, 0, 0.55) 60%, #000000 100%);
+    background: radial-gradient(
+      ellipse at 50% 35%,
+      transparent 0%,
+      rgba(0, 0, 0, 0.55) 60%,
+      #000000 100%
+    );
   }
 
   .bar-grow {
@@ -317,7 +395,9 @@
   }
 
   @keyframes grow-y {
-    from { transform: scaleY(0); }
+    from {
+      transform: scaleY(0);
+    }
   }
 
   .ring-fill {
@@ -325,7 +405,9 @@
   }
 
   @keyframes ring-fill {
-    from { stroke-dashoffset: 327; }
+    from {
+      stroke-dashoffset: 327;
+    }
   }
 
   .drawer-enter {
@@ -337,7 +419,9 @@
   }
 
   @keyframes drawer-in {
-    from { transform: translateX(100%); }
+    from {
+      transform: translateX(100%);
+    }
   }
 
   .dialog-backdrop-enter {
@@ -345,7 +429,9 @@
   }
 
   @keyframes backdrop-in {
-    from { opacity: 0; }
+    from {
+      opacity: 0;
+    }
   }
 
   .menu-enter {
@@ -359,7 +445,10 @@
   }
 
   @keyframes menu-in {
-    from { opacity: 0; transform: translateY(-6px) scale(0.96); }
+    from {
+      opacity: 0;
+      transform: translateY(-6px) scale(0.96);
+    }
   }
 
   .result-enter {
@@ -523,28 +612,59 @@ html.lenis body {
   }
 
   @keyframes scroll-zoom {
-    from { opacity: 0.3; transform: scale(0.86); }
-    to { opacity: 1; transform: scale(1); }
+    from {
+      transform: scale(0.86);
+    }
+    to {
+      transform: scale(1);
+    }
   }
 
   @keyframes scroll-parallax {
-    from { transform: translateY(48px); }
-    to { transform: translateY(-48px); }
+    from {
+      transform: translateY(48px);
+    }
+    to {
+      transform: translateY(-48px);
+    }
   }
 
   @keyframes scroll-highlight {
-    0%, 100% { opacity: 0.8; transform: scale(0.96); }
-    35%, 65% { opacity: 1; transform: scale(1); }
+    0%,
+    100% {
+      transform: scale(0.96);
+    }
+    35%,
+    65% {
+      transform: scale(1);
+    }
   }
 
   @keyframes scroll-draw-y {
-    from { transform: scaleY(0); }
+    from {
+      transform: scaleY(0);
+    }
   }
 
   @keyframes scroll-word {
-    0% { opacity: 0; filter: blur(8px); transform: translateY(0.4em); color: var(--aurora-text); }
-    55% { opacity: 1; filter: blur(0); transform: translateY(0); color: var(--aurora-text); }
-    100% { opacity: 1; filter: blur(0); transform: translateY(0); color: var(--color-porcelain); }
+    0% {
+      opacity: 0;
+      filter: blur(8px);
+      transform: translateY(0.4em);
+      color: var(--aurora-text);
+    }
+    55% {
+      opacity: 1;
+      filter: blur(0);
+      transform: translateY(0);
+      color: var(--aurora-text);
+    }
+    100% {
+      opacity: 1;
+      filter: blur(0);
+      transform: translateY(0);
+      color: var(--color-porcelain);
+    }
   }
 }
 
@@ -557,11 +677,16 @@ html.lenis body {
 }
 
 @keyframes page-out {
-  to { opacity: 0; }
+  to {
+    opacity: 0;
+  }
 }
 
 @keyframes page-in {
-  from { opacity: 0; transform: translateY(16px); }
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -31,13 +31,16 @@ export function mixColor(a: RGB, b: RGB, t: number): RGB {
 
 export function auroraForProgress(progress: number): RGB {
   const p = Math.min(1, Math.max(0, progress));
-  return p < 0.5 ? mixColor(AURORA.blue, AURORA.violet, p * 2) : mixColor(AURORA.violet, AURORA.cyan, (p - 0.5) * 2);
+  return p < 0.5
+    ? mixColor(AURORA.blue, AURORA.violet, p * 2)
+    : mixColor(AURORA.violet, AURORA.cyan, (p - 0.5) * 2);
 }
 
 export function auroraForPage(path: string, progress: number): RGB {
   if (path === '/' || path === '') return auroraForProgress(progress);
   if (path.startsWith('/about')) return auroraForProgress(progress / 2);
-  if (path.startsWith('/recommend') || path === '/login' || path === '/register') return AURORA.violet;
+  if (path.startsWith('/recommend') || path === '/login' || path === '/register')
+    return AURORA.violet;
   if (path.startsWith('/contact') || path.startsWith('/admin')) return AURORA.cyan;
   return AURORA.blue;
 }
@@ -56,7 +59,9 @@ export class SceneSync {
   private readonly router = inject(Router);
 
   readonly mode = signal<SceneMode>('corner');
-  readonly reduceMotion = typeof window !== 'undefined' && (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false);
+  readonly reduceMotion =
+    typeof window !== 'undefined' &&
+    (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false);
   readonly frame: SceneFrame = {
     pointer: null,
     scrollProgress: 0,
@@ -70,7 +75,8 @@ export class SceneSync {
   private lastCssWrite = 0;
 
   private readonly onPointerMove = (event: PointerEvent) => {
-    this.frame.pointer = event.pointerType === 'mouse' ? { x: event.clientX, y: event.clientY } : null;
+    this.frame.pointer =
+      event.pointerType === 'mouse' ? { x: event.clientX, y: event.clientY } : null;
   };
   private readonly onPointerLeave = () => (this.frame.pointer = null);
   private readonly onScroll = () => this.updateScroll();
@@ -111,7 +117,10 @@ export class SceneSync {
       document.documentElement.style.setProperty('--aurora-rgb', rgb);
       document.documentElement.style.setProperty('--aurora', `rgb(${rgb})`);
       const text = mixColor(this.frame.accent, { r: 1, g: 1, b: 1 }, 0.35);
-      document.documentElement.style.setProperty('--aurora-text', `rgb(${Math.round(text.r * 255)} ${Math.round(text.g * 255)} ${Math.round(text.b * 255)})`);
+      document.documentElement.style.setProperty(
+        '--aurora-text',
+        `rgb(${Math.round(text.r * 255)} ${Math.round(text.g * 255)} ${Math.round(text.b * 255)})`,
+      );
     }
   }
 

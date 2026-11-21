@@ -11,7 +11,8 @@ export class Tilt {
   readonly tiltMax = input(4);
 
   private readonly element = inject<ElementRef<HTMLElement>>(ElementRef);
-  private readonly reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
+  private readonly reduceMotion =
+    window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
 
   protected onPointerMove(event: PointerEvent): void {
     if (event.pointerType !== 'mouse' || this.reduceMotion) {

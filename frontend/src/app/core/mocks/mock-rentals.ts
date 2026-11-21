@@ -43,7 +43,13 @@ export function saveMockRentals(rentals: MockRentalRecord[]): void {
   }
 }
 
-export function createRecord(userId: number, gpu: Gpu, quantity: number, start: Date, durationHours: number): MockRentalRecord {
+export function createRecord(
+  userId: number,
+  gpu: Gpu,
+  quantity: number,
+  start: Date,
+  durationHours: number,
+): MockRentalRecord {
   const rentals = allMockRentals();
   const record: MockRentalRecord = {
     id: Math.max(0, ...rentals.map((rental) => rental.id)) + 1,
@@ -88,18 +94,33 @@ export function toApiRental(record: MockRentalRecord): Rental {
 export function availableUnits(gpu: Gpu, start: Date, end: Date): number {
   const booked = allMockRentals()
     .filter((rental) => rental.gpuId === gpu.id && !rental.cancelled)
-    .filter((rental) => Date.parse(rental.startDate) < end.getTime() && Date.parse(rental.endDate) > start.getTime())
+    .filter(
+      (rental) =>
+        Date.parse(rental.startDate) < end.getTime() &&
+        Date.parse(rental.endDate) > start.getTime(),
+    )
     .reduce((sum, rental) => sum + rental.quantity, 0);
   return Math.max(0, gpu.availableUnits - booked);
 }
 
 function seedRentals(): MockRentalRecord[] {
   const hour = Math.floor(Date.now() / HOUR_MS) * HOUR_MS;
-  const make = (id: number, userId: number, gpuId: number, quantity: number, startOffsetHours: number, durationHours: number, cancelled = false): MockRentalRecord => {
+  const make = (
+    id: number,
+    userId: number,
+    gpuId: number,
+    quantity: number,
+    startOffsetHours: number,
+    durationHours: number,
+    cancelled = false,
+  ): MockRentalRecord => {
     const gpu = allMockGpus().find((item) => item.id === gpuId)!;
     const start = hour + startOffsetHours * HOUR_MS;
     return {
-      id, userId, gpuId, quantity,
+      id,
+      userId,
+      gpuId,
+      quantity,
       startDate: new Date(start).toISOString(),
       durationHours,
       endDate: new Date(start + durationHours * HOUR_MS).toISOString(),

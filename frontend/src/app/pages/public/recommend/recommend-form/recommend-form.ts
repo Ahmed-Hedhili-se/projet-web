@@ -4,7 +4,12 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { getErrorMessage } from '../../../../core/models/api-error';
-import { GpuConfiguration, ModelType, RecommendationResponse, WorkloadMode } from '../../../../core/models/recommendation';
+import {
+  GpuConfiguration,
+  ModelType,
+  RecommendationResponse,
+  WorkloadMode,
+} from '../../../../core/models/recommendation';
 import { RecommendationService } from '../../../../core/services/recommendation-service';
 import { Alert } from '../../../../shared/components/alert/alert';
 import { CountUp } from '../../../../shared/directives/count-up';
@@ -33,16 +38,35 @@ export class RecommendForm {
   ];
   protected readonly parameterPresets = [1, 7, 13, 70, 405];
   protected readonly estimateSteps = [
-    { value: '2 / 16 bytes', title: 'Per parameter', text: '2 bytes in inference (FP16 weights). 16 bytes in training: weights, gradients and optimizer states.' },
-    { value: '+20%', title: 'Safety margin', text: 'Extra memory for activations, batches and the KV cache.' },
-    { value: '×1.1 – ×1.3', title: 'Model type', text: 'Vision and diffusion models need more working memory than text models.' },
+    {
+      value: '2 / 16 bytes',
+      title: 'Per parameter',
+      text: '2 bytes in inference (FP16 weights). 16 bytes in training: weights, gradients and optimizer states.',
+    },
+    {
+      value: '+20%',
+      title: 'Safety margin',
+      text: 'Extra memory for activations, batches and the KV cache.',
+    },
+    {
+      value: '×1.1 – ×1.3',
+      title: 'Model type',
+      text: 'Vision and diffusion models need more working memory than text models.',
+    },
   ];
 
   protected readonly form = new FormGroup({
     modelType: new FormControl<ModelType>('LLM', { nonNullable: true }),
-    parametersBillions: new FormControl<number | null>(7, [Validators.required, Validators.min(0.01), Validators.max(2000)]),
+    parametersBillions: new FormControl<number | null>(7, [
+      Validators.required,
+      Validators.min(0.01),
+      Validators.max(2000),
+    ]),
     mode: new FormControl<WorkloadMode>('INFERENCE', { nonNullable: true }),
-    budgetPerHour: new FormControl(2, { nonNullable: true, validators: [Validators.required, Validators.min(0.5)] }),
+    budgetPerHour: new FormControl(2, {
+      nonNullable: true,
+      validators: [Validators.required, Validators.min(0.5)],
+    }),
   });
 
   protected readonly loading = signal(false);
@@ -93,7 +117,11 @@ export class RecommendForm {
 
   private scrollToResultOnMobile(): void {
     if (window.innerWidth < 1024) {
-      setTimeout(() => document.getElementById('recommendation-result')?.scrollIntoView({ behavior: 'smooth', block: 'start' }));
+      setTimeout(() =>
+        document
+          .getElementById('recommendation-result')
+          ?.scrollIntoView({ behavior: 'smooth', block: 'start' }),
+      );
     }
   }
 }

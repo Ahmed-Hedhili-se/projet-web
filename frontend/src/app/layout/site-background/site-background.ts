@@ -1,4 +1,13 @@
-import { Component, ElementRef, OnDestroy, afterNextRender, effect, inject, signal, viewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  OnDestroy,
+  afterNextRender,
+  effect,
+  inject,
+  signal,
+  viewChild,
+} from '@angular/core';
 import { PlanetOnScreen, SceneSync, ScreenPoint } from '../../core/services/scene-sync';
 import { clamp } from './planet-math';
 import type { PlanetScene } from './planet-scene';
@@ -51,9 +60,11 @@ export class SiteBackground implements OnDestroy {
   private readonly reduceMotion = this.sync.reduceMotion;
 
   private readonly onResize = () => this.resize();
-  private readonly onPointerMove = (event: PointerEvent) => (this.mouse = { x: event.clientX, y: event.clientY });
+  private readonly onPointerMove = (event: PointerEvent) =>
+    (this.mouse = { x: event.clientX, y: event.clientY });
   private readonly onPointerLeave = () => (this.mouse = null);
-  private readonly onVisibilityChange = () => (document.hidden ? cancelAnimationFrame(this.frame) : this.start());
+  private readonly onVisibilityChange = () =>
+    document.hidden ? cancelAnimationFrame(this.frame) : this.start();
   private readonly onScroll = () => this.requestStill();
 
   constructor() {
@@ -106,7 +117,11 @@ export class SiteBackground implements OnDestroy {
   private async loadPlanet(): Promise<void> {
     try {
       const { PlanetScene } = await import('./planet-scene');
-      const planet = await PlanetScene.create(this.planetCanvas().nativeElement, this.sync, this.isLite());
+      const planet = await PlanetScene.create(
+        this.planetCanvas().nativeElement,
+        this.sync,
+        this.isLite(),
+      );
       if (this.destroyed) {
         planet.dispose();
         return;
@@ -221,7 +236,13 @@ export class SiteBackground implements OnDestroy {
   private hideBehindPlanet(): void {
     const planet = this.sync.frame.planet;
     for (const node of this.nodes) {
-      node.visible = planet ? clamp((Math.hypot(node.x - planet.x, node.y - planet.y) - planet.radius) / PLANET_MARGIN, 0, 1) : 1;
+      node.visible = planet
+        ? clamp(
+            (Math.hypot(node.x - planet.x, node.y - planet.y) - planet.radius) / PLANET_MARGIN,
+            0,
+            1,
+          )
+        : 1;
     }
   }
 
@@ -254,7 +275,9 @@ export class SiteBackground implements OnDestroy {
     for (let tries = 0; tries < 6; tries++) {
       const marker = markers[Math.floor(Math.random() * markers.length)];
       const usable = this.nodes.filter((node) => node.visible > 0.5);
-      const first = usable.find((node) => Math.hypot(node.x - marker.x, node.y - marker.y) < PLUG_DISTANCE);
+      const first = usable.find(
+        (node) => Math.hypot(node.x - marker.x, node.y - marker.y) < PLUG_DISTANCE,
+      );
       if (!first) {
         continue;
       }
@@ -262,7 +285,10 @@ export class SiteBackground implements OnDestroy {
       const hops = 1 + Math.floor(Math.random() * 3);
       for (let hop = 0; hop < hops; hop++) {
         const from = chain[0];
-        const next = usable.find((node) => !chain.includes(node) && Math.hypot(node.x - from.x, node.y - from.y) < LINK_DISTANCE);
+        const next = usable.find(
+          (node) =>
+            !chain.includes(node) && Math.hypot(node.x - from.x, node.y - from.y) < LINK_DISTANCE,
+        );
         if (!next) {
           break;
         }
@@ -276,7 +302,11 @@ export class SiteBackground implements OnDestroy {
   private crossesPlanet(a: ScreenPoint, b: ScreenPoint, planet: PlanetOnScreen): boolean {
     const abx = b.x - a.x;
     const aby = b.y - a.y;
-    const t = clamp(((planet.x - a.x) * abx + (planet.y - a.y) * aby) / (abx * abx + aby * aby || 1), 0, 1);
+    const t = clamp(
+      ((planet.x - a.x) * abx + (planet.y - a.y) * aby) / (abx * abx + aby * aby || 1),
+      0,
+      1,
+    );
     return Math.hypot(planet.x - (a.x + abx * t), planet.y - (a.y + aby * t)) < planet.radius;
   }
 
@@ -289,7 +319,8 @@ export class SiteBackground implements OnDestroy {
     const planet = frame.planet;
     const accent = `${Math.round(frame.accent.r * 255)}, ${Math.round(frame.accent.g * 255)}, ${Math.round(frame.accent.b * 255)}`;
     ctx.clearRect(0, 0, this.width, this.height);
-    ctx.globalAlpha = this.sync.mode() === 'hero' ? 0.6 + 0.4 * clamp(frame.scrollProgress / 0.3, 0, 1) : 1;
+    ctx.globalAlpha =
+      this.sync.mode() === 'hero' ? 0.6 + 0.4 * clamp(frame.scrollProgress / 0.3, 0, 1) : 1;
     ctx.lineWidth = 1;
 
     for (let i = 0; i < this.nodes.length; i++) {
@@ -298,7 +329,11 @@ export class SiteBackground implements OnDestroy {
         const b = this.nodes[j];
         const distance = Math.hypot(a.x - b.x, a.y - b.y);
         const visible = Math.min(a.visible, b.visible);
-        if (distance < LINK_DISTANCE && visible > 0 && !(planet && this.crossesPlanet(a, b, planet))) {
+        if (
+          distance < LINK_DISTANCE &&
+          visible > 0 &&
+          !(planet && this.crossesPlanet(a, b, planet))
+        ) {
           ctx.strokeStyle = `rgba(${COLOR}, ${(1 - distance / LINK_DISTANCE) * 0.16 * visible})`;
           ctx.beginPath();
           ctx.moveTo(a.x, a.y);
@@ -335,7 +370,9 @@ export class SiteBackground implements OnDestroy {
           ctx.stroke();
         }
       }
-      ctx.fillStyle = node.tinted ? `rgba(${accent}, ${0.8 * node.visible})` : `rgba(${COLOR}, ${0.55 * node.visible})`;
+      ctx.fillStyle = node.tinted
+        ? `rgba(${accent}, ${0.8 * node.visible})`
+        : `rgba(${COLOR}, ${0.55 * node.visible})`;
       ctx.beginPath();
       ctx.arc(node.x, node.y, node.radius, 0, Math.PI * 2);
       ctx.fill();

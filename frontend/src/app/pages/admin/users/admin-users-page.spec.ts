@@ -9,9 +9,36 @@ import { AdminUsersPage } from './admin-users-page';
 describe('AdminUsersPage', () => {
   let httpTesting: HttpTestingController;
   const users: AdminUser[] = [
-    { id: 3, email: 'jane.doe@example.com', firstName: 'Jane', lastName: 'Doe', role: 'USER', isBlocked: false, createdAt: '2026-10-20T14:32:10.000Z', rentalCount: 4 },
-    { id: 9, email: 'blocked@example.com', firstName: 'Sam', lastName: 'Blocked', role: 'USER', isBlocked: true, createdAt: '2026-10-15T09:00:00.000Z', rentalCount: 0 },
-    { id: 1, email: 'admin@teramind.example', firstName: 'Amira', lastName: 'Haddad', role: 'ADMIN', isBlocked: false, createdAt: '2026-10-01T08:00:00.000Z', rentalCount: 1 },
+    {
+      id: 3,
+      email: 'jane.doe@example.com',
+      firstName: 'Jane',
+      lastName: 'Doe',
+      role: 'USER',
+      isBlocked: false,
+      createdAt: '2026-10-20T14:32:10.000Z',
+      rentalCount: 4,
+    },
+    {
+      id: 9,
+      email: 'blocked@example.com',
+      firstName: 'Sam',
+      lastName: 'Blocked',
+      role: 'USER',
+      isBlocked: true,
+      createdAt: '2026-10-15T09:00:00.000Z',
+      rentalCount: 0,
+    },
+    {
+      id: 1,
+      email: 'admin@teramind.example',
+      firstName: 'Amira',
+      lastName: 'Haddad',
+      role: 'ADMIN',
+      isBlocked: false,
+      createdAt: '2026-10-01T08:00:00.000Z',
+      rentalCount: 1,
+    },
   ];
 
   beforeEach(async () => {
@@ -23,7 +50,9 @@ describe('AdminUsersPage', () => {
   });
 
   const clickButton = (root: HTMLElement, label: string) =>
-    [...root.querySelectorAll('button')].find((button) => button.textContent?.trim() === label)?.click();
+    [...root.querySelectorAll('button')]
+      .find((button) => button.textContent?.trim() === label)
+      ?.click();
 
   it('should list the users, filter the blocked ones and block a user after confirmation', async () => {
     const fixture = TestBed.createComponent(AdminUsersPage);
